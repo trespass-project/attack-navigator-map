@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<system
+	xmlns="https://www.trespass-project.eu/schemas/TREsPASS_model"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://www.trespass-project.eu/schemas/TREsPASS_model.xsd" author="attack navigator map (trespass.js)" version="0.0.0" title="empty" date="08-06-2015">
+	<locations></locations>
+	<edges></edges>
+	<actors></actors>
+	<processes></processes>
+	<assets></assets>
+	<predicates></predicates>
+	<policies></policies>
+</system>

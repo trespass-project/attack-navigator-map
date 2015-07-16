@@ -1,0 +1,11 @@
+{
+	"list": [
+		{ "name": "outside" },
+		{ "name": "parking lot" },
+		{ "name": "datacenter" },
+		{ "name": "reception" },
+		{ "name": "office" },
+		{ "name": "server room" },
+		{ "name": "server" }
+	]
+}

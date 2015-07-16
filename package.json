@@ -1,0 +1,57 @@
+{
+  "scripts": {
+    "test": "mocha --watch"
+  },
+  "engines": {
+    "node": ">=0.12.0"
+  },
+  "devDependencies": {
+    "babel": "^5.5.6",
+    "babelify": "^6.1.3",
+    "browser-sync": "^2.2.1",
+    "browserify": "^10.2.6",
+    "chalk": "^1.1.0",
+    "del": "^1.1.1",
+    "eslint-plugin-react": "^2.7.0",
+    "gulp": "^3.9.0",
+    "gulp-autoprefixer": "^2.3.1",
+    "gulp-cache": "^0.2.8",
+    "gulp-eslint": "^0.13.2",
+    "gulp-if": "^1.2.5",
+    "gulp-imagemin": "^2.2.1",
+    "gulp-jade": "^1.0.1",
+    "gulp-load-plugins": "^0.10.0",
+    "gulp-minify-css": "^1.1.1",
+    "gulp-minify-html": "^1.0.0",
+    "gulp-plumber": "^1.0.1",
+    "gulp-sass": "^2.0.0",
+    "gulp-size": "^1.2.1",
+    "gulp-sourcemaps": "^1.5.0",
+    "gulp-stylus": "^2.0.5",
+    "gulp-uglify": "^1.1.0",
+    "gulp-useref": "^1.1.1",
+    "gulp-util": "^3.0.6",
+    "main-bower-files": "^2.5.0",
+    "moment": "^2.10.3",
+    "node-notifier": "^4.2.3",
+    "opn": "^1.0.1",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.2.3",
+    "wiredep": "^2.2.2"
+  },
+  "dependencies": {
+  	"trespass.js": "git+ssh://git@gitlab.com:freder/trespass.js.git#master",
+    "d3": "^3.5.6",
+    "flummox": "^3.5.2",
+    "jquery": "^2.1.4",
+    "lodash": "^3.10.0",
+    "mout": "^0.11.0",
+    "ramda": "^0.16.0",
+    "react": "^0.13.3",
+    "react-dnd": "^1.1.4",
+    "sifter": "^0.4.1"
+  },
+  "name": "attack-navigator-map",
+  "version": "0.0.0"
+}

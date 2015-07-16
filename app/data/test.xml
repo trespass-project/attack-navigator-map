@@ -1,0 +1,546 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<system
+	xmlns="https://www.trespass-project.eu/schemas/TREsPASS_model"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://www.trespass-project.eu/schemas/TREsPASS_model.xsd" author="attack navigator map (trespass.js)" version="0.0.0" title="vsphere_export.graphml" date="08-06-2015">
+	<locations>
+		<location id="vim:entity_vim.ResourcePool%3Aresgroup-142" domain="cyber-virtual"/>
+		<location id="vim:entity_vim.VirtualMachine%3Avm-12" domain="cyber-virtual"/>
+		<location id="vim:entity_vim.ResourcePool%3Aresgroup-70" domain="cyber-virtual"/>
+		<location id="vim:entity_vim.Network%3Anetwork-11" domain="cyber-virtual"/>
+		<location id="vim:entity_vim.Datastore%3Adatastore-10" domain="cyber-virtual"/>
+		<location id="vim:entity_vim.VirtualMachine%3Avm-76" domain="cyber-virtual"/>
+		<location id="vim:entity_vim.ResourcePool%3Aresgroup-67" domain="cyber-virtual"/>
+		<location id="vim:entity_vim.Folder%3Agroup-s5" domain="cyber-virtual"/>
+		<location id="vim:entity_vim.ResourcePool%3Aresgroup-141" domain="cyber-virtual"/>
+		<location id="vim:entity_vim.ClusterComputeResource%3Adomain-c71" domain="cyber-virtual"/>
+		<location id="vim:entity_vim.ResourcePool%3Aresgroup-72" domain="cyber-virtual"/>
+		<location id="vim:entity_vim.ResourcePool%3Aresgroup-66" domain="cyber-virtual"/>
+		<location id="vim:entity_vim.VirtualMachine%3Avm-73" domain="cyber-virtual"/>
+		<location id="vim:entity_vim.VirtualMachine%3Avm-75" domain="cyber-virtual"/>
+		<location id="vim:entity_vim.Datacenter%3Adatacenter-2" domain="cyber-virtual"/>
+		<location id="vim:entity_vim.Folder%3Agroup-h4" domain="cyber-virtual"/>
+		<location id="vim:entity_vim.Folder%3Agroup-v3" domain="cyber-virtual"/>
+		<location id="vim:entity_vim.Folder%3Agroup-n6" domain="cyber-virtual"/>
+		<location id="vim:entity_vim.HostSystem%3Ahost-9" domain="cyber-physical"/>
+		<location id="vim:entity_vim.HostSystem%3Ahost-15" domain="cyber-physical"/>
+		<location id="vim:entity_vim.HostSystem%3Ahost-18" domain="cyber-physical"/>
+		<location id="vim:entity_vim.VirtualMachine%3Avm-74" domain="cyber-virtual"/>
+		<location id="vim:entity_vim.VirtualMachine%3Avm-101" domain="cyber-virtual"/>
+		<location id="vim:entity_vim.VirtualMachine%3Avm-41" domain="cyber-virtual"/>
+		<location id="vim:entity_vim.Folder%3Agroup-d1" domain="cyber-virtual"/>
+		<location id="vim:entity_vim.ClusterComputeResource%3Adomain-c19" domain="cyber-virtual"/>
+		<location id="vim:entity_vim.ResourcePool%3Aresgroup-20" domain="cyber-virtual"/>
+	</locations>
+	<edges>
+		<edge _relation="vmware-resourcePool" directed="true">
+			<source>vcsa</source>
+			<target>ITDept</target>
+		</edge>
+		<edge _relation="vmware-network" directed="true">
+			<source>vcsa</source>
+			<target>VM Network</target>
+		</edge>
+		<edge _relation="vmware-datastore" directed="true">
+			<source>vcsa</source>
+			<target>vsanDatastore</target>
+		</edge>
+		<edge _relation="vmware-resourcePool" directed="true">
+			<source>vm4</source>
+			<target>FinanceDept</target>
+		</edge>
+		<edge _relation="vmware-network" directed="true">
+			<source>vm4</source>
+			<target>VM Network</target>
+		</edge>
+		<edge _relation="vmware-datastore" directed="true">
+			<source>vm4</source>
+			<target>vsanDatastore</target>
+		</edge>
+		<edge _relation="vmware-childEntity" directed="true">
+			<source>datastore</source>
+			<target>vsanDatastore</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>datastore</source>
+			<target>vsanDatastore</target>
+		</edge>
+		<edge _relation="vmware-resourcePool" directed="true">
+			<source>TestCluster</source>
+			<target>Resources</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>TestCluster</source>
+			<target>Resources</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>FraudDept</source>
+			<target>vm1</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>FraudDept</source>
+			<target>vm2</target>
+		</edge>
+		<edge _relation="vmware-resourcePool" directed="true">
+			<source>vm2</source>
+			<target>FraudDept</target>
+		</edge>
+		<edge _relation="vmware-network" directed="true">
+			<source>vm2</source>
+			<target>VM Network</target>
+		</edge>
+		<edge _relation="vmware-datastore" directed="true">
+			<source>vm2</source>
+			<target>vsanDatastore</target>
+		</edge>
+		<edge _relation="vmware-hostFolder" directed="true">
+			<source>CiaB</source>
+			<target>host</target>
+		</edge>
+		<edge _relation="vmware-vmFolder" directed="true">
+			<source>CiaB</source>
+			<target>vm</target>
+		</edge>
+		<edge _relation="vmware-network" directed="true">
+			<source>CiaB</source>
+			<target>VM Network</target>
+		</edge>
+		<edge _relation="vmware-networkFolder" directed="true">
+			<source>CiaB</source>
+			<target>network</target>
+		</edge>
+		<edge _relation="vmware-datastore" directed="true">
+			<source>CiaB</source>
+			<target>vsanDatastore</target>
+		</edge>
+		<edge _relation="vmware-datastoreFolder" directed="true">
+			<source>CiaB</source>
+			<target>datastore</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>CiaB</source>
+			<target>vm</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>CiaB</source>
+			<target>host</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>CiaB</source>
+			<target>datastore</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>CiaB</source>
+			<target>network</target>
+		</edge>
+		<edge _relation="vmware-resourcePool" directed="true">
+			<source>vm1</source>
+			<target>FraudDept</target>
+		</edge>
+		<edge _relation="vmware-network" directed="true">
+			<source>vm1</source>
+			<target>VM Network</target>
+		</edge>
+		<edge _relation="vmware-datastore" directed="true">
+			<source>vm1</source>
+			<target>vsanDatastore</target>
+		</edge>
+		<edge _relation="vmware-host" directed="true">
+			<source>VM Network</source>
+			<target>192.168.0.1</target>
+		</edge>
+		<edge _relation="vmware-host" directed="true">
+			<source>VM Network</source>
+			<target>192.168.0.2</target>
+		</edge>
+		<edge _relation="vmware-host" directed="true">
+			<source>VM Network</source>
+			<target>192.168.0.3</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>VM Network</source>
+			<target>vm3</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>VM Network</source>
+			<target>vcsa</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>VM Network</source>
+			<target>viz</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>VM Network</source>
+			<target>vm1</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>VM Network</source>
+			<target>ubuntu-14.04-template</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>VM Network</source>
+			<target>vm2</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>VM Network</source>
+			<target>vm4</target>
+		</edge>
+		<edge _relation="vmware-childEntity" directed="true">
+			<source>vm</source>
+			<target>vm4</target>
+		</edge>
+		<edge _relation="vmware-childEntity" directed="true">
+			<source>vm</source>
+			<target>vm2</target>
+		</edge>
+		<edge _relation="vmware-childEntity" directed="true">
+			<source>vm</source>
+			<target>ubuntu-14.04-template</target>
+		</edge>
+		<edge _relation="vmware-childEntity" directed="true">
+			<source>vm</source>
+			<target>viz</target>
+		</edge>
+		<edge _relation="vmware-childEntity" directed="true">
+			<source>vm</source>
+			<target>vm1</target>
+		</edge>
+		<edge _relation="vmware-childEntity" directed="true">
+			<source>vm</source>
+			<target>vm3</target>
+		</edge>
+		<edge _relation="vmware-childEntity" directed="true">
+			<source>vm</source>
+			<target>vcsa</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>vm</source>
+			<target>viz</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>vm</source>
+			<target>vcsa</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>vm</source>
+			<target>vm4</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>vm</source>
+			<target>vm3</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>vm</source>
+			<target>ubuntu-14.04-template</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>vm</source>
+			<target>vm2</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>vm</source>
+			<target>vm1</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>ITDept</source>
+			<target>vcsa</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>ITDept</source>
+			<target>viz</target>
+		</edge>
+		<edge _relation="vmware-resourcePool" directed="true">
+			<source>viz</source>
+			<target>ITDept</target>
+		</edge>
+		<edge _relation="vmware-network" directed="true">
+			<source>viz</source>
+			<target>VM Network</target>
+		</edge>
+		<edge _relation="vmware-datastore" directed="true">
+			<source>viz</source>
+			<target>vsanDatastore</target>
+		</edge>
+		<edge _relation="vmware-resourcePool" directed="true">
+			<source>Resources</source>
+			<target>Pre-Prod</target>
+		</edge>
+		<edge _relation="vmware-resourcePool" directed="true">
+			<source>Resources</source>
+			<target>Development</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>Resources</source>
+			<target>Pre-Prod</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>Resources</source>
+			<target>Development</target>
+		</edge>
+		<edge _relation="vmware-childEntity" directed="true">
+			<source>Datacenters</source>
+			<target>CiaB</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>Datacenters</source>
+			<target>CiaB</target>
+		</edge>
+		<edge _relation="vmware-host" directed="true">
+			<source>ProductionCluster</source>
+			<target>192.168.0.3</target>
+		</edge>
+		<edge _relation="vmware-host" directed="true">
+			<source>ProductionCluster</source>
+			<target>192.168.0.2</target>
+		</edge>
+		<edge _relation="vmware-host" directed="true">
+			<source>ProductionCluster</source>
+			<target>192.168.0.1</target>
+		</edge>
+		<edge _relation="vmware-resourcePool" directed="true">
+			<source>ProductionCluster</source>
+			<target>Resources</target>
+		</edge>
+		<edge _relation="vmware-network" directed="true">
+			<source>ProductionCluster</source>
+			<target>VM Network</target>
+		</edge>
+		<edge _relation="vmware-datastore" directed="true">
+			<source>ProductionCluster</source>
+			<target>vsanDatastore</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>ProductionCluster</source>
+			<target>192.168.0.1</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>ProductionCluster</source>
+			<target>192.168.0.2</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>ProductionCluster</source>
+			<target>Resources</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>ProductionCluster</source>
+			<target>192.168.0.3</target>
+		</edge>
+		<edge _relation="vmware-childEntity" directed="true">
+			<source>host</source>
+			<target>ProductionCluster</target>
+		</edge>
+		<edge _relation="vmware-childEntity" directed="true">
+			<source>host</source>
+			<target>TestCluster</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>host</source>
+			<target>ProductionCluster</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>host</source>
+			<target>TestCluster</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>192.168.0.2</source>
+			<target>vm4</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>192.168.0.2</source>
+			<target>vm2</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>192.168.0.2</source>
+			<target>vm1</target>
+		</edge>
+		<edge _relation="vmware-network" directed="true">
+			<source>192.168.0.2</source>
+			<target>VM Network</target>
+		</edge>
+		<edge _relation="vmware-datastore" directed="true">
+			<source>192.168.0.2</source>
+			<target>vsanDatastore</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>FinanceDept</source>
+			<target>vm3</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>FinanceDept</source>
+			<target>vm4</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>vsanDatastore</source>
+			<target>vm3</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>vsanDatastore</source>
+			<target>ubuntu-14.04-template</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>vsanDatastore</source>
+			<target>vm2</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>vsanDatastore</source>
+			<target>vm1</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>vsanDatastore</source>
+			<target>viz</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>vsanDatastore</source>
+			<target>vcsa</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>vsanDatastore</source>
+			<target>vm4</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>192.168.0.1</source>
+			<target>vcsa</target>
+		</edge>
+		<edge _relation="vmware-network" directed="true">
+			<source>192.168.0.1</source>
+			<target>VM Network</target>
+		</edge>
+		<edge _relation="vmware-datastore" directed="true">
+			<source>192.168.0.1</source>
+			<target>vsanDatastore</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>192.168.0.3</source>
+			<target>viz</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>192.168.0.3</source>
+			<target>ubuntu-14.04-template</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>192.168.0.3</source>
+			<target>vm3</target>
+		</edge>
+		<edge _relation="vmware-network" directed="true">
+			<source>192.168.0.3</source>
+			<target>VM Network</target>
+		</edge>
+		<edge _relation="vmware-datastore" directed="true">
+			<source>192.168.0.3</source>
+			<target>vsanDatastore</target>
+		</edge>
+		<edge _relation="vmware-resourcePool" directed="true">
+			<source>vm3</source>
+			<target>FinanceDept</target>
+		</edge>
+		<edge _relation="vmware-network" directed="true">
+			<source>vm3</source>
+			<target>VM Network</target>
+		</edge>
+		<edge _relation="vmware-datastore" directed="true">
+			<source>vm3</source>
+			<target>vsanDatastore</target>
+		</edge>
+		<edge _relation="vmware-network" directed="true">
+			<source>ubuntu-14.04-template</source>
+			<target>VM Network</target>
+		</edge>
+		<edge _relation="vmware-datastore" directed="true">
+			<source>ubuntu-14.04-template</source>
+			<target>vsanDatastore</target>
+		</edge>
+		<edge _relation="vmware-resourcePool" directed="true">
+			<source>Resources</source>
+			<target>FraudDept</target>
+		</edge>
+		<edge _relation="vmware-resourcePool" directed="true">
+			<source>Resources</source>
+			<target>FinanceDept</target>
+		</edge>
+		<edge _relation="vmware-resourcePool" directed="true">
+			<source>Resources</source>
+			<target>ITDept</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>Resources</source>
+			<target>FraudDept</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>Resources</source>
+			<target>FinanceDept</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>Resources</source>
+			<target>ITDept</target>
+		</edge>
+		<edge _relation="vmware-childEntity" directed="true">
+			<source>network</source>
+			<target>VM Network</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>network</source>
+			<target>VM Network</target>
+		</edge>
+		<edge _relation="LogicalAccess_VirtualMachineUser_propagate" directed="true">
+			<source>Finn</source>
+			<target>FinanceDept</target>
+		</edge>
+		<edge _relation="LogicalAccess_Admin_propagate" directed="true">
+			<source>Administrator vsphere.local</source>
+			<target>Datacenters</target>
+		</edge>
+		<edge _relation="LogicalAccess_Readonly_propagate" directed="true">
+			<source>Mr Big</source>
+			<target>CiaB</target>
+		</edge>
+		<edge _relation="LogicalAccess_Admin_propagate" directed="true">
+			<source>Sydney</source>
+			<target>CiaB</target>
+		</edge>
+		<edge _relation="LogicalAccess_Readonly_propagate" directed="true">
+			<source>Terry</source>
+			<target>ProductionCluster</target>
+		</edge>
+		<edge _relation="LogicalAccess_NetworkAdministrator_propagate" directed="true">
+			<source>Terry</source>
+			<target>TestCluster</target>
+		</edge>
+		<edge _relation="LogicalAccess_Noaccess_propagate" directed="true">
+			<source>Cleo</source>
+			<target>CiaB</target>
+		</edge>
+		<edge _relation="LogicalAccess_VirtualMachinePowerUser_propagate" directed="true">
+			<source>Ethan</source>
+			<target>vm1</target>
+		</edge>
+		<edge _relation="LogicalAccess_Admin_propagate" directed="true">
+			<source>VSPHERE.LOCAL\Administrators</source>
+			<target>Datacenters</target>
+		</edge>
+	</edges>
+	<actors>
+		<actor id="vim:principal_VSPHERE.LOCAL%5Csydney">
+			<atlocations>TODO</atlocations>
+		</actor>
+		<actor id="vim:principal_VSPHERE.LOCAL%5Ccleo">
+			<atlocations>TODO</atlocations>
+		</actor>
+		<actor id="vim:principal_VSPHERE.LOCAL%5Cterry">
+			<atlocations>TODO</atlocations>
+		</actor>
+		<actor id="vim:principal_VSPHERE.LOCAL%5Cfinn">
+			<atlocations>TODO</atlocations>
+		</actor>
+		<actor id="vim:principal_VSPHERE.LOCAL%5CAdministrators">
+			<atlocations>TODO</atlocations>
+		</actor>
+		<actor id="vim:principal_VSPHERE.LOCAL%5Cbig">
+			<atlocations>TODO</atlocations>
+		</actor>
+		<actor id="vim:principal_VSPHERE.LOCAL%5CAdministrator">
+			<atlocations>TODO</atlocations>
+		</actor>
+		<actor id="vim:principal_VSPHERE.LOCAL%5Cethan">
+			<atlocations>TODO</atlocations>
+		</actor>
+	</actors>
+</system>

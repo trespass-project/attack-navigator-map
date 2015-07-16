@@ -1,0 +1,48 @@
+// bower:scss
+@import 'bower_components/bootstrap-sass/assets/stylesheets/_bootstrap.scss'
+// endbower
+
+@import 'components'
+
+
+// LAYOUT
+*
+	box-sizing: border-box
+
+html, body
+	margin: 0
+	padding: 0
+	width: 100%
+	height: 100vh
+	background: white
+
+#viewport
+	position: absolute
+	width: 100vw
+	height: 100vh
+	overflow: hidden
+	display: flex
+
+	#map-container, #panel-container
+		height: 100%
+
+	#map-container
+		flex: 1
+		// background: green
+
+	#panel-container
+		$w: 400px
+		flex: 1
+		width: $w
+		max-width: $w
+		// background: blue
+		border-left: solid lightgrey 2px
+		padding: 10px
+		overflow-y: scroll
+
+
+
+// TYPOGRAPHY
+body
+	font-family: "Helvetica" sans-serif
+	font-size: 16px
