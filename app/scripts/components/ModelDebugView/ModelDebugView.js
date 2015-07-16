@@ -1,3 +1,5 @@
+'use strict';
+
 var $ = require('jquery');
 var _ = require('lodash');
 var React = require('react');
@@ -19,7 +21,7 @@ class ModelDebugView extends React.Component {
 		var model = this.props.model;
 
 
-		if (!model) return null;
+		if (!model) { return null; }
 
 		const connectDropTarget = this.props.connectDropTarget;
 		return connectDropTarget(

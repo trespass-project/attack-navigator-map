@@ -1,3 +1,5 @@
+'use strict';
+
 var flummox = require('flummox');
 var mout = require('mout');
 var trespass = require('trespass.js');
@@ -49,7 +51,7 @@ class AppStore extends flummox.Store {
 
 	modelAdd(action) {
 		const {type, data} = action;
-		let method = 'add'+mout.string.pascalCase(type);
+		let method = 'add' + mout.string.pascalCase(type);
 		if (!mout.object.has(trespass.model, method)) {
 			method = 'add_';
 		}
@@ -57,7 +59,7 @@ class AppStore extends flummox.Store {
 		this.setState({ model: model });
 	}
 
-};
+}
 
 
 module.exports = AppStore;

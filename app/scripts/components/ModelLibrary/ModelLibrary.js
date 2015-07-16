@@ -1,4 +1,5 @@
-var $ = require('jquery');
+'use strict';
+
 var _ = require('lodash');
 var React = require('react');
 var utils = require('../../utils.js');

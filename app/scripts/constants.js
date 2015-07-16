@@ -1,3 +1,5 @@
+'use strict';
+
 const constants = {
 	APP: 'app',
 	MODEL_LIBRARY: 'model-library',

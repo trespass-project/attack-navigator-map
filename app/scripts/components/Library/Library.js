@@ -1,11 +1,10 @@
+'use strict';
+
 var $ = require('jquery');
 var _ = require('lodash');
 var utils = require('../../utils.js');
 var constants = require('../../constants.js');
 var React = require('react');
-var LibraryStore = require('./LibraryStore.js');
-var LibraryActions = require('./LibraryActions.js');
-var AppActions = require('../App/AppActions.js');
 var DragSource = require('react-dnd').DragSource;
 
 
@@ -35,12 +34,12 @@ var spec = {
 		return { data: props.data };
 	},
 	endDrag: function(props, monitor, component) {
-		if (!monitor.didDrop()) return;
+		if (!monitor.didDrop()) { return; }
 		let result = monitor.getDropResult();
 		if (result.target === 'debug-view') {
 			var appActions = props.flux.getActions(constants.APP);
 			let data = props.data;
-			data.id = Math.random()+'';
+			data.id = Math.random() + '';
 			data.domain = 'physical';
 			appActions.modelAdd('location', data);
 		}

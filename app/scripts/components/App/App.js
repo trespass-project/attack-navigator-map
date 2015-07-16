@@ -1,5 +1,5 @@
-// var $ = require('jquery');
-// var _ = require('lodash');
+'use strict';
+
 var React = require('react');
 var HTML5Backend = require('react-dnd/modules/backends/HTML5');
 var DragDropContext = require('react-dnd').DragDropContext;

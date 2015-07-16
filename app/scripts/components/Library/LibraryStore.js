@@ -1,3 +1,5 @@
+'use strict';
+
 var flummox = require('flummox');
 var utils = require('../../utils.js');
 
@@ -22,7 +24,7 @@ class LibraryStore extends flummox.Store {
 
 
 	handleNewData(action) {
-		if (this.cache.list.length) return;
+		if (this.cache.list.length) { return; }
 
 		var that = this;
 
@@ -61,7 +63,7 @@ class LibraryStore extends flummox.Store {
 		});
 	}
 
-};
+}
 
 
 module.exports = LibraryStore;

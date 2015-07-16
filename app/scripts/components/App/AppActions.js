@@ -1,3 +1,5 @@
+'use strict';
+
 var $ = require('jquery');
 var _ = require('lodash');
 var flummox = require('flummox');
@@ -11,7 +13,7 @@ class AppActions extends flummox.Actions {
 
 	loadModel(filename) {
 		var promise = $.ajax({
-			url: 'data/'+filename ,
+			url: 'data/' + filename,
 			dataType: 'text', // not 'xml'
 		});
 
