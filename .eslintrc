@@ -22,6 +22,8 @@
 		"no-underscore-dangle": 0,
 		"new-cap": 1,
 		"no-shadow": 1,
+		"no-extra-boolean-cast": 1,
+		"eqeqeq": 1,
 		"dot-notation": 0,
 		"no-unused-vars": 1,
 		"quotes": [1, "single"]
