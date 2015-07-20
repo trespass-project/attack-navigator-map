@@ -7,6 +7,17 @@ var Port = require('./Port.js');
 var icons = require('./icons.js');
 
 
+const typeIcons = {
+	location: 'fa-square-o',
+	asset: 'fa-file-o',
+	actor: 'fa-male',
+	role: 'fa-user',
+	predicate: 'fa-tags',
+	process: 'fa-gears',
+	policy: 'fa-ban',
+};
+
+
 var Node = React.createClass({
 	mixins: [DraggableMixin],
 
@@ -18,9 +29,15 @@ var Node = React.createClass({
 		flux: React.PropTypes.object.isRequired,
 	},
 
+	renderIcon: function() {
+		if (!this.props.showGroupLabels) { return null; }
+		const icon = icons[typeIcons[this.props.node.type]];
+		return <text ref='icon' className='icon fa' x='0' y='2' dangerouslySetInnerHTML={{__html:icon}}></text>;
+	},
+
 	renderLabel: function() {
 		if (!this.props.showGroupLabels) { return null; }
-		return <text ref='label' className='label' x='0' y='0'>{this.props.node.label || 'no label'}</text>;
+		return <text ref='label' className='label' x='0' y={2+this.props.theme.node.size*0.5}>{this.props.node.label || 'no label'}</text>;
 	},
 
 	render: function() {
@@ -45,6 +62,7 @@ var Node = React.createClass({
 						height={radius*2}
 						width={radius*2} />
 					{this.renderLabel()}
+					{this.renderIcon()}
 				</g>
 				<Port
 					{...this.props}

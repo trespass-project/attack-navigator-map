@@ -10,6 +10,17 @@ var helpers = require('./helpers.js');
 var dirs = require('../../variables.js').dirs;
 
 
+const types = [
+	'location',
+	// 'edge',
+	'asset',
+	'actor',
+	'role',
+	'predicate',
+	'process',
+	'policy'
+];
+
 var graph = {
 	nodes: [],
 	edges: []
@@ -20,6 +31,7 @@ graph.nodes = R.map(
 		return {
 			label: i+'',
 			id: i+'',
+			type: _.sample(types),
 			x: Math.random() * 400,
 			y: Math.random() * 400,
 		};
