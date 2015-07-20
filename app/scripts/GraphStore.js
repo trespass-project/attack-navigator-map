@@ -86,8 +86,52 @@ class GraphStore extends Store {
 	}
 
 	_updateGraph(graph) {
+		var graph = graph || this.state.graph;
+		var model = trespass.model.create();
+		graph.edges.forEach(function(edge) {
+			var e = {
+				// TODO
+				_relation: edge.relation || null,
+				source: edge.from.id,
+				target: edge.to.id,
+			}
+			trespass.model.addEdge(model, e);
+		});
+		graph.nodes.forEach(function(node) {
+			try {
+				switch (node.type) {
+					case 'location':
+						trespass.model.addLocation(model, node);
+						break;
+					case 'asset':
+						trespass.model.addAsset(model, node);
+						break;
+					case 'actor':
+						trespass.model.addActor(model, node);
+						break;
+					case 'role':
+						trespass.model.addRole(model, node);
+						break;
+					case 'predicate':
+						trespass.model.addPredicate(model, node);
+						break;
+					case 'process':
+						trespass.model.addProcess(model, node);
+						break;
+					case 'policy':
+						trespass.model.addPolicy(model, node);
+						break;
+					default: // TODO
+						break;
+				}
+			} catch (e) {
+				// console.error(e);
+			}
+		});
+
 		this.setState({
-			graph: (graph || this.state.graph)
+			graph: graph,
+			model: model,
 		});
 	}
 
