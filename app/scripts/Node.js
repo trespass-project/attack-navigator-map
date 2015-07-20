@@ -4,6 +4,7 @@ var $ = require('jquery');
 var React = require('react');
 var DraggableMixin = require('./DraggableMixin.js');
 var Port = require('./Port.js');
+var icons = require('./icons.js');
 
 
 var Node = React.createClass({
@@ -67,7 +68,7 @@ var Node = React.createClass({
 			let menuItems = [
 				{
 					label: 'delete',
-					icon: '×',
+					icon: icons['fa-trash'],
 					action: function() { that._graphActions.removeNode(that.props.node); }
 				}
 			];

@@ -80,10 +80,10 @@ var Edge = React.createClass({
 		var that = this;
 
 		$(this.getDOMNode()).on('contextmenu', function(event) {
-			let menuItems = [
+			let menuItems = [ // TODO: store these centrally
 				{
 					label: 'delete',
-					icon: icons['fa-remove'],
+					icon: icons['fa-trash'],
 					action: function() { that._graphActions.removeEdge(that.props.edge); }
 				}
 			];

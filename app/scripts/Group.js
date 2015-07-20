@@ -4,6 +4,7 @@ var $ = require('jquery');
 var _ = require('lodash');
 var React = require('react');
 var DraggableMixin = require('./DraggableMixin.js');
+var icons = require('./icons.js');
 
 
 var Group = React.createClass({
@@ -63,27 +64,27 @@ var Group = React.createClass({
 
 		var elem = this.getDOMNode();
 		$(elem).on('contextmenu', function(event) {
-			let bgimg = { label: 'image', icon: '+'/*'&#xe934;'*/, action: that.openFileDialog };
+			let bgimg = { label: 'image', icon: icons['fa-plus'], action: that.openFileDialog };
 			if (!_.isEmpty(that.props.group._bgImage)) {
-				bgimg.icon = '—';
+				bgimg.icon = icons['fa-remove'];
 				bgimg.action = function() {
 					that._interfaceActions.removeGroupBackgroundImage(that.props.group);
 				};
 			}
 
 			let menuItems = [
-				{ label: 'remove', icon: '—', action:
+				{ label: 'delete', icon: icons['fa-trash'], action:
 					function(/*event*/) {
 						that._graphActions.removeGroup(that.props.group, true);
 					}
 				},
-				{ label: 'ungroup', icon: '—', action:
+				{ label: 'ungroup', icon: icons['fa-remove'], action:
 					function(/*event*/) {
 						that._graphActions.removeGroup(that.props.group);
 					}
 				},
 				bgimg,
-				{ label: 'node', icon: '+', action:
+				{ label: 'node', icon: icons['fa-plus'], action:
 					function(/*event*/) {
 						let node = {
 							x: event.offsetX,

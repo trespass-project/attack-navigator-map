@@ -14,6 +14,7 @@ var Edge = require('./Edge.js');
 var BackgroundImage = require('./BackgroundImage.js');
 var ContextMenu = require('./ContextMenu.js');
 var DropTarget = require('react-dnd').DropTarget;
+var icons = require('./icons.js');
 
 
 var GraphMixin = {
@@ -182,7 +183,7 @@ var GraphEditor = React.createClass({
 			let menuItems = [ // TODO: have these all in one place?
 				{
 					label: 'add node',
-					icon: '+',
+					icon: icons['fa-plus'],
 					action: function(/*event*/) {
 						let node = {
 							x: event.offsetX,
