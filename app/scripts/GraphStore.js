@@ -68,12 +68,15 @@ class GraphStore extends Store {
 			});
 
 		this.state = {
-			graph
+			graph,
+			model: null
 		};
 	}
 
 	_updateGraph(graph) {
-		this.setState({ graph: (graph || this.state.graph) });
+		this.setState({
+			graph: (graph || this.state.graph)
+		});
 	}
 
 	loadModel(action) {
@@ -148,7 +151,7 @@ class GraphStore extends Store {
 			id: ''+(new Date())
 		});
 		this.state.graph.edges.push(edge);
-		this.setState({ graph: this.state.graph }); // TODO: be more specific?
+		this._updateGraph();
 	}
 
 	removeEdge(action) {
@@ -156,7 +159,7 @@ class GraphStore extends Store {
 		this.state.graph.edges = this.state.graph.edges.filter(function(e) {
 			return edge.id != e.id;
 		});
-		this.setState({ graph: this.state.graph }); // TODO: be more specific?
+		this._updateGraph();
 	}
 
 	removeGroup(action) {
@@ -191,7 +194,7 @@ class GraphStore extends Store {
 		}
 
 		this.state.graph.nodes.push(node);
-		this.setState({ graph: this.state.graph }); // TODO: be more specific?
+		this._updateGraph();
 	}
 
 	_removeNode(id) {
@@ -217,7 +220,7 @@ class GraphStore extends Store {
 		let {node} = action;
 		this._removeNode(node.id);
 		this._cleanupGroups();
-		this.setState({ graph: this.state.graph }); // TODO: be more specific?
+		this._updateGraph();
 	}
 
 	// remove missing nodes
