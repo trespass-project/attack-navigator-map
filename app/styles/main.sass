@@ -9,36 +9,50 @@
 *
 	box-sizing: border-box
 
-html, body
+body
 	margin: 0
 	padding: 0
 	width: 100%
 	height: 100vh
 	background: white
-
-#viewport
-	position: absolute
-	width: 100vw
-	height: 100vh
+	position: relative
 	overflow: hidden
-	display: flex
 
-	#map-container, #panel-container
+#app
+	position: absolute
+	width: 100%
+	height: 100%
+	overflow: hidden
+
+	#container
+		display: flex
 		height: 100%
 
-	#map-container
-		flex: 1
-		// background: green
+		#map-container, #panel-container
+			height: 100%
 
-	#panel-container
-		$w: 400px
-		flex: 1
-		width: $w
-		max-width: $w
-		// background: blue
-		border-left: solid lightgrey 2px
-		padding: 10px
-		overflow-y: scroll
+		#map-container
+			flex: 1
+			// background: green
+
+		#model-debug-view
+			$w: 300px
+			flex: 1
+			width: $w
+			max-width: $w
+			overflow-y: scroll
+			overflow-x: hidden
+
+		#panel-container
+			$w: 300px
+			flex: 1
+			width: $w
+			max-width: $w
+			// background: blue
+			border-left: solid lightgrey 2px
+			padding: 10px
+			overflow-y: scroll
+			overflow-x: hidden
 
 
 
@@ -46,3 +60,65 @@ html, body
 body
 	font-family: "Helvetica" sans-serif
 	font-size: 16px
+
+
+svg.graph
+	width: 100%
+	height: 100%
+	background-color: rgb(50, 50, 50)
+
+	*
+		user-select: none
+		pointer-events: auto
+
+	&.panning, &.not-editable
+		*
+			pointer-events: none
+			user-select: none
+
+
+#map
+	height: 100%
+
+#minimap
+	// position: absolute
+	// top: 10px
+	// right: 10px
+	width: 300px
+	// height: 300px
+	border: solid black 3px
+
+#propspanel
+	font-family: sans-serif
+	// position: absolute
+	// bottom: 10px
+	// right: 10px
+	// width: 300px
+	background: white
+	border: solid black 3px
+
+
+#html
+	position: relative
+	top: -100%
+	&, & > div
+		pointer-events: none
+		width: 100%
+
+	div *
+		pointer-events: auto
+
+
+#add-file
+	position: fixed
+	top: -100px
+	left: -100px
+
+
+@import 'node'
+@import 'edge'
+@import 'group'
+@import 'background-image'
+@import 'main-menu'
+@import 'context-menu'
+

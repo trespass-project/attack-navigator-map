@@ -22,7 +22,6 @@ class LibraryActions extends flummox.Actions {
 		};
 	}
 
-
 	filterList(query) {
 		return {
 			query: query

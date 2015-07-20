@@ -22,6 +22,7 @@ class AppStore extends flummox.Store {
 
 	loadModel(action) {
 		var that = this;
+		console.log(action);
 
 		that.setState({
 			loading: true,

@@ -1,8 +1,6 @@
 'use strict';
 
 var React = require('react');
-var HTML5Backend = require('react-dnd/modules/backends/HTML5');
-var DragDropContext = require('react-dnd').DragDropContext;
 
 var constants = require('../../constants.js');
 
@@ -50,4 +48,4 @@ class App extends React.Component {
 }
 
 
-module.exports = DragDropContext(HTML5Backend)(App);
+module.exports = App;

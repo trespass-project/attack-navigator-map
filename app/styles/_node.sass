@@ -1,0 +1,24 @@
+.not-editable
+	.node-group
+		cursor: auto
+		.node:hover
+			stroke-width: 0
+
+.node-group
+	cursor: pointer
+
+	.node
+		fill: gold
+		opacity: 1
+		stroke: black
+		stroke-width: 0
+		&:hover
+			stroke-width: 1.5
+	
+	.label
+		font-size: 16px
+		font-family: sans-serif
+		fill: black
+		text-anchor: middle
+		alignment-baseline: middle
+		pointer-events: none
