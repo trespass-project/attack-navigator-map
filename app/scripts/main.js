@@ -58,6 +58,8 @@ var App = React.createClass({
 	render: function() {
 		return (
 			<div id='container'>
+				<input type='file' accept='.svg' id='add-file' />
+
 				<div id='map-container'>
 					<div id='map'>
 						<FluxComponent flux={flux} connectToStores={['graph', 'interface']}>
