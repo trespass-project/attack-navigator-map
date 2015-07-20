@@ -17,9 +17,12 @@
 
 	"rules": {
 		"camelcase": 0,
-		"comma-dangle": 1,
+		"comma-dangle": 0,
+		"space-infix-ops": 0,
+		"no-underscore-dangle": 0,
 		"new-cap": 1,
 		"no-shadow": 1,
+		"dot-notation": 0,
 		"no-unused-vars": 1,
 		"quotes": [1, "single"]
 	}
