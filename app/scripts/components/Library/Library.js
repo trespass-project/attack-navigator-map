@@ -37,11 +37,11 @@ var spec = {
 		if (!monitor.didDrop()) { return; }
 		let result = monitor.getDropResult();
 		if (result.target === 'debug-view') {
-			var appActions = props.flux.getActions(constants.APP);
+			var graphActions = props.flux.getActions('graph');
 			let data = props.data;
 			data.id = Math.random() + '';
 			data.domain = 'physical';
-			appActions.modelAdd('location', data);
+			graphActions.modelAdd('location', data);
 		}
 	}
 };

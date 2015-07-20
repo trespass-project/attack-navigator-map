@@ -4,6 +4,8 @@ var _ = require('lodash');
 var flummox = require('flummox');
 var Store = flummox.Store;
 var R = require('ramda');
+var mout = require('mout');
+var trespass = require('trespass.js');
 var helpers = require('./helpers.js');
 
 
@@ -71,6 +73,44 @@ class GraphStore extends Store {
 
 	_updateGraph(graph) {
 		this.setState({ graph: (graph || this.state.graph) });
+	}
+
+	loadModel(action) {
+		var that = this;
+
+		that.setState({
+			loading: true,
+			error: null
+		});
+
+		action.promise
+			.success(function(data, status, jqXHR) {
+				var $system = trespass.model.parse(data)('system');
+				var model = trespass.model.prepare($system);
+				that.setState({ model: model });
+			})
+			.error(function(jqXHR, status, errorMessage) {
+				console.error(status, errorMessage);
+				that.setState({
+					error: {
+						status,
+						errorMessage
+					}
+				});
+			})
+			.always(function() {
+				that.setState({ loading: false });
+			});
+	}
+
+	modelAdd(action) {
+		const {type, data} = action;
+		let method = 'add' + mout.string.pascalCase(type);
+		if (!mout.object.has(trespass.model, method)) {
+			method = 'add_';
+		}
+		let model = trespass.model[method](this.state.model, data);
+		this.setState({ model: model });
 	}
 
 	importModelFragment(action) {

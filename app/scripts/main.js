@@ -10,9 +10,6 @@ const constants = require('./constants.js');
 const C = constants;
 var LibraryActions = require('./components/Library/LibraryActions.js');
 var LibraryStore = require('./components/Library/LibraryStore.js');
-// var App = require('./components/App/App.js');
-var AppActions = require('./components/App/AppActions.js');
-var AppStore = require('./components/App/AppStore.js');
 var Library = require('./components/Library/Library.js');
 var ModelLibrary = require('./components/ModelLibrary/ModelLibrary.js');
 var ModelDebugView = require('./components/ModelDebugView/ModelDebugView.js');
@@ -44,9 +41,6 @@ class MapFlux extends Flux {
 		this.createActions('interface', InterfaceActions);
 		this.createStore('interface', InterfaceStore, this);
 
-		this.createActions(C.APP, AppActions);
-		this.createStore(C.APP, AppStore, this, C.APP);
-
 		this.createActions(C.LOCATION_LIBRARY, LibraryActions);
 		this.createStore(C.LOCATION_LIBRARY, LibraryStore, this, C.LOCATION_LIBRARY);
 
@@ -72,7 +66,7 @@ var App = React.createClass({
 					</div>
 				</div>
 				<div id='model-debug-view'>
-					<FluxComponent flux={flux} connectToStores={[C.APP]} libName={C.APP}>
+					<FluxComponent flux={flux} connectToStores={['graph', 'interface']}>
 						<ModelDebugView />
 					</FluxComponent>
 				</div>
