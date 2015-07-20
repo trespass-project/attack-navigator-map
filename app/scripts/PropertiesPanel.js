@@ -20,10 +20,24 @@ var ContextMenu = React.createClass({
 	},
 
 	_onChange: function(data, event) {
-		// console.log(event.target.value);
 		data[event.target.name] = event.target.value;
 		// TODO: less hacky?
 		this.props.flux.getStore('graph')._updateGraph(this.props.graph);
+	},
+
+	renderTypeOptions: function() {
+		return [
+			'location',
+			// 'edge',
+			'asset',
+			'actor',
+			'role',
+			'predicate',
+			'process',
+			'policy'
+			].map(function(type) {
+				return <option key={type} value={type}>{type}</option>;
+			});
 	},
 
 	renderProperties: function(args) {
@@ -38,6 +52,10 @@ var ContextMenu = React.createClass({
 					<div onChange={_.partial(this._onChange, node)}>
 						<div>label: <input type='text' name='label' placeholder='label' value={node.label || ''} /></div>
 						<div>id: {node.id}</div>
+						<div>type: <select name='type' value={node.type}>
+								{this.renderTypeOptions()}
+							</select>
+						</div>
 						<div>groups: TODO</div>
 					</div>
 				);

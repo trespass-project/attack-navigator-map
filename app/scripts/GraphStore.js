@@ -11,9 +11,12 @@ var dirs = require('../../variables.js').dirs;
 
 
 const types = [
-	'location',
 	// 'edge',
-	'asset',
+
+	'location',
+	// 'asset',
+	'item',
+	'data',
 	'actor',
 	'role',
 	'predicate',
@@ -83,6 +86,8 @@ class GraphStore extends Store {
 			graph,
 			model: null
 		};
+
+		this._updateGraph();
 	}
 
 	_updateGraph(graph) {
@@ -103,8 +108,12 @@ class GraphStore extends Store {
 					case 'location':
 						trespass.model.addLocation(model, node);
 						break;
-					case 'asset':
-						trespass.model.addAsset(model, node);
+					// case 'asset':
+					case 'item':
+						trespass.model.addItem(model, node);
+						break;
+					case 'data':
+						trespass.model.addData(model, node);
 						break;
 					case 'actor':
 						trespass.model.addActor(model, node);
@@ -125,7 +134,7 @@ class GraphStore extends Store {
 						break;
 				}
 			} catch (e) {
-				// console.error(e);
+				console.error(e.message);
 			}
 		});
 
