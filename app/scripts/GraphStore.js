@@ -7,6 +7,7 @@ var R = require('ramda');
 var mout = require('mout');
 var trespass = require('trespass.js');
 var helpers = require('./helpers.js');
+var dirs = require('../../variables.js').dirs;
 
 
 var graph = {
@@ -32,7 +33,7 @@ graph.groups = [
 		id: 'group1',
 		nodeIds: ['1', '2'/*, '4'*/],
 		_bgImage: {
-			url: 'images/floorplan2.svg'
+			url: dirs['images']+'/floorplan2.svg'
 		}
 	},
 	{

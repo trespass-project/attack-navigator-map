@@ -15,16 +15,17 @@ function _dir(name, p) {
 	p = p || '';
 	return path.join(name, p);
 }
-function distDir(p) { return _dir('dist', p); }
-function tempDir(p) { return _dir('.tmp', p); }
-function appDir(p) { return _dir('app', p); }
-function stylesDir(p) { return _dir('styles', p); }
-function jadeDir(p) { return _dir('jade', p); }
-function scriptsDir(p) { return _dir('scripts', p); }
-function imagesDir(p) { return _dir('images', p); }
-function fontsDir(p) { return _dir('fonts', p); }
-function testDir(p) { return _dir('test', p); }
-function specDir(p) { return _dir('spec', p); }
+const dirs = require('./variables.js').dirs;
+function distDir(p) { return _dir(dirs['dist'], p); }
+function tempDir(p) { return _dir(dirs['temp'], p); }
+function appDir(p) { return _dir(dirs['app'], p); }
+function stylesDir(p) { return _dir(dirs['styles'], p); }
+function jadeDir(p) { return _dir(dirs['jade'], p); }
+function scriptsDir(p) { return _dir(dirs['scripts'], p); }
+function imagesDir(p) { return _dir(dirs['images'], p); }
+function fontsDir(p) { return _dir(dirs['fonts'], p); }
+function testDir(p) { return _dir(dirs['test'], p); }
+function specDir(p) { return _dir(dirs['spec'], p); }
 
 var pkg = require('./package.json');
 var projectName = (pkg.name || path.basename(__dirname));
