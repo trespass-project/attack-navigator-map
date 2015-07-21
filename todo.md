@@ -1,8 +1,17 @@
-keep track of transformations
-
 update minimap
+	proper size
+	show visible part as rectangle
+	always fit to entire map
+	clicking on group centers group in editor
+	draggable rectangle to pan editor
+
+bg image: extract / process shapes?
+
+how to show doors and windows?
 
 style panel a bit
+
+add 'download as XML' button
 
 update drag and drop
 
@@ -20,8 +29,6 @@ items should have a selected state
 		group
 
 auto-select new edges
-
-bg image: extract / process shapes?
 
 autolayout: recursively, per group
 

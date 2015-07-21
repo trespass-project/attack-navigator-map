@@ -81,7 +81,9 @@ function unTransformFromTo(fromElem, toElem, xy) {
 
 
 module.exports = {
+	getItemByKey,
 	getItemById,
+	getNodesBBox,
 	getGroupBBox,
 	degToRad,
 	noop,
