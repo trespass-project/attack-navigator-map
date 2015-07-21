@@ -98,6 +98,50 @@ var GraphMixin = {
 				height={group._bgImage.height || 500} />;
 	},
 
+	renderVisibleRect: function() {
+		// TODO: all of this should go into a separate minimap component
+		const props = this.props;
+
+		if (!!props.constantScale) {
+			let $editor = $(props.editorElem);
+			const origin = helpers.unTransformFromTo(
+				props.editorElem,
+				props.editorTransformElem,
+				{ x: 0,
+				  y: 0 }
+			);
+			const corner = helpers.unTransformFromTo(
+				props.editorElem,
+				props.editorTransformElem,
+				{ x: $editor.width(),
+				  y: $editor.height() }
+			);
+			this.visibleRect = {
+				x: origin.x,
+				y: origin.y,
+				width: corner.x - origin.x,
+				height: corner.y - origin.y,
+			};
+		}
+
+		if (!!this.visibleRect) {
+			return (
+				<g transform={'translate('+this.visibleRect.x+','+this.visibleRect.y+')'}>
+					<rect
+						className=''
+						fill='none'
+						stroke='red'
+						strokeWidth={5 / props.constantScale}
+						width={this.visibleRect.width}
+						height={this.visibleRect.height}>
+					</rect>
+				</g>
+			);
+		} else {
+			return null;
+		}
+	},
+
 	render: function() {
 		var props = this.props;
 		var graph = props.graph;
@@ -134,6 +178,7 @@ var GraphMixin = {
 							: null
 						}
 						{graph.nodes.map(this._makeNode)}
+						{this.renderVisibleRect()}
 					</g>
 					{(props.editable) ? <ContextMenu {...this.props} /> : null}
 				</svg>
@@ -296,6 +341,14 @@ var GraphMinimap = React.createClass({
 		// if (!this.fit) { return null; }
 		if (!this.size) { return null; }
 		let bbox = helpers.getNodesBBox(props.graph.nodes);
+
+		const visibleRect = {
+			x: bbox.minX,
+			y: bbox.minY,
+			width:  bbox.maxX - bbox.minX,
+			height: bbox.maxY - bbox.minY,
+		};
+
 		// add some padding
 		bbox.minX -= props.theme.node.size * 2;
 		bbox.maxX += props.theme.node.size * 2;

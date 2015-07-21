@@ -1,7 +1,5 @@
 update minimap
-	proper size
 	show visible part as rectangle
-	always fit to entire map
 	clicking on group centers group in editor
 	draggable rectangle to pan editor
 
