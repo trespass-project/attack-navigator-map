@@ -33,9 +33,10 @@ var Edge = React.createClass({
 
 		if (!props.showEdgeLabels) { return null; }
 
+		const t = 0.5;
 		var center = {
-			x: mout.math.lerp(0.5, props.from.x, props.to.x),
-			y: mout.math.lerp(0.5, props.from.y, props.to.y),
+			x: mout.math.lerp(t, props.from.x, props.to.x),
+			y: mout.math.lerp(t, props.from.y, props.to.y),
 		};
 		return <text
 			onClick={this._onClick}

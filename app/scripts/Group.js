@@ -118,11 +118,9 @@ var Group = React.createClass({
 			var $svg = $($.parseXML(svg)).find('svg').first();
 			var w = parseFloat($svg.attr('width'));
 			var h = parseFloat($svg.attr('height'));
-			// console.log(w, h);
 			var aspectRatio = w / h;
 			// var dataURI = 'data:image/svg+xml;utf8,'+svg;
 			var dataURI = 'data:image/svg+xml;base64,'+btoa(svg);
-			// console.log(dataURI);
 			that._interfaceActions.addGroupBackgroundImage(that.props.group, dataURI, aspectRatio, w);
 		};
 		// reader.readAsDataURL(file);

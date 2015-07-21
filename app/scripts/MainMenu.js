@@ -80,7 +80,7 @@ var fragmentSpec = {
 				node3,
 			],
 			groups: [
-				{ id: id0, name: 'model fragment',	 nodeIds: [id1, id2, id3] }
+				{ id: id0, name: 'model fragment', nodeIds: [id1, id2, id3] }
 			],
 		};
 	},
