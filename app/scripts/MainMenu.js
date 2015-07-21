@@ -10,9 +10,19 @@ function endDrag(props, monitor, component) {
 	let result = monitor.getDropResult();
 	if (result.target === 'graph') {
 		let interfaceStore = component.props.flux.getStore('interface');
-		let xy = helpers.coordsRelativeToElem(interfaceStore.state.editorElem, result.clientOffset);
+
+		const editorXY = helpers.coordsRelativeToElem(
+			interfaceStore.state.editorElem,
+			result.clientOffset
+		);
+		const modelXY = helpers.unTransformFromTo(
+			interfaceStore.state.editorElem,
+			interfaceStore.state.editorTransformElem,
+			editorXY
+		);
+
 		let graphActions = component.props.flux.getActions('graph');
-		graphActions.importModelFragment(monitor.getItem(), xy);
+		graphActions.importModelFragment(monitor.getItem(), modelXY);
 	}
 }
 
@@ -39,7 +49,13 @@ var nodeSpec = {
 var DndNode = React.createClass({
 	render: function() {
 		const connectDragSource = this.props.connectDragSource;
-		return connectDragSource(<div draggable={true} style={{ display: 'inline-block', background: 'lightgrey', marginLeft: '0.5em', padding: '2px' }}>node</div>);
+		return connectDragSource(
+			<div draggable={true}
+				 style={{ display: 'inline-block',
+						  background: 'gold',
+						  marginLeft: '0.5em',
+						  padding: '2px' }}>node</div>
+			);
 	},
 });
 DndNode = DragSource('DndNode', nodeSpec, collect)(DndNode);
@@ -73,7 +89,13 @@ var fragmentSpec = {
 var DndFragment = React.createClass({
 	render: function() {
 		const connectDragSource = this.props.connectDragSource;
-		return connectDragSource(<div draggable={true} style={{ display: 'inline-block', background: 'lightgrey', marginLeft: '0.5em', padding: '2px' }}>fragment</div>);
+		return connectDragSource(
+			<div draggable={true}
+				 style={{ display: 'inline-block',
+						  background: 'gold',
+						  marginLeft: '0.5em',
+						  padding: '2px' }}>fragment</div>
+		);
 	},
 });
 DndFragment = DragSource('DndFragment', fragmentSpec, collect)(DndFragment);

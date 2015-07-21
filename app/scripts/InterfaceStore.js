@@ -1,6 +1,7 @@
 'use strict';
 
 var _ = require('lodash');
+var $ = require('jquery');
 var flummox = require('flummox');
 var Store = flummox.Store;
 var R = require('ramda');
@@ -44,6 +45,7 @@ class InterfaceStore extends Store {
 			selected: null,
 
 			editorElem: null,
+			editorTransformElem: null,
 
 			theme,
 			scale: 1,
@@ -54,7 +56,10 @@ class InterfaceStore extends Store {
 
 	setEditorElem(action) {
 		let {elem} = action;
-		this.setState({ editorElem: elem });
+		this.setState({
+			editorElem: elem,
+			editorTransformElem: $(elem).children('g').first()[0],
+		});
 	}
 
 	select(action) {
