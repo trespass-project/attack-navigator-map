@@ -134,7 +134,7 @@ class GraphStore extends Store {
 						break;
 				}
 			} catch (e) {
-				console.error(e.message);
+				// console.error(e.message);
 			}
 		});
 
