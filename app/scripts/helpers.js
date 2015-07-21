@@ -31,24 +31,26 @@ function getItemByKey(key, coll, value) {
 var getItemById = R.partial(getItemByKey, 'id');
 
 
+function getNodesBBox(nodes) {
+	return nodes.reduce(
+		function(_bounds, node) {
+			_bounds.minX = Math.min(_bounds.minX, node.x);
+			_bounds.minY = Math.min(_bounds.minY, node.y);
+			_bounds.maxX = Math.max(_bounds.maxX, node.x);
+			_bounds.maxY = Math.max(_bounds.maxY, node.y);
+			return _bounds;
+		},
+		{ minX:  Infinity,
+		  minY:  Infinity,
+		  maxX: -Infinity,
+		  maxY: -Infinity }
+	);
+}
+
 // get bounding box for all nodes in group
-function getGroupBBox(nodes, group) {
-	return group.nodeIds
-		.map(R.partial(getItemById, nodes))
-		.reduce(function(_bounds, node) {
-				_bounds.minX = Math.min(_bounds.minX, node.x);
-				_bounds.minY = Math.min(_bounds.minY, node.y);
-				_bounds.maxX = Math.max(_bounds.maxX, node.x);
-				_bounds.maxY = Math.max(_bounds.maxY, node.y);
-				return _bounds;
-			},
-			{
-				minX: Infinity,
-				minY: Infinity,
-				maxX: -Infinity,
-				maxY: -Infinity
-			}
-		);
+function getGroupBBox(allNodes, group) {
+	const nodes = group.nodeIds.map(R.partial(getItemById, allNodes));
+	return getNodesBBox(nodes);
 }
 
 

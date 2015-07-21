@@ -291,16 +291,37 @@ var GraphMinimap = React.createClass({
 	},
 
 	render: function() {
+		const props = this.props;
+
+		// if (!this.fit) { return null; }
+		if (!this.size) { return null; }
+		let bbox = helpers.getNodesBBox(props.graph.nodes);
+		// add some padding
+		bbox.minX -= props.theme.node.size * 2;
+		bbox.maxX += props.theme.node.size * 2;
+		bbox.minY -= props.theme.node.size * 2;
+		bbox.maxY += props.theme.node.size * 2;
+		const bboxSize = {
+			width:  bbox.maxX - bbox.minX,
+			height: bbox.maxY - bbox.minY,
+		};
+		const bboxAspectRatio = bboxSize.width / bboxSize.height;
+		const fit = (this.aspectRatio > bboxAspectRatio) ? 'height' : 'width';
+		// const scale = this.size[this.fit] / bboxSize[this.fit];
+		const scale = this.size[fit] / bboxSize[fit];
+
 		const showNodeLabels = false;
 		const showEdgeLabels = false;
 		const showGroupLabels = false;
 
-		let props = this.props;
 		let restProps = _.omit(props, 'id');
 
 		return (
 			<div ref='height' id={props.id}>
 				<Graph {...restProps}
+					constantScale={scale}
+					panX={-bbox.minX}
+					panY={-bbox.minY}
 					showNodeLabels={showNodeLabels}
 					showEdgeLabels={showEdgeLabels}
 					showGroupLabels={showGroupLabels} />
@@ -309,11 +330,28 @@ var GraphMinimap = React.createClass({
 	},
 
 	_setHeight: function() {
-		let props = this.props;
+		const props = this.props;
+
+		let $minimap = $(this.getDOMNode());
 		let $mainGraph = $(props.editorElem);
-		let $this = $(this.refs.height.getDOMNode());
-		let height = $mainGraph.height() * props.constantScale;
-		$this.height(height);
+
+		// let $height = $(this.refs.height.getDOMNode());
+		// const height = $mainGraph.height() * props.constantScale;
+		// $height.height(height);
+
+		// this.editorSize = {
+		// 	width: $mainGraph.width(),
+		// 	height: $mainGraph.height(),
+		// };
+		// const editorAspectRatio = this.editorSize.width / this.editorSize.height;
+		// if (!editorAspectRatio) { return; }
+
+		this.size = {
+			width: $minimap.width(),
+			height: $minimap.height(),
+		};
+		this.aspectRatio = this.size.width / this.size.height;
+		// this.fit = (this.aspectRatio > editorAspectRatio) ? 'height' : 'width';
 	},
 
 	componentDidMount: function() {

@@ -75,7 +75,7 @@ var App = React.createClass({
 				<div id='panel-container'>
 					<div id='model-library'>
 						<FluxComponent flux={flux} connectToStores={['graph', 'interface']}>
-							<GraphMinimap id='minimap' constantScale={0.2} />
+							<GraphMinimap id='minimap' />
 						</FluxComponent>
 						<FluxComponent flux={flux} connectToStores={['graph', 'interface']}>
 							<PropertiesPanel id='propspanel' />
