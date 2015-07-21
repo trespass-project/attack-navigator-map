@@ -215,9 +215,10 @@ var GraphEditor = React.createClass({
 		let transformedElem = this.refs['panZoom'].getDOMNode();
 		let relativeXy = helpers.coordsRelativeToElem(
 			rootElem,
-			{ x: event.clientX, y: event.clientY }
+			{ x: event.clientX,
+			  y: event.clientY }
 		);
-		let worldXy = helpers.unTransformFromTo(rootElem, transformedElem, relativeXy);
+		let modelXy = helpers.unTransformFromTo(rootElem, transformedElem, relativeXy);
 	},
 
 	_onWheel: function(event) {

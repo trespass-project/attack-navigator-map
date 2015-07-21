@@ -75,7 +75,7 @@ function unTransformFromTo(fromElem, toElem, xy) {
 	let point = fromElem.createSVGPoint();
 	point.x = xy.x;
 	point.y = xy.y;
-	let ctm = fromElem.getTransformToElement(toElem);
+	const ctm = fromElem.getTransformToElement(toElem);
 	return unTransform(point, ctm);
 }
 
