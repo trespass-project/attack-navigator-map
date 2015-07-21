@@ -295,7 +295,7 @@ class GraphStore extends Store {
 
 		groups.forEach(function(group) {
 			group.nodeIds = group.nodeIds.filter(function(id) {
-				let node = helpers.getNodeById(nodes, id);
+				let node = helpers.getItemById(nodes, id);
 				return (!!node);
 			});
 		});

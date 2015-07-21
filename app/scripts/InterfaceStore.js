@@ -194,7 +194,7 @@ class InterfaceStore extends Store {
 				}
 
 				that._graphStore.state.graph.nodes.forEach(function(node) {
-					var newNode = helpers.getNodeById(g.children, node.id);
+					var newNode = helpers.getItemById(g.children, node.id);
 					var tween = new TWEEN.Tween(node)
 						.to(_.pick(newNode, 'x', 'y'), 500)
 						.easing(TWEEN.Easing.Cubic.InOut)
@@ -248,7 +248,7 @@ class InterfaceStore extends Store {
 
 		group.nodeIds
 			.forEach(function(id) {
-				let node = helpers.getNodeById(that._graphStore.state.graph.nodes, id);
+				let node = helpers.getItemById(that._graphStore.state.graph.nodes, id);
 				node.x += posDelta.x;
 				node.y += posDelta.y;
 			});
