@@ -2,6 +2,7 @@
 
 var React = require('react');
 var DraggableMixin = require('./DraggableMixin.js');
+var helpers = require('./helpers.js');
 
 
 var Port = React.createClass({
@@ -37,19 +38,30 @@ var Port = React.createClass({
 	},
 
 	_onDragStart: function(event) {
-		this._interfaceActions.setDragNode(this.props.node);
-		this._onDragMove(event);
+		const props = this.props;
+		const node = props.node;
+
+		this._interfaceActions.setDragNode(node);
+
+		// this._onDragMove(event);
 	},
 
 	_onDragMove: function(event) {
-		var that = this;
-		var node = this.props.node;
+		const props = this.props;
+		const node = props.node;
+
+		const modelXYEvent = helpers.unTransformFromTo(
+			props.editorElem,
+			props.editorTransformElem,
+			{ x: event.offsetX,
+			  y: event.offsetY }
+		);
 
 		this._interfaceActions.setPreviewEdge({
 			from: node,
 			to: {
-				x: node.x + that.props.x + event.deltaX / this.props.scale,
-				y: node.y + that.props.y + event.deltaY / this.props.scale,
+				x: modelXYEvent.x,
+				y: modelXYEvent.y,
 			},
 		});
 	},

@@ -5,6 +5,7 @@ var React = require('react');
 var DraggableMixin = require('./DraggableMixin.js');
 var Port = require('./Port.js');
 var icons = require('./icons.js');
+var helpers = require('./helpers.js');
 
 
 const typeIcons = {
@@ -129,17 +130,42 @@ var Node = React.createClass({
 	},
 
 	_onDragStart: function(event) {
-		var node = this.props.node;
+		const props = this.props;
+		const node = props.node;
+
 		this._interfaceActions.setDragNode(node);
+
 		this.originalPositionX = node.x;
 		this.originalPositionY = node.y;
+
+		this.modelXYEventOrigin = helpers.unTransformFromTo(
+			props.editorElem,
+			props.editorTransformElem,
+			{ x: event.offsetX,
+			  y: event.offsetY }
+		);
 	},
 
 	_onDragMove: function(event) {
+		const props = this.props;
+
+		// get event coords in model space
+		const modelXYEvent = helpers.unTransformFromTo(
+			props.editorElem,
+			props.editorTransformElem,
+			{ x: event.offsetX,
+			  y: event.offsetY }
+		);
+
+		const modelXYDelta = {
+			x: (modelXYEvent.x - this.modelXYEventOrigin.x),
+			y: (modelXYEvent.y - this.modelXYEventOrigin.y),
+		};
+
 		this._interfaceActions.moveNode(
 			this.props.node, {
-				x: this.originalPositionX + event.deltaX / this.props.scale,
-				y: this.originalPositionY + event.deltaY / this.props.scale,
+				x: this.originalPositionX + modelXYDelta.x,
+				y: this.originalPositionY + modelXYDelta.y,
 			}
 		);
 	},

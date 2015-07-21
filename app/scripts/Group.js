@@ -5,6 +5,7 @@ var _ = require('lodash');
 var React = require('react');
 var DraggableMixin = require('./DraggableMixin.js');
 var icons = require('./icons.js');
+var helpers = require('./helpers.js');
 
 
 var Group = React.createClass({
@@ -143,24 +144,45 @@ var Group = React.createClass({
 	},
 
 	_onDragStart: function(event) {
-		this.originalPositionX = this.props.x;
-		this.originalPositionY = this.props.y;
+		const props = this.props;
+
+		this.originalPositionX = props.x;
+		this.originalPositionY = props.y;
+
+		this.modelXYEventOrigin = helpers.unTransformFromTo(
+			props.editorElem,
+			props.editorTransformElem,
+			{ x: event.offsetX,
+			  y: event.offsetY }
+		);
 	},
 
 	_onDragMove: function(event) {
-		var props = this.props;
+		const props = this.props;
 
-		this.prevPositionX = props.x;
-		this.prevPositionY = props.y;
+		this.currentPositionX = props.x;
+		this.currentPositionY = props.y;
 
-		var newPositionX = this.originalPositionX + event.deltaX / props.scale;
-		var newPositionY = this.originalPositionY + event.deltaY / props.scale;
+		const modelXYEvent = helpers.unTransformFromTo(
+			props.editorElem,
+			props.editorTransformElem,
+			{ x: event.offsetX,
+			  y: event.offsetY }
+		);
+
+		const modelXYDelta = {
+			x: (modelXYEvent.x - this.modelXYEventOrigin.x),
+			y: (modelXYEvent.y - this.modelXYEventOrigin.y),
+		};
+
+		var newPositionX = this.originalPositionX + modelXYDelta.x;
+		var newPositionY = this.originalPositionY + modelXYDelta.y;
 
 		this._interfaceActions.moveGroup(
 			props.group,
-			{
-				x: newPositionX - this.prevPositionX,
-				y: newPositionY - this.prevPositionY
+			{ // delta of the delta
+				x: newPositionX - this.currentPositionX,
+				y: newPositionY - this.currentPositionY
 			}
 		);
 	},

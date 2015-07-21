@@ -9,11 +9,13 @@ var ResizeElem = React.createClass({
 	mixins: [DraggableMixin],
 
 	render: function() {
-		var props = this.props;
+		const props = this.props;
+		const halfSize = 0.5 * props.size;
+
 		return <circle
-			cx={props.x+props.size/2}
-			cy={props.y+props.size/2}
-			r={props.size/2}
+			cx={props.x + halfSize}
+			cy={props.y + halfSize}
+			r={halfSize}
 			style={{ opacity: 1 }}
 			fill='white' />;
 	},
@@ -24,16 +26,22 @@ var ResizeElem = React.createClass({
 	},
 
 	_onDragMove: function(event) {
-		let props = this.props;
-		// let w = props.width + event.deltaX;
-		// let h = props.height + event.deltaY;
-		let w = event.offsetX - props.panX - props.imgX;
-		let h = event.offsetY - props.panY - props.imgY;
+		const props = this.props;
 
-		let w1 = w;
-		let h1 = w / props.aspectRatio;
-		let h2 = h;
-		let w2 = h * props.aspectRatio;
+		const modelXYEvent = helpers.unTransformFromTo(
+			props.editorElem,
+			props.editorTransformElem,
+			{ x: event.offsetX,
+			  y: event.offsetY }
+		);
+
+		const w = modelXYEvent.x - props.imgX;
+		const h = modelXYEvent.y - props.imgY;
+
+		const w1 = w;
+		const h1 = w / props.aspectRatio;
+		const h2 = h;
+		const w2 = h * props.aspectRatio;
 
 		this._interfaceActions.resizeGroupBackgroundImage(
 			props.group,
@@ -133,17 +141,35 @@ var Group = React.createClass({
 	_onDragStart: function(event) {
 		this.originalPositionX = this.props.groupCenterOffsetX;
 		this.originalPositionY = this.props.groupCenterOffsetY;
+
+		this.modelXYEventOrigin = helpers.unTransformFromTo(
+			this.props.editorElem,
+			this.props.editorTransformElem,
+			{ x: event.offsetX,
+			  y: event.offsetY }
+		);
 	},
 
 	_onDragMove: function(event) {
-		var newPositionX = this.originalPositionX + event.deltaX / this.props.scale;
-		var newPositionY = this.originalPositionY + event.deltaY / this.props.scale;
+		const props = this.props;
+
+		const modelXYEvent = helpers.unTransformFromTo(
+			props.editorElem,
+			props.editorTransformElem,
+			{ x: event.offsetX,
+			  y: event.offsetY }
+		);
+
+		const modelXYDelta = {
+			x: (modelXYEvent.x - this.modelXYEventOrigin.x),
+			y: (modelXYEvent.y - this.modelXYEventOrigin.y),
+		};
 
 		this._interfaceActions.moveImage(
 			this.props.group,
 			{
-				groupCenterOffsetX: newPositionX,
-				groupCenterOffsetY: newPositionY
+				groupCenterOffsetX: this.originalPositionX + modelXYDelta.x,
+				groupCenterOffsetY: this.originalPositionY + modelXYDelta.y
 			}
 		);
 	},
