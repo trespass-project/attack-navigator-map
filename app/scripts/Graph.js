@@ -36,18 +36,20 @@ var GraphMixin = {
 		let bounds = null;
 		const extraPadding = 5;
 		if (group.nodeIds.length === 0) {
+			const s = this.props.theme.node.size*0.5 + 2*extraPadding;
 			bounds = { // TODO: improve this
 				minX: extraPadding,
 				minY: extraPadding,
-				maxX: this.props.theme.node.size*0.5 + 2*extraPadding,
-				maxY: this.props.theme.node.size*0.5 + 2*extraPadding,
+				maxX: s,
+				maxY: s,
 			};
 		} else {
 			bounds = helpers.getGroupBBox(this.props.graph.nodes, group);
-			bounds.minX -= this.props.theme.node.size*0.5 + extraPadding;
-			bounds.minY -= this.props.theme.node.size*0.5 + extraPadding;
-			bounds.maxX += this.props.theme.node.size*0.5 + extraPadding;
-			bounds.maxY += this.props.theme.node.size*0.5 + extraPadding;
+			const s = this.props.theme.node.size*0.5 + extraPadding;
+			bounds.minX -= s;
+			bounds.minY -= s;
+			bounds.maxX += s;
+			bounds.maxY += s;
 		}
 
 		return <Group
