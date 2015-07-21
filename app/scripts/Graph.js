@@ -211,16 +211,6 @@ var GraphEditor = React.createClass({
 		event.stopPropagation();
 		this._interfaceActions.hideContextMenu();
 		this._interfaceActions.select(null);
-
-		let $svg = $(this.props.editorElem);
-		let rootElem = $svg[0];
-		let transformedElem = this.refs['panZoom'].getDOMNode();
-		let relativeXy = helpers.coordsRelativeToElem(
-			rootElem,
-			{ x: event.clientX,
-			  y: event.clientY }
-		);
-		let modelXy = helpers.unTransformFromTo(rootElem, transformedElem, relativeXy);
 	},
 
 	_onWheel: function(event) {
@@ -229,23 +219,24 @@ var GraphEditor = React.createClass({
 		const props = this.props;
 
 		let deltaScale = event.deltaY / 2000.0;
-		let newScale = mout.math.clamp(this.props.scale + deltaScale, props.minZoom, props.maxZoom);
+		let newScale = mout.math.clamp(this.props.scale + deltaScale,
+									   props.minZoom,
+									   props.maxZoom);
 
-		let $svg = $(this.props.editorElem); // TODO: cache this:
-		const offset = $svg.offset();
 		// event position, relative to svg elem
-		let eventX = event.clientX - offset.top;
-		let eventY = event.clientY - offset.left;
+		const editorXY = helpers.coordsRelativeToElem(
+			props.editorElem,
+			{ x: event.clientX,
+			  y: event.clientY }
+		);
 
 		// zoom and pan transform-origin equivalent
 		// (from the-graph-app.js)
-		var scaleD = newScale / this.props.scale;
-		var currentX = this.props.panX;
-		var currentY = this.props.panY;
-		var oX = eventX;
-		var oY = eventY;
-		var x = scaleD * (currentX - oX) + oX;
-		var y = scaleD * (currentY - oY) + oY;
+		var scaleD = newScale / props.scale;
+		var currentX = props.panX;
+		var currentY = props.panY;
+		var x = scaleD * (currentX - editorXY.x) + editorXY.x;
+		var y = scaleD * (currentY - editorXY.y) + editorXY.y;
 
 		this._interfaceActions.setTransformation({
 			scale: newScale,
