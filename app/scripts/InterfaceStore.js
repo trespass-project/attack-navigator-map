@@ -116,12 +116,8 @@ class InterfaceStore extends Store {
 
 		var showEdgeLabels = false;
 		var threshold = 0.5;
-		if (!scale) {
-			showEdgeLabels = (this.state.scale >= threshold);
-		} else {
-			showEdgeLabels = (scale >= threshold);
-		}
-
+		scale = scale || this.state.scale;
+		showEdgeLabels = (scale >= threshold);
 		var showNodeLabels = showEdgeLabels;
 		var showGroupLabels = showEdgeLabels;
 
