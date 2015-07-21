@@ -130,16 +130,16 @@ var Node = React.createClass({
 
 	_onDragStart: function(event) {
 		var node = this.props.node;
-		this.origialPositionX = node.x;
-		this.origialPositionY = node.y;
 		this._interfaceActions.setDragNode(node);
+		this.originalPositionX = node.x;
+		this.originalPositionY = node.y;
 	},
 
 	_onDragMove: function(event) {
 		this._interfaceActions.moveNode(
 			this.props.node, {
-				x: this.origialPositionX + event.deltaX / this.props.scale,
-				y: this.origialPositionY + event.deltaY / this.props.scale,
+				x: this.originalPositionX + event.deltaX / this.props.scale,
+				y: this.originalPositionY + event.deltaY / this.props.scale,
 			}
 		);
 	},

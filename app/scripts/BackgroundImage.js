@@ -131,13 +131,13 @@ var Group = React.createClass({
 	},
 
 	_onDragStart: function(event) {
-		this.origialPositionX = this.props.groupCenterOffsetX;
-		this.origialPositionY = this.props.groupCenterOffsetY;
+		this.originalPositionX = this.props.groupCenterOffsetX;
+		this.originalPositionY = this.props.groupCenterOffsetY;
 	},
 
 	_onDragMove: function(event) {
-		var newPositionX = this.origialPositionX + event.deltaX / this.props.scale;
-		var newPositionY = this.origialPositionY + event.deltaY / this.props.scale;
+		var newPositionX = this.originalPositionX + event.deltaX / this.props.scale;
+		var newPositionY = this.originalPositionY + event.deltaY / this.props.scale;
 
 		this._interfaceActions.moveImage(
 			this.props.group,

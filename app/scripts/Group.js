@@ -143,8 +143,8 @@ var Group = React.createClass({
 	},
 
 	_onDragStart: function(event) {
-		this.origialPositionX = this.props.x;
-		this.origialPositionY = this.props.y;
+		this.originalPositionX = this.props.x;
+		this.originalPositionY = this.props.y;
 	},
 
 	_onDragMove: function(event) {
@@ -153,8 +153,8 @@ var Group = React.createClass({
 		this.prevPositionX = props.x;
 		this.prevPositionY = props.y;
 
-		var newPositionX = this.origialPositionX + event.deltaX / props.scale;
-		var newPositionY = this.origialPositionY + event.deltaY / props.scale;
+		var newPositionX = this.originalPositionX + event.deltaX / props.scale;
+		var newPositionY = this.originalPositionY + event.deltaY / props.scale;
 
 		this._interfaceActions.moveGroup(
 			props.group,
