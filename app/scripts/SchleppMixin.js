@@ -8,7 +8,7 @@ var SchleppMixin = {
 	componentDidMount: function() {
 		var that = this;
 
-		var elem = helpers.getElem(this, 'dragRoot');
+		var elem = helpers.getElemByRef(this, 'dragRoot');
 		var $elem = $(elem);
 
 		var lastX, lastY;
@@ -39,7 +39,7 @@ var SchleppMixin = {
 	},
 
 	componentWillUnmount: function() {
-		var elem = helpers.getElem(this, 'dragRoot');
+		var elem = helpers.getElemByRef(this, 'dragRoot');
 		var $elem = $(elem);
 		$elem
 			.off('mousedown')

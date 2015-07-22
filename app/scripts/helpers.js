@@ -5,7 +5,7 @@ var R = require('ramda');
 var $ = require('jquery');
 
 
-function getElem(component, ref) {
+function getElemByRef(component, ref) {
 	var it;
 	if (ref && !_.isEmpty(component.refs) && component.refs[ref]) {
 		it = component.refs.dragRoot;
@@ -89,7 +89,7 @@ module.exports = {
 	getGroupBBox,
 	degToRad,
 	noop,
-	getElem,
+	getElemByRef,
 	coordsRelativeToElem,
 	unTransform,
 	unTransformFromTo,
