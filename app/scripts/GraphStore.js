@@ -91,7 +91,7 @@ class GraphStore extends Store {
 	}
 
 	_updateGraph(graph) {
-		var graph = graph || this.state.graph;
+		graph = graph || this.state.graph;
 		var model = trespass.model.create();
 		graph.edges.forEach(function(edge) {
 			var e = {
@@ -99,7 +99,7 @@ class GraphStore extends Store {
 				_relation: edge.relation || null,
 				source: edge.from.id,
 				target: edge.to.id,
-			}
+			};
 			trespass.model.addEdge(model, e);
 		});
 		graph.nodes.forEach(function(node) {
