@@ -91,6 +91,10 @@ var Edge = React.createClass({
 			return false;
 		});
 	},
+
+	componentWillUnmount: function() {
+		$(this.getDOMNode()).off('contextmenu');
+	},
 });
 
 

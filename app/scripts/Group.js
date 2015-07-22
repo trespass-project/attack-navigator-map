@@ -101,7 +101,7 @@ var Group = React.createClass({
 	},
 
 	componentWillUnmount: function() {
-
+		$(this.getDOMNode()).off('contextmenu');
 	},
 
 	openFileDialog: function() {

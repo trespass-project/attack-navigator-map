@@ -100,6 +100,10 @@ var Node = React.createClass({
 		});
 	},
 
+	componentWillUnmount: function() {
+		$(this.getDOMNode()).off('contextmenu');
+	},
+
 	// _getLabelWidth: function() {
 	// 	var label = this.refs.label.getDOMNode();
 	// 	var bbox = label.getBBox();
