@@ -46,6 +46,9 @@ var Node = React.createClass({
 		var props = this.props;
 		var radius = props.theme.node.size * 0.5;
 
+		var portStyle = {};
+		if (!props.hovered) { portStyle.display = 'none'; }
+
 		return (
 			<g
 				className='node-group'
@@ -66,6 +69,7 @@ var Node = React.createClass({
 					{this.renderIcon()}
 				</g>
 				<Port
+					style={portStyle}
 					{...this.props}
 					x={0}
 					y={-radius}

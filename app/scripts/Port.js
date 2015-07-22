@@ -23,6 +23,7 @@ var Port = React.createClass({
 
 		return (
 			<circle
+				style={props.style}
 				cx={props.x}
 				cy={props.y}
 				r={props.size*0.5}
