@@ -106,7 +106,7 @@ var GraphMixin = {
 				<g transform={'translate('+props.visibleRect.x+','+props.visibleRect.y+')'}>
 					<rect
 						className='minimap-visible-rect'
-						strokeWidth={3 / props.constantScale} // TODO: theme
+						strokeWidth={props.theme.minimap.viewport.strokeWidth / props.constantScale}
 						width={props.visibleRect.width}
 						height={props.visibleRect.height}>
 					</rect>
@@ -329,10 +329,7 @@ var GraphMinimap = React.createClass({
 
 		let transform = {
 			scale: props.constantScale,
-			pan: {
-				x: 0,
-				y: 0
-			}
+			pan: { x: 0, y: 0 }
 		};
 
 		if (!transform.scale) {

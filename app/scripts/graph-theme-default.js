@@ -1,4 +1,9 @@
 module.exports = {
+	minimap: {
+		viewport: {
+			strokeWidth: 3
+		}
+	},
 	graph: {
 		//
 	},

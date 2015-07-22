@@ -1,9 +1,12 @@
+function to pan / zoom to a specific coordinate
+	function to fit map to editor
+
 update minimap
-	show visible part as rectangle
-	clicking on group centers group in editor
 	draggable rectangle to pan editor
 
 bg image: extract / process shapes?
+
+autolayout: recursively, per group
 
 how to show doors and windows?
 
@@ -27,8 +30,6 @@ items should have a selected state
 		group
 
 auto-select new edges
-
-autolayout: recursively, per group
 
 pipette tool (to copy props)
 	context menu: "copy properties from ..."
