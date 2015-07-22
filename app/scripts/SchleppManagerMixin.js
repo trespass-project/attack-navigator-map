@@ -4,7 +4,7 @@ var $ = require('jquery');
 var helpers = require('./helpers.js');
 
 
-var DragManagerMixin = {
+var SchleppManagerMixin = {
 	componentDidMount: function() {
 		var that = this;
 
@@ -39,4 +39,4 @@ var DragManagerMixin = {
 	}
 };
 
-module.exports = DragManagerMixin;
+module.exports = SchleppManagerMixin;

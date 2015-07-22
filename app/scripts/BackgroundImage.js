@@ -1,12 +1,12 @@
 'use strict';
 
 var React = require('react');
-var DraggableMixin = require('./DraggableMixin.js');
+var SchleppMixin = require('./SchleppMixin.js');
 var helpers = require('./helpers.js');
 
 
 var ResizeElem = React.createClass({
-	mixins: [DraggableMixin],
+	mixins: [SchleppMixin],
 
 	render: function() {
 		const props = this.props;
@@ -53,7 +53,7 @@ var ResizeElem = React.createClass({
 
 
 var Group = React.createClass({
-	mixins: [DraggableMixin],
+	mixins: [SchleppMixin],
 
 	propTypes: {
 		groupCenterOffsetX: React.PropTypes.number.isRequired,

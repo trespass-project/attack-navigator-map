@@ -6,8 +6,8 @@ var React = require('react');
 var mout = require('mout');
 var classnames = require('classnames');
 var helpers = require('./helpers.js');
-var DragManagerMixin = require('./DragManagerMixin.js');
-var DraggableMixin = require('./DraggableMixin.js');
+var SchleppManagerMixin = require('./SchleppManagerMixin.js');
+var SchleppMixin = require('./SchleppMixin.js');
 var Group = require('./Group.js');
 var Node = require('./Node.js');
 var Edge = require('./Edge.js');
@@ -210,8 +210,8 @@ var GraphMixin = {
 
 var GraphEditor = React.createClass({
 	mixins: [
-		DraggableMixin,
-		DragManagerMixin,
+		SchleppMixin,
+		SchleppManagerMixin,
 		GraphMixin
 	],
 

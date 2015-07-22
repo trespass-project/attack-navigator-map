@@ -1,12 +1,12 @@
 'use strict';
 
 var React = require('react');
-var DraggableMixin = require('./DraggableMixin.js');
+var SchleppMixin = require('./SchleppMixin.js');
 var helpers = require('./helpers.js');
 
 
 var Port = React.createClass({
-	mixins: [DraggableMixin],
+	mixins: [SchleppMixin],
 
 	propTypes: {
 		x: React.PropTypes.number.isRequired,

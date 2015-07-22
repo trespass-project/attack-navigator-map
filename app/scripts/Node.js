@@ -2,7 +2,7 @@
 
 var $ = require('jquery');
 var React = require('react');
-var DraggableMixin = require('./DraggableMixin.js');
+var SchleppMixin = require('./SchleppMixin.js');
 var Port = require('./Port.js');
 var icons = require('./icons.js');
 var helpers = require('./helpers.js');
@@ -20,7 +20,7 @@ const typeIcons = {
 
 
 var Node = React.createClass({
-	mixins: [DraggableMixin],
+	mixins: [SchleppMixin],
 
 	propTypes: {
 		x: React.PropTypes.number.isRequired,

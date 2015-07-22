@@ -3,13 +3,13 @@
 var $ = require('jquery');
 var _ = require('lodash');
 var React = require('react');
-var DraggableMixin = require('./DraggableMixin.js');
+var SchleppMixin = require('./SchleppMixin.js');
 var icons = require('./icons.js');
 var helpers = require('./helpers.js');
 
 
 var Group = React.createClass({
-	mixins: [DraggableMixin],
+	mixins: [SchleppMixin],
 
 	propTypes: {
 		x: React.PropTypes.number.isRequired,
