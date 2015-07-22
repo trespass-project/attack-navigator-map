@@ -21,6 +21,7 @@ var GraphMixin = {
 	propTypes: {
 		graph: React.PropTypes.object.isRequired,
 		editable: React.PropTypes.bool.isRequired,
+		isMinimap: React.PropTypes.bool.isRequired,
 		minZoom: React.PropTypes.number,
 		maxZoom: React.PropTypes.number,
 	},
@@ -29,6 +30,7 @@ var GraphMixin = {
 		return {
 			minZoom: 0.2,
 			maxZoom: 5.0,
+			isMinimap: false,
 		};
 	},
 
@@ -97,41 +99,16 @@ var GraphMixin = {
 	},
 
 	renderVisibleRect: function() {
-		// TODO: all of this should go into a separate minimap component
 		const props = this.props;
 
-		if (!!props.constantScale) {
-			let $editor = $(props.editorElem);
-			const origin = helpers.unTransformFromTo(
-				props.editorElem,
-				props.editorTransformElem,
-				{ x: 0,
-				  y: 0 }
-			);
-			const corner = helpers.unTransformFromTo(
-				props.editorElem,
-				props.editorTransformElem,
-				{ x: $editor.width(),
-				  y: $editor.height() }
-			);
-			this.visibleRect = {
-				x: origin.x,
-				y: origin.y,
-				width: corner.x - origin.x,
-				height: corner.y - origin.y,
-			};
-		}
-
-		if (!!this.visibleRect) {
+		if (props.isMinimap && props.visibleRect) {
 			return (
-				<g transform={'translate('+this.visibleRect.x+','+this.visibleRect.y+')'}>
+				<g transform={'translate('+props.visibleRect.x+','+props.visibleRect.y+')'}>
 					<rect
-						className=''
-						fill='none'
-						stroke='red'
-						strokeWidth={5 / props.constantScale}
-						width={this.visibleRect.width}
-						height={this.visibleRect.height}>
+						className='minimap-visible-rect'
+						strokeWidth={3 / props.constantScale} // TODO: theme
+						width={props.visibleRect.width}
+						height={props.visibleRect.height}>
 					</rect>
 				</g>
 			);
@@ -140,9 +117,32 @@ var GraphMixin = {
 		}
 	},
 
-	render: function() {
+	_renderMap: function() {
 		var props = this.props;
 		var graph = props.graph;
+
+		return (
+			<g>
+				{graph.groups.filter(function(group) { return !!group._bgImage; }).map(this._makeBgImage)}
+				{graph.groups.map(this._makeGroup)}
+				{graph.edges.map(this._makeEdge)}
+				{ (props.previewEdge && !props.isMinimap)
+					? [props.previewEdge].map(this._makePreviewEdge)
+					: null
+				}
+				{graph.nodes.map(this._makeNode)}
+				{this.renderVisibleRect()}
+			</g>
+		);
+	},
+
+	_render: function() {
+		var props = this.props;
+		var graph = props.graph;
+
+		var scale = (props.isMinimap) ? props.constantScale : props.scale;
+		var panX = (props.isMinimap) ? (props.panX * props.constantScale) : props.panX;
+		var panY = (props.isMinimap) ? (props.panY * props.constantScale) : props.panY;
 
 		var classNames = classnames(
 			'graph',
@@ -152,36 +152,27 @@ var GraphMixin = {
 			}
 		);
 
-		var scale = (!!props.constantScale) ? props.constantScale : props.scale;
-		var panX = (!!props.constantScale) ? (props.panX * props.constantScale) : props.panX;
-		var panY = (!!props.constantScale) ? (props.panY * props.constantScale) : props.panY;
-
-		const connectDropTarget = this.props.connectDropTarget || _.identity;
-		return connectDropTarget(
-			<div id={props.id} style={{ height: '100%' }}>
+		return (
+			<div id={props.id} className='graph-container'>
 				<svg
 					ref='dragRoot'
 					className={classNames}
 					onWheel={this._onWheel || helpers.noop}
 					onClick={this._onClick || helpers.noop}>
-					<g
-						ref='panZoom'
-						transform={'matrix('+scale+',0,0,'+scale+','+panX+','+panY+')'}
-						>
-						{graph.groups.filter(function(group) { return !!group._bgImage; }).map(this._makeBgImage)}
-						{graph.groups.map(this._makeGroup)}
-						{graph.edges.map(this._makeEdge)}
-						{ (this.props.previewEdge)
-							? [this.props.previewEdge].map(this._makePreviewEdge)
-							: null
-						}
-						{graph.nodes.map(this._makeNode)}
-						{this.renderVisibleRect()}
+					<g ref='panZoom'
+					   transform={'matrix('+scale+',0,0,'+scale+','+panX+','+panY+')'}>
+						{this._renderMap()}
 					</g>
 					{(props.editable) ? <ContextMenu {...this.props} /> : null}
 				</svg>
 			</div>
 		);
+	},
+
+	render: function() {
+		var props = this.props;
+		const connectDropTarget = props.connectDropTarget || _.identity;
+		return connectDropTarget(this._render());
 	},
 
 	componentWillMount: function() {
@@ -329,50 +320,56 @@ var GraphMinimap = React.createClass({
 
 	getDefaultProps: function() {
 		return {
-			constantScale: 0.2,
+			//
 		};
 	},
 
 	render: function() {
 		const props = this.props;
 
-		// if (!this.fit) { return null; }
-		if (!this.size) { return null; }
-		let bbox = helpers.getNodesBBox(props.graph.nodes);
-
-		const visibleRect = {
-			x: bbox.minX,
-			y: bbox.minY,
-			width:  bbox.maxX - bbox.minX,
-			height: bbox.maxY - bbox.minY,
+		let transform = {
+			scale: props.constantScale,
+			pan: {
+				x: 0,
+				y: 0
+			}
 		};
 
-		// add some padding
-		bbox.minX -= props.theme.node.size * 2;
-		bbox.maxX += props.theme.node.size * 2;
-		bbox.minY -= props.theme.node.size * 2;
-		bbox.maxY += props.theme.node.size * 2;
-		const bboxSize = {
-			width:  bbox.maxX - bbox.minX,
-			height: bbox.maxY - bbox.minY,
-		};
-		const bboxAspectRatio = bboxSize.width / bboxSize.height;
-		const fit = (this.aspectRatio > bboxAspectRatio) ? 'height' : 'width';
-		// const scale = this.size[this.fit] / bboxSize[this.fit];
-		const scale = this.size[fit] / bboxSize[fit];
+		if (!transform.scale) {
+			if (!this.size) { return null; }
+
+			let bbox = helpers.getNodesBBox(props.graph.nodes);
+
+			// add some padding
+			const padding = props.theme.node.size;
+			bbox.minX -= padding;
+			bbox.maxX += padding;
+			bbox.minY -= padding;
+			bbox.maxY += padding;
+			const bboxSize = {
+				width:  bbox.maxX - bbox.minX,
+				height: bbox.maxY - bbox.minY,
+			};
+			const bboxAspectRatio = bboxSize.width / bboxSize.height;
+			const fit = (this.aspectRatio > bboxAspectRatio) ? 'height' : 'width';
+			const scale = this.size[fit] / bboxSize[fit];
+
+			transform.scale = scale;
+			transform.pan.x = -bbox.minX;
+			transform.pan.y = -bbox.minY;
+		}
 
 		const showNodeLabels = false;
 		const showEdgeLabels = false;
 		const showGroupLabels = false;
 
-		let restProps = _.omit(props, 'id');
-
 		return (
 			<div ref='height' id={props.id}>
-				<Graph {...restProps}
-					constantScale={scale}
-					panX={-bbox.minX}
-					panY={-bbox.minY}
+				<Graph {...props}
+					isMinimap={true}
+					constantScale={transform.scale}
+					panX={transform.pan.x}
+					panY={transform.pan.y}
 					showNodeLabels={showNodeLabels}
 					showEdgeLabels={showEdgeLabels}
 					showGroupLabels={showGroupLabels} />
@@ -380,37 +377,23 @@ var GraphMinimap = React.createClass({
 		);
 	},
 
-	_setHeight: function() {
+	_setSize: function() {
 		const props = this.props;
 
 		let $minimap = $(this.getDOMNode());
-		let $mainGraph = $(props.editorElem);
-
-		// let $height = $(this.refs.height.getDOMNode());
-		// const height = $mainGraph.height() * props.constantScale;
-		// $height.height(height);
-
-		// this.editorSize = {
-		// 	width: $mainGraph.width(),
-		// 	height: $mainGraph.height(),
-		// };
-		// const editorAspectRatio = this.editorSize.width / this.editorSize.height;
-		// if (!editorAspectRatio) { return; }
-
 		this.size = {
 			width: $minimap.width(),
 			height: $minimap.height(),
 		};
 		this.aspectRatio = this.size.width / this.size.height;
-		// this.fit = (this.aspectRatio > editorAspectRatio) ? 'height' : 'width';
 	},
 
 	componentDidMount: function() {
-		this._setHeight();
+		this._setSize();
 	},
 
 	componentDidUpdate: function() {
-		this._setHeight();
+		this._setSize();
 	},
 });
 

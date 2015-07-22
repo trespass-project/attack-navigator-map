@@ -46,6 +46,8 @@ class InterfaceStore extends Store {
 
 			editorElem: null,
 			editorTransformElem: null,
+			editorElemSize: null,
+			visibleRect: null,
 
 			theme,
 			scale: 1,
@@ -56,9 +58,23 @@ class InterfaceStore extends Store {
 
 	setEditorElem(action) {
 		let {elem} = action;
+
+		const editorElem = elem;
+		const editorTransformElem = $(elem).children('g').first()[0];
+
+		let editorElemSize = this.state.editorElemSize || null;
+		if (!this.state.editorElem) {
+			const $editor = $(editorElem);
+			editorElemSize = {
+				width: $editor.width(),
+				height: $editor.height(),
+			};
+		}
+
 		this.setState({
-			editorElem: elem,
-			editorTransformElem: $(elem).children('g').first()[0],
+			editorElem,
+			editorTransformElem,
+			editorElemSize
 		});
 	}
 
@@ -126,13 +142,32 @@ class InterfaceStore extends Store {
 		var showNodeLabels = showEdgeLabels;
 		var showGroupLabels = showEdgeLabels;
 
+		let visibleRect = null;
+		if (this.state.editorElem) {
+			const editorElem = this.state.editorElem;
+			const editorTransformElem = this.state.editorTransformElem;
+			const visibleRectPosition = helpers.unTransformFromTo(
+				editorElem,
+				editorTransformElem,
+				{ x: 0,
+				  y: 0 }
+			);
+			visibleRect = {
+				x: visibleRectPosition.x,
+				y: visibleRectPosition.y,
+				width: this.state.editorElemSize.width / scale,
+				height: this.state.editorElemSize.height / scale,
+			};
+		}
+
 		this.setState(
 			_.merge(
 				{},
 				{
 					showEdgeLabels: showEdgeLabels,
 					showNodeLabels: showNodeLabels,
-					showGroupLabels: showGroupLabels
+					showGroupLabels: showGroupLabels,
+					visibleRect,
 				},
 				action.transformation
 			)

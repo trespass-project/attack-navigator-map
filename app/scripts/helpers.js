@@ -74,7 +74,7 @@ function unTransform(point, ctm) {
 	return point.matrixTransform(ctm/*.inverse()*/);
 }
 function unTransformFromTo(fromElem, toElem, xy) {
-	let point = fromElem.createSVGPoint();
+	let point = (fromElem.ownerSVGElement || fromElem).createSVGPoint();
 	point.x = xy.x;
 	point.y = xy.y;
 	const ctm = fromElem.getTransformToElement(toElem);
