@@ -35,7 +35,6 @@ var Group = React.createClass({
 
 		let style = {};
 		if (!props.showGroups) { style.display = 'none'; }
-		// if (!props.showGroups) return null;
 
 		return (
 			<g
