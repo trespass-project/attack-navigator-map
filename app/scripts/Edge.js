@@ -16,8 +16,6 @@ var diagonal = d3.svg.diagonal()
 var Edge = React.createClass({
 	propTypes: {
 		edge: React.PropTypes.object.isRequired,
-		from: React.PropTypes.object.isRequired,
-		to: React.PropTypes.object.isRequired,
 		theme: React.PropTypes.object.isRequired,
 		preview: React.PropTypes.bool,
 	},
@@ -29,20 +27,21 @@ var Edge = React.createClass({
 	},
 
 	renderLabel: function() {
-		var props = this.props;
+		const props = this.props;
+		const edge = props.edge;
 
 		if (!props.showEdgeLabels) { return null; }
 
 		const t = 0.5;
 		var center = {
-			x: mout.math.lerp(t, props.from.x, props.to.x),
-			y: mout.math.lerp(t, props.from.y, props.to.y),
+			x: mout.math.lerp(t, edge.from.x, edge.to.x),
+			y: mout.math.lerp(t, edge.from.y, edge.to.y),
 		};
 		return <text
 			onClick={this._onClick}
 			className='label'
 			x={center.x}
-			y={center.y}>{props.edge.relation || ''}</text>;
+			y={center.y}>{edge.relation || ''}</text>;
 	},
 
 	_onClick: function(event) {
@@ -52,12 +51,12 @@ var Edge = React.createClass({
 	},
 
 	render: function() {
-		var props = this.props;
+		const props = this.props;
 
 		if (!props.showEdges) { return null; }
 
-		var d = diagonal(props);
-		// var d = 'M'+props.from.x+','+props.from.y+' L'+props.to.x+','+props.to.y;
+		var d = diagonal(props.edge);
+		// var d = 'M'+props.edge.from.x+','+props.edge.from.y+' L'+props.edge.to.x+','+props.edge.to.y;
 
 		return (
 			<g className='edge-group'

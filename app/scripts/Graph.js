@@ -71,8 +71,6 @@ var GraphMixin = {
 				{...this.props}
 				key={index}
 				edge={edge}
-				from={edge.from} // TODO: remove `from` and `to`
-				to={edge.to}
 				preview={isPreview} />;
 	},
 
