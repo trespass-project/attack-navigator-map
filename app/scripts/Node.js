@@ -2,6 +2,7 @@
 
 var $ = require('jquery');
 var React = require('react');
+var classnames = require('classnames');
 var SchleppMixin = require('./SchleppMixin.js');
 var Port = require('./Port.js');
 var icons = require('./icons.js');
@@ -43,7 +44,6 @@ var Node = React.createClass({
 
 	render: function() {
 		var props = this.props;
-
 		var radius = props.theme.node.size * 0.5;
 
 		return (
@@ -55,7 +55,7 @@ var Node = React.createClass({
 				onMouseLeave={this._handleHoverOut}>
 				<g ref='dragRoot'>
 					<rect
-						className='node'
+						className={classnames('node', { 'hover': props.hovered })}
 						x={-radius}
 						y={-radius}
 						rx={props.theme.node.cornerRadius}
