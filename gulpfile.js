@@ -210,15 +210,22 @@ gulp.task('fonts', function() {
 });
 
 
-gulp.task('extras', function() {
+gulp.task('data', function() {
+	return gulp.src([
+			appDir(dataDir('**/*'))
+		])
+		.pipe(gulp.dest(distDir()));
+});
+
+
+gulp.task('extras', ['data'], function() {
 	return gulp.src([
 		appDir('*.*'),
-		appDir(dataDir('**/*')),
 		'!'+appDir('*.html'),
 		'!'+appDir('*.jade')
 	], {
 		dot: true
-	}).pipe(gulp.dest(distDir()));
+	}).pipe(gulp.dest(distDir(dataDir())));
 });
 
 
