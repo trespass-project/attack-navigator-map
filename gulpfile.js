@@ -23,6 +23,7 @@ function stylesDir(p) { return _dir(dirs['styles'], p); }
 function jadeDir(p) { return _dir(dirs['jade'], p); }
 function scriptsDir(p) { return _dir(dirs['scripts'], p); }
 function imagesDir(p) { return _dir(dirs['images'], p); }
+function dataDir(p) { return _dir('data', p); }
 function fontsDir(p) { return _dir(dirs['fonts'], p); }
 function testDir(p) { return _dir(dirs['test'], p); }
 function specDir(p) { return _dir(dirs['spec'], p); }
@@ -212,6 +213,7 @@ gulp.task('fonts', function() {
 gulp.task('extras', function() {
 	return gulp.src([
 		appDir('*.*'),
+		appDir(dataDir('**/*')),
 		'!'+appDir('*.html'),
 		'!'+appDir('*.jade')
 	], {
