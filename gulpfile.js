@@ -176,10 +176,10 @@ gulp.task('html', ['jade', 'styles'], function() {
 	return gulp.src([appDir('*.html'), tempDir('*.html')])
 		.pipe(assets)
 		.pipe($.if('*.js', $.uglify()))
-		.pipe($.if('*.css', $.minifyCss({ compatibility: '*'})))
+		// .pipe($.if('*.css', $.minifyCss({ compatibility: '*'})))
 		.pipe(assets.restore())
 		.pipe($.useref())
-		.pipe($.if('*.html', $.minifyHtml({ conditionals: true, loose: true })))
+		// .pipe($.if('*.html', $.minifyHtml({ conditionals: true, loose: true })))
 		.pipe(gulp.dest(distDir()));
 });
 
