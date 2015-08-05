@@ -47,6 +47,10 @@ class InterfaceActions extends Actions {
 		return {group, width, height};
 	}
 
+	backgroundImageToNodes(group) {
+		return {group};
+	}
+
 	setTransformation(transformation) {
 		return {transformation};
 	}

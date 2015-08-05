@@ -132,6 +132,25 @@ class InterfaceStore extends Store {
 		this._graphStore._updateGraph();
 	}
 
+	backgroundImageToNodes(action) {
+		let {group} = action;
+
+		let data = group._bgImage.url.replace('data:image/svg+xml;base64,', '');
+		data = atob(data);
+		const $rootElems = $(data);
+		const svg = $rootElems
+			.map(function() {
+				return $(this)[0];
+			})
+			.filter(function(index, elem) {
+				return elem.tagname === 'svg';
+			})[0];
+		console.log(svg);
+
+		delete group._bgImage;
+		this._graphStore._updateGraph();
+	}
+
 	setTransformation(action) {
 		var {scale, panX, panY} = action.transformation;
 

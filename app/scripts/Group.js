@@ -109,7 +109,7 @@ var Group = React.createClass({
 		$addfile.on('change', this.loadBackgroundFile);
 		$addfile.click();
 	},
-	loadBackgroundFile: function(event) {
+	loadBackgroundFile: function(event) { // TODO: do this elsewhere
 		var that = this;
 		var file = $('#add-file')[0].files[0];
 		var reader = new FileReader();

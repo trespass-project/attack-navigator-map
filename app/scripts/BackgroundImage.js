@@ -1,8 +1,10 @@
 'use strict';
 
+var $ = require('jquery');
 var React = require('react');
 var SchleppMixin = require('./SchleppMixin.js');
 var helpers = require('./helpers.js');
+var icons = require('./icons.js');
 
 
 var ResizeElem = React.createClass({
@@ -128,6 +130,27 @@ var Group = React.createClass({
 	componentWillMount: function() {
 		this._graphActions = this.props.flux.getActions('graph');
 		this._interfaceActions = this.props.flux.getActions('interface');
+	},
+
+	componentDidMount: function() {
+		var that = this;
+		const props = this.props;
+		const elem = this.getDOMNode();
+		$(elem).on('contextmenu', function(event) {
+			let menuItems = [
+				{
+					label: 'convert to nodes',
+					icon: icons['fa-magic'],
+					action: function() { that._interfaceActions.backgroundImageToNodes(props.group); }
+				}
+			];
+			that._interfaceActions.showContextMenu(event, props.group, menuItems);
+			return false;
+		});
+	},
+
+	componentWillUnmount: function() {
+		$(this.getDOMNode()).off('contextmenu');
 	},
 
 	_onMouseOver: function(event) {
