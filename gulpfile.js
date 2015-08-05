@@ -214,7 +214,7 @@ gulp.task('data', function() {
 	return gulp.src([
 			appDir(dataDir('**/*'))
 		])
-		.pipe(gulp.dest(distDir()));
+		.pipe(gulp.dest(distDir(dataDir())));
 });
 
 
@@ -225,7 +225,7 @@ gulp.task('extras', ['data'], function() {
 		'!'+appDir('*.jade')
 	], {
 		dot: true
-	}).pipe(gulp.dest(distDir(dataDir())));
+	}).pipe(gulp.dest(distDir()));
 });
 
 
