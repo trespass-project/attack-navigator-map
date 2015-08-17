@@ -68,6 +68,10 @@ var App = React.createClass({
 					</div>
 				</div>
 				<div id='model-debug-view'>
+					<h1>debug</h1>
+					<FluxComponent flux={flux} connectToStores={['graph', 'interface']}>
+						<MainMenu id='main-menu' />
+					</FluxComponent>
 					<FluxComponent flux={flux} connectToStores={['graph', 'interface']}>
 						<ModelDebugView />
 					</FluxComponent>
@@ -79,9 +83,6 @@ var App = React.createClass({
 						</FluxComponent>
 						<FluxComponent flux={flux} connectToStores={['graph', 'interface']}>
 							<PropertiesPanel id='propspanel' />
-						</FluxComponent>
-						<FluxComponent flux={flux} connectToStores={['graph', 'interface']}>
-							<MainMenu id='main-menu' />
 						</FluxComponent>
 						<FluxComponent flux={flux} connectToStores={[C.MODEL_LIBRARY]} libName={C.MODEL_LIBRARY}>
 							<ModelLibrary url='data/models.json' title='models' />
