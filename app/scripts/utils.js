@@ -7,7 +7,6 @@ var Sifter = require('sifter');
 function getAllMethods(obj) {
 	return Object.getOwnPropertyNames(obj)
 		.filter(function(key) {
-			// console.log(key);
 			return _.isFunction(obj[key]);
 		});
 }
@@ -41,8 +40,15 @@ function filterList(list, query='', options) {
 }
 
 
+function sortBy(property, a, b) {
+	var result = a[property].localeCompare(b[property]);
+	return result;
+}
+
+
 module.exports = {
 	getAllMethods,
 	autoBind,
-	filterList
+	filterList,
+	sortBy,
 };
