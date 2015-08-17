@@ -84,18 +84,11 @@ svg.graph
 #minimap
 	width: 100%
 	height: 200px
-	margin-bottom: 1em
 
 	.minimap-visible-rect
 		fill: rgba(255, 0, 0, 0.2)
 		stroke: red
 		pointer-events: all
-
-#propspanel
-	font-family: sans-serif
-	background: white
-	border: solid black 3px
-	margin-bottom: 1em
 
 
 #html
@@ -115,10 +108,21 @@ svg.graph
 	left: -100px
 
 
+
+.panel-section
+	margin-bottom: 2em
+
+	.title
+		margin: 0
+		line-height: 0.7em
+
+
+
 @import 'node'
 @import 'edge'
 @import 'group'
 @import 'background-image'
 @import 'main-menu'
 @import 'context-menu'
+@import 'props-panel'
 

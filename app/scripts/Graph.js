@@ -361,7 +361,7 @@ var GraphMinimap = React.createClass({
 		const showGroupLabels = false;
 
 		return (
-			<div ref='height' id={props.id}>
+			<div ref='height' id={props.id} className='panel-section'>
 				<Graph {...props}
 					isMinimap={true}
 					constantScale={transform.scale}

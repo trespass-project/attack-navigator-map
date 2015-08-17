@@ -125,10 +125,10 @@ class Library extends React.Component {
 		var list = props.list;
 
 		return (
-			<div className='library-component'>
+			<div className='panel-section library-component'>
 				<h3 className='title'>{props.title}</h3>
 				<div className='search'>
-					<input type='search' className='form-control input-sm' placeholder='search' onChange={this.search}></input>
+					<input type='search' className='form-control' placeholder='search' onChange={this.search}></input>
 				</div>
 				{this.render_loading()}
 				{this.render_error()}
