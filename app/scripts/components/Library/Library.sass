@@ -1,9 +1,10 @@
 .library-component
-	margin-bottom: 1em
+	margin-bottom: 2em
 	user-select: none
 
 	.title
 		margin: 0
+		line-height: 0.7em
 
 	.search, .add
 		margin: 0
@@ -12,15 +13,23 @@
 
 	.results
 		max-height: 300px
-		overflow-y: scroll
+		overflow-y: auto
 		background: lightgrey
 
-	ul
-		list-style: none
-		margin: 0
-		padding: 0.5em
-		display: inline-block
+		ul
+			list-style: none
+			margin: 0
+			padding: 0
+			display: block
 
-		li:hover
-			background: white
-			cursor: pointer
+			li
+				background-color: rgb(245, 245, 245)
+				border-radius: 0
+				cursor: pointer
+				padding-left: 10px
+				padding-right: 10px
+				padding-top: 5px
+				padding-bottom: 5px
+
+			li:hover
+				background: gold

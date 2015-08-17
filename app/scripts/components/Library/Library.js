@@ -18,7 +18,9 @@ class LibraryItem extends React.Component {
 	render() {
 		const props = this.props;
 		const connectDragSource = props.connectDragSource;
-		return connectDragSource(<li>{props.data.label}</li>);
+		return connectDragSource(
+			<li className='list-group-item'>{props.data.label}</li>
+		);
 	}
 
 }
@@ -124,14 +126,14 @@ class Library extends React.Component {
 
 		return (
 			<div className='library-component'>
-				<h1 className='title'>{props.title}</h1>
+				<h3 className='title'>{props.title}</h3>
 				<div className='search'>
-					<input type='search' placeholder='search' onChange={this.search}></input>
+					<input type='search' className='form-control input-sm' placeholder='search' onChange={this.search}></input>
 				</div>
 				{this.render_loading()}
 				{this.render_error()}
 				<div className="results">
-					<ul>{list.map(this.render_listItem)}</ul>
+					<ul className='list-group'>{list.map(this.render_listItem)}</ul>
 				</div>
 				{this.render_add()}
 			</div>
