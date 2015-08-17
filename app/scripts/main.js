@@ -84,13 +84,13 @@ var App = React.createClass({
 						<FluxComponent flux={flux} connectToStores={['graph', 'interface']}>
 							<PropertiesPanel id='propspanel' />
 						</FluxComponent>
-						<FluxComponent flux={flux} connectToStores={[C.MODEL_LIBRARY]} libName={C.MODEL_LIBRARY}>
+						{/*<FluxComponent flux={flux} connectToStores={[C.MODEL_LIBRARY]} libName={C.MODEL_LIBRARY}>
 							<ModelLibrary url='data/models.json' title='models' />
-						</FluxComponent>
+						</FluxComponent>*/}
 					</div>
 					<div id='location-library'>
 						<FluxComponent flux={flux} connectToStores={[C.LOCATION_LIBRARY]} libName={C.LOCATION_LIBRARY}>
-							<Library url='data/locations.json' title='locations' onAdd={handleAdd} />
+							<Library url='data/component-lib.json' title='components' onAdd={handleAdd} />
 						</FluxComponent>
 					</div>
 				</div>

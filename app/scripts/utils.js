@@ -22,7 +22,7 @@ function autoBind(obj) {
 
 function filterList(list, query='', options) {
 	var defaults = {
-		// fields: ['name'],
+		// fields: ['label'],
 		conjunction: 'and'
 	};
 	options = _.defaults(options, defaults);

@@ -16,8 +16,9 @@ class LibraryItem extends React.Component {
 	}
 
 	render() {
-		const connectDragSource = this.props.connectDragSource;
-		return connectDragSource(<li>{this.props.data.name}</li>);
+		const props = this.props;
+		const connectDragSource = props.connectDragSource;
+		return connectDragSource(<li>{props.data.label}</li>);
 	}
 
 }
@@ -97,32 +98,33 @@ class Library extends React.Component {
 	}
 
 	render_add() {
-		var that = this;
-		var onAdd = this.props.onAdd;
-		if (_.isFunction(onAdd)) {
-			var handleAdd = _.wrap(onAdd, function(onAdd) {
-				var input = that.refs['add-input'];
-				var $input = $(input.getDOMNode());
-				var val = $input.val().trim();
-				onAdd(val);
-			});
-			return (
-				<div className='add'>
-					<input type="text" ref='add-input' /> <button onClick={handleAdd}>add</button>
-				</div>
-			);
-		} else {
+		// var that = this;
+		// var onAdd = this.props.onAdd;
+		// if (_.isFunction(onAdd)) {
+		// 	var handleAdd = _.wrap(onAdd, function(onAdd) {
+		// 		var input = that.refs['add-input'];
+		// 		var $input = $(input.getDOMNode());
+		// 		var val = $input.val().trim();
+		// 		onAdd(val);
+		// 	});
+		// 	return (
+		// 		<div className='add'>
+		// 			<input type="text" ref='add-input' /> <button onClick={handleAdd}>add</button>
+		// 		</div>
+		// 	);
+		// } else {
 			return null;
-		}
+		// }
 	}
 
 	render() {
 		var that = this;
-		var list = this.props.list;
+		var props = this.props;
+		var list = props.list;
 
 		return (
 			<div className='library-component'>
-				<h1 className='title'>{this.props.title}</h1>
+				<h1 className='title'>{props.title}</h1>
 				<div className='search'>
 					<input type='search' placeholder='search' onChange={this.search}></input>
 				</div>

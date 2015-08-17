@@ -1,7 +1,10 @@
 'use strict';
 
 var flummox = require('flummox');
+var R = require('ramda');
 var utils = require('../../utils.js');
+
+const labelPropertyName = 'label';
 
 
 class LibraryStore extends flummox.Store {
@@ -35,8 +38,10 @@ class LibraryStore extends flummox.Store {
 
 		action.promise
 			.success(function(data, status, jqXHR) {
-				that.cache.list = data.list;
-				that.setState({ list: data.list });
+				var sortByLabel = R.partial(utils.sortBy, labelPropertyName);
+				const list = data.list.sort(sortByLabel);
+				that.cache.list = list;
+				that.setState({ list: list });
 			})
 			.error(function(jqXHR, status, errorMessage) {
 				that.setState({
@@ -58,7 +63,7 @@ class LibraryStore extends flummox.Store {
 			list: utils.filterList(
 				that.cache.list,
 				action.query,
-				{ fields: ['name'] }
+				{ fields: [labelPropertyName] }
 			)
 		});
 	}

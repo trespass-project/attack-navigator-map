@@ -1,0 +1,20 @@
+{
+	"list": [
+		{ "componentType": "location", "domain": "cyber-virtual", "type": "ClusterComputeResource", "label": "Cluster Compute Resource" },
+		{ "componentType": "location", "domain": "cyber-virtual", "type": "Datacenter", "label": "Datacenter" },
+		{ "componentType": "location", "domain": "cyber-virtual", "type": "Datastore", "label": "Datastore" },
+		{ "componentType": "location", "domain": "cyber-virtual", "type": "Folder", "label": "Folder" },
+		{ "componentType": "location", "domain": "cyber-virtual", "type": "Network", "label": "Network" },
+		{ "componentType": "location", "domain": "cyber-virtual", "type": "ResourcePool", "label": "Resource Pool" },
+		{ "componentType": "location", "domain": "cyber-virtual", "type": "VirtualMachine", "label": "Virtual Machine" },
+
+		{ "componentType": "location", "domain": "cyber-physical", "type": "HostSystem", "label": "Host System" },
+		{ "componentType": "location", "domain": "cyber-physical", "type": "Computer", "label": "Computer" },
+
+		{ "componentType": "location", "domain": "physical", "type": "Building", "label": "Building" },
+		{ "componentType": "location", "domain": "physical", "type": "Room", "label": "Room" },
+		{ "componentType": "location", "domain": "physical", "type": "Door", "label": "Door" },
+		{ "componentType": "location", "domain": "physical", "type": "Window", "label": "Window" },
+		{ "componentType": "location", "domain": "physical", "type": "World", "label": "World" }
+	]
+}
