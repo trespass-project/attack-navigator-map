@@ -6,103 +6,6 @@ var helpers = require('./helpers.js');
 var constants = require('./constants.js');
 
 
-function endDrag(props, monitor, component) {
-	if (!monitor.didDrop()) { return; }
-
-	let result = monitor.getDropResult();
-	if (result.target === constants.DND_TARGET_MAP) {
-		let interfaceStore = component.props.flux.getStore('interface');
-
-		const editorXY = helpers.coordsRelativeToElem(
-			interfaceStore.state.editorElem,
-			result.clientOffset
-		);
-		const modelXY = helpers.unTransformFromTo(
-			interfaceStore.state.editorElem,
-			interfaceStore.state.editorTransformElem,
-			editorXY
-		);
-
-		let graphActions = component.props.flux.getActions('graph');
-		graphActions.importModelFragment(monitor.getItem(), modelXY);
-	}
-}
-
-
-// the props to be injected
-function collect(connect, monitor) {
-	return {
-		connectDragSource: connect.dragSource(),
-		isDragging: monitor.isDragging()
-	};
-}
-
-
-var nodeSpec = {
-	beginDrag: function(props, monitor, component) {
-		return {
-			nodes: [
-				{ id: ''+(new Date()) }
-			]
-		};
-	},
-	endDrag: endDrag
-};
-var DndNode = React.createClass({
-	render: function() {
-		const connectDragSource = this.props.connectDragSource;
-		return connectDragSource(
-			<div draggable={true}
-				 style={{ display: 'inline-block',
-						  background: 'gold',
-						  marginLeft: '0.5em',
-						  padding: '2px' }}>node</div>
-			);
-	},
-});
-DndNode = DragSource(constants.DND_SOURCE_NODE, nodeSpec, collect)(DndNode);
-
-
-var fragmentSpec = {
-	beginDrag: function(props, monitor, component) {
-		const id0 = '0'+(new Date());
-		const id1 = '1'+(new Date());
-		const id2 = '2'+(new Date());
-		const id3 = '3'+(new Date());
-		let node1 = { id: id1, label: 'actor' };
-		let node2 = { id: id2, label: 'room' };
-		let node3 = { id: id3, label: 'firewall' };
-		return {
-			edges: [
-				{ relation: 'relation', id: id0, from: node1, to: node2 }
-			],
-			nodes: [
-				node1,
-				node2,
-				node3,
-			],
-			groups: [
-				{ id: id0, name: 'model fragment', nodeIds: [id1, id2, id3] }
-			],
-		};
-	},
-	endDrag: endDrag
-};
-var DndFragment = React.createClass({
-	render: function() {
-		const connectDragSource = this.props.connectDragSource;
-		return connectDragSource(
-			<div draggable={true}
-				 style={{ display: 'inline-block',
-						  background: 'gold',
-						  marginLeft: '0.5em',
-						  padding: '2px' }}>fragment</div>
-		);
-	},
-});
-DndFragment = DragSource(constants.DND_SOURCE_FRAGMENT, fragmentSpec, collect)(DndFragment);
-
-
 var MainMenu = React.createClass({
 	mixins: [],
 
@@ -126,8 +29,6 @@ var MainMenu = React.createClass({
 				<button onClick={this._toggleEdges}>{(props.showEdges) ? 'hide' : 'show'} edges</button>
 				<button onClick={this._resetTransformation}>reset transformation</button>
 				<button onClick={this._autoLayout}>auto-layout</button>
-				<DndNode {...props} />
-				<DndFragment {...props} />
 			</div>
 		);
 	},

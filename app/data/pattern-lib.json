@@ -1,0 +1,65 @@
+{
+	"list": [
+		{
+			"componentType": "template",
+			"fragment": true,
+			"value": {
+				"nodes": [
+					{ "type": "location", "domain": "physical", "id": "room1", "label": "Room 1" },
+					{ "type": "location", "domain": "physical", "id": "room2", "label": "Room 2" },
+					{ "type": "location", "domain": "physical", "id": "door1", "label": "Door 1" },
+					{ "type": "location", "domain": "physical", "id": "door2", "label": "Door 2" },
+					{ "type": "location", "domain": "physical", "id": "corridor", "label": "Corridor" }
+				],
+				"edges": [
+					{
+						"id": "a",
+						"from": "corridor",
+						"to": "door1",
+						"relation": "connects"
+					},
+					{
+						"id": "b",
+						"from": "corridor",
+						"to": "door2",
+						"relation": "connects"
+					},
+					{
+						"id": "c",
+						"from": "door1",
+						"to": "room1",
+						"relation": "connects"
+					},
+					{
+						"id": "d",
+						"from": "door2",
+						"to": "room2",
+						"relation": "connects"
+					}
+				],
+				"groups": [
+					{
+						"name": "Building",
+						"id": "building",
+						"nodeIds": ["room1", "room2", "corridor", "door1", "door2"]
+					}
+				]
+			},
+			"label": "Model Template"
+		},
+		{
+			"componentType": "pattern",
+			"fragment": true,
+			"value": {
+				"nodes": [
+					{ "type": "actor", "value": "boss", "label": "Boss" },
+					{ "type": "actor", "value": "assistant", "label": "Personal assistant" },
+					{ "type": "actor", "value": "employee", "label": "Employee" }
+				],
+				"edges": [],
+				"groups": []
+			},
+			"label": "Staff pattern"
+		}
+	]
+}

@@ -1,6 +1,7 @@
 const constants = {
 	MODEL_LIBRARY: 'model-library',
-	LOCATION_LIBRARY: 'location-library',
+	MODEL_COMPONENTS_LIBRARY: 'component-lib.js',
+	MODEL_PATTERNS_LIBRARY: 'pattern-lib.js',
 
 	// dnd drop targets
 	DND_TARGET_MAP: 'model-map',
@@ -9,5 +10,6 @@ const constants = {
 	DND_SOURCE_NODE: 'node',
 	DND_SOURCE_FRAGMENT: 'fragment',
 };
+
 
 module.exports = constants;

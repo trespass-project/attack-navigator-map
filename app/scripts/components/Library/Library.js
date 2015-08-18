@@ -37,20 +37,17 @@ LibraryItem.propTypes = {
 
 var spec = {
 	beginDrag: function(props, monitor, component) {
-		return { data: props.data };
+		return props.data;
 	},
+
 	endDrag: function(props, monitor, component) {
 		if (!monitor.didDrop()) { return; }
 
-		let result = monitor.getDropResult();
-		if (result.target === constants.DND_TARGET_MAP ||
-			result.target === constants.DND_TARGET_DEBUG) {
+		const result = monitor.getDropResult();
+		if (result.target === constants.DND_TARGET_MAP /*||
+			result.target === constants.DND_TARGET_DEBUG*/) {
 
-			let item = props.data;
-			item.id = Date.now() + ''; // TODO
-			item.type = item.componentType;
-
-			let interfaceStore = component.props.flux.getStore('interface');
+			const interfaceStore = component.props.flux.getStore('interface');
 			const editorXY = helpers.coordsRelativeToElem(
 				interfaceStore.state.editorElem,
 				result.clientOffset
@@ -61,12 +58,59 @@ var spec = {
 				editorXY
 			);
 
-			let graphActions = component.props.flux.getActions('graph');
-			const fragment = {
-				nodes: [item],
-				edges: [],
-				groups: [],
+			let item = monitor.getItem();
+			let fragment;
+
+			if (item.fragment) {
+				fragment = item.value;
+			} else {
+				item.type = item.componentType;
+				fragment = {
+					nodes: [item],
+					edges: [],
+					groups: [],
+				};
 			}
+
+			// prepare fragment
+			fragment.nodes.forEach(function(node, index) {
+				let oldId = node.id;
+
+				// create unique id
+				node.id = Date.now() + '-' + index;
+
+				// rename existing ids in edges and groups
+				if (oldId) {
+					fragment.edges.forEach(function(edge) {
+						if (edge.from === oldId) {
+							edge.from = node.id;
+						}
+						if (edge.to === oldId) {
+							edge.to = node.id;
+						}
+					});
+
+					fragment.groups.forEach(function(group) {
+						group.nodeIds = group.nodeIds.map(function(nodeId) {
+							if (nodeId === oldId) {
+								return node.id;
+							} else {
+								return nodeId;
+							}
+						})
+					});
+				}
+			});
+
+			// TODO
+			// workaround
+			console.log(fragment.nodes.map(function(n) {return n.id}));
+			fragment.edges.forEach(function(edge) {
+				edge.from = helpers.getItemById(fragment.nodes, edge.from);
+				edge.to = helpers.getItemById(fragment.nodes, edge.to);
+			});
+
+			const graphActions = component.props.flux.getActions('graph');
 			graphActions.importModelFragment(fragment, modelXY);
 		}
 	}
@@ -79,13 +123,13 @@ function collect(connect, monitor) {
 		isDragging: monitor.isDragging()
 	};
 }
-LibraryItem = DragSource(constants.DND_SOURCE_NODE, spec, collect)(LibraryItem);
+// LibraryItem = DragSource(constants.DND_SOURCE_NODE, spec, collect)(LibraryItem);
+LibraryItem = DragSource(constants.DND_SOURCE_FRAGMENT, spec, collect)(LibraryItem);
 
 
 // react + es6
 // http://facebook.github.io/react/blog/2015/01/27/react-v0.13.0-beta-1.html
 class Library extends React.Component {
-
 	constructor(props) {
 		super(props);
 		utils.autoBind(this);

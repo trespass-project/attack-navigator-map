@@ -8,6 +8,7 @@ var FluxComponent = require('flummox/component');
 
 const constants = require('./constants.js');
 const C = constants;
+
 var LibraryActions = require('./components/Library/LibraryActions.js');
 var LibraryStore = require('./components/Library/LibraryStore.js');
 var Library = require('./components/Library/Library.js');
@@ -41,11 +42,14 @@ class MapFlux extends Flux {
 		this.createActions('interface', InterfaceActions);
 		this.createStore('interface', InterfaceStore, this);
 
-		this.createActions(C.LOCATION_LIBRARY, LibraryActions);
-		this.createStore(C.LOCATION_LIBRARY, LibraryStore, this, C.LOCATION_LIBRARY);
+		this.createActions(C.MODEL_COMPONENTS_LIBRARY, LibraryActions);
+		this.createStore(C.MODEL_COMPONENTS_LIBRARY, LibraryStore, this, C.MODEL_COMPONENTS_LIBRARY);
 
-		this.createActions(C.MODEL_LIBRARY, LibraryActions);
-		this.createStore(C.MODEL_LIBRARY, LibraryStore, this, C.MODEL_LIBRARY);
+		this.createActions(C.MODEL_PATTERNS_LIBRARY, LibraryActions);
+		this.createStore(C.MODEL_PATTERNS_LIBRARY, LibraryStore, this, C.MODEL_PATTERNS_LIBRARY);
+
+		// this.createActions(C.MODEL_LIBRARY, LibraryActions);
+		// this.createStore(C.MODEL_LIBRARY, LibraryStore, this, C.MODEL_LIBRARY);
 	}
 }
 
@@ -77,19 +81,27 @@ var App = React.createClass({
 					</FluxComponent>
 				</div>
 				<div id='panel-container'>
-					<div id='model-library'>
-						<FluxComponent flux={flux} connectToStores={['graph', 'interface']}>
-							<GraphMinimap id='minimap' />
-						</FluxComponent>
-						<FluxComponent flux={flux} connectToStores={['graph', 'interface']}>
-							<PropertiesPanel id='propspanel' />
-						</FluxComponent>
-						{/*<FluxComponent flux={flux} connectToStores={[C.MODEL_LIBRARY]} libName={C.MODEL_LIBRARY}>
+					<FluxComponent flux={flux} connectToStores={['graph', 'interface']}>
+						<GraphMinimap id='minimap' />
+					</FluxComponent>
+					<FluxComponent flux={flux} connectToStores={['graph', 'interface']}>
+						<PropertiesPanel id='propspanel' />
+					</FluxComponent>
+
+					{/*<div id='model-library'>
+						<FluxComponent flux={flux} connectToStores={[C.MODEL_LIBRARY]} libName={C.MODEL_LIBRARY}>
 							<ModelLibrary url='data/models.json' title='models' />
-						</FluxComponent>*/}
+						</FluxComponent>
+					</div>*/}
+
+					<div id='pattern-lib'>
+						<FluxComponent flux={flux} connectToStores={[C.MODEL_PATTERNS_LIBRARY]} libName={C.MODEL_PATTERNS_LIBRARY}>
+							<Library url='data/pattern-lib.json' title='patterns' />
+						</FluxComponent>
 					</div>
-					<div id='location-library'>
-						<FluxComponent flux={flux} connectToStores={[C.LOCATION_LIBRARY]} libName={C.LOCATION_LIBRARY}>
+
+					<div id='component-lib'>
+						<FluxComponent flux={flux} connectToStores={[C.MODEL_COMPONENTS_LIBRARY]} libName={C.MODEL_COMPONENTS_LIBRARY}>
 							<Library url='data/component-lib.json' title='components' onAdd={handleAdd} />
 						</FluxComponent>
 					</div>
