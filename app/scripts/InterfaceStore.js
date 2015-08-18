@@ -193,8 +193,6 @@ class InterfaceStore extends Store {
 		);
 	}
 
-	// TODO: function to auto-layout arbitrary model fragments
-
 	_autoLayout() {
 		var that = this;
 

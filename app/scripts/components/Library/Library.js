@@ -104,6 +104,7 @@ var spec = {
 
 			// TODO
 			// workaround
+			console.log(fragment.nodes.map(function(n) {return n.id}));
 			fragment.edges.forEach(function(edge) {
 				edge.from = helpers.getItemById(fragment.nodes, edge.from);
 				edge.to = helpers.getItemById(fragment.nodes, edge.to);
