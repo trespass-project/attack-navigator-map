@@ -2,6 +2,7 @@
 
 var $ = require('jquery');
 var _ = require('lodash');
+var R = require('ramda');
 var utils = require('../../utils.js');
 var constants = require('../../constants.js');
 var React = require('react');
@@ -19,7 +20,10 @@ class LibraryItem extends React.Component {
 		const props = this.props;
 		const connectDragSource = props.connectDragSource;
 		return connectDragSource(
-			<li className='list-group-item'>{props.data.label}</li>
+			<li key={props.data.label} className='list-group-item'>
+				<div className='badge' style={{ float:'right', fontWeight:'normal', marginTop:'0.15em' }}>{props.data.componentType}</div>
+				<div>{props.data.label}</div>
+			</li>
 		);
 	}
 
@@ -80,7 +84,14 @@ class Library extends React.Component {
 		if (_.isFunction(this.props.onClick)) {
 			onClick = function(event) { that.props.onClick(item); };
 		}
-		return <LibraryItem flux={this.props.flux} onClick={onClick} key={item.id || index} data={item} />;
+		return (
+			<LibraryItem
+				flux={this.props.flux}
+				onClick={onClick}
+				key={item.id || index}
+				data={item}
+			/>
+		);
 	}
 
 	render_loading() {
@@ -119,6 +130,16 @@ class Library extends React.Component {
 		// }
 	}
 
+	renderFilterItem(item) {
+		const props = this.props;
+		const checked = R.contains(item, props.componentTypesFilter);
+		return (
+			<label>
+				<input type='checkbox' key={item} value={item} checked={checked} className=''> {item}</input>
+			</label>
+		);
+	}
+
 	render() {
 		var that = this;
 		var props = this.props;
@@ -130,6 +151,9 @@ class Library extends React.Component {
 				<div className='search'>
 					<input type='search' className='form-control' placeholder='search' onChange={this.search}></input>
 				</div>
+				<form className='form-inline type-filter' onChange={this.filterType}>
+					{props.componentTypes.map(this.renderFilterItem)}
+				</form>
 				{this.render_loading()}
 				{this.render_error()}
 				<div className="results">
@@ -138,6 +162,12 @@ class Library extends React.Component {
 				{this.render_add()}
 			</div>
 		);
+	}
+
+	filterType(event) {
+		var flux = this.props.flux;
+		var libraryActions = flux.getActions(this.props.libName);
+		libraryActions.filterByType(event.target.value, event.target.checked);
 	}
 
 	search(event) {
@@ -155,6 +185,8 @@ Library.propTypes = {
 	title: React.PropTypes.string.isRequired,
 	url: React.PropTypes.string.isRequired,
 	list: React.PropTypes.array.isRequired,
+	componentTypes: React.PropTypes.array.isRequired,
+	componentTypesFilter: React.PropTypes.array.isRequired,
 
 	flux: React.PropTypes.any.isRequired,
 	libName: React.PropTypes.string.isRequired,

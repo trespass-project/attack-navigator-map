@@ -1,5 +1,8 @@
 {
 	"list": [
+		{ "componentType": "role", "type": "Administrator", "label": "Administrator" },
+
+
 		{ "componentType": "location", "domain": "cyber-virtual", "type": "ClusterComputeResource", "label": "Cluster Compute Resource" },
 		{ "componentType": "location", "domain": "cyber-virtual", "type": "Datacenter", "label": "Datacenter" },
 		{ "componentType": "location", "domain": "cyber-virtual", "type": "Datastore", "label": "Datastore" },

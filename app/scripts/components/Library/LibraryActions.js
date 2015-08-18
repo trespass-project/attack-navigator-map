@@ -28,6 +28,13 @@ class LibraryActions extends flummox.Actions {
 		};
 	}
 
+	filterByType(componentType, checked) {
+		return {
+			componentType,
+			checked,
+		};
+	}
+
 }
 
 
