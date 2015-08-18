@@ -148,8 +148,13 @@ class Library extends React.Component {
 		return (
 			<div className='panel-section library-component'>
 				<h3 className='title'>{props.title}</h3>
-				<div className='search'>
-					<input type='search' className='form-control' placeholder='search' onChange={this.search}></input>
+				<div className='search form-group'>
+					<div className='input-group'>
+						<input ref='searchInput' type='search' className='form-control' placeholder='search' onChange={this.search}></input>
+						<div className='btn input-group-addon' onClick={this.clearSearch}>
+							<span className='glyphicon glyphicon-remove'></span>
+						</div>
+					</div>
 				</div>
 				<form className='form-inline type-filter' onChange={this.filterType}>
 					{props.componentTypes.map(this.renderFilterItem)}
@@ -168,6 +173,13 @@ class Library extends React.Component {
 		var flux = this.props.flux;
 		var libraryActions = flux.getActions(this.props.libName);
 		libraryActions.filterByType(event.target.value, event.target.checked);
+	}
+
+	clearSearch() {
+		var flux = this.props.flux;
+		var libraryActions = flux.getActions(this.props.libName);
+		this.refs.searchInput.getDOMNode().value = '';
+		libraryActions.filterList('');
 	}
 
 	search(event) {
