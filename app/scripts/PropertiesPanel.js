@@ -144,7 +144,7 @@ var ContextMenu = React.createClass({
 				</h3>
 				<form className='form'>{/* form-horizontal */}
 					<div className='form-group' onChange={onChange}>
-						<span>{(!props.selected) ? 'nothing selected' : ''}</span>
+						<span className='disabled'>{(!props.selected) ? 'nothing selected' : ''}</span>
 						{this.renderProperties()}
 					</div>
 				</form>

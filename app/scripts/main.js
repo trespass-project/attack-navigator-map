@@ -68,7 +68,7 @@ var App = React.createClass({
 					</div>
 				</div>
 				<div id='model-debug-view'>
-					<h1>debug</h1>
+					<h3>debug</h3>
 					<FluxComponent flux={flux} connectToStores={['graph', 'interface']}>
 						<MainMenu id='main-menu' />
 					</FluxComponent>
