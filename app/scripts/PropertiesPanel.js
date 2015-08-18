@@ -25,6 +25,10 @@ var ContextMenu = React.createClass({
 		this.props.flux.getStore('graph')._updateGraph(this.props.graph);
 	},
 
+	_onSubmit: function(event) {
+		event.preventDefault();
+	},
+
 	renderTypeOptions: function() {
 		return [
 			'location',
@@ -142,7 +146,7 @@ var ContextMenu = React.createClass({
 				<h3 className='title'>
 					selection{(props.selected) ? ': '+props.selected.type : ''}
 				</h3>
-				<form className='form'>{/* form-horizontal */}
+				<form className='form' onSubmit={this._onSubmit}>{/* form-horizontal */}
 					<div className='form-group' onChange={onChange}>
 						<span className='disabled'>{(!props.selected) ? 'nothing selected' : ''}</span>
 						{this.renderProperties()}

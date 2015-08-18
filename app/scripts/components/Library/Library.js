@@ -104,7 +104,6 @@ var spec = {
 
 			// TODO
 			// workaround
-			console.log(fragment.nodes.map(function(n) {return n.id}));
 			fragment.edges.forEach(function(edge) {
 				edge.from = helpers.getItemById(fragment.nodes, edge.from);
 				edge.to = helpers.getItemById(fragment.nodes, edge.to);
@@ -219,7 +218,7 @@ class Library extends React.Component {
 						</div>
 					</div>
 				</div>
-				<form className='form-inline type-filter' onChange={this.filterType}>
+				<form className='form-inline type-filter' onChange={this.filterType} onSubmit={this.onSubmit}>
 					{props.componentTypes.map(this.renderFilterItem)}
 				</form>
 				{this.render_loading()}
@@ -230,6 +229,10 @@ class Library extends React.Component {
 				{this.render_add()}
 			</div>
 		);
+	}
+
+	onSubmit(event) {
+		event.preventDefault();
 	}
 
 	filterType(event) {
