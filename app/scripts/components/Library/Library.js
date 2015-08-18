@@ -45,18 +45,12 @@ var spec = {
 		let result = monitor.getDropResult();
 		if (result.target === constants.DND_TARGET_MAP ||
 			result.target === constants.DND_TARGET_DEBUG) {
-			// let graphActions = props.flux.getActions('graph');
 
-			let data = props.data;
-			data.id = Date.now() + '';
-			data.type = data.componentType;
-			// data.domain = 'physical';
-			// graphActions.modelAdd('location', data);
-
-			// graphActions.modelAdd(data.componentType, data);
+			let item = props.data;
+			item.id = Date.now() + ''; // TODO
+			item.type = item.componentType;
 
 			let interfaceStore = component.props.flux.getStore('interface');
-
 			const editorXY = helpers.coordsRelativeToElem(
 				interfaceStore.state.editorElem,
 				result.clientOffset
@@ -69,11 +63,10 @@ var spec = {
 
 			let graphActions = component.props.flux.getActions('graph');
 			const fragment = {
-				nodes: [data],
+				nodes: [item],
 				edges: [],
 				groups: [],
 			}
-			// graphActions.importModelFragment(monitor.getItem(), modelXY);
 			graphActions.importModelFragment(fragment, modelXY);
 		}
 	}
