@@ -19,8 +19,6 @@ class ModelDebugView extends React.Component {
 	render() {
 		var that = this;
 		var model = this.props.model;
-
-
 		if (!model) { return null; }
 
 		const connectDropTarget = this.props.connectDropTarget;
@@ -45,7 +43,7 @@ var spec = {
 	drop: function (props, monitor, component) {
 		let data = monitor.getItem().data;
 		// console.log(data);
-		return { target: 'debug-view' };
+		return { target: constants.DND_TARGET_DEBUG };
 	}
 };
 

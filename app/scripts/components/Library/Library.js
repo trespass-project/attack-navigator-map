@@ -5,12 +5,12 @@ var _ = require('lodash');
 var R = require('ramda');
 var utils = require('../../utils.js');
 var constants = require('../../constants.js');
+var helpers = require('../../helpers.js');
 var React = require('react');
 var DragSource = require('react-dnd').DragSource;
 
 
 class LibraryItem extends React.Component {
-
 	constructor(props) {
 		super(props);
 		utils.autoBind(this);
@@ -26,7 +26,6 @@ class LibraryItem extends React.Component {
 			</li>
 		);
 	}
-
 }
 
 LibraryItem.propTypes = {
@@ -42,13 +41,40 @@ var spec = {
 	},
 	endDrag: function(props, monitor, component) {
 		if (!monitor.didDrop()) { return; }
+
 		let result = monitor.getDropResult();
-		if (result.target === 'debug-view') {
-			var graphActions = props.flux.getActions('graph');
+		if (result.target === constants.DND_TARGET_MAP ||
+			result.target === constants.DND_TARGET_DEBUG) {
+			// let graphActions = props.flux.getActions('graph');
+
 			let data = props.data;
-			data.id = Math.random() + '';
-			data.domain = 'physical';
-			graphActions.modelAdd('location', data);
+			data.id = Date.now() + '';
+			data.type = data.componentType;
+			// data.domain = 'physical';
+			// graphActions.modelAdd('location', data);
+
+			// graphActions.modelAdd(data.componentType, data);
+
+			let interfaceStore = component.props.flux.getStore('interface');
+
+			const editorXY = helpers.coordsRelativeToElem(
+				interfaceStore.state.editorElem,
+				result.clientOffset
+			);
+			const modelXY = helpers.unTransformFromTo(
+				interfaceStore.state.editorElem,
+				interfaceStore.state.editorTransformElem,
+				editorXY
+			);
+
+			let graphActions = component.props.flux.getActions('graph');
+			const fragment = {
+				nodes: [data],
+				edges: [],
+				groups: [],
+			}
+			// graphActions.importModelFragment(monitor.getItem(), modelXY);
+			graphActions.importModelFragment(fragment, modelXY);
 		}
 	}
 };
@@ -60,7 +86,7 @@ function collect(connect, monitor) {
 		isDragging: monitor.isDragging()
 	};
 }
-LibraryItem = DragSource('LibraryItem', spec, collect)(LibraryItem);
+LibraryItem = DragSource(constants.DND_SOURCE_NODE, spec, collect)(LibraryItem);
 
 
 // react + es6

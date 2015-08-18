@@ -6,6 +6,7 @@ var React = require('react');
 var mout = require('mout');
 var classnames = require('classnames');
 var helpers = require('./helpers.js');
+var constants = require('./constants.js');
 var SchleppManagerMixin = require('./SchleppManagerMixin.js');
 var SchleppMixin = require('./SchleppMixin.js');
 var Group = require('./Group.js');
@@ -399,7 +400,7 @@ var spec = {
 	drop: function (props, monitor, component) {
 		// console.log(monitor.getItem());
 		return {
-			target: 'graph',
+			target: constants.DND_TARGET_MAP,
 			clientOffset: monitor.internalMonitor.dragOffsetStore.state.clientOffset // TODO: this seems hacky
 		};
 	}
@@ -417,6 +418,6 @@ function collect(connect, monitor) {
 
 module.exports = {
 	Graph,
-	GraphEditor: DropTarget(['DndNode', 'DndFragment'], spec, collect)(GraphEditor),
+	GraphEditor: DropTarget([constants.DND_SOURCE_NODE, constants.DND_SOURCE_FRAGMENT], spec, collect)(GraphEditor),
 	GraphMinimap,
 };

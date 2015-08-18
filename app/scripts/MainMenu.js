@@ -3,12 +3,14 @@
 var React = require('react');
 var DragSource = require('react-dnd').DragSource;
 var helpers = require('./helpers.js');
+var constants = require('./constants.js');
 
 
 function endDrag(props, monitor, component) {
 	if (!monitor.didDrop()) { return; }
+
 	let result = monitor.getDropResult();
-	if (result.target === 'graph') {
+	if (result.target === constants.DND_TARGET_MAP) {
 		let interfaceStore = component.props.flux.getStore('interface');
 
 		const editorXY = helpers.coordsRelativeToElem(
@@ -58,7 +60,7 @@ var DndNode = React.createClass({
 			);
 	},
 });
-DndNode = DragSource('DndNode', nodeSpec, collect)(DndNode);
+DndNode = DragSource(constants.DND_SOURCE_NODE, nodeSpec, collect)(DndNode);
 
 
 var fragmentSpec = {
@@ -98,7 +100,7 @@ var DndFragment = React.createClass({
 		);
 	},
 });
-DndFragment = DragSource('DndFragment', fragmentSpec, collect)(DndFragment);
+DndFragment = DragSource(constants.DND_SOURCE_FRAGMENT, fragmentSpec, collect)(DndFragment);
 
 
 var MainMenu = React.createClass({
