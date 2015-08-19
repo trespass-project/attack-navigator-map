@@ -24,7 +24,7 @@ class ModelDebugView extends React.Component {
 		const connectDropTarget = this.props.connectDropTarget;
 		return connectDropTarget(
 			<div>
-				<button onClick={this.generateXML} className='btn btn-default btn-xs'>generate XML</button>
+				<button onClick={this.generateXML} className='btn btn-default btn-xs'>save as XML</button>
 				<br/><br/>
 				<pre className='debug-json'>
 					{JSON.stringify(model, null, 2)}
