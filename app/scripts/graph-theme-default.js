@@ -32,7 +32,6 @@ module.exports = {
 	contextMenu: {
 		innerRadius: 20,
 		outerRadius: 70,
-		startAngle: 180-20,
-		endAngle: (180-20)+180+20*2,
+		desiredAngle: 80,
 	}
 };

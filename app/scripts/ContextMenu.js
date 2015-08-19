@@ -62,9 +62,16 @@ var ContextMenu = React.createClass({
 
 		if (!props.contextMenu) { return null; }
 
-		const startAngle = props.theme.contextMenu.startAngle;
-		const endAngle = props.theme.contextMenu.endAngle;
-		const angleStep = (endAngle - startAngle) / props.contextMenu.menuItems.length;
+		const numItems = props.contextMenu.menuItems.length;
+		let angleStep = (numItems === 1) ? 160 : props.theme.contextMenu.desiredAngle;
+		const maxAngle = 360;
+		if (angleStep * numItems > maxAngle) {
+			angleStep = maxAngle / numItems;
+		}
+		const totalAngle = angleStep * numItems;
+		const center = -90;
+		const startAngle = center - (totalAngle * 0.5);
+		const endAngle = center + (totalAngle * 0.5);
 
 		let pieces = props.contextMenu.menuItems.map(function(item, index) {
 			return that._makePiePiece(
