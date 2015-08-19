@@ -44,7 +44,7 @@ class LibraryStore extends flummox.Store {
 				var sortByLabel = R.partial(utils.sortBy, labelPropertyName);
 				const list = data.list.sort(sortByLabel);
 				that.cache.list = list;
-				const componentTypes = R.uniq(list.map(function(item) { return item.componentType; }));
+				const componentTypes = R.uniq(list.map(function(item) { return item.type; }));
 				that.setState({
 					list: list,
 					componentTypes: componentTypes,
@@ -80,11 +80,11 @@ class LibraryStore extends flummox.Store {
 	filterByType(action) {
 		const that = this;
 		const componentTypesFilter = (action.checked)
-			? R.union(this.state.componentTypesFilter, [action.componentType])
-			: R.difference(this.state.componentTypesFilter, [action.componentType]);
+			? R.union(this.state.componentTypesFilter, [action.type])
+			: R.difference(this.state.componentTypesFilter, [action.type]);
 
 		const list = that.cache.list.filter(function(item) {
-			return R.contains(item.componentType, componentTypesFilter);
+			return R.contains(item.type, componentTypesFilter);
 		});
 
 		this.setState({

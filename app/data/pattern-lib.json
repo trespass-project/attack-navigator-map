@@ -1,7 +1,7 @@
 {
 	"list": [
 		{
-			"componentType": "template",
+			"type": "template",
 			"fragment": true,
 			"value": {
 				"nodes": [
@@ -48,7 +48,7 @@
 			"label": "Model Template"
 		},
 		{
-			"componentType": "pattern",
+			"type": "pattern",
 			"fragment": true,
 			"value": {
 				"nodes": [

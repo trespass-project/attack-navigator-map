@@ -28,9 +28,9 @@ class LibraryActions extends flummox.Actions {
 		};
 	}
 
-	filterByType(componentType, checked) {
+	filterByType(type, checked) {
 		return {
-			componentType,
+			type,
 			checked,
 		};
 	}
