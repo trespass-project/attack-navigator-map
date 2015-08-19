@@ -41,7 +41,6 @@ var Port = React.createClass({
 		const node = props.node;
 
 		this.context.interfaceActions.setDragNode(node);
-
 		// this._onDragMove(event);
 	},
 
@@ -57,8 +56,8 @@ var Port = React.createClass({
 		);
 
 		this.context.interfaceActions.setPreviewEdge({
-			from: node,
-			to: {
+			from: node.id,
+			to: { // this is an exception
 				x: modelXYEvent.x,
 				y: modelXYEvent.y,
 			},
@@ -71,8 +70,8 @@ var Port = React.createClass({
 
 		if (props.hoverNode != null && props.dragNode != null) {
 			var newEdge = {
-				from: props.dragNode,
-				to: props.hoverNode
+				from: props.dragNode.id,
+				to: props.hoverNode.id
 			};
 			context.graphActions.addEdge(newEdge);
 		}

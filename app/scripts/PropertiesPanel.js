@@ -109,17 +109,25 @@ var ContextMenu = React.createClass({
 				);
 
 			case 'edge':
-				let edge = props.selected.it;
+				const edge = props.selected.it;
+
+				// look up actual nodes by id
+				// TODO: DRY — make a utility function for this
+				const edgeNodes = {
+					fromNode: helpers.getItemById(props.graph.nodes, edge.from),
+					toNode: helpers.getItemById(props.graph.nodes, edge.to),
+				};
+
 				return (
 					<table>
 						<tbody>
 							<tr>
 								<td><label>from:</label></td>
-								<td><span>{edge.from.label}</span></td>
+								<td><span>{edgeNodes.fromNode.label}</span></td>
 							</tr>
 							<tr>
 								<td><label>to:</label></td>
-								<td><span>{edge.to.label}</span></td>
+								<td><span>{edgeNodes.toNode.label}</span></td>
 							</tr>
 							<tr>
 								<td><label>relation:</label></td>

@@ -6,11 +6,12 @@ var $ = require('jquery');
 var mout = require('mout');
 var classnames = require('classnames');
 var icons = require('./icons.js');
+var helpers = require('./helpers.js');
 
 
 var diagonal = d3.svg.diagonal()
-	.source(function(d) { return d.from; })
-	.target(function(d) { return d.to; });
+	.source(function(d) { return d.fromNode; })
+	.target(function(d) { return d.toNode; });
 
 
 var Edge = React.createClass({
@@ -31,7 +32,7 @@ var Edge = React.createClass({
 		interfaceActions: React.PropTypes.object
 	},
 
-	renderLabel: function() {
+	renderLabel: function(edgeNodes) {
 		const props = this.props;
 		const edge = props.edge;
 
@@ -39,8 +40,8 @@ var Edge = React.createClass({
 
 		const t = 0.5;
 		var center = {
-			x: mout.math.lerp(t, edge.from.x, edge.to.x),
-			y: mout.math.lerp(t, edge.from.y, edge.to.y),
+			x: mout.math.lerp(t, edgeNodes.fromNode.x, edgeNodes.toNode.x),
+			y: mout.math.lerp(t, edgeNodes.fromNode.y, edgeNodes.toNode.y),
 		};
 		return <text
 			onClick={this._onClick}
@@ -57,21 +58,31 @@ var Edge = React.createClass({
 
 	render: function() {
 		const props = this.props;
+		const edge = props.edge;
 
 		if (!props.showEdges) { return null; }
 
-		var d = diagonal(props.edge);
-		// var d = 'M'+props.edge.from.x+','+props.edge.from.y+' L'+props.edge.to.x+','+props.edge.to.y;
+		// look up actual nodes by id
+		let edgeNodes = {
+			fromNode: helpers.getItemById(props.graph.nodes, edge.from),
+		};
+		// in preview edges 'to' is not an id,
+		// an actual object, with x and y properties.
+		if (props.preview) {
+			edgeNodes.toNode = edge.to;
+		} else {
+			edgeNodes.toNode = helpers.getItemById(props.graph.nodes, edge.to);
+		}
 
 		return (
 			<g className='edge-group'
 				onClick={this._onClick}>
 				<path
 					className={classnames('edge', {'preview': props.preview})}
-					d={d}
+					d={diagonal(edgeNodes)}
 					stroke={(props.preview) ? props.theme.previewEdge.stroke : props.theme.edge.stroke}
 					strokeWidth={props.theme.edge.strokeWidth} />
-				{this.renderLabel()}
+				{this.renderLabel(edgeNodes)}
 			</g>
 		);
 	},

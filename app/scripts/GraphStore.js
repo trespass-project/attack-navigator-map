@@ -62,8 +62,8 @@ graph.groups = [
 graph.edges = [
 	{
 		id: 'edge1',
-		from: graph.nodes[0], // TODO: better only use the id
-		to: graph.nodes[1],
+		from: graph.nodes[0].id,
+		to: graph.nodes[1].id,
 		relation: 'edge'
 	}
 ];
@@ -96,10 +96,10 @@ class GraphStore extends Store {
 		var model = trespass.model.create();
 		graph.edges.forEach(function(edge) {
 			var e = {
-				// TODO
+				// TODO: ?
 				_relation: edge.relation || null,
-				source: edge.from.id,
-				target: edge.to.id,
+				source: edge.from,
+				target: edge.to,
 			};
 			trespass.model.addEdge(model, e);
 		});
@@ -274,7 +274,7 @@ class GraphStore extends Store {
 		// and also all edges connected to it
 		graph.edges
 			.filter(function(edge) {
-				return (edge.from.id === id) || (edge.to.id === id);
+				return (edge.from === id) || (edge.to === id);
 			})
 			.map(function(edge) {
 				return {edge};

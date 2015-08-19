@@ -102,13 +102,6 @@ var spec = {
 				}
 			});
 
-			// TODO
-			// workaround
-			fragment.edges.forEach(function(edge) {
-				edge.from = helpers.getItemById(fragment.nodes, edge.from);
-				edge.to = helpers.getItemById(fragment.nodes, edge.to);
-			});
-
 			const graphActions = component.props.flux.getActions(constants.GRAPH);
 			graphActions.importModelFragment(fragment, modelXY);
 		}

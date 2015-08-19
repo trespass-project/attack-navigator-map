@@ -207,9 +207,9 @@ class InterfaceStore extends Store {
 		var edges = this._graphStore.state.graph.edges.map(
 			function(edge) {
 				return {
-					source: edge.from.id,
-					target: edge.to.id,
-					id: ''+Math.random() // TODO
+					source: edge.from,
+					target: edge.to,
+					id: ''+Date.now() // TODO: helper function to generate ids
 				};
 			}
 		);
