@@ -150,6 +150,12 @@ var GraphMixin = {
 		var panX = (props.isMinimap) ? (props.panX * props.constantScale) : props.panX;
 		var panY = (props.isMinimap) ? (props.panY * props.constantScale) : props.panY;
 
+		if (props.isMinimap) {
+			// TODO: s.th. goes wrong here when map is empty
+			panX = panX || 0;
+			panY = panY || 0;
+		}
+
 		var classNames = classnames(
 			'graph',
 			{

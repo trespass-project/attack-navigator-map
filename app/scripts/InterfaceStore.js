@@ -153,7 +153,7 @@ class InterfaceStore extends Store {
 	}
 
 	setTransformation(action) {
-		var {scale, panX, panY} = action.transformation;
+		var {scale/*, panX, panY*/} = action.transformation;
 
 		var showEdgeLabels = false;
 		var threshold = 0.5;

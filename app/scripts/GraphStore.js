@@ -28,7 +28,8 @@ const types = [
 
 var graph = {
 	nodes: [],
-	edges: []
+	edges: [],
+	groups: [],
 };
 
 graph.nodes = R.map(
