@@ -7,6 +7,7 @@ var R = require('ramda');
 var mout = require('mout');
 var trespass = require('trespass.js');
 var helpers = require('./helpers.js');
+var constants = require('./constants.js');
 var dirs = require('../../variables.js').dirs;
 
 
@@ -75,7 +76,7 @@ class GraphStore extends Store {
 		super();
 		let that = this;
 
-		_.pairs(flux.getActionIds('graph'))
+		_.pairs(flux.getActionIds(constants.GRAPH))
 			.forEach(function(pair, index, collection) {
 				let key = pair[0];
 				let actionId = pair[1];

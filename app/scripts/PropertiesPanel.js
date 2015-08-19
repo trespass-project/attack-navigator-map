@@ -3,6 +3,7 @@
 var React = require('react');
 var _ = require('lodash');
 var helpers = require('./helpers.js');
+var constants = require('./constants.js');
 
 
 var ContextMenu = React.createClass({
@@ -22,7 +23,8 @@ var ContextMenu = React.createClass({
 	_onChange: function(data, event) {
 		data[event.target.name] = event.target.value;
 		// TODO: less hacky?
-		this.props.flux.getStore('graph')._updateGraph(this.props.graph);
+		this.props.flux.getStore(constants.GRAPH)
+			._updateGraph(this.props.graph);
 	},
 
 	_onSubmit: function(event) {

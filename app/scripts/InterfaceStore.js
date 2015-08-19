@@ -7,6 +7,7 @@ var Store = flummox.Store;
 var R = require('ramda');
 var TWEEN = require('tween.js');
 var helpers = require('./helpers.js');
+var constants = require('./constants.js');
 var theme = require('./graph-theme-default.js');
 
 var klay = require('klayjs');
@@ -19,14 +20,14 @@ class InterfaceStore extends Store {
 		super();
 		let that = this;
 
-		_.pairs(flux.getActionIds('interface'))
+		_.pairs(flux.getActionIds(constants.INTERFACE))
 			.forEach(function(pair, index, collection) {
 				let key = pair[0];
 				let actionId = pair[1];
 				that.register(actionId, that[key]);
 			});
 
-		this._graphStore = flux.getStore('graph'); // TODO: is this bad practice?
+		this._graphStore = flux.getStore(constants.GRAPH); // TODO: is this bad practice?
 
 		this.state = {
 			drag: null,

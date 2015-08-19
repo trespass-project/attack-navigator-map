@@ -16,7 +16,7 @@ class ModelLibrary extends React.Component {
 
 	loadModel(item) {
 		var flux = this.props.flux;
-		var graphActions = flux.getActions('graph');
+		var graphActions = flux.getActions(constants.GRAPH);
 		graphActions.loadModel(item.filename);
 	}
 

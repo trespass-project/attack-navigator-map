@@ -47,7 +47,7 @@ var spec = {
 		if (result.target === constants.DND_TARGET_MAP /*||
 			result.target === constants.DND_TARGET_DEBUG*/) {
 
-			const interfaceStore = component.props.flux.getStore('interface');
+			const interfaceStore = component.props.flux.getStore(constants.INTERFACE);
 			const editorXY = helpers.coordsRelativeToElem(
 				interfaceStore.state.editorElem,
 				result.clientOffset
@@ -109,7 +109,7 @@ var spec = {
 				edge.to = helpers.getItemById(fragment.nodes, edge.to);
 			});
 
-			const graphActions = component.props.flux.getActions('graph');
+			const graphActions = component.props.flux.getActions(constants.GRAPH);
 			graphActions.importModelFragment(fragment, modelXY);
 		}
 	}

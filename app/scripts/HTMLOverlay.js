@@ -55,7 +55,7 @@ var HTMLOverlay = React.createClass({
 	},
 
 	componentWillMount: function() {
-		// this._graphActions = this.props.flux.getActions('graph');
+		//
 	},
 
 	componentDidMount: function() {
