@@ -19,6 +19,10 @@ class GraphActions extends Actions {
 		};
 	}
 
+	generateXML(filename) {
+		return { filename };
+	}
+
 	modelAdd(type, data) {
 		return { type, data };
 	}

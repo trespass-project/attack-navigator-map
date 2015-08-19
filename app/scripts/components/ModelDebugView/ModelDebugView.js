@@ -23,10 +23,19 @@ class ModelDebugView extends React.Component {
 
 		const connectDropTarget = this.props.connectDropTarget;
 		return connectDropTarget(
-			<pre className='debug-json'>
-				{JSON.stringify(model, null, 2)}
-			</pre>
+			<div>
+				<button onClick={this.generateXML} className='btn btn-default btn-xs'>generate XML</button>
+				<br/><br/>
+				<pre className='debug-json'>
+					{JSON.stringify(model, null, 2)}
+				</pre>
+			</div>
 		);
+	}
+
+	generateXML(event) {
+		event.preventDefault();
+		this.context.graphActions.generateXML();
 	}
 }
 
@@ -36,6 +45,12 @@ ModelDebugView.propTypes = {
 
 	isOver: React.PropTypes.bool.isRequired,
 	connectDropTarget: React.PropTypes.func.isRequired
+};
+
+
+ModelDebugView.contextTypes = {
+	graphActions: React.PropTypes.object,
+	interfaceActions: React.PropTypes.object
 };
 
 

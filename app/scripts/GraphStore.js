@@ -3,6 +3,7 @@
 var _ = require('lodash');
 var flummox = require('flummox');
 var Store = flummox.Store;
+var saveAs = require('browser-saveas');
 var R = require('ramda');
 var mout = require('mout');
 var trespass = require('trespass.js');
@@ -171,6 +172,12 @@ class GraphStore extends Store {
 			.always(function() {
 				that.setState({ loading: false });
 			});
+	}
+
+	generateXML(action) {
+		var xml = trespass.model.xmlify(this.state.model);
+		var blob = new Blob([xml], { type: 'text/plain;charset=utf-8' });
+		saveAs(blob, action.filename || 'model.xml');
 	}
 
 	modelAdd(action) {

@@ -10,8 +10,6 @@ autolayout: recursively, per group
 
 how to show doors and windows?
 
-style panel a bit
-
 add 'download as XML' button
 
 update drag and drop
