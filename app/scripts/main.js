@@ -83,13 +83,24 @@ var App = React.createClass({
 					</div>
 				</div>
 				<div id='model-debug-view'>
-					<h3>debug</h3>
-					<FluxComponent flux={flux} connectToStores={[constants.GRAPH, constants.INTERFACE]}>
-						<MainMenu id='main-menu' />
-					</FluxComponent>
-					<FluxComponent flux={flux} connectToStores={[constants.GRAPH, constants.INTERFACE]}>
-						<ModelDebugView />
-					</FluxComponent>
+					<div className='panel-section'>
+						<h3 className='title'>debug</h3>
+						<FluxComponent flux={flux} connectToStores={[constants.GRAPH, constants.INTERFACE]}>
+							<MainMenu id='main-menu' />
+						</FluxComponent>
+					</div>
+					<div className='panel-section'>
+						<h3 className='title'>outline</h3>
+						<FluxComponent flux={flux} connectToStores={[constants.GRAPH, constants.INTERFACE]}>
+							<span className='disabled'>TODO</span>
+						</FluxComponent>
+					</div>
+					<div className='panel-section'>
+						<h3 className='title'>model</h3>
+						<FluxComponent flux={flux} connectToStores={[constants.GRAPH, constants.INTERFACE]}>
+							<ModelDebugView />
+						</FluxComponent>
+					</div>
 				</div>
 				<div id='panel-container'>
 					<FluxComponent flux={flux} connectToStores={[constants.GRAPH, constants.INTERFACE]}>

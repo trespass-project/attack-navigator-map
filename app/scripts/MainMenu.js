@@ -1,9 +1,8 @@
 'use strict';
 
 var React = require('react');
-var DragSource = require('react-dnd').DragSource;
 var helpers = require('./helpers.js');
-var constants = require('./constants.js');
+const constants = require('./constants.js');
 
 
 var MainMenu = React.createClass({
@@ -25,15 +24,15 @@ var MainMenu = React.createClass({
 	},
 
 	render: function() {
-		var props = this.props;
+		const props = this.props;
 
 		return (
 			<div id={props.id}>
-				<button onClick={this._toggleImages}>{(props.showImages) ? 'hide' : 'show'} images</button>
-				<button onClick={this._toggleGroups}>{(props.showGroups) ? 'hide' : 'show'} groups</button>
-				<button onClick={this._toggleEdges}>{(props.showEdges) ? 'hide' : 'show'} edges</button>
-				<button onClick={this._resetTransformation}>reset transformation</button>
-				<button onClick={this._autoLayout}>auto-layout</button>
+				<button className='btn btn-default btn-xs' onClick={this._toggleImages}>{(props.showImages) ? 'hide' : 'show'} images</button>
+				<button className='btn btn-default btn-xs' onClick={this._toggleGroups}>{(props.showGroups) ? 'hide' : 'show'} groups</button>
+				<button className='btn btn-default btn-xs' onClick={this._toggleEdges}>{(props.showEdges) ? 'hide' : 'show'} edges</button>
+				<button className='btn btn-default btn-xs' onClick={this._resetTransformation}>reset transformation</button>
+				<button className='btn btn-default btn-xs' onClick={this._autoLayout}>auto-layout</button>
 			</div>
 		);
 	},
