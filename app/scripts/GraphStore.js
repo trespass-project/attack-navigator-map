@@ -32,43 +32,43 @@ var graph = {
 	groups: [],
 };
 
-graph.nodes = R.map(
-	function(i) {
-		return {
-			label: i+'',
-			id: i+'',
-			type: _.sample(types),
-			x: Math.random() * 400,
-			y: Math.random() * 400,
-		};
-	},
-	R.range(0, 5)
-);
+// graph.nodes = R.map(
+// 	function(i) {
+// 		return {
+// 			label: i+'',
+// 			id: i+'',
+// 			type: _.sample(types),
+// 			x: Math.random() * 400,
+// 			y: Math.random() * 400,
+// 		};
+// 	},
+// 	R.range(0, 5)
+// );
 
-graph.groups = [
-	{
-		name: 'group 1',
-		id: 'group1',
-		nodeIds: ['1', '2'/*, '4'*/],
-		_bgImage: {
-			url: dirs['images']+'/floorplan2.svg'
-		}
-	},
-	{
-		name: 'group 2',
-		id: 'group2',
-		nodeIds: ['3', '0']
-	}
-];
+// graph.groups = [
+// 	{
+// 		name: 'group 1',
+// 		id: 'group1',
+// 		nodeIds: ['1', '2'/*, '4'*/],
+// 		_bgImage: {
+// 			url: dirs['images']+'/floorplan2.svg'
+// 		}
+// 	},
+// 	{
+// 		name: 'group 2',
+// 		id: 'group2',
+// 		nodeIds: ['3', '0']
+// 	}
+// ];
 
-graph.edges = [
-	{
-		id: 'edge1',
-		from: graph.nodes[0].id,
-		to: graph.nodes[1].id,
-		relation: 'edge'
-	}
-];
+// graph.edges = [
+// 	{
+// 		id: 'edge1',
+// 		from: graph.nodes[0].id,
+// 		to: graph.nodes[1].id,
+// 		relation: 'edge'
+// 	}
+// ];
 
 
 module.exports =
