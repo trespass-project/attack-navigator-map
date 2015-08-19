@@ -96,6 +96,7 @@ class GraphStore extends Store {
 	_updateGraph(graph) {
 		graph = graph || this.state.graph;
 		var model = trespass.model.create();
+
 		graph.edges.forEach(function(edge) {
 			var e = {
 				// TODO: ?
@@ -105,6 +106,7 @@ class GraphStore extends Store {
 			};
 			trespass.model.addEdge(model, e);
 		});
+
 		graph.nodes.forEach(function(node) {
 			try {
 				switch (node.type) {
@@ -222,7 +224,7 @@ class GraphStore extends Store {
 	addEdge(action) {
 		let {edge} = action;
 		_.defaults(edge, {
-			id: ''+(new Date())
+			id: ''+Date.now() // TODO
 		});
 		this.state.graph.edges.push(edge);
 		this._updateGraph();

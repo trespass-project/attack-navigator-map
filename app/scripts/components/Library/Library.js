@@ -37,7 +37,8 @@ LibraryItem.propTypes = {
 
 var spec = {
 	beginDrag: function(props, monitor, component) {
-		return props.data;
+		// needs to be a copy
+		return _.merge({}, props.data);
 	},
 
 	endDrag: function(props, monitor, component) {
@@ -90,7 +91,8 @@ var spec = {
 						}
 					});
 
-					fragment.groups.forEach(function(group) {
+					fragment.groups.forEach(function(group, index) {
+						group.id = Date.now() + '-' + index;
 						group.nodeIds = group.nodeIds.map(function(nodeId) {
 							if (nodeId === oldId) {
 								return node.id;
