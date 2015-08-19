@@ -20,6 +20,11 @@ var Group = React.createClass({
 		flux: React.PropTypes.object.isRequired,
 	},
 
+	contextTypes: {
+		graphActions: React.PropTypes.object,
+		interfaceActions: React.PropTypes.object
+	},
+
 	renderLabel: function() {
 		if (!this.props.showGroupLabels) { return null; }
 		return (
@@ -54,13 +59,10 @@ var Group = React.createClass({
 		);
 	},
 
-	componentWillMount: function() {
-		this._graphActions = this.props.flux.getActions('graph');
-		this._interfaceActions = this.props.flux.getActions('interface');
-	},
 
 	componentDidMount: function() {
 		var that = this;
+		var context = this.context;
 
 		var elem = this.getDOMNode();
 		$(elem).on('contextmenu', function(event) {
@@ -68,19 +70,19 @@ var Group = React.createClass({
 			if (!_.isEmpty(that.props.group._bgImage)) {
 				bgimg.icon = icons['fa-remove'];
 				bgimg.action = function() {
-					that._interfaceActions.removeGroupBackgroundImage(that.props.group);
+					context.interfaceActions.removeGroupBackgroundImage(that.props.group);
 				};
 			}
 
 			let menuItems = [
 				{ label: 'delete', icon: icons['fa-trash'], action:
 					function(/*event*/) {
-						that._graphActions.removeGroup(that.props.group, true);
+						context.graphActions.removeGroup(that.props.group, true);
 					}
 				},
 				{ label: 'ungroup', icon: icons['fa-remove'], action:
 					function(/*event*/) {
-						that._graphActions.removeGroup(that.props.group);
+						context.graphActions.removeGroup(that.props.group);
 					}
 				},
 				bgimg,
@@ -91,11 +93,11 @@ var Group = React.createClass({
 							y: event.offsetY,
 							group: that.props.group
 						};
-						that._graphActions.addNode(node);
+						context.graphActions.addNode(node);
 					}
 				},
 			];
-			that._interfaceActions.showContextMenu(event, that.props.group, menuItems);
+			context.interfaceActions.showContextMenu(event, that.props.group, menuItems);
 			return false;
 		});
 	},
@@ -121,7 +123,7 @@ var Group = React.createClass({
 			var aspectRatio = w / h;
 			// var dataURI = 'data:image/svg+xml;utf8,'+svg;
 			var dataURI = 'data:image/svg+xml;base64,'+btoa(svg);
-			that._interfaceActions.addGroupBackgroundImage(that.props.group, dataURI, aspectRatio, w);
+			that.context.interfaceActions.addGroupBackgroundImage(that.props.group, dataURI, aspectRatio, w);
 		};
 		// reader.readAsDataURL(file);
 		reader.readAsText(file);
@@ -132,14 +134,14 @@ var Group = React.createClass({
 	_onClick: function(event) {
 		event.preventDefault();
 		event.stopPropagation();
-		this._interfaceActions.select(this.props.group, 'group');
+		this.context.interfaceActions.select(this.props.group, 'group');
 	},
 
 	_onMouseOver: function(event) {
-		this._interfaceActions.setHoverGroup(this.props.group);
+		this.context.interfaceActions.setHoverGroup(this.props.group);
 	},
 	_onMouseOut: function(event) {
-		this._interfaceActions.setHoverGroup(null);
+		this.context.interfaceActions.setHoverGroup(null);
 	},
 
 	_onDragStart: function(event) {
@@ -177,7 +179,7 @@ var Group = React.createClass({
 		var newPositionX = this.originalPositionX + modelXYDelta.x;
 		var newPositionY = this.originalPositionY + modelXYDelta.y;
 
-		this._interfaceActions.moveGroup(
+		this.context.interfaceActions.moveGroup(
 			props.group,
 			{ // delta of the delta
 				x: newPositionX - this.currentPositionX,

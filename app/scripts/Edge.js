@@ -26,6 +26,11 @@ var Edge = React.createClass({
 		};
 	},
 
+	contextTypes: {
+		graphActions: React.PropTypes.object,
+		interfaceActions: React.PropTypes.object
+	},
+
 	renderLabel: function() {
 		const props = this.props;
 		const edge = props.edge;
@@ -47,7 +52,7 @@ var Edge = React.createClass({
 	_onClick: function(event) {
 		event.preventDefault();
 		event.stopPropagation();
-		this._interfaceActions.select(this.props.edge, 'edge');
+		this.context.interfaceActions.select(this.props.edge, 'edge');
 	},
 
 	render: function() {
@@ -71,23 +76,18 @@ var Edge = React.createClass({
 		);
 	},
 
-	componentWillMount: function() {
-		this._graphActions = this.props.flux.getActions('graph');
-		this._interfaceActions = this.props.flux.getActions('interface');
-	},
-
 	componentDidMount: function() {
 		var that = this;
 
 		$(this.getDOMNode()).on('contextmenu', function(event) {
-			let menuItems = [ // TODO: store these centrally
+			let menuItems = [
 				{
 					label: 'delete',
 					icon: icons['fa-trash'],
-					action: function() { that._graphActions.removeEdge(that.props.edge); }
+					action: function() { that.context.graphActions.removeEdge(that.props.edge); }
 				}
 			];
-			that._interfaceActions.showContextMenu(event, that.props.group, menuItems);
+			that.context.interfaceActions.showContextMenu(event, that.props.group, menuItems);
 			return false;
 		});
 	},

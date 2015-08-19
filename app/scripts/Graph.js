@@ -35,6 +35,11 @@ var GraphMixin = {
 		};
 	},
 
+	contextTypes: {
+		graphActions: React.PropTypes.object,
+		interfaceActions: React.PropTypes.object
+	},
+
 	_makeGroup: function(group) {
 		let bounds = null;
 		const extraPadding = 5;
@@ -176,10 +181,6 @@ var GraphMixin = {
 		return connectDropTarget(this._render());
 	},
 
-	componentWillMount: function() {
-		this._graphActions = this.props.flux.getActions('graph');
-		this._interfaceActions = this.props.flux.getActions('interface');
-	},
 
 	// updateDimensions: function() {
 	// 	var $window = $(window);
@@ -212,8 +213,9 @@ var GraphEditor = React.createClass({
 	},
 
 	componentDidMount: function() {
+		const context = this.context;
 		let $svg = $(this.getDOMNode()).find('svg');
-		this._interfaceActions.setEditorElem($svg[0]);
+		context.interfaceActions.setEditorElem($svg[0]);
 
 		var that = this;
 		$svg.on('contextmenu', function(event) {
@@ -226,11 +228,11 @@ var GraphEditor = React.createClass({
 							x: event.offsetX,
 							y: event.offsetY,
 						};
-						that._graphActions.addNode(node);
+						context.graphActions.addNode(node);
 					}
 				}
 			];
-			that._interfaceActions.showContextMenu(event, that.props.graph, menuItems);
+			context.interfaceActions.showContextMenu(event, that.props.graph, menuItems);
 			return false;
 		});
 	},
@@ -238,20 +240,22 @@ var GraphEditor = React.createClass({
 	componentWillUnmount: function() {
 		let $svg = $(this.props.editorElem);
 		$svg.off('contextmenu');
-		this._interfaceActions.setEditorElem(null);
+		this.context.interfaceActions.setEditorElem(null);
 	},
 
 	_onClick: function(event) {
 		event.preventDefault();
 		event.stopPropagation();
-		this._interfaceActions.hideContextMenu();
-		this._interfaceActions.select(null);
+		const context = this.context;
+		context.interfaceActions.hideContextMenu();
+		context.interfaceActions.select(null);
 	},
 
 	_onWheel: function(event) {
 		event.preventDefault();
 
 		const props = this.props;
+		const context = this.context;
 
 		let deltaScale = event.deltaY / 2000.0;
 		let newScale = mout.math.clamp(this.props.scale + deltaScale,
@@ -273,7 +277,7 @@ var GraphEditor = React.createClass({
 		var x = scaleD * (currentX - editorXY.x) + editorXY.x;
 		var y = scaleD * (currentY - editorXY.y) + editorXY.y;
 
-		this._interfaceActions.setTransformation({
+		context.interfaceActions.setTransformation({
 			scale: newScale,
 			panX: x,
 			panY: y,
@@ -288,7 +292,7 @@ var GraphEditor = React.createClass({
 	},
 
 	_onDragMove: function(event) {
-		this._interfaceActions.setTransformation({
+		this.context.interfaceActions.setTransformation({
 			panX: this._originalPanX + event.deltaX,
 			panY: this._originalPanY + event.deltaY,
 		});

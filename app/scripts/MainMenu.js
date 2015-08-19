@@ -19,6 +19,11 @@ var MainMenu = React.createClass({
 		};
 	},
 
+	contextTypes: {
+		graphActions: React.PropTypes.object,
+		interfaceActions: React.PropTypes.object
+	},
+
 	render: function() {
 		var props = this.props;
 
@@ -34,19 +39,19 @@ var MainMenu = React.createClass({
 	},
 
 	_toggleImages: function(event) {
-		this._interfaceActions.setShowImages(!this.props.showImages);
+		this.context.interfaceActions.setShowImages(!this.props.showImages);
 	},
 
 	_toggleGroups: function(event) {
-		this._interfaceActions.setShowGroups(!this.props.showGroups);
+		this.context.interfaceActions.setShowGroups(!this.props.showGroups);
 	},
 
 	_toggleEdges: function(event) {
-		this._interfaceActions.setShowEdges(!this.props.showEdges);
+		this.context.interfaceActions.setShowEdges(!this.props.showEdges);
 	},
 
 	_resetTransformation: function(event) {
-		this._interfaceActions.setTransformation({
+		this.context.interfaceActions.setTransformation({
 			scale: 1,
 			panX: 0,
 			panY: 0
@@ -54,12 +59,8 @@ var MainMenu = React.createClass({
 	},
 
 	_autoLayout: function() {
-		this._interfaceActions._autoLayout();
-	},
-
-	componentWillMount: function() {
-		this._interfaceActions = this.props.flux.getActions('interface');
-	},
+		this.context.interfaceActions._autoLayout();
+	}
 
 });
 

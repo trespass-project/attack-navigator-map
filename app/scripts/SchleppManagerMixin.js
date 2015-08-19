@@ -1,10 +1,16 @@
 'use strict';
 
 var $ = require('jquery');
+var React = require('react');
 var helpers = require('./helpers.js');
 
 
 var SchleppManagerMixin = {
+	contextTypes: {
+		graphActions: React.PropTypes.object,
+		interfaceActions: React.PropTypes.object
+	},
+
 	componentDidMount: function() {
 		var that = this;
 
@@ -25,7 +31,7 @@ var SchleppManagerMixin = {
 			if (that.props.drag) {
 				(that.props.drag.onEnd || helpers.noop)(event);
 			}
-			that._interfaceActions.setDrag(null);
+			that.context.interfaceActions.setDrag(null);
 		});
 	},
 

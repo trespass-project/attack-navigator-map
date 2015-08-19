@@ -1,10 +1,16 @@
 'use strict';
 
 var $ = require('jquery');
+var React = require('react');
 var helpers = require('./helpers.js');
 
 
 var SchleppMixin = {
+	contextTypes: {
+		graphActions: React.PropTypes.object,
+		interfaceActions: React.PropTypes.object
+	},
+
 	componentDidMount: function() {
 		var that = this;
 
@@ -24,7 +30,7 @@ var SchleppMixin = {
 
 			(that._onDragStart || helpers.noop)(event);
 
-			that._interfaceActions.setDrag({
+			that.context.interfaceActions.setDrag({
 				elem,
 				onMove: function(event) {
 					event.deltaX = event.offsetX - lastX;

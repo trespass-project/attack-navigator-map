@@ -1,4 +1,7 @@
 const constants = {
+	GRAPH: 'graph',
+	INTERFACE: 'interface',
+
 	MODEL_LIBRARY: 'model-library',
 	MODEL_COMPONENTS_LIBRARY: 'component-lib.js',
 	MODEL_PATTERNS_LIBRARY: 'pattern-lib.js',

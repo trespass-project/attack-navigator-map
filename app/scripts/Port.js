@@ -16,6 +16,11 @@ var Port = React.createClass({
 		flux: React.PropTypes.object.isRequired,
 	},
 
+	contextTypes: {
+		graphActions: React.PropTypes.object,
+		interfaceActions: React.PropTypes.object
+	},
+
 	render: function() {
 		var props = this.props;
 
@@ -31,16 +36,11 @@ var Port = React.createClass({
 		);
 	},
 
-	componentWillMount: function() {
-		this._graphActions = this.props.flux.getActions('graph');
-		this._interfaceActions = this.props.flux.getActions('interface');
-	},
-
 	_onDragStart: function(event) {
 		const props = this.props;
 		const node = props.node;
 
-		this._interfaceActions.setDragNode(node);
+		this.context.interfaceActions.setDragNode(node);
 
 		// this._onDragMove(event);
 	},
@@ -56,7 +56,7 @@ var Port = React.createClass({
 			  y: event.offsetY }
 		);
 
-		this._interfaceActions.setPreviewEdge({
+		this.context.interfaceActions.setPreviewEdge({
 			from: node,
 			to: {
 				x: modelXYEvent.x,
@@ -66,17 +66,18 @@ var Port = React.createClass({
 	},
 
 	_onDragEnd: function(event) {
-		var props = this.props;
+		const props = this.props;
+		const context = this.context;
 
 		if (props.hoverNode != null && props.dragNode != null) {
 			var newEdge = {
 				from: props.dragNode,
 				to: props.hoverNode
 			};
-			this._graphActions.addEdge(newEdge);
+			context.graphActions.addEdge(newEdge);
 		}
-		this._interfaceActions.setPreviewEdge(null);
-		this._interfaceActions.setDragNode(null);
+		context.interfaceActions.setPreviewEdge(null);
+		context.interfaceActions.setDragNode(null);
 	}
 });
 

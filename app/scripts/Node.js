@@ -31,6 +31,11 @@ var Node = React.createClass({
 		flux: React.PropTypes.object.isRequired,
 	},
 
+	contextTypes: {
+		graphActions: React.PropTypes.object,
+		interfaceActions: React.PropTypes.object
+	},
+
 	renderIcon: function() {
 		if (!this.props.showGroupLabels) { return null; }
 		const icon = icons[typeIcons[this.props.node.type]];
@@ -79,23 +84,20 @@ var Node = React.createClass({
 		);
 	},
 
-	componentWillMount: function() {
-		this._graphActions = this.props.flux.getActions('graph');
-		this._interfaceActions = this.props.flux.getActions('interface');
-	},
 
 	componentDidMount: function() {
 		var that = this;
+		const context = this.context;
 
 		$(this.getDOMNode()).on('contextmenu', function(event) {
 			let menuItems = [
 				{
 					label: 'delete',
 					icon: icons['fa-trash'],
-					action: function() { that._graphActions.removeNode(that.props.node); }
+					action: function() { context.graphActions.removeNode(that.props.node); }
 				}
 			];
-			that._interfaceActions.showContextMenu(event, that.props.group, menuItems);
+			context.interfaceActions.showContextMenu(event, that.props.group, menuItems);
 			return false;
 		});
 	},
@@ -134,14 +136,14 @@ var Node = React.createClass({
 	_onClick: function(event) {
 		event.preventDefault();
 		event.stopPropagation();
-		this._interfaceActions.select(this.props.node, 'node');
+		this.context.interfaceActions.select(this.props.node, 'node');
 	},
 
 	_onDragStart: function(event) {
 		const props = this.props;
 		const node = props.node;
 
-		this._interfaceActions.setDragNode(node);
+		this.context.interfaceActions.setDragNode(node);
 
 		this.originalPositionX = node.x;
 		this.originalPositionY = node.y;
@@ -170,7 +172,7 @@ var Node = React.createClass({
 			y: (modelXYEvent.y - this.modelXYEventOrigin.y),
 		};
 
-		this._interfaceActions.moveNode(
+		this.context.interfaceActions.moveNode(
 			this.props.node, {
 				x: this.originalPositionX + modelXYDelta.x,
 				y: this.originalPositionY + modelXYDelta.y,
@@ -179,15 +181,15 @@ var Node = React.createClass({
 	},
 
 	_onDragEnd: function(event) {
-		this._interfaceActions.setDragNode(null);
+		this.context.interfaceActions.setDragNode(null);
 	},
 
 	_handleHover: function(event) {
-		this._interfaceActions.setHoverNode(this.props.node);
+		this.context.interfaceActions.setHoverNode(this.props.node);
 	},
 
 	_handleHoverOut: function(event) {
-		this._interfaceActions.setHoverNode(null);
+		this.context.interfaceActions.setHoverNode(null);
 	}
 });
 
