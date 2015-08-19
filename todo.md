@@ -1,5 +1,7 @@
 items should have a selected state
 
+can we get processes and policies to work?
+
 model outline
 	onclick → function to pan / zoom to a specific coordinate
 
