@@ -46,11 +46,15 @@ var Edge = React.createClass({
 			x: mout.math.lerp(t, edgeNodes.fromNode.x, edgeNodes.toNode.x),
 			y: mout.math.lerp(t, edgeNodes.fromNode.y, edgeNodes.toNode.y),
 		};
+
+		let label = edge.relation || '';
+		label = helpers.ellipsize(15, label);
+
 		return <text
 			onClick={this._onClick}
 			className='label'
 			x={center.x}
-			y={center.y}>{edge.relation || ''}</text>;
+			y={center.y}>{label}</text>;
 	},
 
 	_onClick: function(event) {

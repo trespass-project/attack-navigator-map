@@ -13,14 +13,29 @@ var f3 = function(s) {
 };
 
 
-describe(f1('file'), function() {
+var helpers = require('../app/scripts/helpers.js');
 
-	describe(f2('function'), function() {
 
-		it(f3('should'), function() {
-			assert(false);
+describe(f1('helpers.js'), function() {
+
+	describe(f2('ellipsize'), function() {
+		it(f3('should work'), function() {
+			var input = '0123456789';
+			var shortened = helpers.ellipsize(5, input);
+			assert(shortened === '012…89' || shortened === '01…789');
+
+			input = '012';
+			shortened = helpers.ellipsize(2, input);
+			assert(shortened === '0…2');
+
+			input = '01234';
+			shortened = helpers.ellipsize(5, input);
+			assert(shortened === '01234');
+
+			input = '0';
+			shortened = helpers.ellipsize(5, input);
+			assert(shortened === '0');
 		});
-
 	});
 
 })

@@ -54,6 +54,21 @@ function getGroupBBox(allNodes, group) {
 }
 
 
+function ellipsize(maxLen, s) {
+	const E = '…';
+	let len = s.length;
+	let diff = maxLen - len;
+	if (0 > diff) {
+		let centerIndex = len / 2;
+		let numDel = Math.abs(diff);
+		let startIndex = Math.round(centerIndex - (numDel / 2));
+		return s.substring(0, startIndex) + E + s.substring(startIndex + numDel);
+	} else {
+		return s;
+	}
+}
+
+
 function degToRad(deg) {
 	return deg * (Math.PI / 180);
 }
@@ -87,6 +102,7 @@ module.exports = {
 	getItemById,
 	getNodesBBox,
 	getGroupBBox,
+	ellipsize,
 	degToRad,
 	noop,
 	getElemByRef,

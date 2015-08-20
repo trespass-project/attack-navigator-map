@@ -1,4 +1,6 @@
-import from xml
+context menu: "duplicate"
+
+create a user walkthrough story
 
 items should have a selected state
 
@@ -23,8 +25,6 @@ autolayout: recursively, per group
 how to show doors and windows?
 
 groups: resizable (min size)
-
-context menu: "duplicate"
 
 multi-selection
 	"group items"
