@@ -1,8 +1,12 @@
+how to show doors and windows?
+
 context menu: "duplicate"
 
 create a user walkthrough story
 
 items should have a selected state
+
+---
 
 can we get processes and policies to work?
 
@@ -21,8 +25,6 @@ update minimap
 	draggable rectangle to pan editor
 
 autolayout: recursively, per group
-
-how to show doors and windows?
 
 groups: resizable (min size)
 

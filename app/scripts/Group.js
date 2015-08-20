@@ -86,6 +86,11 @@ var Group = React.createClass({
 						context.graphActions.removeGroup(that.props.group);
 					}
 				},
+				{ label: 'clone', icon: icons['fa-files-o'], action:
+					function() {
+						context.graphActions.cloneGroup(that.props.group);
+					}
+				},
 				bgimg,
 				{ label: 'node', icon: icons['fa-plus'], action:
 					function(/*event*/) {

@@ -359,6 +359,47 @@ class GraphStore extends Store {
 		this._updateModel();
 	}
 
+	cloneGroup(action) {
+		const that = this;
+
+		let {group} = action;
+		group = _.merge({}, group);
+
+		// create fragment from group
+		const groupNodes = group.nodeIds.map(function(nodeId) {
+			// all nodes referenced in group
+			return helpers.getItemById(that.state.graph.nodes, nodeId);
+		});
+		const nodes = groupNodes.map(function(node) {
+			let newNode = _.merge({}, node);
+			newNode.x = node.x + 100;
+			newNode.y = node.y + 100;
+			return newNode;
+		});
+
+		const nodeIds = nodes.map(function(node) { return node.id; });
+		const edges = this.state.graph.edges
+			.filter(function(edge) {
+				// of all edges return only those,
+				// where `from` and `to` are in this group
+				return R.contains(edge.from, nodeIds) && R.contains(edge.to, nodeIds);
+			})
+			.map(function(edge) {
+				return _.merge({}, edge);
+			});
+		let fragment = {
+			nodes: nodes,
+			edges: edges,
+			groups: [group]
+		};
+
+		// prepare fragment
+		fragment = helpers.prepareGraphFragment(fragment);
+
+		// add fragment
+		this.importModelFragment({fragment});
+	}
+
 	removeGroup(action) {
 		let that = this;
 		let {group, removeNodes} = action;

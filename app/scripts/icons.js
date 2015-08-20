@@ -1,5 +1,4 @@
 // http://fortawesome.github.io/Font-Awesome/cheatsheet/
-// v4.3.0
 module.exports = {
 	'fa-adjust': '&#xf042;',
 	'fa-adn': '&#xf170;',
@@ -124,6 +123,7 @@ module.exports = {
 	'fa-circle-thin': '&#xf1db;',
 	'fa-clipboard': '&#xf0ea;',
 	'fa-clock-o': '&#xf017;',
+	'fa-clone': '&#xf24d;',
 	'fa-close': '&#xf00d;',
 	'fa-cloud': '&#xf0c2;',
 	'fa-cloud-download': '&#xf0ed;',

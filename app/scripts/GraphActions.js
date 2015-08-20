@@ -43,6 +43,10 @@ class GraphActions extends Actions {
 		return {edge};
 	}
 
+	cloneGroup(group) {
+		return {group};
+	}
+
 	removeGroup(group, removeNodes=false) {
 		return {group, removeNodes};
 	}

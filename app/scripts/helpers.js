@@ -54,6 +54,43 @@ function getGroupBBox(allNodes, group) {
 }
 
 
+function prepareGraphFragment(fragment) {
+	// prepare fragment
+
+	fragment.nodes.forEach(function(node, index) {
+		let oldId = node.id;
+
+		// create unique id
+		node.id = Date.now() + '-' + index;
+
+		// rename existing ids in edges and groups
+		if (oldId) {
+			fragment.edges.forEach(function(edge) {
+				if (edge.from === oldId) {
+					edge.from = node.id;
+				}
+				if (edge.to === oldId) {
+					edge.to = node.id;
+				}
+			});
+
+			fragment.groups.forEach(function(group, index) {
+				group.id = Date.now() + '-' + index;
+				group.nodeIds = group.nodeIds.map(function(nodeId) {
+					if (nodeId === oldId) {
+						return node.id;
+					} else {
+						return nodeId;
+					}
+				});
+			});
+		}
+	});
+
+	return fragment;
+}
+
+
 function ellipsize(maxLen, s) {
 	const E = '…';
 	let len = s.length;
@@ -102,6 +139,7 @@ module.exports = {
 	getItemById,
 	getNodesBBox,
 	getGroupBBox,
+	prepareGraphFragment,
 	ellipsize,
 	degToRad,
 	noop,
