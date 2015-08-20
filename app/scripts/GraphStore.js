@@ -290,11 +290,7 @@ class GraphStore extends Store {
 			};
 		});
 		graph.nodes = R.concat(graph.nodes, policies);
-
-		// TODO: rest ...
-
-		// auto-layout
-		// TODO
+		// TODO: refine, generalize, ...
 
 		this.setState({
 			model: model,

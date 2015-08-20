@@ -10,15 +10,11 @@ var GraphOutline = React.createClass({
 	mixins: [PureRenderMixin],
 
 	propTypes: {
-		// edge: React.PropTypes.object.isRequired,
-		// theme: React.PropTypes.object.isRequired,
-		// preview: React.PropTypes.bool,
+		graph: React.PropTypes.object.isRequired
 	},
 
 	getDefaultProps: function() {
-		return {
-			// preview: false
-		};
+		return {};
 	},
 
 	contextTypes: {
