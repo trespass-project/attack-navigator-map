@@ -58,6 +58,6 @@
     "tween.js": "^0.14.0"
   },
   "name": "attack-navigator-map",
-  "version": "0.0.1-11",
+  "version": "0.0.1-12",
   "private": false
 }
