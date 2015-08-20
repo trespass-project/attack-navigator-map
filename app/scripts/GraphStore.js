@@ -210,7 +210,7 @@ class GraphStore extends Store {
 				x: 200,
 				y: 200,
 			};
-		})
+		});
 		graph.nodes = R.concat(graph.nodes, locations);
 
 		let assets = model.system.assets.map(function(asset) {
@@ -223,7 +223,7 @@ class GraphStore extends Store {
 				x: 400,
 				y: 200,
 			};
-		})
+		});
 		graph.nodes = R.concat(graph.nodes, assets);
 
 		let actors = model.system.actors.map(function(actor) {
@@ -236,7 +236,7 @@ class GraphStore extends Store {
 				x: 400,
 				y: 400,
 			};
-		})
+		});
 		graph.nodes = R.concat(graph.nodes, actors);
 
 		let roles = model.system.roles.map(function(role) {
@@ -249,7 +249,7 @@ class GraphStore extends Store {
 				x: 600,
 				y: 200,
 			};
-		})
+		});
 		graph.nodes = R.concat(graph.nodes, roles);
 
 		let predicates = model.system.predicates.map(function(predicate) {
@@ -262,7 +262,7 @@ class GraphStore extends Store {
 				x: 600,
 				y: 400,
 			};
-		})
+		});
 		graph.nodes = R.concat(graph.nodes, predicates);
 
 		let processes = model.system.processes.map(function(process) {
@@ -275,7 +275,7 @@ class GraphStore extends Store {
 				x: 600,
 				y: 600,
 			};
-		})
+		});
 		graph.nodes = R.concat(graph.nodes, processes);
 
 		let policies = model.system.policies.map(function(policy) {
@@ -288,7 +288,7 @@ class GraphStore extends Store {
 				x: 600,
 				y: 200,
 			};
-		})
+		});
 		graph.nodes = R.concat(graph.nodes, policies);
 
 		// TODO: rest ...
