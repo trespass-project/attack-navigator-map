@@ -14,17 +14,19 @@ class GraphActions extends Actions {
 			dataType: 'text', // not 'xml'
 		});
 
-		return {
-			promise: promise
-		};
+		return {promise};
+	}
+
+	loadXML(content) {
+		return {content};
 	}
 
 	generateXML(filename) {
-		return { filename };
+		return {filename};
 	}
 
 	modelAdd(type, data) {
-		return { type, data };
+		return {type, data};
 	}
 
 	// —————

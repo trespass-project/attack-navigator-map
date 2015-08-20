@@ -77,6 +77,11 @@ var Edge = React.createClass({
 			edgeNodes.toNode = helpers.getItemById(props.graph.nodes, edge.to);
 		}
 
+		// both nodes need to exist, obviously
+		if (!edgeNodes.fromNode || !edgeNodes.toNode) {
+			return null;
+		}
+
 		return (
 			<g className='edge-group'
 				onClick={this._onClick}>

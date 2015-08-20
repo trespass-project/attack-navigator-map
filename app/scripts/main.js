@@ -14,6 +14,7 @@ var LibraryStore = require('./components/Library/LibraryStore.js');
 var Library = require('./components/Library/Library.js');
 var ModelLibrary = require('./components/ModelLibrary/ModelLibrary.js');
 var ModelDebugView = require('./components/ModelDebugView/ModelDebugView.js');
+var GraphOutline = require('./GraphOutline.js');
 
 var HTMLOverlay = require('./HTMLOverlay.js');
 var MainMenu = require('./MainMenu.js');
@@ -95,7 +96,7 @@ var App = React.createClass({
 					<div className='panel-section'>
 						<h3 className='title'>outline</h3>
 						<FluxComponent flux={flux} connectToStores={[constants.GRAPH, constants.INTERFACE]}>
-							<span className='disabled'>TODO</span>
+							<GraphOutline />
 						</FluxComponent>
 					</div>
 					<div className='panel-section'>
