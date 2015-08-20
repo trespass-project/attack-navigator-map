@@ -95,7 +95,7 @@ function ellipsize(maxLen, s) {
 	const E = '…';
 	let len = s.length;
 	let diff = maxLen - len;
-	if (0 > diff) {
+	if (diff < 0) {
 		let centerIndex = len / 2;
 		let numDel = Math.abs(diff);
 		let startIndex = Math.round(centerIndex - (numDel / 2));
