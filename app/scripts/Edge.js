@@ -79,6 +79,7 @@ var Edge = React.createClass({
 
 		// both nodes need to exist, obviously
 		if (!edgeNodes.fromNode || !edgeNodes.toNode) {
+			console.warn('ignoring edge with missing nodes');
 			return null;
 		}
 

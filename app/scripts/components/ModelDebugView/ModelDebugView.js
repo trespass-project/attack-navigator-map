@@ -26,6 +26,8 @@ class ModelDebugView extends React.Component {
 		const connectDropTarget = this.props.connectDropTarget;
 		return connectDropTarget(
 			<div>
+				<input ref='load-model' type='file' accept='.xml' onChange={this.loadXMLFile} />
+				<hr/>
 				<button onClick={this.generateXML} className='btn btn-default btn-xs'>save as XML</button>
 				<br/><br/>
 				<pre className='debug-json'>
@@ -33,6 +35,21 @@ class ModelDebugView extends React.Component {
 				</pre>
 			</div>
 		);
+	}
+
+	loadXMLFile(event) {
+		event.preventDefault();
+		let that = this;
+
+		let $fileInput = $(this.refs['load-model'].getDOMNode());
+		let file = $fileInput[0].files[0];
+
+		var reader = new FileReader();
+		reader.onload = function(event) {
+			var content = event.target.result;
+			that.context.graphActions.loadXML(content);
+		};
+		reader.readAsText(file);
 	}
 
 	generateXML(event) {

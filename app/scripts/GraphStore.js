@@ -90,10 +90,10 @@ class GraphStore extends Store {
 			model: null
 		};
 
-		this._updateGraph();
+		this._updateModel();
 	}
 
-	_updateGraph(graph) {
+	_updateModel(graph) {
 		graph = graph || this.state.graph;
 		var model = trespass.model.create();
 
@@ -159,9 +159,7 @@ class GraphStore extends Store {
 
 		action.promise
 			.success(function(data, status, jqXHR) {
-				var $system = trespass.model.parse(data)('system');
-				var model = trespass.model.prepare($system);
-				that.setState({ model: model });
+				that.loadXML({data});
 			})
 			.error(function(jqXHR, status, errorMessage) {
 				console.error(status, errorMessage);
@@ -175,6 +173,133 @@ class GraphStore extends Store {
 			.always(function() {
 				that.setState({ loading: false });
 			});
+	}
+
+	loadXML(action) {
+		const {content} = action;
+		var $system = trespass.model.parse(content)('system');
+		var model = trespass.model.prepare($system);
+
+		// TODO: generate graph from model
+		let graph = {
+			nodes: [],
+			edges: [],
+			groups: [],
+		};
+
+		// for each edge in model, create edge in graph
+		graph.edges = model.system.edges.map(function(edge) {
+			edge = edge.edge;
+			return {
+				from: edge.source,
+				to: edge.target,
+				relation: edge._relation,
+				directed: edge.directed,
+			};
+		});
+
+		// for each location in model, create node
+		let locations = model.system.locations.map(function(location) {
+			location = location.location;
+			return {
+				type: 'location',
+				label: location.label || location.id || 'untitled',
+				value: location.id,
+				id: location.id,
+				domain: location.domain,
+				x: 200,
+				y: 200,
+			};
+		})
+		graph.nodes = R.concat(graph.nodes, locations);
+
+		let assets = model.system.assets.map(function(asset) {
+			asset = asset.asset;
+			return {
+				type: 'asset',
+				label: asset.label || asset.id || 'untitled',
+				value: asset.id,
+				id: asset.id,
+				x: 400,
+				y: 200,
+			};
+		})
+		graph.nodes = R.concat(graph.nodes, assets);
+
+		let actors = model.system.actors.map(function(actor) {
+			actor = actor.actor;
+			return {
+				type: 'actor',
+				label: actor.label || actor.id || 'untitled',
+				value: actor.id,
+				id: actor.id,
+				x: 400,
+				y: 400,
+			};
+		})
+		graph.nodes = R.concat(graph.nodes, actors);
+
+		let roles = model.system.roles.map(function(role) {
+			role = role.role;
+			return {
+				type: 'role',
+				label: role.label || role.id || 'untitled',
+				value: role.id,
+				id: role.id,
+				x: 600,
+				y: 200,
+			};
+		})
+		graph.nodes = R.concat(graph.nodes, roles);
+
+		let predicates = model.system.predicates.map(function(predicate) {
+			predicate = predicate.predicate;
+			return {
+				type: 'predicate',
+				label: predicate.label || predicate.id || 'untitled',
+				value: predicate.id,
+				id: predicate.id,
+				x: 600,
+				y: 400,
+			};
+		})
+		graph.nodes = R.concat(graph.nodes, predicates);
+
+		let processes = model.system.processes.map(function(process) {
+			process = process.process;
+			return {
+				type: 'process',
+				label: process.label || process.id || 'untitled',
+				value: process.id,
+				id: process.id,
+				x: 600,
+				y: 600,
+			};
+		})
+		graph.nodes = R.concat(graph.nodes, processes);
+
+		let policies = model.system.policies.map(function(policy) {
+			policy = policy.policy;
+			return {
+				type: 'policy',
+				label: policy.label || policy.id || 'untitled',
+				value: policy.id,
+				id: policy.id,
+				x: 600,
+				y: 200,
+			};
+		})
+		graph.nodes = R.concat(graph.nodes, policies);
+
+		// TODO: rest ...
+
+		// auto-layout
+		// TODO
+
+		this.setState({
+			model: model,
+			graph: graph
+		});
 	}
 
 	generateXML(action) {
@@ -218,7 +343,7 @@ class GraphStore extends Store {
 			});
 		}
 
-		this._updateGraph(graph);
+		this._updateModel(graph);
 	}
 
 	addEdge(action) {
@@ -227,7 +352,7 @@ class GraphStore extends Store {
 			id: ''+Date.now() // TODO
 		});
 		this.state.graph.edges.push(edge);
-		this._updateGraph();
+		this._updateModel();
 	}
 
 	removeEdge(action) {
@@ -235,7 +360,7 @@ class GraphStore extends Store {
 		this.state.graph.edges = this.state.graph.edges.filter(function(e) {
 			return edge.id != e.id;
 		});
-		this._updateGraph();
+		this._updateModel();
 	}
 
 	removeGroup(action) {
@@ -270,7 +395,7 @@ class GraphStore extends Store {
 		}
 
 		this.state.graph.nodes.push(node);
-		this._updateGraph();
+		this._updateModel();
 	}
 
 	_removeNode(id) {
@@ -296,7 +421,7 @@ class GraphStore extends Store {
 		let {node} = action;
 		this._removeNode(node.id);
 		this._cleanupGroups();
-		this._updateGraph();
+		this._updateModel();
 	}
 
 	// remove missing nodes

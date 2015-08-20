@@ -24,7 +24,7 @@ var ContextMenu = React.createClass({
 		data[event.target.name] = event.target.value;
 		// TODO: less hacky?
 		this.props.flux.getStore(constants.GRAPH)
-			._updateGraph(this.props.graph);
+			._updateModel(this.props.graph);
 	},
 
 	_onSubmit: function(event) {

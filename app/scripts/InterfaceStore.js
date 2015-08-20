@@ -27,7 +27,7 @@ class InterfaceStore extends Store {
 				that.register(actionId, that[key]);
 			});
 
-		this._graphStore = flux.getStore(constants.GRAPH); // TODO: is this bad practice?
+		this.graphStore = flux.getStore(constants.GRAPH); // TODO: is this bad practice?
 
 		this.state = {
 			drag: null,
@@ -112,7 +112,7 @@ class InterfaceStore extends Store {
 	removeGroupBackgroundImage(action) {
 		let {group} = action;
 		delete group._bgImage;
-		this._graphStore._updateGraph();
+		this.graphStore._updateModel();
 	}
 
 	addGroupBackgroundImage(action) {
@@ -121,7 +121,7 @@ class InterfaceStore extends Store {
 		group._bgImage.url = dataURI;
 		group._bgImage.width = 550;
 		group._bgImage.height = 550 / aspectRatio;
-		this._graphStore._updateGraph();
+		this.graphStore._updateModel();
 	}
 
 	resizeGroupBackgroundImage(action) {
@@ -130,7 +130,7 @@ class InterfaceStore extends Store {
 
 		group._bgImage.width = Math.max(width, 50);
 		group._bgImage.height = Math.max(height, 50);
-		this._graphStore._updateGraph();
+		this.graphStore._updateModel();
 	}
 
 	backgroundImageToNodes(action) {
@@ -149,7 +149,7 @@ class InterfaceStore extends Store {
 		console.log(svg);
 
 		delete group._bgImage;
-		this._graphStore._updateGraph();
+		this.graphStore._updateModel();
 	}
 
 	setTransformation(action) {
@@ -197,14 +197,14 @@ class InterfaceStore extends Store {
 	_autoLayout() {
 		var that = this;
 
-		var children = this._graphStore.state.graph.nodes.map(
+		var children = this.graphStore.state.graph.nodes.map(
 			function(node) {
 				// node.width = 40;
 				// node.height = 40;
 				return _.merge({}, node);
 			}
 		);
-		var edges = this._graphStore.state.graph.edges.map(
+		var edges = this.graphStore.state.graph.edges.map(
 			function(edge) {
 				return {
 					source: edge.from,
@@ -249,13 +249,13 @@ class InterfaceStore extends Store {
 					TWEEN.update(time);
 				}
 
-				that._graphStore.state.graph.nodes.forEach(function(node) {
+				that.graphStore.state.graph.nodes.forEach(function(node) {
 					var newNode = helpers.getItemById(g.children, node.id);
 					var tween = new TWEEN.Tween(node)
 						.to(_.pick(newNode, 'x', 'y'), 500)
 						.easing(TWEEN.Easing.Cubic.InOut)
 						.onUpdate(function() {
-							that._graphStore._updateGraph();
+							that.graphStore._updateModel();
 						})
 						.start()
 						.onComplete(function() {
@@ -295,7 +295,7 @@ class InterfaceStore extends Store {
 		let {node, newPos} = action;
 		node.x = newPos.x;
 		node.y = newPos.y;
-		this._graphStore._updateGraph();
+		this.graphStore._updateModel();
 	}
 
 	moveGroup(action) {
@@ -304,12 +304,12 @@ class InterfaceStore extends Store {
 
 		group.nodeIds
 			.forEach(function(id) {
-				let node = helpers.getItemById(that._graphStore.state.graph.nodes, id);
+				let node = helpers.getItemById(that.graphStore.state.graph.nodes, id);
 				node.x += posDelta.x;
 				node.y += posDelta.y;
 			});
 
-		this._graphStore._updateGraph();
+		this.graphStore._updateModel();
 	}
 
 	moveImage(action) {
@@ -319,7 +319,7 @@ class InterfaceStore extends Store {
 		group._bgImage.groupCenterOffsetX = newPos.groupCenterOffsetX;
 		group._bgImage.groupCenterOffsetY = newPos.groupCenterOffsetY;
 
-		this._graphStore._updateGraph();
+		this.graphStore._updateModel();
 	}
 
 };

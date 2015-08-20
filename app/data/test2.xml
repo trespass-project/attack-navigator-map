@@ -1,0 +1,593 @@
+<?xml version='1.0' encoding='utf-8'?>
+<system author="attack navigator map (trespass.js)" date="06-07-2015" title="vsphere_export.graphml" version="0.0.0" 
+	xmlns="https://www.trespass-project.eu/schemas/TREsPASS_model" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://www.trespass-project.eu/schemas/TREsPASS_model.xsd">
+	<locations>
+		<location _type="ResourcePool" domain="cyber-virtual" id="http://zurich.ibm.com/save/ontology/vmware/entity_vim.ResourcePool%3Aresgroup-142" />
+		<location _type="VirtualMachine" domain="cyber-virtual" id="http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-12" />
+		<location _type="ResourcePool" domain="cyber-virtual" id="http://zurich.ibm.com/save/ontology/vmware/entity_vim.ResourcePool%3Aresgroup-70" />
+		<location _type="Network" domain="cyber-virtual" id="http://zurich.ibm.com/save/ontology/vmware/entity_vim.Network%3Anetwork-11" />
+		<location _type="Datastore" domain="cyber-virtual" id="http://zurich.ibm.com/save/ontology/vmware/entity_vim.Datastore%3Adatastore-10" />
+		<location _type="VirtualMachine" domain="cyber-virtual" id="http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-76" />
+		<location _type="ResourcePool" domain="cyber-virtual" id="http://zurich.ibm.com/save/ontology/vmware/entity_vim.ResourcePool%3Aresgroup-67" />
+		<location _type="Folder" domain="cyber-virtual" id="http://zurich.ibm.com/save/ontology/vmware/entity_vim.Folder%3Agroup-s5" />
+		<location _type="ResourcePool" domain="cyber-virtual" id="http://zurich.ibm.com/save/ontology/vmware/entity_vim.ResourcePool%3Aresgroup-141" />
+		<location _type="ClusterComputeResource" domain="cyber-virtual" id="http://zurich.ibm.com/save/ontology/vmware/entity_vim.ClusterComputeResource%3Adomain-c71" />
+		<location _type="ResourcePool" domain="cyber-virtual" id="http://zurich.ibm.com/save/ontology/vmware/entity_vim.ResourcePool%3Aresgroup-72" />
+		<location _type="ResourcePool" domain="cyber-virtual" id="http://zurich.ibm.com/save/ontology/vmware/entity_vim.ResourcePool%3Aresgroup-66" />
+		<location _type="VirtualMachine" domain="cyber-virtual" id="http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-73" />
+		<location _type="VirtualMachine" domain="cyber-virtual" id="http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-75" />
+		<location _type="Datacenter" domain="cyber-virtual" id="http://zurich.ibm.com/save/ontology/vmware/entity_vim.Datacenter%3Adatacenter-2" />
+		<location _type="Folder" domain="cyber-virtual" id="http://zurich.ibm.com/save/ontology/vmware/entity_vim.Folder%3Agroup-h4" />
+		<location _type="Folder" domain="cyber-virtual" id="http://zurich.ibm.com/save/ontology/vmware/entity_vim.Folder%3Agroup-v3" />
+		<location _type="Folder" domain="cyber-virtual" id="http://zurich.ibm.com/save/ontology/vmware/entity_vim.Folder%3Agroup-n6" />
+		<location _type="HostSystem" domain="cyber-physical" id="http://zurich.ibm.com/save/ontology/vmware/entity_vim.HostSystem%3Ahost-9" />
+		<location _type="HostSystem" domain="cyber-physical" id="http://zurich.ibm.com/save/ontology/vmware/entity_vim.HostSystem%3Ahost-15" />
+		<location _type="HostSystem" domain="cyber-physical" id="http://zurich.ibm.com/save/ontology/vmware/entity_vim.HostSystem%3Ahost-18" />
+		<location _type="VirtualMachine" domain="cyber-virtual" id="http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-74" />
+		<location _type="VirtualMachine" domain="cyber-virtual" id="http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-101" />
+		<location _type="VirtualMachine" domain="cyber-virtual" id="http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-41" />
+		<location _type="Folder" domain="cyber-virtual" id="http://zurich.ibm.com/save/ontology/vmware/entity_vim.Folder%3Agroup-d1" />
+		<location _type="ClusterComputeResource" domain="cyber-virtual" id="http://zurich.ibm.com/save/ontology/vmware/entity_vim.ClusterComputeResource%3Adomain-c19" />
+		<location _type="ResourcePool" domain="cyber-virtual" id="http://zurich.ibm.com/save/ontology/vmware/entity_vim.ResourcePool%3Aresgroup-20" />
+	</locations>
+	<edges>
+		<edge _relation="vmware-resourcePool" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-12</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ResourcePool%3Aresgroup-70</target>
+		</edge>
+		<edge _relation="vmware-network" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-12</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Network%3Anetwork-11</target>
+		</edge>
+		<edge _relation="vmware-datastore" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-12</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Datastore%3Adatastore-10</target>
+		</edge>
+		<edge _relation="vmware-resourcePool" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-76</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ResourcePool%3Aresgroup-67</target>
+		</edge>
+		<edge _relation="vmware-network" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-76</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Network%3Anetwork-11</target>
+		</edge>
+		<edge _relation="vmware-datastore" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-76</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Datastore%3Adatastore-10</target>
+		</edge>
+		<edge _relation="vmware-childEntity" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Folder%3Agroup-s5</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Datastore%3Adatastore-10</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Folder%3Agroup-s5</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Datastore%3Adatastore-10</target>
+		</edge>
+		<edge _relation="vmware-resourcePool" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ClusterComputeResource%3Adomain-c71</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ResourcePool%3Aresgroup-72</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ClusterComputeResource%3Adomain-c71</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ResourcePool%3Aresgroup-72</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ResourcePool%3Aresgroup-66</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-73</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ResourcePool%3Aresgroup-66</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-75</target>
+		</edge>
+		<edge _relation="vmware-resourcePool" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-75</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ResourcePool%3Aresgroup-66</target>
+		</edge>
+		<edge _relation="vmware-network" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-75</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Network%3Anetwork-11</target>
+		</edge>
+		<edge _relation="vmware-datastore" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-75</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Datastore%3Adatastore-10</target>
+		</edge>
+		<edge _relation="vmware-hostFolder" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Datacenter%3Adatacenter-2</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Folder%3Agroup-h4</target>
+		</edge>
+		<edge _relation="vmware-vmFolder" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Datacenter%3Adatacenter-2</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Folder%3Agroup-v3</target>
+		</edge>
+		<edge _relation="vmware-network" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Datacenter%3Adatacenter-2</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Network%3Anetwork-11</target>
+		</edge>
+		<edge _relation="vmware-networkFolder" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Datacenter%3Adatacenter-2</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Folder%3Agroup-n6</target>
+		</edge>
+		<edge _relation="vmware-datastore" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Datacenter%3Adatacenter-2</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Datastore%3Adatastore-10</target>
+		</edge>
+		<edge _relation="vmware-datastoreFolder" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Datacenter%3Adatacenter-2</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Folder%3Agroup-s5</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Datacenter%3Adatacenter-2</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Folder%3Agroup-v3</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Datacenter%3Adatacenter-2</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Folder%3Agroup-h4</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Datacenter%3Adatacenter-2</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Folder%3Agroup-s5</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Datacenter%3Adatacenter-2</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Folder%3Agroup-n6</target>
+		</edge>
+		<edge _relation="vmware-resourcePool" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-73</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ResourcePool%3Aresgroup-66</target>
+		</edge>
+		<edge _relation="vmware-network" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-73</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Network%3Anetwork-11</target>
+		</edge>
+		<edge _relation="vmware-datastore" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-73</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Datastore%3Adatastore-10</target>
+		</edge>
+		<edge _relation="vmware-host" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Network%3Anetwork-11</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.HostSystem%3Ahost-9</target>
+		</edge>
+		<edge _relation="vmware-host" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Network%3Anetwork-11</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.HostSystem%3Ahost-15</target>
+		</edge>
+		<edge _relation="vmware-host" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Network%3Anetwork-11</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.HostSystem%3Ahost-18</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Network%3Anetwork-11</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-74</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Network%3Anetwork-11</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-12</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Network%3Anetwork-11</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-101</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Network%3Anetwork-11</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-73</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Network%3Anetwork-11</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-41</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Network%3Anetwork-11</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-75</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Network%3Anetwork-11</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-76</target>
+		</edge>
+		<edge _relation="vmware-childEntity" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Folder%3Agroup-v3</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-76</target>
+		</edge>
+		<edge _relation="vmware-childEntity" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Folder%3Agroup-v3</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-75</target>
+		</edge>
+		<edge _relation="vmware-childEntity" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Folder%3Agroup-v3</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-41</target>
+		</edge>
+		<edge _relation="vmware-childEntity" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Folder%3Agroup-v3</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-101</target>
+		</edge>
+		<edge _relation="vmware-childEntity" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Folder%3Agroup-v3</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-73</target>
+		</edge>
+		<edge _relation="vmware-childEntity" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Folder%3Agroup-v3</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-74</target>
+		</edge>
+		<edge _relation="vmware-childEntity" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Folder%3Agroup-v3</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-12</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Folder%3Agroup-v3</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-101</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Folder%3Agroup-v3</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-12</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Folder%3Agroup-v3</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-76</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Folder%3Agroup-v3</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-74</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Folder%3Agroup-v3</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-41</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Folder%3Agroup-v3</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-75</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Folder%3Agroup-v3</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-73</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ResourcePool%3Aresgroup-70</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-12</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ResourcePool%3Aresgroup-70</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-101</target>
+		</edge>
+		<edge _relation="vmware-resourcePool" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-101</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ResourcePool%3Aresgroup-70</target>
+		</edge>
+		<edge _relation="vmware-network" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-101</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Network%3Anetwork-11</target>
+		</edge>
+		<edge _relation="vmware-datastore" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-101</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Datastore%3Adatastore-10</target>
+		</edge>
+		<edge _relation="vmware-resourcePool" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ResourcePool%3Aresgroup-72</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ResourcePool%3Aresgroup-142</target>
+		</edge>
+		<edge _relation="vmware-resourcePool" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ResourcePool%3Aresgroup-72</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ResourcePool%3Aresgroup-141</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ResourcePool%3Aresgroup-72</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ResourcePool%3Aresgroup-142</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ResourcePool%3Aresgroup-72</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ResourcePool%3Aresgroup-141</target>
+		</edge>
+		<edge _relation="vmware-childEntity" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Folder%3Agroup-d1</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Datacenter%3Adatacenter-2</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Folder%3Agroup-d1</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Datacenter%3Adatacenter-2</target>
+		</edge>
+		<edge _relation="vmware-host" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ClusterComputeResource%3Adomain-c19</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.HostSystem%3Ahost-18</target>
+		</edge>
+		<edge _relation="vmware-host" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ClusterComputeResource%3Adomain-c19</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.HostSystem%3Ahost-15</target>
+		</edge>
+		<edge _relation="vmware-host" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ClusterComputeResource%3Adomain-c19</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.HostSystem%3Ahost-9</target>
+		</edge>
+		<edge _relation="vmware-resourcePool" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ClusterComputeResource%3Adomain-c19</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ResourcePool%3Aresgroup-20</target>
+		</edge>
+		<edge _relation="vmware-network" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ClusterComputeResource%3Adomain-c19</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Network%3Anetwork-11</target>
+		</edge>
+		<edge _relation="vmware-datastore" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ClusterComputeResource%3Adomain-c19</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Datastore%3Adatastore-10</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ClusterComputeResource%3Adomain-c19</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.HostSystem%3Ahost-9</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ClusterComputeResource%3Adomain-c19</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.HostSystem%3Ahost-15</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ClusterComputeResource%3Adomain-c19</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ResourcePool%3Aresgroup-20</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ClusterComputeResource%3Adomain-c19</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.HostSystem%3Ahost-18</target>
+		</edge>
+		<edge _relation="vmware-childEntity" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Folder%3Agroup-h4</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ClusterComputeResource%3Adomain-c19</target>
+		</edge>
+		<edge _relation="vmware-childEntity" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Folder%3Agroup-h4</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ClusterComputeResource%3Adomain-c71</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Folder%3Agroup-h4</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ClusterComputeResource%3Adomain-c19</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Folder%3Agroup-h4</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ClusterComputeResource%3Adomain-c71</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.HostSystem%3Ahost-15</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-76</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.HostSystem%3Ahost-15</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-75</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.HostSystem%3Ahost-15</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-73</target>
+		</edge>
+		<edge _relation="vmware-network" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.HostSystem%3Ahost-15</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Network%3Anetwork-11</target>
+		</edge>
+		<edge _relation="vmware-datastore" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.HostSystem%3Ahost-15</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Datastore%3Adatastore-10</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ResourcePool%3Aresgroup-67</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-74</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ResourcePool%3Aresgroup-67</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-76</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Datastore%3Adatastore-10</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-74</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Datastore%3Adatastore-10</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-41</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Datastore%3Adatastore-10</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-75</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Datastore%3Adatastore-10</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-73</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Datastore%3Adatastore-10</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-101</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Datastore%3Adatastore-10</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-12</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Datastore%3Adatastore-10</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-76</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.HostSystem%3Ahost-9</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-12</target>
+		</edge>
+		<edge _relation="vmware-network" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.HostSystem%3Ahost-9</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Network%3Anetwork-11</target>
+		</edge>
+		<edge _relation="vmware-datastore" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.HostSystem%3Ahost-9</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Datastore%3Adatastore-10</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.HostSystem%3Ahost-18</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-101</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.HostSystem%3Ahost-18</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-41</target>
+		</edge>
+		<edge _relation="vmware-vm" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.HostSystem%3Ahost-18</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-74</target>
+		</edge>
+		<edge _relation="vmware-network" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.HostSystem%3Ahost-18</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Network%3Anetwork-11</target>
+		</edge>
+		<edge _relation="vmware-datastore" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.HostSystem%3Ahost-18</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Datastore%3Adatastore-10</target>
+		</edge>
+		<edge _relation="vmware-resourcePool" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-74</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ResourcePool%3Aresgroup-67</target>
+		</edge>
+		<edge _relation="vmware-network" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-74</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Network%3Anetwork-11</target>
+		</edge>
+		<edge _relation="vmware-datastore" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-74</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Datastore%3Adatastore-10</target>
+		</edge>
+		<edge _relation="vmware-network" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-41</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Network%3Anetwork-11</target>
+		</edge>
+		<edge _relation="vmware-datastore" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-41</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Datastore%3Adatastore-10</target>
+		</edge>
+		<edge _relation="vmware-resourcePool" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ResourcePool%3Aresgroup-20</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ResourcePool%3Aresgroup-66</target>
+		</edge>
+		<edge _relation="vmware-resourcePool" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ResourcePool%3Aresgroup-20</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ResourcePool%3Aresgroup-67</target>
+		</edge>
+		<edge _relation="vmware-resourcePool" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ResourcePool%3Aresgroup-20</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ResourcePool%3Aresgroup-70</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ResourcePool%3Aresgroup-20</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ResourcePool%3Aresgroup-66</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ResourcePool%3Aresgroup-20</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ResourcePool%3Aresgroup-67</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ResourcePool%3Aresgroup-20</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ResourcePool%3Aresgroup-70</target>
+		</edge>
+		<edge _relation="vmware-childEntity" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Folder%3Agroup-n6</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Network%3Anetwork-11</target>
+		</edge>
+		<edge _relation="vmware-parentchild" directed="true">
+			<source>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Folder%3Agroup-n6</source>
+			<target>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Network%3Anetwork-11</target>
+		</edge>
+	</edges>
+	<actors>
+		<actor id="http://zurich.ibm.com/save/ontology/vmware/principal_VSPHERE.LOCAL%5Csydney">
+			<atLocations>TODO</atLocations>
+		</actor>
+		<actor id="http://zurich.ibm.com/save/ontology/vmware/principal_VSPHERE.LOCAL%5Ccleo">
+			<atLocations>TODO</atLocations>
+		</actor>
+		<actor id="http://zurich.ibm.com/save/ontology/vmware/principal_VSPHERE.LOCAL%5Cterry">
+			<atLocations>TODO</atLocations>
+		</actor>
+		<actor id="http://zurich.ibm.com/save/ontology/vmware/principal_VSPHERE.LOCAL%5Cfinn">
+			<atLocations>TODO</atLocations>
+		</actor>
+		<actor id="http://zurich.ibm.com/save/ontology/vmware/principal_VSPHERE.LOCAL%5CAdministrators">
+			<atLocations>TODO</atLocations>
+		</actor>
+		<actor id="http://zurich.ibm.com/save/ontology/vmware/principal_VSPHERE.LOCAL%5Cbig">
+			<atLocations>TODO</atLocations>
+		</actor>
+		<actor id="http://zurich.ibm.com/save/ontology/vmware/principal_VSPHERE.LOCAL%5CAdministrator">
+			<atLocations>TODO</atLocations>
+		</actor>
+		<actor id="http://zurich.ibm.com/save/ontology/vmware/principal_VSPHERE.LOCAL%5Cethan">
+			<atLocations>TODO</atLocations>
+		</actor>
+	</actors>
+	<policies>
+		<policy>
+			<atLocations>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ResourcePool%3Aresgroup-67</atLocations>
+			<enabledActions>LogicalAccess_VirtualMachineUser_propagate</enabledActions>
+			<credentials>
+				<credPredicate name="isVmwareUser">
+					<value>http://zurich.ibm.com/save/ontology/vmware/principal_VSPHERE.LOCAL%5Cfinn</value>
+				</credPredicate>
+			</credentials>
+		</policy>
+		<policy>
+			<atLocations>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Folder%3Agroup-d1</atLocations>
+			<enabledActions>LogicalAccess_Admin_propagate</enabledActions>
+			<credentials>
+				<credPredicate name="isVmwareUser">
+					<value>http://zurich.ibm.com/save/ontology/vmware/principal_VSPHERE.LOCAL%5CAdministrator</value>
+				</credPredicate>
+			</credentials>
+		</policy>
+		<policy>
+			<atLocations>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Datacenter%3Adatacenter-2</atLocations>
+			<enabledActions>LogicalAccess_Readonly_propagate</enabledActions>
+			<credentials>
+				<credPredicate name="isVmwareUser">
+					<value>http://zurich.ibm.com/save/ontology/vmware/principal_VSPHERE.LOCAL%5Cbig</value>
+				</credPredicate>
+			</credentials>
+		</policy>
+		<policy>
+			<atLocations>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Datacenter%3Adatacenter-2</atLocations>
+			<enabledActions>LogicalAccess_Admin_propagate</enabledActions>
+			<credentials>
+				<credPredicate name="isVmwareUser">
+					<value>http://zurich.ibm.com/save/ontology/vmware/principal_VSPHERE.LOCAL%5Csydney</value>
+				</credPredicate>
+			</credentials>
+		</policy>
+		<policy>
+			<atLocations>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ClusterComputeResource%3Adomain-c19</atLocations>
+			<enabledActions>LogicalAccess_Readonly_propagate</enabledActions>
+			<credentials>
+				<credPredicate name="isVmwareUser">
+					<value>http://zurich.ibm.com/save/ontology/vmware/principal_VSPHERE.LOCAL%5Cterry</value>
+				</credPredicate>
+			</credentials>
+		</policy>
+		<policy>
+			<atLocations>http://zurich.ibm.com/save/ontology/vmware/entity_vim.ClusterComputeResource%3Adomain-c71</atLocations>
+			<enabledActions>LogicalAccess_NetworkAdministrator_propagate</enabledActions>
+			<credentials>
+				<credPredicate name="isVmwareUser">
+					<value>http://zurich.ibm.com/save/ontology/vmware/principal_VSPHERE.LOCAL%5Cterry</value>
+				</credPredicate>
+			</credentials>
+		</policy>
+		<policy>
+			<atLocations>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Datacenter%3Adatacenter-2</atLocations>
+			<enabledActions>LogicalAccess_Noaccess_propagate</enabledActions>
+			<credentials>
+				<credPredicate name="isVmwareUser">
+					<value>http://zurich.ibm.com/save/ontology/vmware/principal_VSPHERE.LOCAL%5Ccleo</value>
+				</credPredicate>
+			</credentials>
+		</policy>
+		<policy>
+			<atLocations>http://zurich.ibm.com/save/ontology/vmware/entity_vim.VirtualMachine%3Avm-73</atLocations>
+			<enabledActions>LogicalAccess_VirtualMachinePowerUser_propagate</enabledActions>
+			<credentials>
+				<credPredicate name="isVmwareUser">
+					<value>http://zurich.ibm.com/save/ontology/vmware/principal_VSPHERE.LOCAL%5Cethan</value>
+				</credPredicate>
+			</credentials>
+		</policy>
+		<policy>
+			<atLocations>http://zurich.ibm.com/save/ontology/vmware/entity_vim.Folder%3Agroup-d1</atLocations>
+			<enabledActions>LogicalAccess_Admin_propagate</enabledActions>
+			<credentials>
+				<credPredicate name="isVmwareUser">
+					<value>http://zurich.ibm.com/save/ontology/vmware/principal_VSPHERE.LOCAL%5CAdministrators</value>
+				</credPredicate>
+			</credentials>
+		</policy>
+	</policies>
+</system>
