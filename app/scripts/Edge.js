@@ -1,6 +1,7 @@
 'use strict';
 
 var React = require('react');
+var PureRenderMixin = require('react/addons').addons.PureRenderMixin;
 var d3 = require('d3');
 var $ = require('jquery');
 var mout = require('mout');
@@ -15,6 +16,8 @@ var diagonal = d3.svg.diagonal()
 
 
 var Edge = React.createClass({
+	mixins: [PureRenderMixin],
+
 	propTypes: {
 		edge: React.PropTypes.object.isRequired,
 		theme: React.PropTypes.object.isRequired,

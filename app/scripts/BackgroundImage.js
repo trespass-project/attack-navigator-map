@@ -2,13 +2,14 @@
 
 var $ = require('jquery');
 var React = require('react');
+var PureRenderMixin = require('react/addons').addons.PureRenderMixin;
 var SchleppMixin = require('./SchleppMixin.js');
 var helpers = require('./helpers.js');
 var icons = require('./icons.js');
 
 
 var ResizeElem = React.createClass({
-	mixins: [SchleppMixin],
+	mixins: [SchleppMixin, PureRenderMixin],
 
 	contextTypes: {
 		graphActions: React.PropTypes.object,

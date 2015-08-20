@@ -1,12 +1,13 @@
 'use strict';
 
 var React = require('react');
+var PureRenderMixin = require('react/addons').addons.PureRenderMixin;
 var SchleppMixin = require('./SchleppMixin.js');
 var helpers = require('./helpers.js');
 
 
 var Port = React.createClass({
-	mixins: [SchleppMixin],
+	mixins: [SchleppMixin, PureRenderMixin],
 
 	propTypes: {
 		x: React.PropTypes.number.isRequired,

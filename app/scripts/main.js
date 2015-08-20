@@ -2,6 +2,7 @@
 
 var $ = require('jquery');
 var React = require('react');
+var PureRenderMixin = require('react/addons').addons.PureRenderMixin;
 var flummox = require('flummox');
 var Flux = flummox.Flux;
 var FluxComponent = require('flummox/component');
@@ -58,6 +59,8 @@ var HTML5Backend = require('react-dnd/modules/backends/HTML5');
 var DragDropContext = require('react-dnd').DragDropContext;
 
 var App = React.createClass({
+	mixins: [PureRenderMixin],
+
 	childContextTypes: {
 		graphActions: React.PropTypes.object.isRequired,
 		interfaceActions: React.PropTypes.object.isRequired

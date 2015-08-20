@@ -2,6 +2,7 @@
 
 var $ = require('jquery');
 var React = require('react');
+var PureRenderMixin = require('react/addons').addons.PureRenderMixin;
 var classnames = require('classnames');
 var SchleppMixin = require('./SchleppMixin.js');
 var Port = require('./Port.js');
@@ -21,7 +22,7 @@ const typeIcons = {
 
 
 var Node = React.createClass({
-	mixins: [SchleppMixin],
+	mixins: [SchleppMixin, PureRenderMixin],
 
 	propTypes: {
 		x: React.PropTypes.number.isRequired,
