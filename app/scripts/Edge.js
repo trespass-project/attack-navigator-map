@@ -16,7 +16,7 @@ var diagonal = d3.svg.diagonal()
 
 
 var Edge = React.createClass({
-	mixins: [PureRenderMixin],
+	// mixins: [PureRenderMixin],
 
 	propTypes: {
 		edge: React.PropTypes.object.isRequired,

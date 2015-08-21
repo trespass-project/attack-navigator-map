@@ -7,7 +7,7 @@ var helpers = require('./helpers.js');
 
 
 var Port = React.createClass({
-	mixins: [SchleppMixin, PureRenderMixin],
+	mixins: [SchleppMixin/*, PureRenderMixin*/],
 
 	propTypes: {
 		x: React.PropTypes.number.isRequired,

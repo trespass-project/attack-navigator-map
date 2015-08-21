@@ -22,7 +22,7 @@ const typeIcons = {
 
 
 var Node = React.createClass({
-	mixins: [SchleppMixin, PureRenderMixin],
+	mixins: [SchleppMixin/*, PureRenderMixin*/],
 
 	propTypes: {
 		x: React.PropTypes.number.isRequired,

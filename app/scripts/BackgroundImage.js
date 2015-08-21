@@ -9,7 +9,7 @@ var icons = require('./icons.js');
 
 
 var ResizeElem = React.createClass({
-	mixins: [SchleppMixin, PureRenderMixin],
+	mixins: [SchleppMixin/*, PureRenderMixin*/],
 
 	contextTypes: {
 		graphActions: React.PropTypes.object,

@@ -8,7 +8,7 @@ var helpers = require('./helpers.js');
 
 
 var ContextMenu = React.createClass({
-	mixins: [PureRenderMixin],
+	// mixins: [PureRenderMixin],
 
 	propTypes: {
 		theme: React.PropTypes.object.isRequired,

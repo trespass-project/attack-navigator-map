@@ -20,7 +20,7 @@ var icons = require('./icons.js');
 
 
 var GraphMixin = {
-	mixins: [PureRenderMixin],
+	// mixins: [PureRenderMixin],
 
 	propTypes: {
 		graph: React.PropTypes.object.isRequired,

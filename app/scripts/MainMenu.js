@@ -7,7 +7,7 @@ const constants = require('./constants.js');
 
 
 var MainMenu = React.createClass({
-	mixins: [PureRenderMixin],
+	// mixins: [PureRenderMixin],
 
 	propTypes: {
 

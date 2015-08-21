@@ -7,7 +7,7 @@ var helpers = require('./helpers.js');
 
 
 var GraphOutline = React.createClass({
-	mixins: [PureRenderMixin],
+	// mixins: [PureRenderMixin],
 
 	propTypes: {
 		graph: React.PropTypes.object.isRequired
