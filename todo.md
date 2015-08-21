@@ -1,12 +1,20 @@
-how to show doors and windows?
+directed edges = arrows / triangles
 
-context menu: "duplicate"
+how to bundle multiple edges?
 
-create a user walkthrough story
+edge performace issue
+
+"duplicate" nodes
 
 items should have a selected state
 
+how to show doors and windows?
+
+create a user walkthrough story
+
 ---
+
+special interest groups
 
 can we get processes and policies to work?
 
