@@ -223,24 +223,24 @@ class InterfaceStore extends Store {
 		klay.layout({
 			graph: graph,
 			options: {
-				'direction': 'RIGHT',
-				'spacing': 100,
 				// http://rtsys.informatik.uni-kiel.de/confluence/display/KIELER/KIML+Layout+Options
 
 				// the-graph uses these values:
+				// https://github.com/noflo/klayjs-noflo/blob/master/klay-noflo.js
 				'intCoordinates': true,
 				'algorithm': 'de.cau.cs.kieler.klay.layered',
 				'layoutHierarchy': true,
-				// 'spacing': 36,
+				'spacing': theme.node.size*3,
 				'borderSpacing': 20,
 				'edgeSpacingFactor': 0.2,
-				'inLayerSpacingFactor': 2.0,
+				'inLayerSpacingFactor': 1.0,
 				'nodePlace': 'BRANDES_KOEPF',
 				'nodeLayering': 'NETWORK_SIMPLEX',
 				'edgeRouting': 'POLYLINE',
 				'crossMin': 'LAYER_SWEEP',
-				// 'direction': 'RIGHT'
+				'direction': 'RIGHT'
 			},
+
 			success: function(g) {
 				var done = false;
 				function animate(time) {
@@ -255,7 +255,7 @@ class InterfaceStore extends Store {
 						.to(_.pick(newNode, 'x', 'y'), 500)
 						.easing(TWEEN.Easing.Cubic.InOut)
 						.onUpdate(function() {
-							that.graphStore._updateModel();
+							that.graphStore._updateModel(); // TODO
 						})
 						.start()
 						.onComplete(function() {
@@ -266,6 +266,7 @@ class InterfaceStore extends Store {
 
 				animate();
 			},
+
 			error: function(err) {
 				console.error(err);
 			}
