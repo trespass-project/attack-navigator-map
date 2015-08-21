@@ -195,16 +195,52 @@ class InterfaceStore extends Store {
 	}
 
 	_autoLayout() {
-		var that = this;
+		const that = this;
+		let state = this.graphStore.state;
 
-		var children = this.graphStore.state.graph.nodes.map(
+		let nodesInGoupsIds = [];
+		let groups = state.graph.groups.map(function(group, index) {
+			nodesInGoupsIds = R.concat(nodesInGoupsIds, group.nodeIds);
+			let nodeFromId = R.partial(helpers.getItemById, state.graph.nodes);
+			let children = group.nodeIds
+				.map(nodeFromId)
+				.map(function(node) {
+					return _.merge(
+						node,
+						{ width: theme.node.size,
+						  height: theme.node.size }
+					);
+				});
+
+			return {
+				id: helpers.makeId(index, 'group'),
+				children: children,
+				group: true
+			};
+		});
+
+		nodesInGoupsIds = R.uniq(nodesInGoupsIds);
+		let nodeInGroup = nodesInGoupsIds.reduce(function(result, nodeId) {
+			result[nodeId] = true;
+			return result;
+		}, {});
+
+		let children = state.graph.nodes.map(
 			function(node) {
-				// node.width = 40;
-				// node.height = 40;
-				return _.merge({}, node);
+				if (nodeInGroup[node.id]) {
+					return null;
+				}
+				return _.merge(
+					node,
+					{ width: theme.node.size,
+					  height: theme.node.size }
+				);
 			}
 		);
-		var edges = this.graphStore.state.graph.edges.map(
+		children = _.compact(children);
+		children = children.concat(groups);
+
+		let edges = state.graph.edges.map(
 			function(edge, index) {
 				return {
 					source: edge.from,
@@ -214,7 +250,7 @@ class InterfaceStore extends Store {
 			}
 		);
 
-		var graph = {
+		let graph = {
 			'id': 'root',
 			'children': children,
 			'edges': edges
@@ -249,7 +285,17 @@ class InterfaceStore extends Store {
 					TWEEN.update(time);
 				}
 
-				that.graphStore.state.graph.nodes.forEach(function(node) {
+				// post-process groups
+				g.children.forEach(function(child) {
+					if (child.group === true) {
+						child.children.forEach(function(node) {
+							node.x += child.x;
+							node.y += child.y;
+						});
+					}
+				});
+
+				state.graph.nodes.forEach(function(node) {
 					var newNode = helpers.getItemById(g.children, node.id);
 					var tween = new TWEEN.Tween(node)
 						.to(_.pick(newNode, 'x', 'y'), 500)

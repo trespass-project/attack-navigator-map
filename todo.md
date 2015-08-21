@@ -32,8 +32,6 @@ function to fit map to editor
 update minimap
 	draggable rectangle to pan editor
 
-autolayout: recursively, per group
-
 groups: resizable (min size)
 
 multi-selection
