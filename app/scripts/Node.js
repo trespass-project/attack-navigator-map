@@ -94,11 +94,15 @@ var Node = React.createClass({
 
 		$(this.getDOMNode()).on('contextmenu', function(event) {
 			let menuItems = [
-				{
-					label: 'delete',
+				{	label: 'delete',
 					icon: icons['fa-trash'],
 					action: function() { context.graphActions.removeNode(that.props.node); }
-				}
+				},
+				{	label: 'clone', icon: icons['fa-files-o'], action:
+					function() {
+						context.graphActions.cloneNode(that.props.node);
+					}
+				},
 			];
 			context.interfaceActions.showContextMenu(event, that.props.group, menuItems);
 			return false;

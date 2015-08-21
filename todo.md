@@ -4,8 +4,6 @@ how to bundle multiple edges?
 
 edge performace issue
 
-"duplicate" nodes
-
 items should have a selected state
 
 how to show doors and windows?

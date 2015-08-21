@@ -55,6 +55,10 @@ class GraphActions extends Actions {
 		return {node};
 	}
 
+	cloneNode(node) {
+		return {node};
+	}
+
 	removeNode(node) {
 		return {node};
 	}
