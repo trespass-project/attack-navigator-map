@@ -266,7 +266,7 @@ var GraphEditor = React.createClass({
 		const props = this.props;
 		const context = this.context;
 
-		let deltaScale = event.deltaY / 2000.0;
+		let deltaScale = -event.deltaY / 2000.0;
 		let newScale = mout.math.clamp(this.props.scale + deltaScale,
 									   props.minZoom,
 									   props.maxZoom);
