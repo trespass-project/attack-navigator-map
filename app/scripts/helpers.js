@@ -61,7 +61,7 @@ function prepareGraphFragment(fragment) {
 		let oldId = node.id;
 
 		// create unique id
-		node.id = Date.now() + '-' + index;
+		node.id = makeId(index, node.type);
 
 		// rename existing ids in edges and groups
 		if (oldId) {
@@ -75,7 +75,7 @@ function prepareGraphFragment(fragment) {
 			});
 
 			fragment.groups.forEach(function(group, index) {
-				group.id = Date.now() + '-' + index;
+				group.id = makeId(index, 'group');
 				group.nodeIds = group.nodeIds.map(function(nodeId) {
 					if (nodeId === oldId) {
 						return node.id;
@@ -88,6 +88,11 @@ function prepareGraphFragment(fragment) {
 	});
 
 	return fragment;
+}
+
+
+function makeId(index, type) {
+	return [Date.now(), index||0, type||''].join('-');
 }
 
 
@@ -140,6 +145,7 @@ module.exports = {
 	getNodesBBox,
 	getGroupBBox,
 	prepareGraphFragment,
+	makeId,
 	ellipsize,
 	degToRad,
 	noop,

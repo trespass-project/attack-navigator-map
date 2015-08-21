@@ -345,7 +345,7 @@ class GraphStore extends Store {
 	addEdge(action) {
 		let {edge} = action;
 		_.defaults(edge, {
-			id: ''+Date.now() // TODO
+			id: helpers.makeId()
 		});
 		this.state.graph.edges.push(edge);
 		this._updateModel();

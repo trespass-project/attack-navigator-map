@@ -205,11 +205,11 @@ class InterfaceStore extends Store {
 			}
 		);
 		var edges = this.graphStore.state.graph.edges.map(
-			function(edge) {
+			function(edge, index) {
 				return {
 					source: edge.from,
 					target: edge.to,
-					id: ''+Date.now() // TODO: helper function to generate ids
+					id: helpers.makeId(index, 'edge')
 				};
 			}
 		);
