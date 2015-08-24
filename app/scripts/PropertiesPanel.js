@@ -1,5 +1,6 @@
 'use strict';
 
+var $ = require('jquery');
 var React = require('react');
 var _ = require('lodash');
 var helpers = require('./helpers.js');
@@ -10,13 +11,12 @@ var ContextMenu = React.createClass({
 	mixins: [],
 
 	propTypes: {
-		// theme: React.PropTypes.object.isRequired,
-		// contextMenu: React.PropTypes.any.isRequired,
+		relationsLibUrl: React.PropTypes.string.isRequired,
 	},
 
 	getDefaultProps: function() {
 		return {
-
+			//
 		};
 	},
 
@@ -126,12 +126,18 @@ var ContextMenu = React.createClass({
 								<td><span>{edgeNodes.fromNode.label}</span></td>
 							</tr>
 							<tr>
-								<td><label>to:</label></td>
-								<td><span>{edgeNodes.toNode.label}</span></td>
+								<td><label>relation:</label></td>
+								<td>
+									<select name='relation' value={edge.relation||null}>
+										{this.state.relationsLib.map(function(relation) {
+											return <option value={relation.value}>{relation.label}</option>;
+										})}
+									</select>
+								</td>
 							</tr>
 							<tr>
-								<td><label>relation:</label></td>
-								<td><input type='text' className='form-control' name='relation' placeholder='relation' value={edge.relation || ''} /></td>
+								<td><label>to:</label></td>
+								<td><span>{edgeNodes.toNode.label}</span></td>
 							</tr>
 						</tbody>
 					</table>
@@ -165,6 +171,24 @@ var ContextMenu = React.createClass({
 			</div>
 		);
 	},
+
+	componentWillMount: function() {
+		const that = this;
+
+		// TODO: use flux pattern for this
+		$.ajax({
+			url: this.props.relationsLibUrl,
+			dataType: 'json',
+		}).success(function(data) {
+			that.setState({ relationsLib: data.list });
+		});
+	},
+
+	getInitialState: function() {
+		return {
+			relationsLib: []
+		};
+	}
 
 });
 

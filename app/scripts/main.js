@@ -111,7 +111,10 @@ var App = React.createClass({
 						<GraphMinimap id='minimap' />
 					</FluxComponent>
 					<FluxComponent flux={flux} connectToStores={[constants.GRAPH, constants.INTERFACE]}>
-						<PropertiesPanel id='propspanel' />
+						<PropertiesPanel
+							relationsLibUrl={'data/'+constants.MODEL_RELATIONS_LIBRARY}
+							id='propspanel'
+						/>
 					</FluxComponent>
 
 					{/*<div id='model-library'>
