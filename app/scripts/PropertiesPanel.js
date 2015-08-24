@@ -3,6 +3,7 @@
 var $ = require('jquery');
 var React = require('react');
 var _ = require('lodash');
+var R = require('ramda');
 var helpers = require('./helpers.js');
 var constants = require('./constants.js');
 
@@ -22,6 +23,12 @@ var ContextMenu = React.createClass({
 
 	_onChange: function(data, event) {
 		data[event.target.name] = event.target.value;
+
+		// TODO:
+		if (!!data.relation) { // it's an edge
+			data.directed = (R.contains(data.relation, ['network', 'connects'])) ? false : true;
+		}
+
 		// TODO: less hacky?
 		this.props.flux.getStore(constants.GRAPH)
 			._updateModel(this.props.graph);

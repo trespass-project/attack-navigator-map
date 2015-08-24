@@ -38,6 +38,15 @@
 
 		{
 			"type": "relation",
+			"value": "owns",
+			"label": "owns",
+			"directed": true,
+			"acceptsSource": ["actor"],
+			"acceptsTarget": []
+		},
+
+		{
+			"type": "relation",
 			"value": "employee of",
 			"label": "employee of",
 			"directed": true,
