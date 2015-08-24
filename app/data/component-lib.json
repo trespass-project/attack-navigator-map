@@ -1,7 +1,10 @@
 {
 	"list": [
 		{ "type": "role", "value": "Administrator", "label": "Administrator" },
+		{ "type": "role", "value": "Employee", "label": "Employee" },
 
+		{ "type": "asset: data", "value": "File", "label": "File X" },
+		{ "type": "asset: item", "value": "Badge", "label": "Badge" },
 
 		{ "type": "location", "domain": "cyber-virtual", "value": "ClusterComputeResource", "label": "Cluster Compute Resource" },
 		{ "type": "location", "domain": "cyber-virtual", "value": "Datacenter", "label": "Datacenter" },
@@ -10,14 +13,20 @@
 		{ "type": "location", "domain": "cyber-virtual", "value": "Network", "label": "Network" },
 		{ "type": "location", "domain": "cyber-virtual", "value": "ResourcePool", "label": "Resource Pool" },
 		{ "type": "location", "domain": "cyber-virtual", "value": "VirtualMachine", "label": "Virtual Machine" },
+		{ "type": "location", "domain": "cyber-virtual", "value": "VirtualFirewall", "label": "Virtual Firewall" },
+		{ "type": "location", "domain": "cyber-virtual", "value": "VirtualSwitch", "label": "Virtual Switch" },
 
 		{ "type": "location", "domain": "cyber-physical", "value": "HostSystem", "label": "Host System" },
 		{ "type": "location", "domain": "cyber-physical", "value": "Computer", "label": "Computer" },
+		{ "type": "location", "domain": "cyber-physical", "value": "Laptop", "label": "Laptop" },
+		{ "type": "location", "domain": "cyber-physical", "value": "Server", "label": "Server" },
+		{ "type": "location", "domain": "cyber-physical", "value": "Gateway", "label": "Gateway" },
+		{ "type": "location", "domain": "cyber-physical", "value": "Switch", "label": "Switch" },
 
 		{ "type": "location", "domain": "physical", "value": "Building", "label": "Building" },
 		{ "type": "location", "domain": "physical", "value": "Room", "label": "Room" },
 		{ "type": "location", "domain": "physical", "value": "Door", "label": "Door" },
 		{ "type": "location", "domain": "physical", "value": "Window", "label": "Window" },
-		{ "type": "location", "domain": "physical", "value": "World", "label": "World" }
+		{ "type": "location", "domain": "physical", "value": "World", "label": "Outside world" }
 	]
 }

@@ -47,7 +47,7 @@ class LibraryStore extends flummox.Store {
 				const componentTypes = R.uniq(list.map(function(item) { return item.type; }));
 				that.setState({
 					list: list,
-					componentTypes: componentTypes,
+					componentTypes: componentTypes.sort(),
 					componentTypesFilter: componentTypes
 				});
 			})
