@@ -54,6 +54,17 @@ function getGroupBBox(allNodes, group) {
 }
 
 
+function getNodeGroups(nodeId, groups) {
+	var result = [];
+	groups.forEach(function(group) {
+		if (R.contains(nodeId, group.nodeIds)) {
+			result.push(group);
+		}
+	});
+	return result;
+}
+
+
 function prepareGraphFragment(fragment) {
 	// prepare fragment
 
@@ -144,6 +155,7 @@ module.exports = {
 	getItemById,
 	getNodesBBox,
 	getGroupBBox,
+	getNodeGroups,
 	prepareGraphFragment,
 	makeId,
 	ellipsize,

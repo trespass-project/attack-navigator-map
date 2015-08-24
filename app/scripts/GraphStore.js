@@ -488,6 +488,7 @@ class GraphStore extends Store {
 		const that = this;
 
 		let {node} = action;
+		let origNode = node;
 		node = _.merge({}, node);
 
 		// create fragment from node
@@ -513,10 +514,17 @@ class GraphStore extends Store {
 			groups: []
 		};
 
-		// TODO: what if node is in a group?
-
 		// prepare fragment
 		fragment = helpers.prepareGraphFragment(fragment);
+
+		// if node is in a group, so is the clone
+		let groups = helpers.getNodeGroups(origNode.id, this.state.graph.groups);
+		if (groups.length > 0) {
+			let group = groups[0];
+			fragment.nodes.forEach(function(node) {
+				group.nodeIds.push(node.id);
+			});
+		}
 
 		// add fragment
 		this.importModelFragment({fragment});
