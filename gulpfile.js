@@ -202,6 +202,11 @@ gulp.task('images', function() {
 
 
 gulp.task('fonts', function() {
+	// fontawesome
+	gulp.src('bower_components/fontawesome/fonts/*.{eot,svg,ttf,woff,woff2}')
+		.pipe(gulp.dest(tempDir(fontsDir())))
+		.pipe(gulp.dest(distDir(fontsDir())));
+
 	return gulp.src(require('main-bower-files')({
 		filter: '**/*.{ eot,svg,ttf,woff,woff2 }'
 	}).concat(appDir(fontsDir('**/*'))))
