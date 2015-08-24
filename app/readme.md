@@ -17,8 +17,8 @@
 
 ## data sources
 - libraries
-	- [componen-lib.json](./data/componen-lib.json)
-	- [pattern-lib.json](./data/pattern-lib.json)
+	- [component-lib.json](/anm2/data/component-lib.json)
+	- [pattern-lib.json](/anm2/data/pattern-lib.json)
 - models
-	- [empty.xml](./data/empty.xml)
-	- [test2.xml](./data/test2.xml)
+	- [empty.xml](/anm2/data/empty.xml)
+	- [test2.xml](/anm2/data/test2.xml)
