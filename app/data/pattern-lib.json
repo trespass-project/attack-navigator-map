@@ -80,8 +80,106 @@
 					}
 				]
 			},
-			"label": "Model Template"
+			"label": "Buildung template"
 		},
+
+
+		{
+			"type": "template",
+			"fragment": true,
+			"value": {
+				"nodes": [
+					{
+						"type": "location",
+						"domain": "virtual",
+						"id": "vm1",
+						"x": 300,
+						"y": 1,
+						"label": "VM1"
+					},
+					{
+						"type": "location",
+						"domain": "virtual",
+						"id": "vm2",
+						"x": 300,
+						"y": 100,
+						"label": "VM2"
+					},
+					{
+						"type": "asset",
+						"id": "file1",
+						"x": 450,
+						"y": 1,
+						"label": "File 1"
+					},
+					{
+						"type": "asset",
+						"id": "file2",
+						"x": 450,
+						"y": 100,
+						"label": "File 2"
+					},
+					{
+						"type": "location",
+						"domain": "virtual",
+						"id": "vsw",
+						"x": 150,
+						"y": 50,
+						"label": "Virtual switch"
+					},
+					{
+						"type": "location",
+						"domain": "virtual",
+						"id": "vfw",
+						"x": 1,
+						"y": 50,
+						"label": "Virtual firewall"
+					}
+				],
+				"edges": [
+					{
+						"id": "a",
+						"from": "vfw",
+						"to": "vsw",
+						"relation": "network"
+					},
+					{
+						"id": "b",
+						"from": "vsw",
+						"to": "vm1",
+						"relation": "network"
+					},
+					{
+						"id": "c",
+						"from": "vsw",
+						"to": "vm2",
+						"relation": "network"
+					},
+					{
+						"id": "d",
+						"to": "vm1",
+						"from": "file1",
+						"relation": "contained in"
+					},
+					{
+						"id": "e",
+						"to": "vm2",
+						"from": "file2",
+						"relation": "contained in"
+					}
+				],
+				"groups": [
+					{
+						"name": "Virtual network",
+						"id": "virtual-network",
+						"nodeIds": ["vfw", "vsw", "vm1", "vm2", "file1", "file2"]
+					}
+				]
+			},
+			"label": "Virtual network pattern"
+		},
+
+
 		{
 			"type": "pattern",
 			"fragment": true,
