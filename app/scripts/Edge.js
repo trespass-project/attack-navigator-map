@@ -15,6 +15,28 @@ var diagonal = d3.svg.diagonal()
 	.target(function(d) { return d.toNode; });
 
 
+// from processing
+function _bezierPoint(a, b, c, d, t) {
+	const t1 = 1.0 - t;
+	return a*t1*t1*t1 + 3*b*t*t1*t1 + 3*c*t*t*t1 + d*t*t*t;
+}
+
+function bezierPoint(p1, /*c1, c2, */p2, t) {
+	var m = (p1.y + p2.y) / 2;
+	var c1 = { x: p1.x, y: m };
+	var c2 = { x: p2.x, y: m };
+
+	var x = _bezierPoint(p1.x, c1.x, c2.x, p2.x, t);
+	var y = _bezierPoint(p1.y, c1.y, c2.y, p2.y, t);
+
+	return {
+		x: x,
+		y: y
+	};
+}
+
+
+
 var Edge = React.createClass({
 	// mixins: [PureRenderMixin],
 
@@ -87,6 +109,27 @@ var Edge = React.createClass({
 			return null;
 		}
 
+		let arrow = null; // TODO: clean up all of this!
+		if (edge.directed) {
+			arrow = bezierPoint(edgeNodes.fromNode, edgeNodes.toNode, 0.75);
+			var size = 10;
+			var x = arrow.x;
+			var y = arrow.y;
+
+			var d = 'M'+(size*0.5)+','+(0);
+			d += ' L'+(size*-0.5)+','+(size*0.5);
+			d += ' L'+(size*-0.5)+','+(size*-0.5);
+			d += ' Z';
+
+			var angleDeg = Math.atan2(edgeNodes.toNode.y - edgeNodes.fromNode.y, edgeNodes.toNode.x - edgeNodes.fromNode.x) * 180 / Math.PI;
+
+			arrow = (
+				<g transform={'translate('+x+','+y+') rotate('+angleDeg+')'}>
+					<path d={d} />
+				</g>
+			);
+		}
+
 		return (
 			<g className='edge-group'
 				onClick={this._onClick}>
@@ -95,6 +138,7 @@ var Edge = React.createClass({
 					d={diagonal(edgeNodes)}
 					stroke={(props.preview) ? props.theme.previewEdge.stroke : props.theme.edge.stroke}
 					strokeWidth={props.theme.edge.strokeWidth} />
+				{arrow}
 				{this.renderLabel(edgeNodes)}
 			</g>
 		);

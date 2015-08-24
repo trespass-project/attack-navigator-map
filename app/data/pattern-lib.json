@@ -159,13 +159,15 @@
 						"id": "d",
 						"to": "vm1",
 						"from": "file1",
-						"relation": "contained in"
+						"relation": "contained in",
+						"directed": true
 					},
 					{
 						"id": "e",
 						"to": "vm2",
 						"from": "file2",
-						"relation": "contained in"
+						"relation": "contained in",
+						"directed": true
 					}
 				],
 				"groups": [
