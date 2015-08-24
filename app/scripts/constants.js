@@ -3,8 +3,8 @@ const constants = {
 	INTERFACE: 'interface',
 
 	MODEL_LIBRARY: 'model-library',
-	MODEL_COMPONENTS_LIBRARY: 'component-lib.js',
-	MODEL_PATTERNS_LIBRARY: 'pattern-lib.js',
+	MODEL_COMPONENTS_LIBRARY: 'component-lib.json',
+	MODEL_PATTERNS_LIBRARY: 'pattern-lib.json',
 
 	// dnd drop targets
 	DND_TARGET_MAP: 'model-map',

@@ -60,7 +60,7 @@ var HTML5Backend = require('react-dnd/modules/backends/HTML5');
 var DragDropContext = require('react-dnd').DragDropContext;
 
 var App = React.createClass({
-	mixins: [PureRenderMixin],
+	// mixins: [PureRenderMixin],
 
 	childContextTypes: {
 		graphActions: React.PropTypes.object.isRequired,
@@ -122,13 +122,13 @@ var App = React.createClass({
 
 					<div id='pattern-lib'>
 						<FluxComponent flux={flux} connectToStores={[constants.MODEL_PATTERNS_LIBRARY]} libName={constants.MODEL_PATTERNS_LIBRARY}>
-							<Library url='data/pattern-lib.json' title='patterns' />
+							<Library url={'data/'+constants.MODEL_PATTERNS_LIBRARY} title='patterns' />
 						</FluxComponent>
 					</div>
 
 					<div id='component-lib'>
 						<FluxComponent flux={flux} connectToStores={[constants.MODEL_COMPONENTS_LIBRARY]} libName={constants.MODEL_COMPONENTS_LIBRARY}>
-							<Library url='data/component-lib.json' title='components' onAdd={handleAdd} />
+							<Library url={'data/'+constants.MODEL_COMPONENTS_LIBRARY} title='components' onAdd={handleAdd} />
 						</FluxComponent>
 					</div>
 				</div>
