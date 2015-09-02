@@ -138,7 +138,8 @@ var GraphMixin = {
 		var graph = props.graph;
 
 		return (
-			<g>
+			/* prevent event propagation from map up to svg elem */
+			<g ref='map-group' onClick={ function(event) { event.stopPropagation(); } }>
 				{graph.groups.filter(function(group) { return !!group._bgImage; }).map(this._makeBgImage)}
 				{graph.groups.map(this._makeGroup)}
 				{graph.edges.map(this._makeEdge)}
@@ -180,7 +181,8 @@ var GraphMixin = {
 					ref='dragRoot'
 					className={classNames}
 					onWheel={this._onWheel || helpers.noop}
-					onClick={this._onClick || helpers.noop}>
+					onClick={this._onClick || helpers.noop}
+				>
 					<g ref='panZoom'
 					   transform={'matrix('+scale+',0,0,'+scale+','+panX+','+panY+')'}>
 						{this._renderMap()}
@@ -236,17 +238,17 @@ var GraphEditor = React.createClass({
 		var that = this;
 		$svg.on('contextmenu', function(event) {
 			let menuItems = [ // TODO: have these all in one place?
-				{
-					label: 'add node',
-					icon: icons['fa-plus'],
-					action: function(/*event*/) {
-						let node = {
-							x: event.offsetX,
-							y: event.offsetY,
-						};
-						context.graphActions.addNode(node);
-					}
-				}
+				// {
+				// 	label: 'add node',
+				// 	icon: icons['fa-plus'],
+				// 	action: function(/*event*/) {
+				// 		let node = {
+				// 			x: event.offsetX,
+				// 			y: event.offsetY,
+				// 		};
+				// 		context.graphActions.addNode(node);
+				// 	}
+				// }
 			];
 			context.interfaceActions.showContextMenu(event, that.props.graph, menuItems);
 			return false;

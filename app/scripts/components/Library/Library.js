@@ -77,6 +77,10 @@ var spec = {
 
 			const graphActions = component.props.flux.getActions(constants.GRAPH);
 			graphActions.importModelFragment(fragment, modelXY);
+
+			// select
+			const interfaceActions = component.props.flux.getActions(constants.INTERFACE);
+			interfaceActions.select(item, 'node');
 		}
 	}
 };

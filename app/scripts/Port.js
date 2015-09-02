@@ -75,6 +75,7 @@ var Port = React.createClass({
 				to: props.hoverNode.id
 			};
 			context.graphActions.addEdge(newEdge);
+			context.interfaceActions.select(newEdge, 'edge');
 		}
 		context.interfaceActions.setPreviewEdge(null);
 		context.interfaceActions.setDragNode(null);
