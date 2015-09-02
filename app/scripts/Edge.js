@@ -10,9 +10,47 @@ var icons = require('./icons.js');
 var helpers = require('./helpers.js');
 
 
-var diagonal = d3.svg.diagonal()
-	.source(function(d) { return d.fromNode; })
-	.target(function(d) { return d.toNode; });
+// var diagonal = d3.svg.diagonal()
+// 	.source(function(d) { return d.fromNode; })
+// 	.target(function(d) { return d.toNode; });
+
+
+function pathifyBezier(p1, c1, c2, p2) {
+	return [
+		'M', p1.x+','+p1.y,
+		'C', c1.x+','+c1.y,
+		     c2.x+','+c2.y,
+		     p2.x+','+p2.y
+	].join(' ');
+}
+
+
+function diagonalBezier(p1, p2) {
+	// var m = (p1.y + p2.y) / 2;
+	const m = p1.y + ((p2.y - p1.y) / 2);
+	const c1 = { x: p1.x, y: m };
+	const c2 = { x: p2.x, y: m };
+	return { p1, c1, c2, p2 };
+}
+
+
+function arrowHead(size) {
+	let path = 'M'+(size*0.5)+','+(0);
+	path += ' L'+(size*-0.5)+','+(size*0.5);
+	path += ' L'+(size*-0.5)+','+(size*-0.5);
+	path += ' Z';
+	return path;
+}
+
+
+function vectorAngle(x, y) {
+	return Math.atan2(y, x);
+}
+
+
+function radians(angleDeg) {
+	return angleDeg * 180 / Math.PI;
+}
 
 
 // from processing
@@ -21,18 +59,10 @@ function _bezierPoint(a, b, c, d, t) {
 	return a*t1*t1*t1 + 3*b*t*t1*t1 + 3*c*t*t*t1 + d*t*t*t;
 }
 
-function bezierPoint(p1, /*c1, c2, */p2, t) {
-	var m = (p1.y + p2.y) / 2;
-	var c1 = { x: p1.x, y: m };
-	var c2 = { x: p2.x, y: m };
-
-	var x = _bezierPoint(p1.x, c1.x, c2.x, p2.x, t);
-	var y = _bezierPoint(p1.y, c1.y, c2.y, p2.y, t);
-
-	return {
-		x: x,
-		y: y
-	};
+function bezierPoint(p1, c1, c2, p2, t) {
+	const x = _bezierPoint(p1.x, c1.x, c2.x, p2.x, t);
+	const y = _bezierPoint(p1.y, c1.y, c2.y, p2.y, t);
+	return { x, y };
 }
 
 
@@ -109,23 +139,23 @@ var Edge = React.createClass({
 			return null;
 		}
 
-		let arrow = null; // TODO: clean up all of this!
+		let { p1, c1, c2, p2 } = diagonalBezier(edgeNodes.fromNode, edgeNodes.toNode);
+
+		let arrow = null;
 		if (edge.directed) {
-			arrow = bezierPoint(edgeNodes.fromNode, edgeNodes.toNode, 0.75);
+			var arrowPosition = bezierPoint(p1, c1, c2, p2, 0.75);
 			var size = 10;
-			var x = arrow.x;
-			var y = arrow.y;
+			var x = arrowPosition.x;
+			var y = arrowPosition.y;
 
-			var d = 'M'+(size*0.5)+','+(0);
-			d += ' L'+(size*-0.5)+','+(size*0.5);
-			d += ' L'+(size*-0.5)+','+(size*-0.5);
-			d += ' Z';
+			var arrowShape = arrowHead(size);
 
-			var angleDeg = Math.atan2(edgeNodes.toNode.y - edgeNodes.fromNode.y, edgeNodes.toNode.x - edgeNodes.fromNode.x) * 180 / Math.PI;
+			var angleDeg = vectorAngle(edgeNodes.toNode.x - edgeNodes.fromNode.x, edgeNodes.toNode.y - edgeNodes.fromNode.y);
+			angleDeg = radians(angleDeg);
 
 			arrow = (
 				<g transform={'translate('+x+','+y+') rotate('+angleDeg+')'}>
-					<path d={d} />
+					<path d={arrowShape} />
 				</g>
 			);
 		}
@@ -135,7 +165,7 @@ var Edge = React.createClass({
 				onClick={this._onClick}>
 				<path
 					className={classnames('edge', {'preview': props.preview})}
-					d={diagonal(edgeNodes)}
+					d={pathifyBezier(p1, c1, c2, p2)}
 					stroke={(props.preview) ? props.theme.previewEdge.stroke : props.theme.edge.stroke}
 					strokeWidth={props.theme.edge.strokeWidth} />
 				{arrow}
