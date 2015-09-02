@@ -2,6 +2,7 @@
 
 var $ = require('jquery');
 var _ = require('lodash');
+var classnames = require('classnames');
 var React = require('react');
 var PureRenderMixin = require('react/addons').addons.PureRenderMixin;
 var SchleppMixin = require('./SchleppMixin.js');
@@ -18,7 +19,14 @@ var Group = React.createClass({
 		width: React.PropTypes.number.isRequired,
 		height: React.PropTypes.number.isRequired,
 		group: React.PropTypes.object.isRequired,
+		selected: React.PropTypes.bool,
 		flux: React.PropTypes.object.isRequired,
+	},
+
+	getDefaultProps: function() {
+		return {
+			selected: false,
+		};
 	},
 
 	contextTypes: {
@@ -49,7 +57,7 @@ var Group = React.createClass({
 				onClick={this._onClick}
 				transform={'translate('+props.x+','+props.y+')'}>
 				<rect
-					className='group'
+					className={classnames('group', { 'selected': props.selected })}
 					rx={props.theme.group.cornerRadius}
 					ry={props.theme.group.cornerRadius}
 					width={props.width}

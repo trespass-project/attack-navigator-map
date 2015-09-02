@@ -44,10 +44,13 @@ var GraphMixin = {
 	},
 
 	_makeGroup: function(group) {
+		const props = this.props;
+
 		let bounds = null;
 		const extraPadding = 5;
+
 		if (group.nodeIds.length === 0) {
-			const s = this.props.theme.node.size*0.5 + 2*extraPadding;
+			const s = props.theme.node.size*0.5 + 2*extraPadding;
 			bounds = { // TODO: improve this
 				minX: extraPadding,
 				minY: extraPadding,
@@ -55,8 +58,8 @@ var GraphMixin = {
 				maxY: s,
 			};
 		} else {
-			bounds = helpers.getGroupBBox(this.props.graph.nodes, group);
-			const s = this.props.theme.node.size*0.5 + extraPadding;
+			bounds = helpers.getGroupBBox(props.graph.nodes, group);
+			const s = props.theme.node.size*0.5 + extraPadding;
 			bounds.minX -= s;
 			bounds.minY -= s;
 			bounds.maxX += s;
@@ -64,8 +67,9 @@ var GraphMixin = {
 		}
 
 		return <Group
-				{...this.props}
+				{...props}
 				key={group.id}
+				selected={props.selected && (group.id === props.selected.it.id)}
 				group={group}
 				x={bounds.minX}
 				y={bounds.minY}
@@ -78,19 +82,22 @@ var GraphMixin = {
 	},
 
 	_makeEdge: function(edge, index, collection, isPreview) {
+		const props = this.props;
 		return <Edge
-				{...this.props}
+				{...props}
 				key={index}
 				edge={edge}
+				selected={props.selected && (edge.id === props.selected.it.id)}
 				preview={isPreview} />;
 	},
 
 	_makeNode: function(node, index) {
-		var props = this.props;
+		const props = this.props;
 		return <Node
 				{...this.props}
 				key={index}
 				hovered={props.hoverNode && (node.id === props.hoverNode.id)}
+				selected={props.selected && (node.id === props.selected.it.id)}
 				x={node.x}
 				y={node.y}
 				node={node} />;

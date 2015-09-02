@@ -43,12 +43,14 @@ var Edge = React.createClass({
 	propTypes: {
 		edge: React.PropTypes.object.isRequired,
 		theme: React.PropTypes.object.isRequired,
+		selected: React.PropTypes.bool,
 		preview: React.PropTypes.bool,
 	},
 
 	getDefaultProps: function() {
 		return {
-			preview: false
+			preview: false,
+			selected: false,
 		};
 	},
 
@@ -134,7 +136,7 @@ var Edge = React.createClass({
 			<g className='edge-group'
 				onClick={this._onClick}>
 				<path
-					className={classnames('edge', {'preview': props.preview})}
+					className={classnames('edge', { 'preview': props.preview, 'selected': props.selected })}
 					d={diagonal(edgeNodes)}
 					stroke={(props.preview) ? props.theme.previewEdge.stroke : props.theme.edge.stroke}
 					strokeWidth={props.theme.edge.strokeWidth} />

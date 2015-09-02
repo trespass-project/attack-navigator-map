@@ -27,9 +27,18 @@ var Node = React.createClass({
 	propTypes: {
 		x: React.PropTypes.number.isRequired,
 		y: React.PropTypes.number.isRequired,
+		hovered: React.PropTypes.bool,
+		selected: React.PropTypes.bool,
 		theme: React.PropTypes.object.isRequired,
 		node: React.PropTypes.object.isRequired,
 		flux: React.PropTypes.object.isRequired,
+	},
+
+	getDefaultProps: function() {
+		return {
+			selected: false,
+			hovered: false,
+		};
 	},
 
 	contextTypes: {
@@ -66,7 +75,7 @@ var Node = React.createClass({
 				onMouseLeave={this._handleHoverOut}>
 				<g ref='dragRoot'>
 					<rect
-						className={classnames('node', { 'hover': props.hovered })}
+						className={classnames('node', { 'hover': props.hovered, 'selected': props.selected })}
 						x={-radius}
 						y={-radius}
 						rx={props.theme.node.cornerRadius}

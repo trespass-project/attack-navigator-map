@@ -5,6 +5,8 @@
 			stroke-width: 0px
 
 .node-group
+	$selected-fill: orange
+
 	cursor: pointer
 
 	.node
@@ -12,8 +14,11 @@
 		opacity: 1
 		stroke: black
 		stroke-width: 0px
-		&.hover /* &:hover */
+		&.hover
 			stroke-width: 1.5px
+			fill: $selected-fill
+		&.selected
+			fill: $selected-fill
 
 	.port
 		fill: white

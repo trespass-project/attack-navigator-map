@@ -1,14 +1,25 @@
-directed edges = arrows / triangles
-
-how to bundle multiple edges?
-
-edge performace issue
-
 items should have a selected state
+
+items should be groupable
+
+root + group context menu: load model into group
+
+edge rendering
+	slow for some reason
+	improve arrow head position
+	how to bundle multiple edges?
+
+single items (and selections of multiple) should be savable as model fragments
 
 how to show doors and windows?
 
-create a user walkthrough story
+model component properties
+	radar graph component
+
+attacker profile editor
+	Attacker Profile Template.docx
+
+introduce layers / gazes
 
 ---
 
