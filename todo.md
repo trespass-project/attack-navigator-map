@@ -1,3 +1,6 @@
+model component properties
+	radar graph component
+
 multiple items should be selectable (with cmd)
 	nodes only: context menu: "group items"
 	should be savable as model fragments
@@ -8,9 +11,6 @@ edge rendering
 	how to bundle multiple edges?
 
 how to show doors and windows?
-
-model component properties
-	radar graph component
 
 attacker profile editor
 	'Attacker Profile Template.docx'

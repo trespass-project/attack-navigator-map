@@ -50,12 +50,14 @@ var GraphMixin = {
 		const extraPadding = 5;
 
 		if (group.nodeIds.length === 0) {
+			const xOffset = group.x || 0;
+			const yOffset = group.y || 0;
 			const s = props.theme.node.size*0.5 + 2*extraPadding;
 			bounds = { // TODO: improve this
-				minX: extraPadding,
-				minY: extraPadding,
-				maxX: s,
-				maxY: s,
+				minX: xOffset + extraPadding,
+				minY: yOffset + extraPadding,
+				maxX: xOffset + s,
+				maxY: yOffset + s,
 			};
 		} else {
 			bounds = helpers.getGroupBBox(props.graph.nodes, group);
@@ -238,17 +240,17 @@ var GraphEditor = React.createClass({
 		var that = this;
 		$svg.on('contextmenu', function(event) {
 			let menuItems = [ // TODO: have these all in one place?
-				// {
-				// 	label: 'add node',
-				// 	icon: icons['fa-plus'],
-				// 	action: function(/*event*/) {
-				// 		let node = {
-				// 			x: event.offsetX,
-				// 			y: event.offsetY,
-				// 		};
-				// 		context.graphActions.addNode(node);
-				// 	}
-				// }
+				{
+					label: 'add group',
+					icon: icons['fa-plus'],
+					action: function(/*event*/) {
+						let group = {
+							x: event.offsetX,
+							y: event.offsetY,
+						};
+						context.graphActions.addGroup(group);
+					}
+				}
 			];
 			context.interfaceActions.showContextMenu(event, that.props.graph, menuItems);
 			return false;
