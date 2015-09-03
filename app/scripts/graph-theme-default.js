@@ -15,7 +15,7 @@ module.exports = {
 		//
 	},
 	port: {
-		size: 14,
+		size: 16,
 	},
 	edge: {
 		//
@@ -31,7 +31,7 @@ module.exports = {
 	},
 	contextMenu: {
 		innerRadius: 20,
-		outerRadius: 70,
+		outerRadius: 95,
 		desiredAngle: 80,
 	}
 };
