@@ -111,7 +111,7 @@ var Edge = React.createClass({
 			return null;
 		}
 
-		let arrow = null; // TODO: clean up all of this!
+		let arrow = null;
 		if (edge.directed) {
 			arrow = bezierPoint(edgeNodes.fromNode, edgeNodes.toNode, 0.75);
 			var size = 10;

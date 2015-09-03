@@ -99,21 +99,36 @@ var Node = React.createClass({
 
 	componentDidMount: function() {
 		var that = this;
+		const props = this.props;
 		const context = this.context;
 
 		$(this.getDOMNode()).on('contextmenu', function(event) {
 			let menuItems = [
 				{	label: 'delete',
 					icon: icons['fa-trash'],
-					action: function() { context.graphActions.removeNode(that.props.node); }
+					action: function() { context.graphActions.removeNode(props.node); }
 				},
 				{	label: 'clone', icon: icons['fa-files-o'], action:
 					function() {
-						context.graphActions.cloneNode(that.props.node);
+						context.graphActions.cloneNode(props.node);
+					}
+				},
+				{	label: 'add to group', icon: icons['fa-object-group'], action:
+					function() {
+						context.interfaceActions.nextClickDo(function(clickedItem) {
+							console.log(clickedItem);
+							// if clickedItem is a group
+							// context.graphActions.addNodeToGroup(props.node, clickedItem);
+						});
+					}
+				},
+				{	label: 'remove from group', icon: icons['fa-object-group'], action:
+					function() {
+						// TODO
 					}
 				},
 			];
-			context.interfaceActions.showContextMenu(event, that.props.group, menuItems);
+			context.interfaceActions.showContextMenu(event, props.group, menuItems);
 			return false;
 		});
 	},
