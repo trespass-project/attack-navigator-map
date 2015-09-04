@@ -44,19 +44,24 @@ var GraphMixin = {
 	},
 
 	_makeGroup: function(group) {
+		const props = this.props;
+
 		let bounds = null;
 		const extraPadding = 5;
+
 		if (group.nodeIds.length === 0) {
-			const s = this.props.theme.node.size*0.5 + 2*extraPadding;
+			const xOffset = group.x || 0;
+			const yOffset = group.y || 0;
+			const s = props.theme.node.size*0.5 + 2*extraPadding;
 			bounds = { // TODO: improve this
-				minX: extraPadding,
-				minY: extraPadding,
-				maxX: s,
-				maxY: s,
+				minX: xOffset + extraPadding,
+				minY: yOffset + extraPadding,
+				maxX: xOffset + s,
+				maxY: yOffset + s,
 			};
 		} else {
-			bounds = helpers.getGroupBBox(this.props.graph.nodes, group);
-			const s = this.props.theme.node.size*0.5 + extraPadding;
+			bounds = helpers.getGroupBBox(props.graph.nodes, group);
+			const s = props.theme.node.size*0.5 + extraPadding;
 			bounds.minX -= s;
 			bounds.minY -= s;
 			bounds.maxX += s;
@@ -64,8 +69,10 @@ var GraphMixin = {
 		}
 
 		return <Group
-				{...this.props}
+				{...props}
 				key={group.id}
+				hovered={props.hoverGroup && (group.id === props.hoverGroup.id)}
+				selected={props.selected && (group.id === props.selected.it.id)}
 				group={group}
 				x={bounds.minX}
 				y={bounds.minY}
@@ -78,19 +85,22 @@ var GraphMixin = {
 	},
 
 	_makeEdge: function(edge, index, collection, isPreview) {
+		const props = this.props;
 		return <Edge
-				{...this.props}
+				{...props}
 				key={index}
 				edge={edge}
+				selected={props.selected && (edge.id === props.selected.it.id)}
 				preview={isPreview} />;
 	},
 
 	_makeNode: function(node, index) {
-		var props = this.props;
+		const props = this.props;
 		return <Node
 				{...this.props}
 				key={index}
 				hovered={props.hoverNode && (node.id === props.hoverNode.id)}
+				selected={props.selected && (node.id === props.selected.it.id)}
 				x={node.x}
 				y={node.y}
 				node={node} />;
@@ -131,7 +141,8 @@ var GraphMixin = {
 		var graph = props.graph;
 
 		return (
-			<g>
+			/* prevent event propagation from map up to svg elem */
+			<g ref='map-group' onClick={ function(event) { event.stopPropagation(); } }>
 				{graph.groups.filter(function(group) { return !!group._bgImage; }).map(this._makeBgImage)}
 				{graph.groups.map(this._makeGroup)}
 				{graph.edges.map(this._makeEdge)}
@@ -173,7 +184,8 @@ var GraphMixin = {
 					ref='dragRoot'
 					className={classNames}
 					onWheel={this._onWheel || helpers.noop}
-					onClick={this._onClick || helpers.noop}>
+					onClick={this._onClick || helpers.noop}
+				>
 					<g ref='panZoom'
 					   transform={'matrix('+scale+',0,0,'+scale+','+panX+','+panY+')'}>
 						{this._renderMap()}
@@ -230,14 +242,14 @@ var GraphEditor = React.createClass({
 		$svg.on('contextmenu', function(event) {
 			let menuItems = [ // TODO: have these all in one place?
 				{
-					label: 'add node',
+					label: 'add group',
 					icon: icons['fa-plus'],
 					action: function(/*event*/) {
-						let node = {
+						let group = {
 							x: event.offsetX,
 							y: event.offsetY,
 						};
-						context.graphActions.addNode(node);
+						context.graphActions.addGroup(group);
 					}
 				}
 			];

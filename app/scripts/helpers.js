@@ -32,7 +32,7 @@ var getItemById = R.partial(getItemByKey, 'id');
 
 
 function getNodesBBox(nodes) {
-	return nodes.reduce(
+	var bounds = nodes.reduce(
 		function(_bounds, node) {
 			_bounds.minX = Math.min(_bounds.minX, node.x);
 			_bounds.minY = Math.min(_bounds.minY, node.y);
@@ -45,12 +45,34 @@ function getNodesBBox(nodes) {
 		  maxX: -Infinity,
 		  maxY: -Infinity }
 	);
+
+	bounds.x = bounds.minX;
+	bounds.y = bounds.minY;
+	bounds.width = bounds.maxX - bounds.minX;
+	bounds.height = bounds.maxY - bounds.minY;
+
+	return bounds;
 }
 
 // get bounding box for all nodes in group
 function getGroupBBox(allNodes, group) {
 	const nodes = group.nodeIds.map(R.partial(getItemById, allNodes));
 	return getNodesBBox(nodes);
+}
+
+
+function isRectInsideRect(r1, r2) {
+	// expects a rect to have: x, y, width, height
+
+	function isBetween(what, low, high) {
+		return (what >= low) && (what <= high);
+	}
+
+	var insideX = isBetween(r1.x, r2.x, r2.x+r2.width) || isBetween(r1.x+r1.width, r2.x, r2.x+r2.width);
+	var insideY = isBetween(r1.y, r2.y, r2.y+r2.height) || isBetween(r1.y+r1.height, r2.y, r2.y+r2.height);
+
+	var inside = insideX && insideY;
+	return inside;
 }
 
 
@@ -155,6 +177,7 @@ module.exports = {
 	getItemById,
 	getNodesBBox,
 	getGroupBBox,
+	isRectInsideRect,
 	getNodeGroups,
 	prepareGraphFragment,
 	makeId,

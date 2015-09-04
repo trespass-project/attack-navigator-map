@@ -449,6 +449,19 @@ class GraphStore extends Store {
 		this.importModelFragment({fragment});
 	}
 
+	addGroup(action) {
+		let {group} = action;
+
+		group = _.defaults(group, {
+			id: helpers.makeId(),
+			label: 'new group',
+			nodeIds: []
+		});
+
+		this.state.graph.groups.push(group);
+		this._updateModel();
+	}
+
 	removeGroup(action) {
 		let that = this;
 		let {group, removeNodes} = action;
@@ -467,11 +480,28 @@ class GraphStore extends Store {
 		this.setState({ graph: graph }); // TODO: be more specific?
 	}
 
+	addNodeToGroup(action) {
+		let {node, group} = action;
+		group.nodeIds.push(node.id);
+		this._updateModel();
+	}
+
+	ungroupNode(action) {
+		let {node} = action;
+
+		// remove node from all groups it is in
+		this.state.graph.groups = this.state.graph.groups.map(function(group) {
+			group.nodeIds = R.reject(function(a) { return R.equals(a, node.id); }, group.nodeIds);
+			return group;
+		});
+		this._updateModel();
+	}
+
 	addNode(action) {
 		let {node} = action;
 
 		node = _.defaults(node, {
-			id: ''+(new Date()),
+			id: helpers.makeId(),
 			label: 'new node'
 		});
 

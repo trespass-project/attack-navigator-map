@@ -2,11 +2,38 @@
 
 var $ = require('jquery');
 var _ = require('lodash');
+var R = require('ramda');
+var classnames = require('classnames');
 var React = require('react');
 var PureRenderMixin = require('react/addons').addons.PureRenderMixin;
 var SchleppMixin = require('./SchleppMixin.js');
 var icons = require('./icons.js');
 var helpers = require('./helpers.js');
+
+
+var Dropzone = React.createClass({
+	propTypes: {
+		x: React.PropTypes.number.isRequired,
+		y: React.PropTypes.number.isRequired,
+		group: React.PropTypes.object.isRequired,
+	},
+
+	render: function() {
+		const props = this.props;
+		return (
+			<g
+				transform={'translate('+props.x+','+props.y+')'}
+			>
+				<circle
+					className='dropzone'
+					cx={0}
+					cy={0}
+					r={'50'}
+				/>
+			</g>
+		);
+	},
+});
 
 
 var Group = React.createClass({
@@ -18,7 +45,17 @@ var Group = React.createClass({
 		width: React.PropTypes.number.isRequired,
 		height: React.PropTypes.number.isRequired,
 		group: React.PropTypes.object.isRequired,
+		selected: React.PropTypes.bool,
+		hovered: React.PropTypes.bool,
 		flux: React.PropTypes.object.isRequired,
+		theme: React.PropTypes.object.isRequired,
+	},
+
+	getDefaultProps: function() {
+		return {
+			hovered: false,
+			selected: false,
+		};
 	},
 
 	contextTypes: {
@@ -36,6 +73,36 @@ var Group = React.createClass({
 		);
 	},
 
+	renderDropzone: function() {
+		const props = this.props;
+
+		if (props.dragNode && !R.contains(props.dragNode.id, props.group.nodeIds)) {
+			const groupRect = {
+				x: props.x,
+				y: props.y,
+				width: props.width,
+				height: props.height,
+			};
+			const nodeRect = {
+				x: props.dragNode.x - 0.5*props.theme.node.size,
+				y: props.dragNode.y - 0.5*props.theme.node.size,
+				width: props.theme.node.size,
+				height: props.theme.node.size,
+			};
+			if (helpers.isRectInsideRect(nodeRect, groupRect)) {
+				return (
+					<Dropzone
+						group={props.group}
+						x={props.width*0.5}
+						y={props.height*0.5}
+					/>
+				);
+			}
+		}
+
+		return null;
+	},
+
 	render: function() {
 		var props = this.props;
 
@@ -47,19 +114,29 @@ var Group = React.createClass({
 				className='group-group'
 				style={style}
 				onClick={this._onClick}
+				onMouseEnter={this._handleHover}
+				onMouseLeave={this._handleHoverOut}
 				transform={'translate('+props.x+','+props.y+')'}>
 				<rect
-					className='group'
+					className={classnames('group', { 'selected': props.selected })}
 					rx={props.theme.group.cornerRadius}
 					ry={props.theme.group.cornerRadius}
 					width={props.width}
 					height={props.height}>
 				</rect>
 				{this.renderLabel()}
+				{this.renderDropzone()}
 			</g>
 		);
 	},
 
+	_handleHover: function(event) {
+		this.context.interfaceActions.setHoverGroup(this.props.group);
+	},
+
+	_handleHoverOut: function(event) {
+		this.context.interfaceActions.setHoverGroup(null);
+	},
 
 	componentDidMount: function() {
 		var that = this;

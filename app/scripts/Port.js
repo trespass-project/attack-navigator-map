@@ -27,13 +27,22 @@ var Port = React.createClass({
 
 		if (!props.editable) { return null; }
 
+		var iconHTML = { __html: '&#xf100;' };
+
 		return (
-			<circle
-				className='port'
+			<g
 				style={props.style}
-				cx={props.x}
-				cy={props.y}
-				r={props.size*0.5} />
+				className='port-group'
+				transform={'translate('+props.x+','+props.y+')'}
+			>
+				<circle
+					className='port'
+					cx={0}
+					cy={0}
+					r={props.size*0.5}
+				/>
+				<text dy='1' className='spiral' dangerouslySetInnerHTML={iconHTML}></text>
+			</g>
 		);
 	},
 
@@ -75,6 +84,7 @@ var Port = React.createClass({
 				to: props.hoverNode.id
 			};
 			context.graphActions.addEdge(newEdge);
+			context.interfaceActions.select(newEdge, 'edge');
 		}
 		context.interfaceActions.setPreviewEdge(null);
 		context.interfaceActions.setDragNode(null);

@@ -75,6 +75,10 @@ class InterfaceActions extends Actions {
 		return {node};
 	}
 
+	setHoverGroup(group) {
+		return {group};
+	}
+
 	moveNode(node, newPos) {
 		return {node, newPos};
 	}

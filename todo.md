@@ -1,16 +1,21 @@
-directed edges = arrows / triangles
+model component properties
+	radar graph component
 
-how to bundle multiple edges?
+multiple items should be selectable (with cmd)
+	nodes only: context menu: "group items"
+	should be savable as model fragments
 
-edge performace issue
-
-items should have a selected state
+edge rendering
+	slow for some reason
+	improve arrow head position
+	how to bundle multiple edges?
 
 how to show doors and windows?
 
-create a user walkthrough story
+attacker profile editor
+	'Attacker Profile Template.docx'
 
----
+introduce layers / gazes
 
 special interest groups
 
@@ -21,9 +26,10 @@ model outline
 
 bg image: extract / process shapes?
 
-multi-level context menu?
-
-store context menu info in a central place
+context menu
+	multi-level context menu?
+	store context menu info in a central place
+	root + group context menu: load model into group
 
 function to fit map to editor
 
@@ -31,11 +37,6 @@ update minimap
 	draggable rectangle to pan editor
 
 groups: resizable (min size)
-
-multi-selection
-	"group items"
-
-auto-select new edges
 
 pipette tool (to copy props)
 	context menu: "copy properties from ..."

@@ -360,6 +360,7 @@ module.exports = {
 	'fa-neuter': '&#xf22c;',
 	'fa-newspaper-o': '&#xf1ea;',
 	'fa-openid': '&#xf19b;',
+	'fa-object-group': '&#xf247;',
 	'fa-outdent': '&#xf03b;',
 	'fa-pagelines': '&#xf18c;',
 	'fa-paint-brush': '&#xf1fc;',

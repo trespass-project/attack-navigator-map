@@ -7,6 +7,9 @@ var browserSync = require('browser-sync');
 var del = require('del');
 var wiredep = require('wiredep').stream;
 var notifier = require('node-notifier');
+var execSync = require('child_process').execSync;
+var moment = require('moment');
+var chalk = require('chalk');
 
 var $ = gulpLoadPlugins();
 var reload = browserSync.reload;
@@ -24,6 +27,7 @@ function jadeDir(p) { return _dir(dirs['jade'], p); }
 function scriptsDir(p) { return _dir(dirs['scripts'], p); }
 function imagesDir(p) { return _dir(dirs['images'], p); }
 function dataDir(p) { return _dir('data', p); }
+function iconsDir(p) { return _dir(dirs['icons'], p); }
 function fontsDir(p) { return _dir(dirs['fonts'], p); }
 function testDir(p) { return _dir(dirs['test'], p); }
 function specDir(p) { return _dir(dirs['spec'], p); }
@@ -207,6 +211,11 @@ gulp.task('fonts', function() {
 		.pipe(gulp.dest(tempDir(fontsDir())))
 		.pipe(gulp.dest(distDir(fontsDir())));
 
+	// fontcustom
+	gulp.src(appDir(iconsDir('icons/*.{eot,svg,ttf,woff,woff2}')))
+		.pipe(gulp.dest(tempDir(fontsDir())))
+		.pipe(gulp.dest(distDir(fontsDir())));
+
 	return gulp.src(require('main-bower-files')({
 		filter: '**/*.{ eot,svg,ttf,woff,woff2 }'
 	}).concat(appDir(fontsDir('**/*'))))
@@ -267,7 +276,15 @@ gulp.task('serve', ['jade', 'scripts', 'styles', 'fonts'], function() {
 	gulp.watch(appDir('**/*.jade'), ['jade']);
 	gulp.watch(appDir(stylesDir('**/*.{sass,scss,styl}')), ['styles']);
 	gulp.watch(appDir(fontsDir('**/*')), ['fonts']);
+	gulp.watch(appDir(iconsDir('*.svg')), ['fontcustom']);
+	gulp.start('fontcustom');
 	gulp.watch('bower.json', ['wiredep', 'fonts']);
+});
+
+
+gulp.task('fontcustom', function() {
+	execSync('fontcustom compile', { cwd: appDir(iconsDir()) });
+	gulp.start('fonts'); // copy fonts
 });
 
 
@@ -337,10 +354,6 @@ gulp.task('npm-init', function(cb) {
 
 
 gulp.task('version-bump', ['npm-init'], function(cb) {
-	var execSync = require('child_process').execSync;
-	var moment = require('moment');
-	var chalk = require('chalk');
-
 	// bump version
 	try {
 		execSync(

@@ -1,6 +1,8 @@
 'use strict';
 
 var $ = require('jquery');
+var _ = require('lodash');
+var R = require('ramda');
 var React = require('react');
 var PureRenderMixin = require('react/addons').addons.PureRenderMixin;
 var classnames = require('classnames');
@@ -27,9 +29,18 @@ var Node = React.createClass({
 	propTypes: {
 		x: React.PropTypes.number.isRequired,
 		y: React.PropTypes.number.isRequired,
+		hovered: React.PropTypes.bool,
+		selected: React.PropTypes.bool,
 		theme: React.PropTypes.object.isRequired,
 		node: React.PropTypes.object.isRequired,
 		flux: React.PropTypes.object.isRequired,
+	},
+
+	getDefaultProps: function() {
+		return {
+			selected: false,
+			hovered: false,
+		};
 	},
 
 	contextTypes: {
@@ -66,7 +77,7 @@ var Node = React.createClass({
 				onMouseLeave={this._handleHoverOut}>
 				<g ref='dragRoot'>
 					<rect
-						className={classnames('node', { 'hover': props.hovered })}
+						className={classnames('node', { 'hover': props.hovered, 'selected': props.selected })}
 						x={-radius}
 						y={-radius}
 						rx={props.theme.node.cornerRadius}
@@ -90,21 +101,27 @@ var Node = React.createClass({
 
 	componentDidMount: function() {
 		var that = this;
+		const props = this.props;
 		const context = this.context;
 
 		$(this.getDOMNode()).on('contextmenu', function(event) {
 			let menuItems = [
 				{	label: 'delete',
 					icon: icons['fa-trash'],
-					action: function() { context.graphActions.removeNode(that.props.node); }
+					action: function() { context.graphActions.removeNode(props.node); }
 				},
 				{	label: 'clone', icon: icons['fa-files-o'], action:
 					function() {
-						context.graphActions.cloneNode(that.props.node);
+						context.graphActions.cloneNode(props.node);
+					}
+				},
+				{	label: 'remove\nfrom group', icon: icons['fa-object-group'], action:
+					function() {
+						context.graphActions.ungroupNode(props.node);
 					}
 				},
 			];
-			context.interfaceActions.showContextMenu(event, that.props.group, menuItems);
+			context.interfaceActions.showContextMenu(event, props.group, menuItems);
 			return false;
 		});
 	},
@@ -188,6 +205,30 @@ var Node = React.createClass({
 	},
 
 	_onDragEnd: function(event) {
+		// TODO: DRY (almost same code as in <Dropzone>)
+
+		// for every group
+			// check if node is inside the bounds of group
+				// if yes, add node to group
+		const props = this.props;
+		const graph = props.graph;
+		const groups = graph.groups;
+		const node = props.node;
+		const dropGroups = groups.filter(function(group) {
+			const groupRect = helpers.getGroupBBox(graph.nodes, group);
+			const nodeRect = {
+				x: node.x - 0.5*props.theme.node.size,
+				y: node.y - 0.5*props.theme.node.size,
+				width: props.theme.node.size,
+				height: props.theme.node.size,
+			};
+			// TODO: check if actually inside dropzone
+			return helpers.isRectInsideRect(nodeRect, groupRect);
+		});
+		if (dropGroups.length) {
+			this.context.graphActions.addNodeToGroup(node, R.last(dropGroups));
+		}
+
 		this.context.interfaceActions.setDragNode(null);
 	},
 
