@@ -482,9 +482,14 @@ class GraphStore extends Store {
 
 	addNodeToGroup(action) {
 		let {node, group} = action;
-		group.nodeIds.push(node.id);
-		group.nodeIds = R.uniq(group.nodeIds);
-		this._updateModel();
+
+		// only if not already in group
+		let nodeGroups = helpers.getNodeGroups(node.id, this.state.graph.groups);
+		if (nodeGroups.length === 0) {
+			group.nodeIds.push(node.id);
+			group.nodeIds = R.uniq(group.nodeIds);
+			this._updateModel();
+		}
 	}
 
 	ungroupNode(action) {
