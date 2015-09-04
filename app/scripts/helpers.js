@@ -107,13 +107,9 @@ function isRectInsideRect(r1, r2) {
 
 
 function getNodeGroups(nodeId, groups) {
-	var result = [];
-	groups.forEach(function(group) {
-		if (R.contains(nodeId, group.nodeIds)) {
-			result.push(group);
-		}
+	return groups.filter(function(group) {
+		return R.contains(nodeId, group.nodeIds);
 	});
-	return result;
 }
 
 
