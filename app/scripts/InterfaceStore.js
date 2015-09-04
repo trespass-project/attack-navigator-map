@@ -33,6 +33,7 @@ class InterfaceStore extends Store {
 			drag: null,
 			dragNode: null,
 			hoverNode: null,
+			hoverGroup: null,
 			previewEdge: null,
 
 			showEdgeLabels: true,
@@ -336,6 +337,11 @@ class InterfaceStore extends Store {
 	setHoverNode(action) {
 		let {node} = action;
 		this.setState({ hoverNode: node });
+	}
+
+	setHoverGroup(action) {
+		let {group} = action;
+		this.setState({ hoverGroup: group });
 	}
 
 	moveNode(action) {

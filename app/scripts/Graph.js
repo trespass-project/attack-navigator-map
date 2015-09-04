@@ -71,6 +71,7 @@ var GraphMixin = {
 		return <Group
 				{...props}
 				key={group.id}
+				hovered={props.hoverGroup && (group.id === props.hoverGroup.id)}
 				selected={props.selected && (group.id === props.selected.it.id)}
 				group={group}
 				x={bounds.minX}

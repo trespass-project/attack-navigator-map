@@ -55,6 +55,14 @@ class GraphActions extends Actions {
 		return {group, removeNodes};
 	}
 
+	addNodeToGroup(node, group) {
+		return {node, group};
+	}
+
+	ungroupNode(node) {
+		return {node};
+	}
+
 	addNode(node) {
 		return {node};
 	}

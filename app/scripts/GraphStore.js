@@ -480,6 +480,23 @@ class GraphStore extends Store {
 		this.setState({ graph: graph }); // TODO: be more specific?
 	}
 
+	addNodeToGroup(action) {
+		let {node, group} = action;
+		group.nodeIds.push(node.id);
+		this._updateModel();
+	}
+
+	ungroupNode(action) {
+		let {node} = action;
+
+		// remove node from all groups it is in
+		this.state.graph.groups = this.state.graph.groups.map(function(group) {
+			group.nodeIds = R.reject(function(a) { return R.equals(a, node.id); }, group.nodeIds);
+			return group;
+		});
+		this._updateModel();
+	}
+
 	addNode(action) {
 		let {node} = action;
 

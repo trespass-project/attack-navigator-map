@@ -1,6 +1,8 @@
 'use strict';
 
 var $ = require('jquery');
+var _ = require('lodash');
+var R = require('ramda');
 var React = require('react');
 var PureRenderMixin = require('react/addons').addons.PureRenderMixin;
 var classnames = require('classnames');
@@ -113,18 +115,9 @@ var Node = React.createClass({
 						context.graphActions.cloneNode(props.node);
 					}
 				},
-				{	label: 'add to group', icon: icons['fa-object-group'], action:
+				{	label: 'remove\nfrom group', icon: icons['fa-object-group'], action:
 					function() {
-						context.interfaceActions.nextClickDo(function(clickedItem) {
-							console.log(clickedItem);
-							// if clickedItem is a group
-							// context.graphActions.addNodeToGroup(props.node, clickedItem);
-						});
-					}
-				},
-				{	label: 'remove from group', icon: icons['fa-object-group'], action:
-					function() {
-						// TODO
+						context.graphActions.ungroupNode(props.node);
 					}
 				},
 			];
@@ -212,6 +205,30 @@ var Node = React.createClass({
 	},
 
 	_onDragEnd: function(event) {
+		// TODO: DRY (almost same code as in <Dropzone>)
+
+		// for every group
+			// check if node is inside the bounds of group
+				// if yes, add node to group
+		const props = this.props;
+		const graph = props.graph;
+		const groups = graph.groups;
+		const node = props.node;
+		const dropGroups = groups.filter(function(group) {
+			const groupRect = helpers.getGroupBBox(graph.nodes, group);
+			const nodeRect = {
+				x: node.x - 0.5*props.theme.node.size,
+				y: node.y - 0.5*props.theme.node.size,
+				width: props.theme.node.size,
+				height: props.theme.node.size,
+			};
+			// TODO: check if actually inside dropzone
+			return helpers.isRectInsideRect(nodeRect, groupRect);
+		});
+		if (dropGroups.length) {
+			this.context.graphActions.addNodeToGroup(node, R.last(dropGroups));
+		}
+
 		this.context.interfaceActions.setDragNode(null);
 	},
 
