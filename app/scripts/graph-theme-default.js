@@ -25,6 +25,7 @@ module.exports = {
 	},
 	group: {
 		cornerRadius: 5,
+		dropzoneRadius: 50
 	},
 	bgImage: {
 		opacity: 0.5,

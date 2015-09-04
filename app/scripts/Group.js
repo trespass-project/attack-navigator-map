@@ -16,6 +16,7 @@ var Dropzone = React.createClass({
 		x: React.PropTypes.number.isRequired,
 		y: React.PropTypes.number.isRequired,
 		group: React.PropTypes.object.isRequired,
+		radius: React.PropTypes.number.isRequired,
 	},
 
 	render: function() {
@@ -28,7 +29,7 @@ var Dropzone = React.createClass({
 					className='dropzone'
 					cx={0}
 					cy={0}
-					r={'50'}
+					r={props.radius}
 				/>
 			</g>
 		);
@@ -89,10 +90,13 @@ var Group = React.createClass({
 				width: props.theme.node.size,
 				height: props.theme.node.size,
 			};
-			if (helpers.isRectInsideRect(nodeRect, groupRect)) {
+			if (helpers.isRectInsideRect(nodeRect, groupRect)
+				|| helpers.isRectInsideRect(groupRect, nodeRect) // or, when group is smaller than node
+				) {
 				return (
 					<Dropzone
 						group={props.group}
+						radius={props.theme.group.dropzoneRadius}
 						x={props.width*0.5}
 						y={props.height*0.5}
 					/>

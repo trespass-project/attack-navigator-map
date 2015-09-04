@@ -222,8 +222,20 @@ var Node = React.createClass({
 				width: props.theme.node.size,
 				height: props.theme.node.size,
 			};
-			// TODO: check if actually inside dropzone
-			return helpers.isRectInsideRect(nodeRect, groupRect);
+			var groupCenter = {
+				x: groupRect.x + groupRect.width*0.5,
+				y: groupRect.y + groupRect.height*0.5,
+			};
+			// console.log(helpers.distBetweenPoints(node, groupCenter));
+			// if (helpers.isRectInsideRect(nodeRect, groupRect)
+			// 	|| helpers.isRectInsideRect(groupRect, nodeRect) // or, when group is smaller than node
+			// 	) {
+				// check if actually inside dropzone
+				if (helpers.distBetweenPoints(nodeRect, groupCenter) <= props.theme.group.dropzoneRadius) {
+					return true;
+				}
+			// }
+			return false;
 		});
 		if (dropGroups.length) {
 			this.context.graphActions.addNodeToGroup(node, R.last(dropGroups));

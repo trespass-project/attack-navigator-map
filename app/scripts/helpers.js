@@ -46,6 +46,10 @@ function getNodesBBox(nodes) {
 		  maxY: -Infinity }
 	);
 
+	if (nodes.length === 0) {
+		bounds.minX = bounds.maxX = bounds.minY = bounds.maxY = 0;
+	}
+
 	bounds.x = bounds.minX;
 	bounds.y = bounds.minY;
 	bounds.width = bounds.maxX - bounds.minX;
@@ -54,10 +58,36 @@ function getNodesBBox(nodes) {
 	return bounds;
 }
 
+
+function getGroupInitialPosition(group) {
+	return {
+		x: group.x || 0,
+		y: group.y || 0,
+	};
+}
+
+
 // get bounding box for all nodes in group
 function getGroupBBox(allNodes, group) {
 	const nodes = group.nodeIds.map(R.partial(getItemById, allNodes));
-	return getNodesBBox(nodes);
+	let bbox = getNodesBBox(nodes);
+	if (nodes.length === 0) {
+		const initialPos = getGroupInitialPosition(group);
+		bbox.x = initialPos.x;
+		bbox.y = initialPos.y;
+		bbox.minX = initialPos.x;
+		bbox.maxX = initialPos.x + bbox.width;
+		bbox.minY = initialPos.y;
+		bbox.maxY = initialPos.y + bbox.height;
+	}
+	return bbox;
+}
+
+
+function distBetweenPoints(a, b) {
+	const x = b.x - a.x;
+	const y = b.y - a.y;
+	return Math.sqrt(x*x + y*y);
 }
 
 
@@ -177,6 +207,8 @@ module.exports = {
 	getItemById,
 	getNodesBBox,
 	getGroupBBox,
+	getGroupInitialPosition,
+	distBetweenPoints,
 	isRectInsideRect,
 	getNodeGroups,
 	prepareGraphFragment,
