@@ -424,9 +424,10 @@ var GraphMinimap = React.createClass({
 var spec = {
 	drop: function (props, monitor, component) {
 		// console.log(monitor.getItem());
+		const clientOffset = monitor.internalMonitor.store.getState().dragOffset.clientOffset;
 		return {
 			target: constants.DND_TARGET_MAP,
-			clientOffset: monitor.internalMonitor.dragOffsetStore.state.clientOffset // TODO: this seems hacky
+			clientOffset
 		};
 	}
 };
