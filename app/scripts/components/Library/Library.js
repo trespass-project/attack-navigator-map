@@ -21,7 +21,7 @@ class LibraryItem extends React.Component {
 		const connectDragSource = props.connectDragSource;
 		return connectDragSource(
 			<li key={props.data.label} className='list-group-item'>
-				<div className='badge' style={{ float:'right', fontWeight:'normal', marginTop:'0.15em' }}>{props.data.type}</div>
+				<div className='badge' style={{ float: 'right', fontWeight: 'normal', marginTop: '0.15em' }}>{props.data.type}</div>
 				<div>{props.data.label}</div>
 			</li>
 		);

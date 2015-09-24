@@ -40,7 +40,7 @@ var ContextMenu = React.createClass({
 		let translate = sf('translate({0},{1})', center.x, center.y);
 
 		let iconHTML = { __html: (item.icon || '').trim() };
-		let labelLines = item.label.split('\n').map(function(line) { return line.trim() });
+		let labelLines = item.label.split('\n').map(function(line) { return line.trim(); });
 
 		return (
 			<g key={index}>
@@ -55,7 +55,7 @@ var ContextMenu = React.createClass({
 						{
 							labelLines.map(function(line) {
 								var lineHTML = { __html: (line || '') };
-								return <tspan x='0' dy='1.1em' dangerouslySetInnerHTML={lineHTML} />
+								return <tspan x='0' dy='1.1em' dangerouslySetInnerHTML={lineHTML} />;
 							})
 						}
 					</text>
