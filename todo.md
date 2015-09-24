@@ -1,3 +1,5 @@
+bug: context menu open + click on non-map-root, doesn't close it
+
 model component properties
 	radar graph component
 
