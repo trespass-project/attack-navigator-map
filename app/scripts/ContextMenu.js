@@ -3,6 +3,7 @@
 var React = require('react');
 var PureRenderMixin = require('react/addons').addons.PureRenderMixin;
 var d3 = require('d3');
+var classnames = require('classnames');
 var sf = require('sf');
 var helpers = require('./helpers.js');
 
@@ -42,10 +43,12 @@ var ContextMenu = React.createClass({
 		let iconHTML = { __html: (item.icon || '').trim() };
 		let labelLines = item.label.split('\n').map(function(line) { return line.trim(); });
 
+		let pathClasses = classnames('menu-item', { 'destructive': item.destructive });
+
 		return (
 			<g key={index}>
 				<path
-					className='menu-item'
+					className={pathClasses}
 					d={d}
 					onClick={item.action}>
 				</path>

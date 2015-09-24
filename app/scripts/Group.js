@@ -157,12 +157,12 @@ var Group = React.createClass({
 			}
 
 			let menuItems = [
-				{ label: 'delete', icon: icons['fa-trash'], action:
+				{ label: 'delete', destructive: true, icon: icons['fa-trash'], action:
 					function(/*event*/) {
 						context.graphActions.removeGroup(that.props.group, true);
 					}
 				},
-				{ label: 'ungroup', icon: icons['fa-remove'], action:
+				{ label: 'ungroup', destructive: true, icon: icons['fa-remove'], action:
 					function(/*event*/) {
 						context.graphActions.removeGroup(that.props.group);
 					}
