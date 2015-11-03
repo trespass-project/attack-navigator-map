@@ -36,6 +36,11 @@ class InterfaceStore extends Store {
 			hoverGroup: null,
 			previewEdge: null,
 
+			spacePressed: false,
+			mouseOverEditor: false,
+			panning: false,
+			pannable: false,
+
 			showEdgeLabels: true,
 			showNodeLabels: true,
 			showGroupLabels: true,
@@ -373,6 +378,22 @@ class InterfaceStore extends Store {
 		group._bgImage.groupCenterOffsetY = newPos.groupCenterOffsetY;
 
 		this.graphStore._updateModel();
+	}
+
+	setSpacePressed(action) {
+		this.setState({ spacePressed: action.yesno });
+	}
+
+	setMouseOverEditor(action) {
+		this.setState({ mouseOverEditor: action.yesno });
+	}
+
+	setPanning(action) {
+		this.setState({ panning: action.yesno });
+	}
+
+	setPannable(action) {
+		this.setState({ pannable: action.yesno });
 	}
 
 };

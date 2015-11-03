@@ -23,6 +23,17 @@ var SchleppMixin = {
 			event.preventDefault();
 			event.stopPropagation();
 
+			// panning:
+			// only when space is pressed and mouse is over editor
+			if ($elem[0].tagName === 'svg') {
+				let panning = that.props.mouseOverEditor && that.props.spacePressed;
+				if (!panning) {
+					return;
+				} else {
+					that.context.interfaceActions.setPanning(true);
+				}
+			}
+
 			lastX = event.offsetX;
 			lastY = event.offsetY;
 			event.deltaX = 0;

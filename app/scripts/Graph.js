@@ -175,6 +175,8 @@ var GraphMixin = {
 			{
 				'editable': props.editable,
 				'not-editable': !props.editable,
+				'pannable': props.pannable,
+				'panning': props.panning
 			}
 		);
 
@@ -306,8 +308,6 @@ var GraphEditor = React.createClass({
 	},
 
 	_onDragStart: function(event) {
-		let $svg = $(this.props.editorElem);
-		$svg.addClass('panning');
 		this._originalPanX = this.props.panX;
 		this._originalPanY = this.props.panY;
 	},
@@ -320,8 +320,6 @@ var GraphEditor = React.createClass({
 	},
 
 	_onDragEnd: function(event) {
-		let $svg = $(this.props.editorElem);
-		$svg.removeClass('panning');
 		this._originalPanX = this.props.panX;
 		this._originalPanY = this.props.panY;
 	},

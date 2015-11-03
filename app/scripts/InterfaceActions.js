@@ -14,6 +14,7 @@ class InterfaceActions extends Actions {
 	showContextMenu(event, context, menuItems) {
 		return {event, context, menuItems};
 	}
+
 	hideContextMenu() {
 		return {};
 	}
@@ -89,6 +90,22 @@ class InterfaceActions extends Actions {
 
 	moveImage(group, newPos) {
 		return {group, newPos};
+	}
+
+	setSpacePressed(yesno) {
+		return {yesno};
+	}
+
+	setMouseOverEditor(yesno) {
+		return {yesno};
+	}
+
+	setPanning(yesno) {
+		return {yesno};
+	}
+
+	setPannable(yesno) {
+		return {yesno};
 	}
 
 };
