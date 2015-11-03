@@ -37,14 +37,15 @@ body
 			flex: 1
 			// background: green
 
+		$padding: 10px
 		#model-debug-view
 			$w: 300px
 			flex: 1
 			width: $w
 			max-width: $w
-			overflow-y: scroll
+			overflow-y: auto
 			overflow-x: hidden
-			padding: 10px
+			padding: $padding
 
 			.title
 				margin-bottom: 0.3em
@@ -57,8 +58,26 @@ body
 			// background: blue
 			border-left: solid lightgrey 2px
 			padding: 10px
-			overflow-y: scroll
-			overflow-x: hidden
+			// overflow-y: auto
+			overflow: visible // ← must be this!
+
+			#wizard-container
+				position: relative
+				#steps-container
+					position: absolute
+					$w: 30px
+					left: -$w - $padding
+					.step-icon
+						width: $w
+						height: $w
+						background-color: yellow
+						z-index: 9999
+						cursor: pointer
+						// ----
+						word-wrap: break-word
+						font-size: 10px
+						line-height: 1em
+						margin-bottom: 1em
 
 
 
@@ -142,4 +161,3 @@ svg.graph
 @import 'main-menu'
 @import 'context-menu'
 @import 'props-panel'
-

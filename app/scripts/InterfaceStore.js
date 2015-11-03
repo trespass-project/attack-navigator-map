@@ -41,6 +41,11 @@ class InterfaceStore extends Store {
 			panning: false,
 			pannable: false,
 
+			interfaceMode: 'light', // pro
+			wizard: {
+				selectedSection: 'import'
+			},
+
 			showEdgeLabels: true,
 			showNodeLabels: true,
 			showGroupLabels: true,
@@ -394,6 +399,10 @@ class InterfaceStore extends Store {
 
 	setPannable(action) {
 		this.setState({ pannable: action.yesno });
+	}
+
+	setSelectWizardStep(action) {
+		this.setState({ wizard: { selectedSection: action.name } });
 	}
 
 };

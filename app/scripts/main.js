@@ -11,26 +11,18 @@ const constants = require('./constants.js');
 
 var LibraryActions = require('./components/Library/LibraryActions.js');
 var LibraryStore = require('./components/Library/LibraryStore.js');
-var Library = require('./components/Library/Library.js');
 var ModelLibrary = require('./components/ModelLibrary/ModelLibrary.js');
 var ModelDebugView = require('./components/ModelDebugView/ModelDebugView.js');
 var GraphOutline = require('./GraphOutline.js');
+var GraphEditor = require('./Graph.js').GraphEditor;
 
 var HTMLOverlay = require('./HTMLOverlay.js');
 var MainMenu = require('./MainMenu.js');
-var PropertiesPanel = require('./PropertiesPanel.js');
-var Graph = require('./Graph.js').Graph;
-var GraphEditor = require('./Graph.js').GraphEditor;
-var GraphMinimap = require('./Graph.js').GraphMinimap;
+var Wizard = require('./Wizard.js');
 var GraphActions = require('./GraphActions.js');
 var GraphStore = require('./GraphStore.js');
 var InterfaceActions = require('./InterfaceActions.js');
 var InterfaceStore = require('./InterfaceStore.js');
-
-
-function handleAdd() {
-	console.log('here');
-}
 
 
 class MapFlux extends Flux {
@@ -86,6 +78,7 @@ var App = React.createClass({
 						</FluxComponent>
 					</div>
 				</div>
+
 				<div id='model-debug-view'>
 					<div className='panel-section'>
 						<h3 className='title'>debug</h3>
@@ -106,34 +99,11 @@ var App = React.createClass({
 						</FluxComponent>
 					</div>
 				</div>
+
 				<div id='panel-container'>
 					<FluxComponent flux={flux} connectToStores={[constants.GRAPH, constants.INTERFACE]}>
-						<GraphMinimap id='minimap' />
+						<Wizard />
 					</FluxComponent>
-					<FluxComponent flux={flux} connectToStores={[constants.GRAPH, constants.INTERFACE]}>
-						<PropertiesPanel
-							relationsLibUrl={'data/'+constants.MODEL_RELATIONS_LIBRARY}
-							id='propspanel'
-						/>
-					</FluxComponent>
-
-					{/*<div id='model-library'>
-						<FluxComponent flux={flux} connectToStores={[constants.MODEL_LIBRARY]} libName={constants.MODEL_LIBRARY}>
-							<ModelLibrary url='data/models.json' title='models' />
-						</FluxComponent>
-					</div>*/}
-
-					<div id='pattern-lib'>
-						<FluxComponent flux={flux} connectToStores={[constants.MODEL_PATTERNS_LIBRARY]} libName={constants.MODEL_PATTERNS_LIBRARY}>
-							<Library url={'data/'+constants.MODEL_PATTERNS_LIBRARY} title='patterns' />
-						</FluxComponent>
-					</div>
-
-					<div id='component-lib'>
-						<FluxComponent flux={flux} connectToStores={[constants.MODEL_COMPONENTS_LIBRARY]} libName={constants.MODEL_COMPONENTS_LIBRARY}>
-							<Library url={'data/'+constants.MODEL_COMPONENTS_LIBRARY} title='components' onAdd={handleAdd} />
-						</FluxComponent>
-					</div>
 				</div>
 			</div>
 		);

@@ -16,12 +16,20 @@ class LibraryItem extends React.Component {
 		utils.autoBind(this);
 	}
 
+	renderType() {
+		const props = this.props;
+		if (!props.showType) { return null; }
+		return <div className='badge' style={{ float: 'right', fontWeight: 'normal', marginTop: '0.15em' }}>
+			{props.data.type}
+		</div>
+	}
+
 	render() {
 		const props = this.props;
 		const connectDragSource = props.connectDragSource;
 		return connectDragSource(
 			<li key={props.data.label} className='list-group-item'>
-				<div className='badge' style={{ float: 'right', fontWeight: 'normal', marginTop: '0.15em' }}>{props.data.type}</div>
+				{this.renderType()}
 				<div>{props.data.label}</div>
 			</li>
 		);
@@ -112,16 +120,18 @@ class Library extends React.Component {
 
 	renderListItem(item, index) {
 		var that = this;
+		const props = this.props;
 		var onClick = null;
 		if (_.isFunction(this.props.onClick)) {
 			onClick = function(event) { that.props.onClick(item); };
 		}
 		return (
 			<LibraryItem
-				flux={this.props.flux}
+				flux={props.flux}
 				onClick={onClick}
 				key={item.id || index}
 				data={item}
+				showType={props.showFilter}
 			/>
 		);
 	}
@@ -172,6 +182,16 @@ class Library extends React.Component {
 		);
 	}
 
+	renderFilter() {
+		const props = this.props;
+
+		if (!props.showFilter) { return null; }
+
+		return <form className='form-inline type-filter' onChange={this.filterType} onSubmit={this.onSubmit}>
+			{props.componentTypes.map(this.renderFilterItem)}
+		</form>;
+	}
+
 	render() {
 		var that = this;
 		var props = this.props;
@@ -188,13 +208,11 @@ class Library extends React.Component {
 						</div>
 					</div>
 				</div>
-				<form className='form-inline type-filter' onChange={this.filterType} onSubmit={this.onSubmit}>
-					{props.componentTypes.map(this.renderFilterItem)}
-				</form>
+				{this.renderFilter()}
 				{this.renderLoading()}
 				{this.renderError()}
 				<div className="results">
-					<ul className='list-group'>{list.map(this.renderListItem)}</ul>
+					<ul className='list-group'>{list.filter(props.filter).map(this.renderListItem)}</ul>
 				</div>
 				{this.renderAdd()}
 			</div>
@@ -235,15 +253,23 @@ Library.propTypes = {
 	list: React.PropTypes.array.isRequired,
 	componentTypes: React.PropTypes.array.isRequired,
 	componentTypesFilter: React.PropTypes.array.isRequired,
+	showFilter: React.PropTypes.bool,
+
+	filter: React.PropTypes.func,
 
 	flux: React.PropTypes.any.isRequired,
 	libName: React.PropTypes.string.isRequired,
 
 	renderItem: React.PropTypes.func,
-	onClick: React.PropTypes.func,
 	onAdd: React.PropTypes.func,
 	loading: React.PropTypes.bool,
 	query: React.PropTypes.string,
+};
+
+
+Library.defaultProps = {
+	showFilter: false,
+	filter: function() { return true; }
 };
 
 

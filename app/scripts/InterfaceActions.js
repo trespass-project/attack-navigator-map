@@ -108,4 +108,8 @@ class InterfaceActions extends Actions {
 		return {yesno};
 	}
 
+	setSelectWizardStep(name) {
+		return {name};
+	}
+
 };
