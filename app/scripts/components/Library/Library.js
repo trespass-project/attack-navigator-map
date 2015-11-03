@@ -103,14 +103,14 @@ class Library extends React.Component {
 		super(props);
 		utils.autoBind(this);
 
-		this.render_listItem = this.props.renderItem || this.render_listItem;
+		this.renderListItem = this.props.renderItem || this.renderListItem;
 
 		var flux = this.props.flux;
 		var libraryActions = flux.getActions(this.props.libName);
 		libraryActions.loadData(this.props.url);
 	}
 
-	render_listItem(item, index) {
+	renderListItem(item, index) {
 		var that = this;
 		var onClick = null;
 		if (_.isFunction(this.props.onClick)) {
@@ -126,7 +126,7 @@ class Library extends React.Component {
 		);
 	}
 
-	render_loading() {
+	renderLoading() {
 		if (this.props.loading) {
 			return <div>loading...</div>;
 		} else {
@@ -134,7 +134,7 @@ class Library extends React.Component {
 		}
 	}
 
-	render_error() {
+	renderError() {
 		if (this.props.error) {
 			return <div>{this.props.error.status}: {this.props.error.errorMessage}</div>;
 		} else {
@@ -142,7 +142,7 @@ class Library extends React.Component {
 		}
 	}
 
-	render_add() {
+	renderAdd() {
 		// var that = this;
 		// var onAdd = this.props.onAdd;
 		// if (_.isFunction(onAdd)) {
@@ -191,12 +191,12 @@ class Library extends React.Component {
 				<form className='form-inline type-filter' onChange={this.filterType} onSubmit={this.onSubmit}>
 					{props.componentTypes.map(this.renderFilterItem)}
 				</form>
-				{this.render_loading()}
-				{this.render_error()}
+				{this.renderLoading()}
+				{this.renderError()}
 				<div className="results">
-					<ul className='list-group'>{list.map(this.render_listItem)}</ul>
+					<ul className='list-group'>{list.map(this.renderListItem)}</ul>
 				</div>
-				{this.render_add()}
+				{this.renderAdd()}
 			</div>
 		);
 	}

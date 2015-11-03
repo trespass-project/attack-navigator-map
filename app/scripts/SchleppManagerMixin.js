@@ -24,7 +24,6 @@ var SchleppManagerMixin = {
 				if (that.props.mouseOverEditor) {
 					event.preventDefault();
 					event.stopPropagation();
-					// console.log('space!');
 				}
 
 				that.context.interfaceActions.setSpacePressed(true);
