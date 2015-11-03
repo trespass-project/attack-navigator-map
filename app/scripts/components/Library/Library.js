@@ -166,8 +166,8 @@ class Library extends React.Component {
 		const props = this.props;
 		const checked = R.contains(item, props.componentTypesFilter);
 		return (
-			<label>
-				<input type='checkbox' key={item} value={item} checked={checked} className=''> {item}</input>
+			<label key={item}>
+				<input type='checkbox' value={item} checked={checked} className=''> {item}</input>
 			</label>
 		);
 	}
