@@ -1,0 +1,436 @@
+{
+	"DoorDatacenter": {
+		"cloneability": "false",
+		"forceability": "true",
+		"label": "DoorDatacenter",
+		"persistence": "na",
+		"type": "Door"
+	},
+	"DoorInternal": {
+		"cloneability": "false",
+		"forceability": "true",
+		"label": "DoorInternal",
+		"persistence": "na",
+		"type": "Door"
+	},
+	"DoorOutside": {
+		"cloneability": "false",
+		"forceability": "true",
+		"label": "DoorOutside",
+		"persistence": "na",
+		"type": "Door"
+	},
+	"Hallway": {
+		"cloneability": "false",
+		"forceability": "true",
+		"label": "Hallway",
+		"persistence": "na",
+		"type": "Room"
+	},
+	"Outside": {
+		"cloneability": "false",
+		"forceability": "true",
+		"label": "Outside",
+		"persistence": "na",
+		"type": "Room"
+	},
+	"RoomDatacenter": {
+		"cloneability": "false",
+		"forceability": "true",
+		"label": "RoomDatacenter",
+		"persistence": "na",
+		"type": "Room"
+	},
+	"RoomInternal": {
+		"cloneability": "false",
+		"forceability": "true",
+		"label": "RoomInternal",
+		"persistence": "na",
+		"type": "Room"
+	},
+	"WindowDatacenter": {
+		"cloneability": "false",
+		"forceability": "true",
+		"label": "WindowDatacenter",
+		"persistence": "na",
+		"type": "Window"
+	},
+	"WindowInternal": {
+		"cloneability": "false",
+		"forceability": "true",
+		"label": "WindowInternal",
+		"persistence": "na",
+		"type": "Window"
+	},
+	"administrator": {
+		"cloneability": "false",
+		"forceability": "true",
+		"label": "Administrator",
+		"persistence": "na",
+		"type": "Actor"
+	},
+	"administrators": {
+		"cloneability": "false",
+		"forceability": "true",
+		"label": "Administrators",
+		"persistence": "na",
+		"type": "Actor"
+	},
+	"big": {
+		"cloneability": "false",
+		"forceability": "true",
+		"label": "MrBig",
+		"persistence": "na",
+		"type": "Actor"
+	},
+	"cleo": {
+		"cloneability": "false",
+		"forceability": "true",
+		"label": "Cleo",
+		"persistence": "na",
+		"type": "Actor"
+	},
+	"entity_vim.ClusterComputeResource_domain-c26": {
+		"cloneability": "false",
+		"forceability": "false",
+		"label": "ProductionCluster",
+		"persistence": "na",
+		"type": "ClusterComputeResource"
+	},
+	"entity_vim.ClusterComputeResource_domain-c28": {
+		"cloneability": "false",
+		"forceability": "false",
+		"label": "TestCluster",
+		"persistence": "na",
+		"type": "ClusterComputeResource"
+	},
+	"entity_vim.Datacenter_datacenter-21": {
+		"cloneability": "false",
+		"forceability": "false",
+		"label": "CIAB",
+		"persistence": "na",
+		"type": "Datacenter"
+	},
+	"entity_vim.Datastore_datastore-41": {
+		"cloneability": "true",
+		"forceability": "false",
+		"label": "vsanDatastore",
+		"persistence": "persistent",
+		"type": "Datastore"
+	},
+	"entity_vim.Folder_group-d1": {
+		"cloneability": "false",
+		"forceability": "false",
+		"label": "Datacenters",
+		"persistence": "na",
+		"type": "Folder"
+	},
+	"entity_vim.Folder_group-h23": {
+		"cloneability": "false",
+		"forceability": "false",
+		"label": "host",
+		"persistence": "na",
+		"type": "Folder"
+	},
+	"entity_vim.Folder_group-n25": {
+		"cloneability": "false",
+		"forceability": "false",
+		"label": "network",
+		"persistence": "na",
+		"type": "Folder"
+	},
+	"entity_vim.Folder_group-s24": {
+		"cloneability": "false",
+		"forceability": "false",
+		"label": "datastore",
+		"persistence": "na",
+		"type": "Folder"
+	},
+	"entity_vim.Folder_group-v22": {
+		"cloneability": "false",
+		"forceability": "false",
+		"label": "vm",
+		"persistence": "na",
+		"type": "Folder"
+	},
+	"entity_vim.Folder_group-v30": {
+		"cloneability": "false",
+		"forceability": "false",
+		"label": "Current",
+		"persistence": "na",
+		"type": "Folder"
+	},
+	"entity_vim.HostSystem_host-40": {
+		"cloneability": "false",
+		"forceability": "false",
+		"label": "nuc3",
+		"persistence": "persistent",
+		"type": "HostSystem"
+	},
+	"entity_vim.HostSystem_host-49": {
+		"cloneability": "false",
+		"forceability": "false",
+		"label": "nuc2",
+		"persistence": "persistent",
+		"type": "HostSystem"
+	},
+	"entity_vim.HostSystem_host-52": {
+		"cloneability": "false",
+		"forceability": "false",
+		"label": "nuc1",
+		"persistence": "persistent",
+		"type": "HostSystem"
+	},
+	"entity_vim.Network_network-42": {
+		"cloneability": "false",
+		"forceability": "false",
+		"label": "FinanceDept_PG",
+		"persistence": "non-persistent",
+		"type": "Network"
+	},
+	"entity_vim.Network_network-43": {
+		"cloneability": "false",
+		"forceability": "false",
+		"label": "FraudDept_PG",
+		"persistence": "non-persistent",
+		"type": "Network"
+	},
+	"entity_vim.Network_network-44": {
+		"cloneability": "false",
+		"forceability": "false",
+		"label": "ITDept_PG",
+		"persistence": "non-persistent",
+		"type": "Network"
+	},
+	"entity_vim.Network_network-45": {
+		"cloneability": "false",
+		"forceability": "false",
+		"label": "VM Network",
+		"persistence": "non-persistent",
+		"type": "Network"
+	},
+	"entity_vim.ResourcePool_resgroup-27": {
+		"cloneability": "false",
+		"forceability": "false",
+		"label": "Resources",
+		"persistence": "na",
+		"type": "ResourcePool"
+	},
+	"entity_vim.ResourcePool_resgroup-29": {
+		"cloneability": "false",
+		"forceability": "false",
+		"label": "Resources",
+		"persistence": "na",
+		"type": "ResourcePool"
+	},
+	"entity_vim.ResourcePool_resgroup-57": {
+		"cloneability": "false",
+		"forceability": "false",
+		"label": "Pre-Prod",
+		"persistence": "na",
+		"type": "ResourcePool"
+	},
+	"entity_vim.ResourcePool_resgroup-58": {
+		"cloneability": "false",
+		"forceability": "false",
+		"label": "Development",
+		"persistence": "na",
+		"type": "ResourcePool"
+	},
+	"entity_vim.ResourcePool_resgroup-59": {
+		"cloneability": "false",
+		"forceability": "false",
+		"label": "FinanceDept",
+		"persistence": "na",
+		"type": "ResourcePool"
+	},
+	"entity_vim.ResourcePool_resgroup-60": {
+		"cloneability": "false",
+		"forceability": "false",
+		"label": "FraudDept",
+		"persistence": "na",
+		"type": "ResourcePool"
+	},
+	"entity_vim.ResourcePool_resgroup-61": {
+		"cloneability": "false",
+		"forceability": "false",
+		"label": "ITDept",
+		"persistence": "na",
+		"type": "ResourcePool"
+	},
+	"entity_vim.VirtualMachine_vm-101": {
+		"cloneability": "true",
+		"forceability": "true",
+		"label": "ubuntu-14.04-template",
+		"persistence": "ask-container",
+		"type": "VirtualMachine"
+	},
+	"entity_vim.VirtualMachine_vm-102": {
+		"cloneability": "true",
+		"forceability": "true",
+		"label": "scantest",
+		"persistence": "ask-container",
+		"type": "VirtualMachine"
+	},
+	"entity_vim.VirtualMachine_vm-122": {
+		"cloneability": "true",
+		"forceability": "true",
+		"label": "scantest2",
+		"persistence": "ask-container",
+		"type": "VirtualMachine"
+	},
+	"entity_vim.VirtualMachine_vm-161": {
+		"cloneability": "true",
+		"forceability": "true",
+		"label": "admin",
+		"persistence": "ask-container",
+		"type": "VirtualMachine"
+	},
+	"entity_vim.VirtualMachine_vm-46": {
+		"cloneability": "true",
+		"forceability": "true",
+		"label": "vm3",
+		"persistence": "ask-container",
+		"type": "VirtualMachine"
+	},
+	"entity_vim.VirtualMachine_vm-47": {
+		"cloneability": "true",
+		"forceability": "true",
+		"label": "viz",
+		"persistence": "ask-container",
+		"type": "VirtualMachine"
+	},
+	"entity_vim.VirtualMachine_vm-50": {
+		"cloneability": "true",
+		"forceability": "true",
+		"label": "vm4",
+		"persistence": "ask-container",
+		"type": "VirtualMachine"
+	},
+	"entity_vim.VirtualMachine_vm-51": {
+		"cloneability": "true",
+		"forceability": "true",
+		"label": "vm1",
+		"persistence": "ask-container",
+		"type": "VirtualMachine"
+	},
+	"entity_vim.VirtualMachine_vm-54": {
+		"cloneability": "true",
+		"forceability": "true",
+		"label": "vm2",
+		"persistence": "ask-container",
+		"type": "VirtualMachine"
+	},
+	"entity_vim.VirtualMachine_vm-55": {
+		"cloneability": "true",
+		"forceability": "true",
+		"label": "vcsa",
+		"persistence": "ask-container",
+		"type": "VirtualMachine"
+	},
+	"entity_vim.VirtualMachine_vm-82": {
+		"cloneability": "true",
+		"forceability": "true",
+		"label": "OpenVAS",
+		"persistence": "ask-container",
+		"type": "VirtualMachine"
+	},
+	"ethan": {
+		"cloneability": "false",
+		"forceability": "true",
+		"label": "Ethan",
+		"persistence": "na",
+		"type": "Actor"
+	},
+	"fileX": {
+		"cloneability": "true",
+		"forceability": "false",
+		"label": "fileX",
+		"persistence": "ask-container",
+		"type": "file"
+	},
+	"finn": {
+		"cloneability": "false",
+		"forceability": "true",
+		"label": "Finn",
+		"persistence": "na",
+		"type": "Actor"
+	},
+	"grey": {
+		"cloneability": "false",
+		"forceability": "false",
+		"label": "Grey",
+		"persistence": "na",
+		"type": "Principal"
+	},
+	"principal_VSPHERE.LOCAL_Administrator": {
+		"cloneability": "false",
+		"forceability": "false",
+		"label": "Administrator vsphere.local",
+		"persistence": "na",
+		"type": "Principal"
+	},
+	"principal_VSPHERE.LOCAL_Administrators": {
+		"cloneability": "false",
+		"forceability": "false",
+		"label": "VSPHERE.LOCAL\\Administrators",
+		"persistence": "na",
+		"type": "Principal"
+	},
+	"principal_VSPHERE.LOCAL_big": {
+		"cloneability": "false",
+		"forceability": "false",
+		"label": "Mr Big",
+		"persistence": "na",
+		"type": "Principal"
+	},
+	"principal_VSPHERE.LOCAL_cleo": {
+		"cloneability": "false",
+		"forceability": "false",
+		"label": "Cleo",
+		"persistence": "na",
+		"type": "Principal"
+	},
+	"principal_VSPHERE.LOCAL_ethan": {
+		"cloneability": "false",
+		"forceability": "false",
+		"label": "Ethan",
+		"persistence": "na",
+		"type": "Principal"
+	},
+	"principal_VSPHERE.LOCAL_finn": {
+		"cloneability": "false",
+		"forceability": "false",
+		"label": "Finn",
+		"persistence": "na",
+		"type": "Principal"
+	},
+	"principal_VSPHERE.LOCAL_sydney": {
+		"cloneability": "false",
+		"forceability": "false",
+		"label": "Sydney",
+		"persistence": "na",
+		"type": "Principal"
+	},
+	"principal_VSPHERE.LOCAL_terry": {
+		"cloneability": "false",
+		"forceability": "false",
+		"label": "Terry",
+		"persistence": "na",
+		"type": "Principal"
+	},
+	"sydney": {
+		"cloneability": "false",
+		"forceability": "true",
+		"label": "Sydney",
+		"persistence": "na",
+		"type": "Actor"
+	},
+	"terry": {
+		"cloneability": "false",
+		"forceability": "true",
+		"label": "Terry",
+		"persistence": "na",
+		"type": "Actor"
+	}
+}
