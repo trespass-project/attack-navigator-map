@@ -1,7 +1,6 @@
 'use strict';
 
 var React = require('react');
-var PureRenderMixin = require('react/addons').addons.PureRenderMixin;
 var d3 = require('d3');
 var $ = require('jquery');
 var mout = require('mout');
@@ -68,8 +67,6 @@ function bezierPoint(p1, c1, c2, p2, t) {
 
 
 var Edge = React.createClass({
-	// mixins: [PureRenderMixin],
-
 	propTypes: {
 		edge: React.PropTypes.object.isRequired,
 		theme: React.PropTypes.object.isRequired,

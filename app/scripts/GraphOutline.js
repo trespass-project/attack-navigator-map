@@ -1,14 +1,11 @@
 'use strict';
 
 var React = require('react');
-var PureRenderMixin = require('react/addons').addons.PureRenderMixin;
 var classnames = require('classnames');
 var helpers = require('./helpers.js');
 
 
 var GraphOutline = React.createClass({
-	// mixins: [PureRenderMixin],
-
 	propTypes: {
 		graph: React.PropTypes.object.isRequired
 	},

@@ -1,7 +1,6 @@
 'use strict';
 
 var $ = require('jquery');
-var PureRenderMixin = require('react/addons').addons.PureRenderMixin;
 var _ = require('lodash');
 var React = require('react');
 var DropTarget = require('react-dnd').DropTarget;
@@ -11,8 +10,6 @@ var constants = require('../../constants.js');
 
 
 class ModelDebugView extends React.Component {
-	// TODO: PureRenderMixin
-
 	constructor(props) {
 		super(props);
 		utils.autoBind(this);

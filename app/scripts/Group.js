@@ -5,7 +5,6 @@ var _ = require('lodash');
 var R = require('ramda');
 var classnames = require('classnames');
 var React = require('react');
-var PureRenderMixin = require('react/addons').addons.PureRenderMixin;
 var SchleppMixin = require('./SchleppMixin.js');
 var icons = require('./icons.js');
 var helpers = require('./helpers.js');
@@ -38,7 +37,7 @@ var Dropzone = React.createClass({
 
 
 var Group = React.createClass({
-	mixins: [SchleppMixin/*, PureRenderMixin*/],
+	mixins: [SchleppMixin],
 
 	propTypes: {
 		x: React.PropTypes.number.isRequired,

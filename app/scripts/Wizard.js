@@ -2,7 +2,6 @@
 
 var R = require('ramda');
 var React = require('react');
-// var PureRenderMixin = require('react/addons').addons.PureRenderMixin;
 var FluxComponent = require('flummox/component');
 var helpers = require('./helpers.js');
 const constants = require('./constants.js');
@@ -25,8 +24,6 @@ function handleAdd() {
 
 
 var Wizard = React.createClass({
-	// mixins: [PureRenderMixin],
-
 	propTypes: {
 		//
 	},

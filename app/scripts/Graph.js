@@ -3,7 +3,6 @@
 var _ = require('lodash');
 var $ = require('jquery');
 var React = require('react');
-var PureRenderMixin = require('react/addons').addons.PureRenderMixin;
 var mout = require('mout');
 var classnames = require('classnames');
 var helpers = require('./helpers.js');
@@ -20,8 +19,6 @@ var icons = require('./icons.js');
 
 
 var GraphMixin = {
-	// mixins: [PureRenderMixin],
-
 	propTypes: {
 		graph: React.PropTypes.object.isRequired,
 		editable: React.PropTypes.bool.isRequired,

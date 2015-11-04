@@ -1,7 +1,6 @@
 'use strict';
 
 var React = require('react');
-var PureRenderMixin = require('react/addons').addons.PureRenderMixin;
 var d3 = require('d3');
 var classnames = require('classnames');
 var sf = require('sf');
@@ -9,8 +8,6 @@ var helpers = require('./helpers.js');
 
 
 var ContextMenu = React.createClass({
-	// mixins: [PureRenderMixin],
-
 	propTypes: {
 		theme: React.PropTypes.object.isRequired,
 		contextMenu: React.PropTypes.any.isRequired,

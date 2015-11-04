@@ -1,14 +1,11 @@
 'use strict';
 
 var React = require('react');
-var PureRenderMixin = require('react/addons').addons.PureRenderMixin;
 var helpers = require('./helpers.js');
 const constants = require('./constants.js');
 
 
 var MainMenu = React.createClass({
-	// mixins: [PureRenderMixin],
-
 	propTypes: {
 
 	},
