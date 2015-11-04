@@ -231,16 +231,12 @@ var Wizard = React.createClass({
 
 					{renderFn(props, flux)}
 
-
 					{/*<div id='model-library'>
 						<FluxComponent flux={flux} connectToStores={[constants.MODEL_LIBRARY]} libName={constants.MODEL_LIBRARY}>
 							<ModelLibrary url='data/models.json' title='models' />
 						</FluxComponent>
 					</div>*/}
-
-
 				</div>
-
 			</div>
 		);
 	},

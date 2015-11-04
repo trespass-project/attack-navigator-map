@@ -7,7 +7,6 @@
 				"nodes": [
 					{
 						"type": "location",
-						"domain": "physical",
 						"id": "room1",
 						"x": 240,
 						"y": -120,
@@ -15,7 +14,6 @@
 					},
 					{
 						"type": "location",
-						"domain": "physical",
 						"id": "room2",
 						"x": 240,
 						"y": 120,
@@ -23,7 +21,6 @@
 					},
 					{
 						"type": "location",
-						"domain": "physical",
 						"id": "door1",
 						"x": 130,
 						"y": -70,
@@ -31,7 +28,6 @@
 					},
 					{
 						"type": "location",
-						"domain": "physical",
 						"id": "door2",
 						"x": 130,
 						"y": 70,
@@ -39,7 +35,6 @@
 					},
 					{
 						"type": "location",
-						"domain": "physical",
 						"id": "corridor",
 						"x": 1,
 						"y": 1,
@@ -91,7 +86,6 @@
 				"nodes": [
 					{
 						"type": "location",
-						"domain": "virtual",
 						"id": "vm1",
 						"x": 300,
 						"y": 1,
@@ -99,7 +93,6 @@
 					},
 					{
 						"type": "location",
-						"domain": "virtual",
 						"id": "vm2",
 						"x": 300,
 						"y": 100,
@@ -121,7 +114,6 @@
 					},
 					{
 						"type": "location",
-						"domain": "virtual",
 						"id": "vsw",
 						"x": 150,
 						"y": 50,
@@ -129,7 +121,6 @@
 					},
 					{
 						"type": "location",
-						"domain": "virtual",
 						"id": "vfw",
 						"x": 1,
 						"y": 50,
