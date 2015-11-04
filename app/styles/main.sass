@@ -70,14 +70,29 @@ body
 					.step-icon
 						width: $w
 						height: $w
-						background-color: yellow
-						z-index: 9999
+						z-index: 999
 						cursor: pointer
 						// ----
 						word-wrap: break-word
 						font-size: 10px
 						line-height: 1em
 						margin-bottom: 1em
+
+					// currently selected one
+					.step-icon.selected
+						background-color: yellow
+
+					// all the ones before selected one
+					.step-icon.selected ~ .step-icon
+						background-color: rgb(100, 100, 100)
+
+					// all the ones after selected one
+					.step-icon
+						background-color: rgb(240, 240, 240)
+
+					// visited ones: override everything else
+					.step-icon.visited
+						background-color: orange !important
 
 
 

@@ -103,6 +103,7 @@ var Wizard = React.createClass({
 		const props = this.props;
 		const flux = props.flux;
 		const wizard = props.wizard;
+		const selectedSection = wizard.selectedSection;
 
 		var wizardSteps = {
 			'import': {
@@ -139,37 +140,37 @@ var Wizard = React.createClass({
 				<div id='wizard-container'>
 					<div id="steps-container">
 						<div
-							className="step-icon"
+							className={"step-icon " + ((selectedSection === 'import') ? 'selected' : '')}
 							onClick={R.partial(this.selectWizardStep, 'import')}
 							>
 							import
 						</div>
 						<div
-							className="step-icon"
+							className={"step-icon " + ((selectedSection === 'locations') ? 'selected' : '')}
 							onClick={R.partial(this.selectWizardStep, 'locations')}
 							>
 							locations
 						</div>
 						<div
-							className="step-icon"
+							className={"step-icon " + ((selectedSection === 'assets') ? 'selected' : '')}
 							onClick={R.partial(this.selectWizardStep, 'assets')}
 							>
 							assets
 						</div>
 						<div
-							className="step-icon"
+							className={"step-icon " + ((selectedSection === 'actors') ? 'selected' : '')}
 							onClick={R.partial(this.selectWizardStep, 'actors')}
 							>
 							actors
 						</div>
 						<div
-							className="step-icon"
+							className={"step-icon " + ((selectedSection === 'policies') ? 'selected' : '')}
 							onClick={R.partial(this.selectWizardStep, 'policies')}
 							>
 							policies
 						</div>
 						<div
-							className="step-icon"
+							className={"step-icon " + ((selectedSection === 'attacker profile') ? 'selected' : '')}
 							onClick={R.partial(this.selectWizardStep, 'attacker profile')}
 							>
 							attacker profile
