@@ -11,6 +11,13 @@ var GraphMinimap = require('./Graph.js').GraphMinimap;
 var PropertiesPanel = require('./PropertiesPanel.js');
 var Library = require('./components/Library/Library.js');
 
+var api = require('../../api.js').api;
+var serverPort = require('../../api.js').serverPort;
+var serverDomain = require('../../api.js').serverDomain;
+function apiUrl(url) {
+	return 'http://' + serverDomain + ':' + serverPort + url;
+}
+
 
 function handleAdd() {
 	console.log('here');
@@ -46,7 +53,7 @@ var Wizard = React.createClass({
 			flux={flux}
 			connectToStores={[constants.GRAPH, constants.INTERFACE]}>
 			<PropertiesPanel
-				relationsLibUrl={'data/'+constants.MODEL_RELATIONS_LIBRARY}
+				relationsLibUrl={apiUrl(api.relations.url)}
 				id='propspanel'
 			/>
 		</FluxComponent>;
@@ -70,7 +77,7 @@ var Wizard = React.createClass({
 					connectToStores={[constants.MODEL_PATTERNS_LIBRARY]}
 					libName={constants.MODEL_PATTERNS_LIBRARY}>
 					<Library
-						url={'data/'+constants.MODEL_PATTERNS_LIBRARY}
+						url={apiUrl(api.patterns.url)}
 						title='patterns' />
 				</FluxComponent>
 			</div>
@@ -81,7 +88,7 @@ var Wizard = React.createClass({
 					connectToStores={[constants.MODEL_COMPONENTS_LIBRARY]}
 					libName={constants.MODEL_COMPONENTS_LIBRARY}>
 					<Library
-						url={'data/'+constants.MODEL_COMPONENTS_LIBRARY}
+						url={apiUrl(api.components.url)}
 						title='components'
 						filter={filterFn}
 						onAdd={handleAdd} />
@@ -102,7 +109,7 @@ var Wizard = React.createClass({
 					connectToStores={[constants.MODEL_COMPONENTS_LIBRARY]}
 					libName={constants.MODEL_COMPONENTS_LIBRARY}>
 					<Library
-						url={'data/'+constants.MODEL_COMPONENTS_LIBRARY}
+						url={apiUrl(api.components.url)}
 						title='components'
 						filter={filterFn}
 						onAdd={handleAdd} />
@@ -123,7 +130,7 @@ var Wizard = React.createClass({
 					connectToStores={[constants.MODEL_PATTERNS_LIBRARY]}
 					libName={constants.MODEL_PATTERNS_LIBRARY}>
 					<Library
-						url={'data/'+constants.MODEL_PATTERNS_LIBRARY}
+						url={apiUrl(api.patterns.url)}
 						title='patterns' />
 				</FluxComponent>
 			</div>
@@ -134,7 +141,7 @@ var Wizard = React.createClass({
 					connectToStores={[constants.MODEL_COMPONENTS_LIBRARY]}
 					libName={constants.MODEL_COMPONENTS_LIBRARY}>
 					<Library
-						url={'data/'+constants.MODEL_COMPONENTS_LIBRARY}
+						url={apiUrl(api.components.url)}
 						title='components'
 						filter={filterFn}
 						onAdd={handleAdd} />
