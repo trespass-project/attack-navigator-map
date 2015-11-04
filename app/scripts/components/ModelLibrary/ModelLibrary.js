@@ -21,7 +21,7 @@ class ModelLibrary extends React.Component {
 	}
 
 	renderItem(item, index) {
-		var onClick = R.partial(this.loadModel, item);
+		var onClick = R.partial(this.loadModel, [item]);
 		return (
 			<li
 			onClick={onClick}

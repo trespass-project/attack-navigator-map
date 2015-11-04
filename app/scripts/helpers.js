@@ -28,7 +28,7 @@ function getItemByKey(key, coll, value) {
 		});
 	return result;
 }
-var getItemById = R.partial(getItemByKey, 'id');
+var getItemById = R.partial(getItemByKey, ['id']);
 
 
 function getNodesBBox(nodes) {
@@ -69,7 +69,7 @@ function getGroupInitialPosition(group) {
 
 // get bounding box for all nodes in group
 function getGroupBBox(allNodes, group) {
-	const nodes = group.nodeIds.map(R.partial(getItemById, allNodes));
+	const nodes = group.nodeIds.map(R.partial(getItemById, [allNodes]));
 	let bbox = getNodesBBox(nodes);
 	if (nodes.length === 0) {
 		const initialPos = getGroupInitialPosition(group);

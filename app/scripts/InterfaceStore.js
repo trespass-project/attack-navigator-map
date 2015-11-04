@@ -212,7 +212,7 @@ class InterfaceStore extends Store {
 		let nodesInGoupsIds = [];
 		let groups = state.graph.groups.map(function(group, index) {
 			nodesInGoupsIds = R.concat(nodesInGoupsIds, group.nodeIds);
-			let nodeFromId = R.partial(helpers.getItemById, state.graph.nodes);
+			let nodeFromId = R.partial(helpers.getItemById, [state.graph.nodes]);
 			let children = group.nodeIds
 				.map(nodeFromId)
 				.map(function(node) {

@@ -41,7 +41,7 @@ class LibraryStore extends flummox.Store {
 
 		action.promise
 			.success(function(data, status, jqXHR) {
-				var sortByLabel = R.partial(utils.sortBy, labelPropertyName);
+				var sortByLabel = R.partial(utils.sortBy, [labelPropertyName]);
 				const list = data.list.sort(sortByLabel);
 				that.cache.list = list;
 				const componentTypes = R.uniq(list.map(function(item) { return item.type; }));

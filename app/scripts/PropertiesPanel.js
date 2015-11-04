@@ -161,7 +161,7 @@ var ContextMenu = React.createClass({
 
 		var onChange = null;
 		if (props.selected) {
-			onChange = R.partial(this._onChange, props.selected.it);
+			onChange = R.partial(this._onChange, [props.selected.it]);
 		}
 
 		return (
