@@ -53,14 +53,20 @@ var Wizard = React.createClass({
 	},
 
 	renderImport: function(props, flux) {
-		return <div>import</div>;
+		return <div>
+			<input ref='load-model' type='file' accept='.xml' onChange={this.loadXMLFile} />
+		</div>;
 	},
 
 	renderLocations: function(props, flux) {
+		const filterFn = function(a) {
+			return R.contains(a.type, ['location']);
+		};
 		return <div>
 			<div id='pattern-lib'>
 				<FluxComponent
 					flux={flux}
+					key={'locations-patterns'}
 					connectToStores={[constants.MODEL_PATTERNS_LIBRARY]}
 					libName={constants.MODEL_PATTERNS_LIBRARY}>
 					<Library
@@ -71,12 +77,13 @@ var Wizard = React.createClass({
 			<div id='component-lib'>
 				<FluxComponent
 					flux={flux}
+					key={'locations-components'}
 					connectToStores={[constants.MODEL_COMPONENTS_LIBRARY]}
 					libName={constants.MODEL_COMPONENTS_LIBRARY}>
 					<Library
 						url={'data/'+constants.MODEL_COMPONENTS_LIBRARY}
 						title='components'
-						filter={function(a) { return a.type === 'location' }}
+						filter={filterFn}
 						onAdd={handleAdd} />
 				</FluxComponent>
 			</div>
@@ -84,11 +91,56 @@ var Wizard = React.createClass({
 	},
 
 	renderAssets: function(props, flux) {
-		return <div>assets</div>;
+		const filterFn = function(a) {
+			return R.contains(a.type, ['asset/item', 'asset/data']);
+		};
+		return <div>
+			<div id='component-lib'>
+				<FluxComponent
+					flux={flux}
+					key={'assets-components'}
+					connectToStores={[constants.MODEL_COMPONENTS_LIBRARY]}
+					libName={constants.MODEL_COMPONENTS_LIBRARY}>
+					<Library
+						url={'data/'+constants.MODEL_COMPONENTS_LIBRARY}
+						title='components'
+						filter={filterFn}
+						onAdd={handleAdd} />
+				</FluxComponent>
+			</div>
+		</div>;
 	},
 
 	renderActors: function(props, flux) {
-		return <div>actors</div>;
+		const filterFn = function(a) {
+			return R.contains(a.type, ['actor', 'role']);
+		};
+		return <div>
+			<div id='pattern-lib'>
+				<FluxComponent
+					flux={flux}
+					key={'actors-patterns'}
+					connectToStores={[constants.MODEL_PATTERNS_LIBRARY]}
+					libName={constants.MODEL_PATTERNS_LIBRARY}>
+					<Library
+						url={'data/'+constants.MODEL_PATTERNS_LIBRARY}
+						title='patterns' />
+				</FluxComponent>
+			</div>
+			<div id='component-lib'>
+				<FluxComponent
+					flux={flux}
+					key={'actors-components'}
+					connectToStores={[constants.MODEL_COMPONENTS_LIBRARY]}
+					libName={constants.MODEL_COMPONENTS_LIBRARY}>
+					<Library
+						url={'data/'+constants.MODEL_COMPONENTS_LIBRARY}
+						title='components'
+						filter={filterFn}
+						onAdd={handleAdd} />
+				</FluxComponent>
+			</div>
+		</div>;
 	},
 
 	renderPolicies: function(props, flux) {
