@@ -31,7 +31,7 @@ let App = React.createClass({
 
 				<div id='map-container'>
 					<div id='map'>
-						{/*<GraphEditor id='editor' {...props} />*/}
+						<GraphEditor id='editor' {...props} />
 					</div>
 				</div>
 

@@ -8,6 +8,7 @@ let SchleppMixin = require('./SchleppMixin.js');
 let helpers = require('./helpers.js');
 const constants = require('./constants.js');
 let icons = require('./icons.js');
+let actionCreators = require('./actionCreators.js');
 let DropTarget = require('react-dnd').DropTarget;
 
 
@@ -18,6 +19,10 @@ let GraphEditor = React.createClass({
 		GraphMixin
 	],
 
+	propTypes: {
+		dispatch: React.PropTypes.func.isRequired,
+	},
+
 	getDefaultProps: function() {
 		return {
 			editable: true,
@@ -25,9 +30,11 @@ let GraphEditor = React.createClass({
 	},
 
 	componentDidMount: function() {
-		const context = this.context;
+		const props = this.props;
 		let $svg = $(this.getDOMNode()).find('svg');
-		context.interfaceActions.setEditorElem($svg[0]);
+
+		// TODO: do this elsewhere
+		props.dispatch( actionCreators.setEditorElem($svg[0]) );
 
 		let that = this;
 		$svg.on('contextmenu', function(event) {
@@ -40,11 +47,11 @@ let GraphEditor = React.createClass({
 							x: event.offsetX,
 							y: event.offsetY,
 						};
-						context.graphActions.addGroup(group);
+						props.dispatch( actionCreators.addGroup(group) );
 					}
 				}
 			];
-			context.interfaceActions.showContextMenu(event, that.props.graph, menuItems);
+			props.dispatch( actionCreators.showContextMenu(event, that.props.graph, menuItems) );
 			return false;
 		});
 	},
@@ -52,22 +59,20 @@ let GraphEditor = React.createClass({
 	componentWillUnmount: function() {
 		let $svg = $(this.props.editorElem);
 		$svg.off('contextmenu');
-		this.context.interfaceActions.setEditorElem(null);
+		this.props.dispatch( actionCreators.setEditorElem(null) );
 	},
 
 	_onClick: function(event) {
 		event.preventDefault();
 		event.stopPropagation();
-		const context = this.context;
-		context.interfaceActions.hideContextMenu();
-		context.interfaceActions.select(null);
+		const props = this.props;
+		props.dispatch( actionCreators.hideContextMenu() );
+		props.dispatch( actionCreators.select(null) );
 	},
 
 	_onWheel: function(event) {
 		event.preventDefault();
-
 		const props = this.props;
-		const context = this.context;
 
 		let deltaScale = -event.deltaY / 2000.0;
 		let newScale = mout.math.clamp(this.props.scale + deltaScale,
@@ -89,28 +94,34 @@ let GraphEditor = React.createClass({
 		const x = scaleD * (currentX - editorXY.x) + editorXY.x;
 		const y = scaleD * (currentY - editorXY.y) + editorXY.y;
 
-		context.interfaceActions.setTransformation({
-			scale: newScale,
-			panX: x,
-			panY: y,
-		});
+		props.dispatch(
+			actionCreators.setTransformation({
+				scale: newScale,
+				panX: x,
+				panY: y,
+			})
+		);
 	},
 
 	_onDragStart: function(event) {
-		this._originalPanX = this.props.panX;
-		this._originalPanY = this.props.panY;
+		const props = this.props;
+		this._originalPanX = props.panX;
+		this._originalPanY = props.panY;
 	},
 
 	_onDragMove: function(event) {
-		this.context.interfaceActions.setTransformation({
-			panX: this._originalPanX + event.deltaX,
-			panY: this._originalPanY + event.deltaY,
-		});
+		this.props.dispatch(
+			actionCreators.setTransformation({
+				panX: this._originalPanX + event.deltaX,
+				panY: this._originalPanY + event.deltaY,
+			})
+		);
 	},
 
 	_onDragEnd: function(event) {
-		this._originalPanX = this.props.panX;
-		this._originalPanY = this.props.panY;
+		const props = this.props;
+		this._originalPanX = props.panX;
+		this._originalPanY = props.panY;
 	},
 });
 

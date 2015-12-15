@@ -3,12 +3,8 @@
 let $ = require('jquery');
 let React = require('react');
 let helpers = require('./helpers.js');
+let actionCreators = require('./actionCreators.js');
 
-
-	contextTypes: {
-		graphActions: React.PropTypes.object,
-		interfaceActions: React.PropTypes.object
-	},
 
 let SchleppMixin = {
 	componentDidMount: function() {
@@ -27,11 +23,11 @@ let SchleppMixin = {
 			// panning:
 			// only when space is pressed and mouse is over editor
 			if ($elem[0].tagName === 'svg') {
-				let panning = that.props.mouseOverEditor && that.props.spacePressed;
+				let panning = props.mouseOverEditor && props.spacePressed;
 				if (!panning) {
 					return;
 				} else {
-					that.context.interfaceActions.setPanning(true);
+					props.dispatch( actionCreators.setPanning(true) );
 				}
 			}
 
@@ -42,17 +38,19 @@ let SchleppMixin = {
 
 			(that._onDragStart || helpers.noop)(event);
 
-			that.context.interfaceActions.setDrag({
-				elem,
-				onMove: function(event) {
-					event.deltaX = event.offsetX - lastX;
-					event.deltaY = event.offsetY - lastY;
-					(that._onDragMove || helpers.noop)(event);
-				},
-				onEnd: function(event) {
-					(that._onDragEnd || helpers.noop)(event);
-				},
-			});
+			props.dispatch(
+				actionCreators.setDrag({
+					elem,
+					onMove: function(event) {
+						event.deltaX = event.offsetX - lastX;
+						event.deltaY = event.offsetY - lastY;
+						(that._onDragMove || helpers.noop)(event);
+					},
+					onEnd: function(event) {
+						(that._onDragEnd || helpers.noop)(event);
+					},
+				})
+			);
 		});
 	},
 
