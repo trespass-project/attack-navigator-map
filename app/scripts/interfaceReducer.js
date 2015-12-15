@@ -50,8 +50,7 @@ const initialState = {
 
 
 module.exports =
-function reducer(state, action) {
-	state = state || initialState;
+function reducer(state=initialState, action) {
 	const mergeWithState = R.partial(mergeWith, [state]);
 
 	const blacklist = [

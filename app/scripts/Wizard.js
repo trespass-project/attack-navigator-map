@@ -63,13 +63,13 @@ let Wizard = React.createClass({
 		};
 		return <div>
 			<div id='pattern-lib'>
-				<Library
+				<Library {...props}
 					key={'locations-patterns'}
 					url={apiUrl(api.patterns.url)}
 					title='patterns' />
 			</div>
 			<div id='component-lib'>
-				<Library
+				<Library {...props}
 					key={'locations-components'}
 					url={apiUrl(api.components.url)}
 					title='components'
@@ -85,7 +85,7 @@ let Wizard = React.createClass({
 		};
 		return <div>
 			<div id='component-lib'>
-				<Library
+				<Library {...props}
 					key={'assets-components'}
 					url={apiUrl(api.components.url)}
 					title='components'
@@ -101,13 +101,13 @@ let Wizard = React.createClass({
 		};
 		return <div>
 			<div id='pattern-lib'>
-				<Library
+				<Library {...props}
 					key={'actors-patterns'}
 					url={apiUrl(api.patterns.url)}
 					title='patterns' />
 			</div>
 			<div id='component-lib'>
-				<Library
+				<Library {...props}
 					key={'actors-components'}
 					url={apiUrl(api.components.url)}
 					title='components'

@@ -10,6 +10,9 @@ let actionCreators = require('../../actionCreators.js');
 
 let LibraryItem = React.createClass({
 	propTypes: {
+		dispatch: React.PropTypes.func.isRequired,
+		editorElem: React.PropTypes.object.isRequired,
+		editorTransformElem: React.PropTypes.object.isRequired,
 		data: React.PropTypes.object.isRequired,
 		// injected by react dnd:
 		isDragging: React.PropTypes.bool.isRequired,
@@ -58,12 +61,12 @@ const spec = {
 			result.target === constants.DND_TARGET_DEBUG*/) {
 
 			const editorXY = helpers.coordsRelativeToElem(
-				interfaceStore.state.editorElem,
+				props.editorElem,
 				result.clientOffset
 			);
 			const modelXY = helpers.unTransformFromTo(
-				interfaceStore.state.editorElem,
-				interfaceStore.state.editorTransformElem,
+				props.editorElem,
+				props.editorTransformElem,
 				editorXY
 			);
 
@@ -82,10 +85,10 @@ const spec = {
 			}
 
 			fragment = helpers.prepareGraphFragment(fragment);
-			this.props.dispatch( actionCreators.importModelFragment(fragment, modelXY) );
+			props.dispatch( actionCreators.importModelFragment(fragment, modelXY) );
 
 			// select
-			interfaceActions.select(item, 'node');
+			props.dispatch( actionCreators.select(item, 'node') );
 		}
 	}
 };
