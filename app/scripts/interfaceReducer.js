@@ -20,11 +20,6 @@ var initialState = {
 	panning: false,
 	pannable: false,
 
-	interfaceMode: 'light', // pro
-	wizard: {
-		selectedSection: 'import'
-	},
-
 	showEdgeLabels: true,
 	showNodeLabels: true,
 	showGroupLabels: true,
@@ -44,6 +39,12 @@ var initialState = {
 	scale: 1,
 	panX: 0,
 	panY: 0,
+
+	interfaceMode: 'light', // pro
+
+	wizard: {
+		selectedSection: 'import'
+	},
 };
 
 
@@ -171,8 +172,7 @@ function reducer(state, action) {
 			break;
 
 		case constants.ACTION_selectWizardStep:
-			const newState = mergeWithState({ wizard: { selectedSection: action.name } });
-			return newState;
+			return mergeWithState({ wizard: { selectedSection: action.name } });;
 			break;
 
 		default:

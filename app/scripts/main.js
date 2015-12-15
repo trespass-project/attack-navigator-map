@@ -1,6 +1,8 @@
 'use strict';
 
 let React = require('react');
+let R = require('ramda');
+let _ = require('lodash');
 
 let createStore = require('redux').createStore;
 let combineReducers = require('redux').combineReducers;
@@ -31,7 +33,7 @@ let App = React.createClass({
 
 				<div id='map-container'>
 					<div id='map'>
-						<GraphEditor id='editor' {...props} />
+						{/*<GraphEditor id='editor' {...props} />*/}
 					</div>
 				</div>
 
@@ -60,7 +62,8 @@ let App = React.createClass({
 
 
 function mapStateToProps(state) {
-	return state;
+	const newState = _.merge({}, state.model, state.interface);
+	return newState;
 }
 
 App = DragDropContext(HTML5Backend)(App);

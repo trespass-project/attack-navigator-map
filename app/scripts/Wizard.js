@@ -1,18 +1,19 @@
 'use strict';
 
-var R = require('ramda');
-var React = require('react');
-var FluxComponent = require('flummox/component');
-var helpers = require('./helpers.js');
+let R = require('ramda');
+let React = require('react');
+let classnames = require('classnames');
+let helpers = require('./helpers.js');
 const constants = require('./constants.js');
+const actionCreators = require('./actionCreators.js');
 
-var GraphMinimap = require('./Graph.js').GraphMinimap;
-var PropertiesPanel = require('./PropertiesPanel.js');
-var Library = require('./components/Library/Library.js');
+let GraphMinimap = require('./Graph.js').GraphMinimap;
+let PropertiesPanel = require('./PropertiesPanel.js');
+let Library = require('./components/Library/Library.js');
 
-var api = require('../../api.js').api;
-var serverPort = require('../../api.js').serverPort;
-var serverDomain = require('../../api.js').serverDomain;
+const api = require('../../api.js').api;
+const serverPort = require('../../api.js').serverPort;
+const serverDomain = require('../../api.js').serverDomain;
 function apiUrl(url) {
 	return 'http://' + serverDomain + ':' + serverPort + url;
 }
@@ -23,7 +24,7 @@ function handleAdd() {
 }
 
 
-var Wizard = React.createClass({
+let Wizard = React.createClass({
 	propTypes: {
 		//
 	},
@@ -39,129 +40,100 @@ var Wizard = React.createClass({
 		interfaceActions: React.PropTypes.object
 	},
 
-	renderMinimap: function(props, flux) {
-		return <FluxComponent flux={flux} connectToStores={[constants.GRAPH, constants.INTERFACE]}>
-			<GraphMinimap id='minimap' />
-		</FluxComponent>;
+	renderMinimap: function(props) {
+		return <GraphMinimap id='minimap' />;
 	},
 
-	renderProperties: function(props, flux) {
-		return <FluxComponent
-			flux={flux}
-			connectToStores={[constants.GRAPH, constants.INTERFACE]}>
-			<PropertiesPanel
-				relationsLibUrl={apiUrl(api.relations.url)}
-				id='propspanel'
-			/>
-		</FluxComponent>;
+	renderProperties: function(props) {
+		return <PropertiesPanel
+			relationsLibUrl={apiUrl(api.relations.url)}
+			id='propspanel' />;
 	},
 
-	renderImport: function(props, flux) {
+	renderImport: function(props) {
 		return <div>
-			<input ref='load-model' type='file' accept='.xml' onChange={this.loadXMLFile} />
+			<input
+				ref='load-model'
+				type='file'
+				accept='.xml'
+				onChange={this.loadXMLFile} />
 		</div>;
 	},
 
-	renderLocations: function(props, flux) {
+	renderLocations: function(props) {
 		const filterFn = function(a) {
 			return R.contains(a.type, ['location']);
 		};
 		return <div>
 			<div id='pattern-lib'>
-				<FluxComponent
-					flux={flux}
+				<Library
 					key={'locations-patterns'}
-					connectToStores={[constants.MODEL_PATTERNS_LIBRARY]}
-					libName={constants.MODEL_PATTERNS_LIBRARY}>
-					<Library
-						url={apiUrl(api.patterns.url)}
-						title='patterns' />
-				</FluxComponent>
+					url={apiUrl(api.patterns.url)}
+					title='patterns' />
 			</div>
 			<div id='component-lib'>
-				<FluxComponent
-					flux={flux}
+				<Library
 					key={'locations-components'}
-					connectToStores={[constants.MODEL_COMPONENTS_LIBRARY]}
-					libName={constants.MODEL_COMPONENTS_LIBRARY}>
-					<Library
-						url={apiUrl(api.components.url)}
-						title='components'
-						filter={filterFn}
-						onAdd={handleAdd} />
-				</FluxComponent>
+					url={apiUrl(api.components.url)}
+					title='components'
+					filter={filterFn}
+					onAdd={handleAdd} />
 			</div>
 		</div>;
 	},
 
-	renderAssets: function(props, flux) {
+	renderAssets: function(props) {
 		const filterFn = function(a) {
 			return R.contains(a.type, ['asset/item', 'asset/data']);
 		};
 		return <div>
 			<div id='component-lib'>
-				<FluxComponent
-					flux={flux}
+				<Library
 					key={'assets-components'}
-					connectToStores={[constants.MODEL_COMPONENTS_LIBRARY]}
-					libName={constants.MODEL_COMPONENTS_LIBRARY}>
-					<Library
-						url={apiUrl(api.components.url)}
-						title='components'
-						filter={filterFn}
-						onAdd={handleAdd} />
-				</FluxComponent>
+					url={apiUrl(api.components.url)}
+					title='components'
+					filter={filterFn}
+					onAdd={handleAdd} />
 			</div>
 		</div>;
 	},
 
-	renderActors: function(props, flux) {
+	renderActors: function(props) {
 		const filterFn = function(a) {
 			return R.contains(a.type, ['actor', 'role']);
 		};
 		return <div>
 			<div id='pattern-lib'>
-				<FluxComponent
-					flux={flux}
+				<Library
 					key={'actors-patterns'}
-					connectToStores={[constants.MODEL_PATTERNS_LIBRARY]}
-					libName={constants.MODEL_PATTERNS_LIBRARY}>
-					<Library
-						url={apiUrl(api.patterns.url)}
-						title='patterns' />
-				</FluxComponent>
+					url={apiUrl(api.patterns.url)}
+					title='patterns' />
 			</div>
 			<div id='component-lib'>
-				<FluxComponent
-					flux={flux}
+				<Library
 					key={'actors-components'}
-					connectToStores={[constants.MODEL_COMPONENTS_LIBRARY]}
-					libName={constants.MODEL_COMPONENTS_LIBRARY}>
-					<Library
-						url={apiUrl(api.components.url)}
-						title='components'
-						filter={filterFn}
-						onAdd={handleAdd} />
-				</FluxComponent>
+					url={apiUrl(api.components.url)}
+					title='components'
+					filter={filterFn}
+					onAdd={handleAdd} />
 			</div>
 		</div>;
 	},
 
-	renderPolicies: function(props, flux) {
+	renderPolicies: function(props) {
 		return <div>policies</div>;
 	},
 
-	renderAttackerProfile: function(props, flux) {
+	renderAttackerProfile: function(props) {
 		return <div>attacker profile</div>;
 	},
 
 	render: function() {
 		const props = this.props;
-		const flux = props.flux;
 		const wizard = props.wizard;
 		const selectedSection = wizard.selectedSection;
 
-		var wizardSteps = {
+		const wizardSteps = {
 			'import': {
 				renderFn: this.renderImport,
 			},
@@ -182,7 +154,9 @@ var Wizard = React.createClass({
 			},
 		};
 
-		let defaultRenderFn = function() { return <div>error</div>; };
+		let defaultRenderFn = function() {
+			return <div>error</div>;
+		};
 		let renderFn = (!!wizardSteps[wizard.selectedSection])
 			? wizardSteps[wizard.selectedSection].renderFn
 				|| defaultRenderFn
@@ -190,56 +164,56 @@ var Wizard = React.createClass({
 
 		return (
 			<div>
-				{this.renderMinimap(props, flux)}
-				{this.renderProperties(props, flux)}
+				{/*{this.renderMinimap(props)}*/}
+				{this.renderProperties(props)}
 
 				<div id='wizard-container'>
-					<div id="steps-container">
+					<div id='steps-container'>
 						<div
-							className={"step-icon " + ((selectedSection === 'import') ? 'selected' : '')}
-							onClick={R.partial(this.selectWizardStep, ['import'])}
-							>
+							className={classnames('step-icon',
+								{ selected: (selectedSection === 'import') })
+							}
+							onClick={R.partial(this.selectWizardStep, ['import'])} >
 							import
 						</div>
 						<div
-							className={"step-icon " + ((selectedSection === 'locations') ? 'selected' : '')}
-							onClick={R.partial(this.selectWizardStep, ['locations'])}
-							>
+							className={classnames('step-icon',
+								{ selected: (selectedSection === 'locations') })
+							}
+							onClick={R.partial(this.selectWizardStep, ['locations'])} >
 							locations
 						</div>
 						<div
-							className={"step-icon " + ((selectedSection === 'assets') ? 'selected' : '')}
-							onClick={R.partial(this.selectWizardStep, ['assets'])}
-							>
+							className={classnames('step-icon',
+								{ selected: (selectedSection === 'assets') })
+							}
+							onClick={R.partial(this.selectWizardStep, ['assets'])} >
 							assets
 						</div>
 						<div
-							className={"step-icon " + ((selectedSection === 'actors') ? 'selected' : '')}
-							onClick={R.partial(this.selectWizardStep, ['actors'])}
-							>
+							className={classnames('step-icon',
+								{ selected: (selectedSection === 'actors') })
+							}
+							onClick={R.partial(this.selectWizardStep, ['actors'])} >
 							actors
 						</div>
 						<div
-							className={"step-icon " + ((selectedSection === 'policies') ? 'selected' : '')}
-							onClick={R.partial(this.selectWizardStep, ['policies'])}
-							>
+							className={classnames('step-icon',
+								{ selected: (selectedSection === 'policies') })
+							}
+							onClick={R.partial(this.selectWizardStep, ['policies'])} >
 							policies
 						</div>
 						<div
-							className={"step-icon " + ((selectedSection === 'attacker profile') ? 'selected' : '')}
-							onClick={R.partial(this.selectWizardStep, ['attacker profile'])}
-							>
+							className={classnames('step-icon',
+								{ selected: (selectedSection === 'attacker profile') })
+							}
+							onClick={R.partial(this.selectWizardStep, ['attacker profile'])} >
 							attacker profile
 						</div>
 					</div>
 
-					{renderFn(props, flux)}
-
-					{/*<div id='model-library'>
-						<FluxComponent flux={flux} connectToStores={[constants.MODEL_LIBRARY]} libName={constants.MODEL_LIBRARY}>
-							<ModelLibrary url='data/models.json' title='models' />
-						</FluxComponent>
-					</div>*/}
+					{renderFn(props)}
 				</div>
 			</div>
 		);
@@ -248,8 +222,7 @@ var Wizard = React.createClass({
 
 	selectWizardStep(name, event) {
 		event.preventDefault();
-		// console.log(name);
-		this.context.interfaceActions.setSelectWizardStep(name);
+		this.props.dispatch( actionCreators.selectWizardStep(name) );
 	}
 
 });
