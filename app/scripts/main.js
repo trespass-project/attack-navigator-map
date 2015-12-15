@@ -12,9 +12,10 @@ let thunk = require('redux-thunk');
 
 let ModelDebugView = require('./components/ModelDebugView/ModelDebugView.js');
 let GraphOutline = require('./GraphOutline.js');
-let GraphEditor = require('./Graph.js').GraphEditor;
 let MainMenu = require('./MainMenu.js');
 let Wizard = require('./Wizard.js');
+
+let GraphEditor = require('./GraphEditor.js');
 
 let HTML5Backend = require('react-dnd/modules/backends/HTML5');
 let DragDropContext = require('react-dnd').DragDropContext;
