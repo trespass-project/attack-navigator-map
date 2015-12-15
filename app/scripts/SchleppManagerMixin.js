@@ -1,8 +1,8 @@
 'use strict';
 
-var $ = require('jquery');
-var React = require('react');
-var helpers = require('./helpers.js');
+let $ = require('jquery');
+let React = require('react');
+let helpers = require('./helpers.js');
 
 
 var SchleppManagerMixin = {
@@ -12,12 +12,12 @@ var SchleppManagerMixin = {
 	},
 
 	componentDidMount: function() {
-		var that = this;
+		const props = this.props;
 
-		var elem = helpers.getElemByRef(this, 'dragRoot');
-		var $elem = $(elem);
+		let elem = helpers.getElemByRef(this, 'dragRoot');
+		let $elem = $(elem);
 
-		var $body = $('body');
+		let $body = $('body');
 
 		$body.on('keydown', function(event) {
 			if (event.keyCode === 32) {
@@ -71,10 +71,10 @@ var SchleppManagerMixin = {
 	},
 
 	componentWillUnmount: function() {
-		var elem = helpers.getElemByRef(this, 'dragRoot');
-		var $elem = $(elem);
+		let elem = helpers.getElemByRef(this, 'dragRoot');
+		let $elem = $(elem);
 
-		var $body = $('body');
+		let $body = $('body');
 
 		$body
 			.off('keydown')

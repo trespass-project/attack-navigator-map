@@ -1,23 +1,24 @@
 'use strict';
 
-var $ = require('jquery');
-var React = require('react');
-var helpers = require('./helpers.js');
+let $ = require('jquery');
+let React = require('react');
+let helpers = require('./helpers.js');
 
 
-var SchleppMixin = {
 	contextTypes: {
 		graphActions: React.PropTypes.object,
 		interfaceActions: React.PropTypes.object
 	},
 
+let SchleppMixin = {
 	componentDidMount: function() {
-		var that = this;
+		let that = this;
+		const props = this.props;
 
-		var elem = helpers.getElemByRef(this, 'dragRoot');
-		var $elem = $(elem);
+		let elem = helpers.getElemByRef(this, 'dragRoot');
+		let $elem = $(elem);
 
-		var lastX, lastY;
+		let lastX, lastY;
 
 		$elem.on('mousedown', function(event) {
 			event.preventDefault();
@@ -56,8 +57,8 @@ var SchleppMixin = {
 	},
 
 	componentWillUnmount: function() {
-		var elem = helpers.getElemByRef(this, 'dragRoot');
-		var $elem = $(elem);
+		let elem = helpers.getElemByRef(this, 'dragRoot');
+		let $elem = $(elem);
 		$elem
 			.off('mousedown')
 			.off('mousemove')

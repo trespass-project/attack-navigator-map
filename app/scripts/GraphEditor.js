@@ -136,14 +136,11 @@ function collect(connect, monitor) {
 }
 
 
-GraphEditor = DropTarget(
-	[
-		constants.DND_SOURCE_NODE,
-		constants.DND_SOURCE_FRAGMENT
-	],
-	spec,
-	collect
-)(GraphEditor);
+const types = [
+	constants.DND_SOURCE_NODE,
+	constants.DND_SOURCE_FRAGMENT
+];
+GraphEditor = DropTarget(types, spec, collect)(GraphEditor);
 
 
 module.exports = GraphEditor;

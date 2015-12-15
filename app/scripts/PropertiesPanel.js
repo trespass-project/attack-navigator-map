@@ -155,7 +155,6 @@ var ContextMenu = React.createClass({
 	},
 
 	render: function() {
-		var that = this;
 		var props = this.props;
 
 		var onChange = null;

@@ -33,7 +33,6 @@ class ModelLibrary extends React.Component {
 	}
 
 	render() {
-		var that = this;
 		var list = this.props.list;
 
 		return (

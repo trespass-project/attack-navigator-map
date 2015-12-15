@@ -103,7 +103,6 @@ var Node = React.createClass({
 
 
 	componentDidMount: function() {
-		var that = this;
 		const props = this.props;
 		const context = this.context;
 

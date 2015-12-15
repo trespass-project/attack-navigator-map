@@ -1,16 +1,16 @@
 'use strict';
 
-var $ = require('jquery');
-var _ = require('lodash');
-var R = require('ramda');
-var Q = require('q');
-var utils = require('../../utils.js');
-var React = require('react');
+let $ = require('jquery');
+let _ = require('lodash');
+let R = require('ramda');
+let Q = require('q');
+let utils = require('../../utils.js');
+let React = require('react');
 
-var LibraryItem = require('./LibraryItem.js');
+let LibraryItem = require('./LibraryItem.js');
 
 
-var Library = React.createClass({
+let Library = React.createClass({
 	propTypes: {
 		title: React.PropTypes.string.isRequired,
 		url: React.PropTypes.string.isRequired,
@@ -106,9 +106,8 @@ var Library = React.createClass({
 	},
 
 	renderListItem: function(item, index) {
-		var that = this;
 		const props = this.props;
-		var onClick = null;
+		let onClick = null;
 		if (_.isFunction(props.onClick)) {
 			onClick = function(event) { props.onClick(item); };
 		}
