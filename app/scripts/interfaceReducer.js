@@ -1,14 +1,14 @@
 'use strict';
 
-var $ = require('jquery');
-var R = require('ramda');
-var _ = require('lodash');
+let $ = require('jquery');
+let R = require('ramda');
+let _ = require('lodash');
 const mergeWith = require('./reducer-utils.js').mergeWith;
 const constants = require('./constants.js');
 const theme = require('./graph-theme-default.js');
 
 
-var initialState = {
+const initialState = {
 	drag: null,
 	dragNode: null,
 	hoverNode: null,

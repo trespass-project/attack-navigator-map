@@ -14,19 +14,22 @@ var Library = React.createClass({
 	propTypes: {
 		title: React.PropTypes.string.isRequired,
 		url: React.PropTypes.string.isRequired,
-		componentTypes: React.PropTypes.array.isRequired,
-		componentTypesFilter: React.PropTypes.array.isRequired,
-		showFilter: React.PropTypes.bool,
 		filter: React.PropTypes.func,
 		renderItem: React.PropTypes.func,
+
+		showFilter: React.PropTypes.bool,
+		componentTypes: React.PropTypes.array.isRequired,
+		componentTypesFilter: React.PropTypes.array.isRequired,
 	},
 
 	getDefaultProps: function() {
-		let renderListItem = this.renderListItem;
 		return {
+			filter: function() { return true; },
+			renderItem: this.renderListItem,
+
 			showFilter: false,
-			renderItem: renderListItem,
-			filter: function() { return true; }
+			componentTypes: [],
+			componentTypesFilter: [],
 		};
 	},
 

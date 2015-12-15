@@ -6,7 +6,7 @@ const mergeWith = require('./reducer-utils.js').mergeWith;
 const constants = require('./constants.js');
 
 
-let initialState = {
+const initialState = {
 	graph: {
 		nodes: [],
 		edges: [],
@@ -18,8 +18,7 @@ let initialState = {
 
 
 module.exports =
-function reducer(state, action) {
-	state = state || initialState;
+function reducer(state=initialState, action) {
 	const mergeWithState = R.partial(mergeWith, [state]);
 
 	// once, in the other reducer, is enough
