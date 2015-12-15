@@ -38,7 +38,12 @@ function reducer(state=initialState, action) {
 		}
 
 		case constants.ACTION_importModelFragment: {
-			return state;
+			return state; // TODO: implement
+			break;
+		}
+
+		case constants.ACTION_loadXML: {
+			return state; // TODO: implement
 			break;
 		}
 

@@ -1,5 +1,6 @@
 'use strict';
 
+let $ = require('jquery');
 let R = require('ramda');
 let React = require('react');
 let classnames = require('classnames');
@@ -26,14 +27,12 @@ function handleAdd() {
 
 let Wizard = React.createClass({
 	propTypes: {
-		//
+		dispatch: React.PropTypes.func.isRequired,
 	},
 
-	getDefaultProps: function() {
-		return {
-			//
-		};
-	},
+	// getDefaultProps: function() {
+	// 	return {};
+	// },
 
 	contextTypes: {
 		graphActions: React.PropTypes.object,
@@ -162,6 +161,7 @@ let Wizard = React.createClass({
 				|| defaultRenderFn
 			: defaultRenderFn;
 
+		// TODO: activate minimap
 		return (
 			<div>
 				{/*{this.renderMinimap(props)}*/}
@@ -219,6 +219,12 @@ let Wizard = React.createClass({
 		);
 	},
 
+	loadXMLFile: function(event) {
+		event.preventDefault();
+		let $fileInput = $(this.refs['load-model'].getDOMNode());
+		let file = $fileInput[0].files[0];
+		this.props.dispatch( actionCreators.loadXMLFile(file) );
+	},
 
 	selectWizardStep(name, event) {
 		event.preventDefault();

@@ -12,14 +12,6 @@ function getAllMethods(obj) {
 }
 
 
-function autoBind(obj) {
-	getAllMethods(obj.constructor.prototype)
-		.forEach(function(method) {
-			obj[method] = obj[method].bind(obj);
-		});
-}
-
-
 function filterList(list, query='', options) {
 	var defaults = {
 		// fields: ['label'],
@@ -48,7 +40,6 @@ function sortBy(property, a, b) {
 
 module.exports = {
 	getAllMethods,
-	autoBind,
 	filterList,
 	sortBy,
 };

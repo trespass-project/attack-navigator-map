@@ -1,23 +1,31 @@
 'use strict';
 
-var $ = require('jquery');
-var _ = require('lodash');
-var React = require('react');
-var DropTarget = require('react-dnd').DropTarget;
+let $ = require('jquery');
+let _ = require('lodash');
+let React = require('react');
+let DropTarget = require('react-dnd').DropTarget;
 
-var utils = require('../../utils.js');
-var constants = require('../../constants.js');
+let actionCreators = require('../../actionCreators.js');
+let utils = require('../../utils.js');
+const constants = require('../../constants.js');
 
 
-class ModelDebugView extends React.Component {
-	constructor(props) {
-		super(props);
-		utils.autoBind(this);
-	}
+let ModelDebugView = React.createClass({
+	propTypes: {
+		dispatch: React.PropTypes.func.isRequired,
+		model: React.PropTypes.object,
 
-	render() {
-		var that = this;
-		var model = this.props.model;
+		isOver: React.PropTypes.bool.isRequired,
+		connectDropTarget: React.PropTypes.func.isRequired
+	},
+
+	// getDefaultProps: function() {
+	// 	return {};
+	// },
+
+	render: function() {
+		let that = this;
+		const model = this.props.model;
 		if (!model) { return null; }
 
 		const connectDropTarget = this.props.connectDropTarget;
@@ -32,48 +40,25 @@ class ModelDebugView extends React.Component {
 				</pre>
 			</div>
 		);
-	}
+	},
 
-	loadXMLFile(event) {
+	loadXMLFile: function(event) {
 		event.preventDefault();
-		let that = this;
-
 		let $fileInput = $(this.refs['load-model'].getDOMNode());
 		let file = $fileInput[0].files[0];
+		this.props.dispatch( actionCreators.loadXMLFile(file) );
+	},
 
-		var reader = new FileReader();
-		reader.onload = function(event) {
-			var content = event.target.result;
-			that.context.graphActions.loadXML(content);
-		};
-		reader.readAsText(file);
-	}
-
-	generateXML(event) {
+	generateXML: function(event) {
 		event.preventDefault();
-		this.context.graphActions.generateXML();
-	}
-}
+		this.props.dispatch( actionCreators.generateXML() );
+	},
+});
 
 
-ModelDebugView.propTypes = {
-	model: React.PropTypes.object,
-
-	isOver: React.PropTypes.bool.isRequired,
-	connectDropTarget: React.PropTypes.func.isRequired
-};
-
-
-ModelDebugView.contextTypes = {
-	graphActions: React.PropTypes.object,
-	interfaceActions: React.PropTypes.object
-};
-
-
-var spec = {
+const spec = {
 	drop: function (props, monitor, component) {
 		let data = monitor.getItem().data;
-		// console.log(data);
 		return { target: constants.DND_TARGET_DEBUG };
 	}
 };

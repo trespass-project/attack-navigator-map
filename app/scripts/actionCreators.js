@@ -110,12 +110,23 @@ function addGroupBackgroundImage(group, dataURI, aspectRatio, width) {
 };
 
 
+const setTransformation =
 module.exports.setTransformation =
-function setTransformation(transformation) {
+function(transformation) {
 	return {
 		type: constants.ACTION_setTransformation,
 		transformation
 	};
+};
+
+
+module.exports.resetTransformation =
+function resetTransformation() {
+	return setTransformation({
+		scale: 1,
+		panX: 0,
+		panY: 0
+	});
 };
 
 
@@ -205,6 +216,40 @@ function selectWizardStep(name) {
 	return {
 		type: constants.ACTION_selectWizardStep,
 		name
+	};
+};
+
+// TODO: autoLayout
+
+
+const loadXMLFile =
+module.exports.loadXMLFile =
+function(file) {
+	return function(dispatch, getState) {
+		const action = {
+			type: constants.Action_loadXMLFile,
+			file,
+		};
+		dispatch(action);
+
+		// ———
+
+		let reader = new FileReader();
+		reader.onload = function(event) {
+			const content = event.target.result;
+			dispatch( loadXML(content) );
+		};
+		reader.readAsText(file);
+	};
+};
+
+
+const loadXML =
+module.exports.loadXML =
+function(xmlString) {
+	return {
+		type: constants.Action_loadXML,
+		xml: xmlString,
 	};
 };
 

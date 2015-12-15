@@ -1,62 +1,74 @@
 'use strict';
 
-var React = require('react');
-var helpers = require('./helpers.js');
+let React = require('react');
+let actionCreators = require('./actionCreators.js');
+let helpers = require('./helpers.js');
 const constants = require('./constants.js');
 
 
-var MainMenu = React.createClass({
+let MainMenu = React.createClass({
 	propTypes: {
-
+		dispatch: React.PropTypes.func.isRequired,
 	},
 
-	getDefaultProps: function() {
-		return {
+	// getDefaultProps: function() {
+	// 	return {
 
-		};
-	},
-
-	contextTypes: {
-		graphActions: React.PropTypes.object,
-		interfaceActions: React.PropTypes.object
-	},
+	// 	};
+	// },
 
 	render: function() {
 		const props = this.props;
 
 		return (
 			<div id={props.id}>
-				<button className='btn btn-default btn-xs' onClick={this._toggleImages}>{(props.showImages) ? 'hide' : 'show'} images</button>
-				<button className='btn btn-default btn-xs' onClick={this._toggleGroups}>{(props.showGroups) ? 'hide' : 'show'} groups</button>
-				<button className='btn btn-default btn-xs' onClick={this._toggleEdges}>{(props.showEdges) ? 'hide' : 'show'} edges</button>
-				<button className='btn btn-default btn-xs' onClick={this._resetTransformation}>reset transformation</button>
-				<button className='btn btn-default btn-xs' onClick={this._autoLayout}>auto-layout</button>
+				<button
+					className='btn btn-default btn-xs'
+					onClick={this.toggleImages} >
+					{(props.showImages) ? 'hide' : 'show'} images
+				</button>
+				<button
+					className='btn btn-default btn-xs'
+					onClick={this.toggleGroups} >
+					{(props.showGroups) ? 'hide' : 'show'} groups
+				</button>
+				<button
+					className='btn btn-default btn-xs'
+					onClick={this.toggleEdges} >
+					{(props.showEdges) ? 'hide' : 'show'} edges
+				</button>
+				<button
+					className='btn btn-default btn-xs'
+					onClick={this.resetTransformation} >
+					reset transformation
+				</button>
+				<button
+					className='btn btn-default btn-xs'
+					onClick={this.autoLayout} >
+					auto-layout
+				</button>
 			</div>
 		);
 	},
 
-	_toggleImages: function(event) {
-		this.context.interfaceActions.setShowImages(!this.props.showImages);
+	toggleImages: function(event) {
+		this.props.dispatch( actionCreators.setShowImages(!this.props.showImages) );
 	},
 
-	_toggleGroups: function(event) {
-		this.context.interfaceActions.setShowGroups(!this.props.showGroups);
+	toggleGroups: function(event) {
+		this.props.dispatch( actionCreators.setShowGroups(!this.props.showGroups) );
 	},
 
-	_toggleEdges: function(event) {
-		this.context.interfaceActions.setShowEdges(!this.props.showEdges);
+	toggleEdges: function(event) {
+		this.props.dispatch( actionCreators.setShowEdges(!this.props.showEdges) );
 	},
 
-	_resetTransformation: function(event) {
-		this.context.interfaceActions.setTransformation({
-			scale: 1,
-			panX: 0,
-			panY: 0
-		});
+	resetTransformation: function(event) {
+		this.props.dispatch( actionCreators.resetTransformation() );
 	},
 
-	_autoLayout: function() {
-		this.context.interfaceActions._autoLayout();
+	autoLayout: function() {
+		this.props.dispatch( actionCreators.autoLayout() );
 	}
 
 });

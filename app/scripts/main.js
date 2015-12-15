@@ -37,20 +37,20 @@ let App = React.createClass({
 					</div>
 				</div>
 
-				{/*<div id='model-debug-view'>
-									<div className='panel-section'>
-										<h3 className='title'>debug</h3>
-										<MainMenu id='main-menu' {...props} />
-									</div>
-									<div className='panel-section'>
-										<h3 className='title'>outline</h3>
-											<GraphOutline {...props} />
-									</div>
-									<div className='panel-section'>
-										<h3 className='title'>model</h3>
-										<ModelDebugView {...props} />
-									</div>
-								</div>*/}
+				<div id='model-debug-view'>
+					<div className='panel-section'>
+						<h3 className='title'>debug</h3>
+						<MainMenu id='main-menu' {...props} />
+					</div>
+					<div className='panel-section'>
+						<h3 className='title'>outline</h3>
+							<GraphOutline graph={props.graph} dispatch={props.dispatch} />
+					</div>
+					<div className='panel-section'>
+						<h3 className='title'>model</h3>
+						<ModelDebugView {...props} />
+					</div>
+				</div>
 
 				<div id='panel-container'>
 					<Wizard {...props} />
