@@ -1,14 +1,14 @@
 'use strict';
 
-var _ = require('lodash');
-var constants = require('../../constants.js');
-var helpers = require('../../helpers.js');
-var React = require('react');
-var DragSource = require('react-dnd').DragSource;
-var actionCreators = require('../../actionCreators.js');
+let _ = require('lodash');
+const constants = require('../../constants.js');
+let helpers = require('../../helpers.js');
+let React = require('react');
+let DragSource = require('react-dnd').DragSource;
+let actionCreators = require('../../actionCreators.js');
 
 
-var LibraryItem = React.createClass({
+let LibraryItem = React.createClass({
 	propTypes: {
 		data: React.PropTypes.object.isRequired,
 		// injected by react dnd:
@@ -44,7 +44,7 @@ var LibraryItem = React.createClass({
 });
 
 
-var spec = {
+const spec = {
 	beginDrag: function(props, monitor, component) {
 		// needs to be a copy
 		return _.merge({}, props.data);
