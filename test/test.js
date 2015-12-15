@@ -1,3 +1,5 @@
+'use strict';
+
 var assert = require('assert');
 var chalk = require('chalk');
 
@@ -38,4 +40,4 @@ describe(f1('helpers.js'), function() {
 		});
 	});
 
-})
+});
