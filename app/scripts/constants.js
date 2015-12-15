@@ -14,6 +14,34 @@ const constants = {
 	// dnd drag sources
 	DND_SOURCE_NODE: 'node',
 	DND_SOURCE_FRAGMENT: 'fragment',
+
+	// ——— action types ————
+	ACTION_setEditorElem: 'ACTION_setEditorElem',
+	ACTION_select: 'ACTION_select',
+	ACTION_showContextMenu: 'ACTION_showContextMenu',
+	ACTION_hideContextMenu: 'ACTION_hideContextMenu',
+	ACTION_setShowGroups: 'ACTION_setShowGroups',
+	ACTION_setShowImages: 'ACTION_setShowImages',
+	ACTION_setShowEdges: 'ACTION_setShowEdges',
+	ACTION_removeGroupBackgroundImage: 'ACTION_removeGroupBackgroundImage',
+	ACTION_addGroupBackgroundImage: 'ACTION_addGroupBackgroundImage',
+	ACTION_resizeGroupBackgroundImage: 'ACTION_resizeGroupBackgroundImage',
+	ACTION_backgroundImageToNodes: 'ACTION_backgroundImageToNodes',
+	ACTION_setTransformation: 'ACTION_setTransformation',
+	ACTION_setPreviewEdge: 'ACTION_setPreviewEdge',
+	ACTION_setDrag: 'ACTION_setDrag',
+	ACTION_setDragNode: 'ACTION_setDragNode',
+	ACTION_setHoverNode: 'ACTION_setHoverNode',
+	ACTION_setHoverGroup: 'ACTION_setHoverGroup',
+	ACTION_moveNode: 'ACTION_moveNode',
+	ACTION_moveGroup: 'ACTION_moveGroup',
+	ACTION_moveImage: 'ACTION_moveImage',
+	ACTION_setSpacePressed: 'ACTION_setSpacePressed',
+	ACTION_setMouseOverEditor: 'ACTION_setMouseOverEditor',
+	ACTION_setPanning: 'ACTION_setPanning',
+	ACTION_setPannable: 'ACTION_setPannable',
+	ACTION_selectWizardStep: 'ACTION_selectWizardStep',
+	ACTION_importModelFragment: 'ACTION_importModelFragment',
 };
 
 
