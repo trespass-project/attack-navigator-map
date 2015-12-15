@@ -127,8 +127,8 @@ let GraphMixin = {
 	},
 
 	_renderMap: function() {
-		var props = this.props;
-		var graph = props.graph;
+		const props = this.props;
+		const graph = props.graph;
 
 		return (
 			/* prevent event propagation from map up to svg elem */
@@ -147,12 +147,12 @@ let GraphMixin = {
 	},
 
 	_render: function() {
-		var props = this.props;
-		var graph = props.graph;
+		const props = this.props;
+		const graph = props.graph;
 
-		var scale = (props.isMinimap) ? props.constantScale : props.scale;
-		var panX = (props.isMinimap) ? (props.panX * props.constantScale) : props.panX;
-		var panY = (props.isMinimap) ? (props.panY * props.constantScale) : props.panY;
+		const scale = (props.isMinimap) ? props.constantScale : props.scale;
+		let panX = (props.isMinimap) ? (props.panX * props.constantScale) : props.panX;
+		let panY = (props.isMinimap) ? (props.panY * props.constantScale) : props.panY;
 
 		if (props.isMinimap) {
 			// TODO: s.th. goes wrong here when map is empty
@@ -160,7 +160,7 @@ let GraphMixin = {
 			panY = panY || 0;
 		}
 
-		var classNames = classnames(
+		const classNames = classnames(
 			'graph',
 			{
 				'editable': props.editable,
@@ -189,7 +189,7 @@ let GraphMixin = {
 	},
 
 	render: function() {
-		var props = this.props;
+		const props = this.props;
 		const connectDropTarget = props.connectDropTarget || _.identity;
 		return connectDropTarget(this._render());
 	},

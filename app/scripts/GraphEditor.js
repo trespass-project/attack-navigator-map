@@ -11,7 +11,7 @@ let icons = require('./icons.js');
 let DropTarget = require('react-dnd').DropTarget;
 
 
-var GraphEditor = React.createClass({
+let GraphEditor = React.createClass({
 	mixins: [
 		SchleppMixin,
 		SchleppManagerMixin,
@@ -29,14 +29,14 @@ var GraphEditor = React.createClass({
 		let $svg = $(this.getDOMNode()).find('svg');
 		context.interfaceActions.setEditorElem($svg[0]);
 
-		var that = this;
+		let that = this;
 		$svg.on('contextmenu', function(event) {
-			let menuItems = [ // TODO: have these all in one place?
+			const menuItems = [ // TODO: have these all in one place?
 				{
 					label: 'add group',
 					icon: icons['fa-plus'],
 					action: function(/*event*/) {
-						let group = {
+						const group = {
 							x: event.offsetX,
 							y: event.offsetY,
 						};
@@ -83,11 +83,11 @@ var GraphEditor = React.createClass({
 
 		// zoom and pan transform-origin equivalent
 		// (from the-graph-app.js)
-		var scaleD = newScale / props.scale;
-		var currentX = props.panX;
-		var currentY = props.panY;
-		var x = scaleD * (currentX - editorXY.x) + editorXY.x;
-		var y = scaleD * (currentY - editorXY.y) + editorXY.y;
+		const scaleD = newScale / props.scale;
+		const currentX = props.panX;
+		const currentY = props.panY;
+		const x = scaleD * (currentX - editorXY.x) + editorXY.x;
+		const y = scaleD * (currentY - editorXY.y) + editorXY.y;
 
 		context.interfaceActions.setTransformation({
 			scale: newScale,

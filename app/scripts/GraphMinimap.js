@@ -3,7 +3,7 @@ let React = require('react');
 let helpers = require('./helpers.js');
 
 
-var GraphMinimap = React.createClass({
+let GraphMinimap = React.createClass({
 	propTypes: {
 		constantScale: React.PropTypes.number,
 	},
