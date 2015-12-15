@@ -5,6 +5,7 @@ let R = require('ramda');
 let _ = require('lodash');
 const mergeWith = require('./reducer-utils.js').mergeWith;
 const constants = require('./constants.js');
+let helpers = require('./helpers.js');
 const theme = require('./graph-theme-default.js');
 
 
@@ -76,28 +77,22 @@ function reducer(state, action) {
 			}
 
 			return mergeWithState({editorElem, editorTransformElem, editorElemSize});
-			break;
 
 		case constants.ACTION_select:
 			return mergeWithState({ selected: action.selected });
-			break;
 
 		case constants.ACTION_showContextMenu:
 		case constants.ACTION_hideContextMenu:
 			return mergeWithState({ contextMenu: action.contextMenu });
-			break;
 
 		case constants.ACTION_setShowImages:
 			return mergeWithState({ showImages: action.yesno });
-			break;
 
 		case constants.ACTION_setShowGroups:
 			return mergeWithState({ showGroups: action.yesno });
-			break;
 
 		case constants.ACTION_setShowEdges:
 			return mergeWithState({ showEdges: action.yesno });
-			break;
 
 		case constants.ACTION_setTransformation:
 			let {scale/*, panX, panY*/} = action.transformation;
@@ -133,50 +128,38 @@ function reducer(state, action) {
 				action.transformation
 			);
 			return mergeWithState(mergeThis);
-			break;
 
 		case constants.ACTION_setPreviewEdge:
 			return mergeWithState({ previewEdge: action.previewEdge });
-			break;
 
 		case constants.ACTION_setDrag:
 			return mergeWithState({ drag: action.data });
-			break;
 
 		case constants.ACTION_setDragNode:
 			return mergeWithState({ dragNode: action.node });
-			break;
 
 		case constants.ACTION_setHoverNode:
 			return mergeWithState({ hoverNode: action.node });
-			break;
 
 		case constants.ACTION_setHoverGroup:
 			return mergeWithState({ hoverGroup: action.group });
-			break;
 
 		case constants.ACTION_setSpacePressed:
 			return mergeWithState({ spacePressed: action.yesno });
-			break;
 
 		case constants.ACTION_setMouseOverEditor:
 			return mergeWithState({ mouseOverEditor: action.yesno });
-			break;
 
 		case constants.ACTION_setPanning:
 			return mergeWithState({ panning: action.yesno });
-			break;
 
 		case constants.ACTION_setPannable:
 			return mergeWithState({ pannable: action.yesno });
-			break;
 
 		case constants.ACTION_selectWizardStep:
-			return mergeWithState({ wizard: { selectedSection: action.name } });;
-			break;
+			return mergeWithState({ wizard: { selectedSection: action.name } });
 
 		default:
 			return state;
-			break;
 	}
 };

@@ -2,7 +2,6 @@
 
 var $ = require('jquery');
 var React = require('react');
-var _ = require('lodash');
 var R = require('ramda');
 var helpers = require('./helpers.js');
 var constants = require('./constants.js');

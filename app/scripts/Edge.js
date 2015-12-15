@@ -1,7 +1,7 @@
 'use strict';
 
 var React = require('react');
-var d3 = require('d3');
+// var d3 = require('d3');
 var $ = require('jquery');
 var mout = require('mout');
 var classnames = require('classnames');

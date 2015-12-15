@@ -1,7 +1,6 @@
 'use strict';
 
 var $ = require('jquery');
-var _ = require('lodash');
 var R = require('ramda');
 var React = require('react');
 var classnames = require('classnames');
@@ -50,7 +49,12 @@ var Node = React.createClass({
 	renderIcon: function() {
 		if (!this.props.showGroupLabels) { return null; }
 		const icon = icons[typeIcons[this.props.node.type]];
-		return <text ref='icon' className='icon fa' x='0' y='2' dangerouslySetInnerHTML={{__html:icon}}></text>;
+		return <text
+			ref='icon'
+			className='icon fa'
+			x='0'
+			y='2'
+			dangerouslySetInnerHTML={{__html: icon}}></text>;
 	},
 
 	renderLabel: function() {

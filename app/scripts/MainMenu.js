@@ -2,8 +2,6 @@
 
 let React = require('react');
 let actionCreators = require('./actionCreators.js');
-let helpers = require('./helpers.js');
-const constants = require('./constants.js');
 
 
 let MainMenu = React.createClass({

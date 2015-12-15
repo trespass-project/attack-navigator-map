@@ -365,7 +365,7 @@ var GraphMinimap = React.createClass({
 			bbox.minY -= padding;
 			bbox.maxY += padding;
 			const bboxSize = {
-				width:  bbox.maxX - bbox.minX,
+				width: bbox.maxX - bbox.minX,
 				height: bbox.maxY - bbox.minY,
 			};
 			const bboxAspectRatio = bboxSize.width / bboxSize.height;

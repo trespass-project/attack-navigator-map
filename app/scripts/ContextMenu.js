@@ -79,7 +79,7 @@ var ContextMenu = React.createClass({
 		const totalAngle = angleStep * numItems;
 		const center = -90;
 		const startAngle = center - (totalAngle * 0.5);
-		const endAngle = center + (totalAngle * 0.5);
+		// const endAngle = center + (totalAngle * 0.5);
 
 		let pieces = props.contextMenu.menuItems.map(function(item, index) {
 			return that._makePiePiece(

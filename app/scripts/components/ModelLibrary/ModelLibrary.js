@@ -1,6 +1,6 @@
 'use strict';
 
-var _ = require('lodash');
+var R = require('ramda');
 var React = require('react');
 var utils = require('../../utils.js');
 var constants = require('../../constants.js');

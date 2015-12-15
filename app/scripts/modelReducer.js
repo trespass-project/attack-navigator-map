@@ -34,22 +34,18 @@ function reducer(state=initialState, action) {
 			// return mergeWithState({ showEdges: action.yesno });
 			// TODO:
 			return state;
-			break;
 		}
 
 		case constants.ACTION_importModelFragment: {
 			return state; // TODO: implement
-			break;
 		}
 
 		case constants.ACTION_loadXML: {
 			return state; // TODO: implement
-			break;
 		}
 
 		default: {
 			return state;
-			break;
 		}
 	}
 };

@@ -1,9 +1,6 @@
 'use strict';
 
-var $ = require('jquery');
 var _ = require('lodash');
-var R = require('ramda');
-var Q = require('q');
 var constants = require('../../constants.js');
 var helpers = require('../../helpers.js');
 var React = require('react');
@@ -105,4 +102,4 @@ function collect(connect, monitor) {
 LibraryItem = DragSource(constants.DND_SOURCE_FRAGMENT, spec, collect)(LibraryItem);
 
 
-module.exports = LibraryItem
+module.exports = LibraryItem;

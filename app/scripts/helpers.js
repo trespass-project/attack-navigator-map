@@ -40,8 +40,8 @@ function getNodesBBox(nodes) {
 			_bounds.maxY = Math.max(_bounds.maxY, node.y);
 			return _bounds;
 		},
-		{ minX:  Infinity,
-		  minY:  Infinity,
+		{ minX: Infinity,
+		  minY: Infinity,
 		  maxX: -Infinity,
 		  maxY: -Infinity }
 	);

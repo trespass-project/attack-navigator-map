@@ -17,9 +17,9 @@ let GraphOutline = React.createClass({
 
 	renderItem: function(item) {
 		const style = {
-			float:'right',
-			fontWeight:'normal',
-			marginTop:'0.15em'
+			float: 'right',
+			fontWeight: 'normal',
+			marginTop: '0.15em'
 		};
 		return <li key={item.type} className='list-group-item'>
 			<div className='badge' style={style}>

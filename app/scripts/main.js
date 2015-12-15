@@ -61,14 +61,6 @@ let App = React.createClass({
 });
 
 
-function mapStateToProps(state) {
-	const newState = _.merge({}, state.model, state.interface);
-	return newState;
-}
-
-App = DragDropContext(HTML5Backend)(App);
-App = connect(mapStateToProps)(App);
-
 const reducer = combineReducers({
 	model: require('./modelReducer.js'),
 	interface: require('./interfaceReducer.js'),
@@ -76,6 +68,13 @@ const reducer = combineReducers({
 const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
 let store = createStoreWithMiddleware(reducer);
 
+function mapStateToProps(state) {
+	const newState = _.merge({}, state.model, state.interface);
+	return newState;
+}
+
+App = DragDropContext(HTML5Backend)(App);
+App = connect(mapStateToProps)(App);
 
 React.render(
 	<Provider store={store}>

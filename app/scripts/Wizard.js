@@ -4,8 +4,6 @@ let $ = require('jquery');
 let R = require('ramda');
 let React = require('react');
 let classnames = require('classnames');
-let helpers = require('./helpers.js');
-const constants = require('./constants.js');
 const actionCreators = require('./actionCreators.js');
 
 let GraphMinimap = require('./Graph.js').GraphMinimap;
