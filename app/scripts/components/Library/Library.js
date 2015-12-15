@@ -3,176 +3,86 @@
 var $ = require('jquery');
 var _ = require('lodash');
 var R = require('ramda');
+var Q = require('q');
 var utils = require('../../utils.js');
-var constants = require('../../constants.js');
-var helpers = require('../../helpers.js');
 var React = require('react');
-var DragSource = require('react-dnd').DragSource;
+
+var LibraryItem = require('./LibraryItem.js');
 
 
-class LibraryItem extends React.Component {
-	constructor(props) {
-		super(props);
-		utils.autoBind(this);
-	}
-
-	renderType() {
-		const props = this.props;
-		if (!props.showType) { return null; }
-		return <div className='badge' style={{ float: 'right', fontWeight: 'normal', marginTop: '0.15em' }}>
-			{props.data.type}
-		</div>
-	}
-
-	render() {
-		const props = this.props;
-		const connectDragSource = props.connectDragSource;
-		return connectDragSource(
-			<li key={props.data.label} className='list-group-item'>
-				{this.renderType()}
-				<div>{props.data.label}</div>
-			</li>
-		);
-	}
-}
-
-LibraryItem.propTypes = {
-	data: React.PropTypes.object.isRequired,
-	// injected by react dnd:
-	isDragging: React.PropTypes.bool.isRequired,
-	connectDragSource: React.PropTypes.func.isRequired
-};
-
-var spec = {
-	beginDrag: function(props, monitor, component) {
-		// needs to be a copy
-		return _.merge({}, props.data);
+var Library = React.createClass({
+	propTypes: {
+		title: React.PropTypes.string.isRequired,
+		url: React.PropTypes.string.isRequired,
+		componentTypes: React.PropTypes.array.isRequired,
+		componentTypesFilter: React.PropTypes.array.isRequired,
+		showFilter: React.PropTypes.bool,
+		filter: React.PropTypes.func,
+		renderItem: React.PropTypes.func,
 	},
 
-	endDrag: function(props, monitor, component) {
-		if (!monitor.didDrop()) { return; }
+	getDefaultProps: function() {
+		let renderListItem = this.renderListItem;
+		return {
+			showFilter: false,
+			renderItem: renderListItem,
+			filter: function() { return true; }
+		};
+	},
 
-		const result = monitor.getDropResult();
-		if (result.target === constants.DND_TARGET_MAP /*||
-			result.target === constants.DND_TARGET_DEBUG*/) {
+	getInitialState: function() {
+		return {
+			loading: true,
+			error: null,
+			searchQuery: '',
+			listFiltered: [],
+			list: [],
+		};
+	},
 
-			const interfaceStore = component.props.flux.getStore(constants.INTERFACE);
-			const editorXY = helpers.coordsRelativeToElem(
-				interfaceStore.state.editorElem,
-				result.clientOffset
-			);
-			const modelXY = helpers.unTransformFromTo(
-				interfaceStore.state.editorElem,
-				interfaceStore.state.editorTransformElem,
-				editorXY
-			);
+	componentWillMount: function() {
+		let that = this;
+		let req = $.getJSON(this.props.url, {});
 
-			let item = monitor.getItem();
-			let fragment;
+		that.setState({
+			loading: true
+		});
 
-			if (item.fragment) {
-				fragment = item.value;
-			} else {
-				item.type = item.type;
-				fragment = {
-					nodes: [item],
-					edges: [],
-					groups: [],
-				};
-			}
+		Q(req)
+			.then(function(data) {
+				that.setState({
+					list: data.list,
+					listFiltered: data.list,
+					error: null,
+					loading: false
+				});
+			},
+			function(err) {
+				console.error(err);
+				that.setState({
+					list: [],
+					listFiltered: [],
+					error: err,
+					loading: false
+				});
+			});
+	},
 
-			fragment = helpers.prepareGraphFragment(fragment);
+	renderLoading: function() {
+		// TODO: react-loader
+		return (this.props.loading)
+			? <div>loading...</div>
+			: null;
+	},
 
-			const graphActions = component.props.flux.getActions(constants.GRAPH);
-			graphActions.importModelFragment(fragment, modelXY);
+	renderError: function() {
+		const state = this.state;
+		return (state.error)
+			? <div>{state.error.statusText}: {state.error.responseText}</div>
+			: null;
+	},
 
-			// select
-			const interfaceActions = component.props.flux.getActions(constants.INTERFACE);
-			interfaceActions.select(item, 'node');
-		}
-	}
-};
-
-// the props to be injected
-function collect(connect, monitor) {
-	return {
-		connectDragSource: connect.dragSource(),
-		isDragging: monitor.isDragging()
-	};
-}
-// LibraryItem = DragSource(constants.DND_SOURCE_NODE, spec, collect)(LibraryItem);
-LibraryItem = DragSource(constants.DND_SOURCE_FRAGMENT, spec, collect)(LibraryItem);
-
-
-// react + es6
-// http://facebook.github.io/react/blog/2015/01/27/react-v0.13.0-beta-1.html
-class Library extends React.Component {
-	constructor(props) {
-		super(props);
-		utils.autoBind(this);
-
-		this.renderListItem = this.props.renderItem || this.renderListItem;
-
-		var flux = this.props.flux;
-		var libraryActions = flux.getActions(this.props.libName);
-		libraryActions.loadData(this.props.url);
-	}
-
-	renderListItem(item, index) {
-		var that = this;
-		const props = this.props;
-		var onClick = null;
-		if (_.isFunction(this.props.onClick)) {
-			onClick = function(event) { that.props.onClick(item); };
-		}
-		return (
-			<LibraryItem
-				flux={props.flux}
-				onClick={onClick}
-				key={item.id || index}
-				data={item}
-				showType={props.showFilter}
-			/>
-		);
-	}
-
-	renderLoading() {
-		if (this.props.loading) {
-			return <div>loading...</div>;
-		} else {
-			return null;
-		}
-	}
-
-	renderError() {
-		if (this.props.error) {
-			return <div>{this.props.error.status}: {this.props.error.errorMessage}</div>;
-		} else {
-			return null;
-		}
-	}
-
-	renderAdd() {
-		// var that = this;
-		// var onAdd = this.props.onAdd;
-		// if (_.isFunction(onAdd)) {
-		// 	var handleAdd = _.wrap(onAdd, function(onAdd) {
-		// 		var input = that.refs['add-input'];
-		// 		var $input = $(input.getDOMNode());
-		// 		var val = $input.val().trim();
-		// 		onAdd(val);
-		// 	});
-		// 	return (
-		// 		<div className='add'>
-		// 			<input type="text" ref='add-input' /> <button onClick={handleAdd}>add</button>
-		// 		</div>
-		// 	);
-		// } else {
-			return null;
-		// }
-	}
-
-	renderFilterItem(item) {
+	renderFilterItem: function(item) {
 		const props = this.props;
 		const checked = R.contains(item, props.componentTypesFilter);
 		return (
@@ -180,9 +90,9 @@ class Library extends React.Component {
 				<input type='checkbox' value={item} checked={checked} className=''> {item}</input>
 			</label>
 		);
-	}
+	},
 
-	renderFilter() {
+	renderFilter: function() {
 		const props = this.props;
 
 		if (!props.showFilter) { return null; }
@@ -190,12 +100,32 @@ class Library extends React.Component {
 		return <form className='form-inline type-filter' onChange={this.filterType} onSubmit={this.onSubmit}>
 			{props.componentTypes.map(this.renderFilterItem)}
 		</form>;
-	}
+	},
 
-	render() {
+	renderListItem: function(item, index) {
 		var that = this;
-		var props = this.props;
-		var list = props.list;
+		const props = this.props;
+		var onClick = null;
+		if (_.isFunction(props.onClick)) {
+			onClick = function(event) { props.onClick(item); };
+		}
+
+		return (
+			<LibraryItem
+				{...props}
+				onClick={onClick}
+				key={item.id || index}
+				data={item}
+				showType={props.showFilter}
+			/>
+		);
+	},
+
+	render: function() {
+		let that = this;
+		const props = this.props;
+		const state = this.state;
+		const listFiltered = state.listFiltered;
 
 		return (
 			<div className='panel-section library-component'>
@@ -211,72 +141,41 @@ class Library extends React.Component {
 				{this.renderFilter()}
 				{this.renderLoading()}
 				{this.renderError()}
-				<div className="results">
-					<ul className='list-group'>{list.filter(props.filter).map(this.renderListItem)}</ul>
+				<div className='results'>
+					<ul className='list-group'>
+						{listFiltered
+							.filter(props.filter)
+							.map(this.renderListItem)}
+					</ul>
 				</div>
-				{this.renderAdd()}
 			</div>
 		);
+	},
+
+	// 	onSubmit: function(event) {
+	// 		event.preventDefault();
+	// 	},
+
+	// 	filterType: function(event) {
+	// 		libraryActions.filterByType(event.target.value, event.target.checked);
+	// 	},
+
+	clearSearch: function() {
+		$(this.refs['searchInput'].getDOMNode()).val('');
+		this._search('');
+	},
+
+	search: function(event) {
+		this._search($(this.refs['searchInput'].getDOMNode()).val());
+	},
+
+	_search: function(query) {
+		const state = this.state;
+		query = query.trim();
+		this.setState({
+			listFiltered: utils.filterList(state.list, query, { fields: ['label'] })
+		});
 	}
-
-	onSubmit(event) {
-		event.preventDefault();
-	}
-
-	filterType(event) {
-		var flux = this.props.flux;
-		var libraryActions = flux.getActions(this.props.libName);
-		libraryActions.filterByType(event.target.value, event.target.checked);
-	}
-
-	clearSearch() {
-		var flux = this.props.flux;
-		var libraryActions = flux.getActions(this.props.libName);
-		this.refs.searchInput.getDOMNode().value = '';
-		libraryActions.filterList('');
-	}
-
-	search(event) {
-		var flux = this.props.flux;
-		var libraryActions = flux.getActions(this.props.libName);
-
-		var $input = $(event.target);
-		var query = $input.val().trim();
-		libraryActions.filterList(query);
-	}
-}
-
-
-Library.propTypes = {
-	title: React.PropTypes.string.isRequired,
-	url: React.PropTypes.string.isRequired,
-	list: React.PropTypes.array.isRequired,
-	componentTypes: React.PropTypes.array.isRequired,
-	componentTypesFilter: React.PropTypes.array.isRequired,
-	showFilter: React.PropTypes.bool,
-
-	filter: React.PropTypes.func,
-
-	flux: React.PropTypes.any.isRequired,
-	libName: React.PropTypes.string.isRequired,
-
-	renderItem: React.PropTypes.func,
-	onAdd: React.PropTypes.func,
-	loading: React.PropTypes.bool,
-	query: React.PropTypes.string,
-};
-
-
-Library.defaultProps = {
-	showFilter: false,
-	filter: function() { return true; }
-};
-
-
-// https://github.com/acdlite/flummox/issues/208
-// Library.contextTypes = {
-// 	flux: React.PropTypes.any
-// };
-
+});
 
 module.exports = Library;
