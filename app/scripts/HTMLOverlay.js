@@ -1,8 +1,6 @@
 'use strict';
 
-var _ = require('lodash');
 var React = require('react');
-var mout = require('mout');
 var helpers = require('./helpers.js');
 
 

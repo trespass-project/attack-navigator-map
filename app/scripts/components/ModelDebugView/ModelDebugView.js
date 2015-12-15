@@ -1,12 +1,10 @@
 'use strict';
 
 let $ = require('jquery');
-let _ = require('lodash');
 let React = require('react');
 let DropTarget = require('react-dnd').DropTarget;
 
 let actionCreators = require('../../actionCreators.js');
-let utils = require('../../utils.js');
 const constants = require('../../constants.js');
 
 
@@ -24,7 +22,6 @@ let ModelDebugView = React.createClass({
 	// },
 
 	render: function() {
-		let that = this;
 		const model = this.props.model;
 		if (!model) { return null; }
 

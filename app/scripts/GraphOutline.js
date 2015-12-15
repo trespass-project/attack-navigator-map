@@ -1,8 +1,6 @@
 'use strict';
 
 let React = require('react');
-let classnames = require('classnames');
-let helpers = require('./helpers.js');
 
 
 let GraphOutline = React.createClass({

@@ -1,7 +1,6 @@
 'use strict';
 
 let React = require('react');
-let R = require('ramda');
 let _ = require('lodash');
 
 let createStore = require('redux').createStore;
@@ -19,8 +18,6 @@ let Wizard = require('./Wizard.js');
 
 let HTML5Backend = require('react-dnd/modules/backends/HTML5');
 let DragDropContext = require('react-dnd').DragDropContext;
-
-const constants = require('./constants.js');
 
 
 let App = React.createClass({
