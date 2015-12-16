@@ -20,15 +20,12 @@ function noop() {}
 
 
 function getItemByKey(key, coll, value) {
-	var result = null;
-	coll.some(function(item) { // faster than filter
-			let match = (item[key] === value);
-			if (match) { result = item; }
-			return match;
-		});
-	return result;
+	return coll
+		.filter(function(item) {
+			return (item[key] === value);
+		})[0] || null;
 }
-var getItemById = R.partial(getItemByKey, ['id']);
+const getItemById = R.partial(getItemByKey, ['id']);
 
 
 function getNodesBBox(nodes) {
@@ -113,43 +110,6 @@ function getNodeGroups(nodeId, groups) {
 }
 
 
-function prepareGraphFragment(fragment) {
-	// prepare fragment
-
-	fragment.nodes.forEach(function(node, index) {
-		let oldId = node.id;
-
-		// create unique id
-		node.id = makeId(index, node.type);
-
-		// rename existing ids in edges and groups
-		if (oldId) {
-			fragment.edges.forEach(function(edge) {
-				if (edge.from === oldId) {
-					edge.from = node.id;
-				}
-				if (edge.to === oldId) {
-					edge.to = node.id;
-				}
-			});
-
-			fragment.groups.forEach(function(group, index) {
-				group.id = makeId(index, 'group');
-				group.nodeIds = group.nodeIds.map(function(nodeId) {
-					if (nodeId === oldId) {
-						return node.id;
-					} else {
-						return nodeId;
-					}
-				});
-			});
-		}
-	});
-
-	return fragment;
-}
-
-
 function makeId(index, type) {
 	return [Date.now(), index||0, type||''].join('-');
 }
@@ -207,7 +167,6 @@ module.exports = {
 	distBetweenPoints,
 	isRectInsideRect,
 	getNodeGroups,
-	prepareGraphFragment,
 	makeId,
 	ellipsize,
 	degToRad,

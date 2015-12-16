@@ -1,7 +1,9 @@
 'use strict';
 
 let R = require('ramda');
+let _ = require('lodash');
 let trespass = require('trespass.js');
+let modelHelpers = require('./model-helpers.js');
 const mergeWith = require('./reducer-utils.js').mergeWith;
 const constants = require('./constants.js');
 
@@ -37,7 +39,9 @@ function reducer(state=initialState, action) {
 		}
 
 		case constants.ACTION_importModelFragment: {
-			return state; // TODO: implement
+			const {fragment, xy} = action;
+			const graph = modelHelpers.importModelFragment(state.graph, fragment, xy);
+			return _.merge({}, state, { graph });
 		}
 
 		case constants.ACTION_loadXML: {

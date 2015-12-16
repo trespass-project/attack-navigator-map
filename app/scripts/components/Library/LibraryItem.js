@@ -71,24 +71,15 @@ const spec = {
 			);
 
 			let item = monitor.getItem();
-			let fragment;
+			const fragment = (item.fragment)
+				? item.value
+				: { nodes: [item] }; // treat single nodes like fragments
 
-			if (item.fragment) {
-				fragment = item.value;
-			} else {
-				item.type = item.type;
-				fragment = {
-					nodes: [item],
-					edges: [],
-					groups: [],
-				};
-			}
-
-			fragment = helpers.prepareGraphFragment(fragment);
 			props.dispatch( actionCreators.importModelFragment(fragment, modelXY) );
 
-			// select
-			props.dispatch( actionCreators.select(item, 'node') );
+			if (item.type === 'node') {
+				props.dispatch( actionCreators.select(item, 'node') );
+			}
 		}
 	}
 };
