@@ -1,14 +1,14 @@
 'use strict';
 
-var $ = require('jquery');
-var R = require('ramda');
-var React = require('react');
-var classnames = require('classnames');
-var SchleppMixin = require('./SchleppMixin.js');
-var Port = require('./Port.js');
-var icons = require('./icons.js');
-var helpers = require('./helpers.js');
-var actionCreators = require('./actionCreators.js');
+let $ = require('jquery');
+let R = require('ramda');
+let React = require('react');
+let classnames = require('classnames');
+let SchleppMixin = require('./SchleppMixin.js');
+let Port = require('./Port.js');
+let icons = require('./icons.js');
+let helpers = require('./helpers.js');
+let actionCreators = require('./actionCreators.js');
 
 
 const typeIcons = {
@@ -22,7 +22,7 @@ const typeIcons = {
 };
 
 
-var Node = React.createClass({
+let Node = React.createClass({
 	mixins: [SchleppMixin],
 
 	propTypes: {
@@ -63,11 +63,12 @@ var Node = React.createClass({
 	},
 
 	render: function() {
-		var props = this.props;
-		var radius = props.theme.node.size * 0.5;
+		const props = this.props;
+		const radius = props.theme.node.size * 0.5;
 
-		var portStyle = {};
-		if (!props.hovered) { portStyle.display = 'none'; }
+		const portStyle = (!props.hovered)
+			? { display: 'none' }
+			: {};
 
 		return (
 			<g
@@ -228,7 +229,7 @@ var Node = React.createClass({
 				width: props.theme.node.size,
 				height: props.theme.node.size,
 			};
-			var groupCenter = {
+			const groupCenter = {
 				x: groupRect.x + groupRect.width*0.5,
 				y: groupRect.y + groupRect.height*0.5,
 			};
