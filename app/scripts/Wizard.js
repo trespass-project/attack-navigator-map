@@ -32,11 +32,6 @@ let Wizard = React.createClass({
 	// 	return {};
 	// },
 
-	contextTypes: {
-		graphActions: React.PropTypes.object,
-		interfaceActions: React.PropTypes.object
-	},
-
 	renderMinimap: function(props) {
 		return <GraphMinimap id='minimap' />;
 	},

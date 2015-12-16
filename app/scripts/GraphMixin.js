@@ -28,11 +28,6 @@ let GraphMixin = {
 		};
 	},
 
-	contextTypes: {
-		graphActions: React.PropTypes.object,
-		interfaceActions: React.PropTypes.object
-	},
-
 	renderGroup: function(group) {
 		const props = this.props;
 
