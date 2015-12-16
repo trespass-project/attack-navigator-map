@@ -58,15 +58,15 @@ let GraphMixin = {
 		}
 
 		return <Group
-				{...props}
-				key={group.id}
-				hovered={props.hoverGroup && (group.id === props.hoverGroup.id)}
-				selected={props.selected && (group.id === props.selected.it.id)}
-				group={group}
-				x={bounds.minX}
-				y={bounds.minY}
-				width={bounds.maxX-bounds.minX}
-				height={bounds.maxY-bounds.minY} />;
+			{...props}
+			key={group.id}
+			hovered={props.hoverGroup && (group.id === props.hoverGroup.id)}
+			selected={props.selected && (group.id === props.selected.it.id)}
+			group={group}
+			x={bounds.minX}
+			y={bounds.minY}
+			width={bounds.maxX-bounds.minX}
+			height={bounds.maxY-bounds.minY} />;
 	},
 
 	renderPreviewEdge: function(edge, index, collection) {
@@ -76,34 +76,34 @@ let GraphMixin = {
 	renderEdge: function(edge, index, collection, isPreview) {
 		const props = this.props;
 		return <Edge
-				{...props}
-				key={index}
-				edge={edge}
-				selected={props.selected && (edge.id === props.selected.it.id)}
-				preview={isPreview} />;
+			{...props}
+			key={index}
+			edge={edge}
+			selected={props.selected && (edge.id === props.selected.it.id)}
+			preview={isPreview} />;
 	},
 
 	renderNode: function(node, index) {
 		const props = this.props;
 		return <Node
-				{...this.props}
-				key={index}
-				hovered={props.hoverNode && (node.id === props.hoverNode.id)}
-				selected={props.selected && (node.id === props.selected.it.id)}
-				x={node.x}
-				y={node.y}
-				node={node} />;
+			{...this.props}
+			key={index}
+			hovered={props.hoverNode && (node.id === props.hoverNode.id)}
+			selected={props.selected && (node.id === props.selected.it.id)}
+			x={node.x}
+			y={node.y}
+			node={node} />;
 	},
 
 	renderBgImage: function(group, index) {
 		return <BackgroundImage
-				{...this.props}
-				key={index}
-				group={group}
-				groupCenterOffsetX={group._bgImage.groupCenterOffsetX}
-				groupCenterOffsetY={group._bgImage.groupCenterOffsetY}
-				width={group._bgImage.width || 500}
-				height={group._bgImage.height || 500} />;
+			{...this.props}
+			key={index}
+			group={group}
+			groupCenterOffsetX={group._bgImage.groupCenterOffsetX}
+			groupCenterOffsetY={group._bgImage.groupCenterOffsetY}
+			width={group._bgImage.width || 500}
+			height={group._bgImage.height || 500} />;
 	},
 
 	renderVisibleRect: function() {
