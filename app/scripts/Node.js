@@ -32,7 +32,6 @@ let Node = React.createClass({
 		selected: React.PropTypes.bool,
 		theme: React.PropTypes.object.isRequired,
 		node: React.PropTypes.object.isRequired,
-		flux: React.PropTypes.object.isRequired,
 	},
 
 	getDefaultProps: function() {

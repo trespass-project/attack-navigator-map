@@ -1,51 +1,48 @@
 'use strict';
 
-var R = require('ramda');
-var React = require('react');
-var utils = require('../../utils.js');
-var constants = require('../../constants.js');
-var Library = require('../Library/Library.js');
+let R = require('ramda');
+let React = require('react');
+let actionCreators = require('../../actionCreators.js');
+const constants = require('../../constants.js');
+let Library = require('../Library/Library.js');
 
 
-class ModelLibrary extends React.Component {
 
-	constructor(props) {
-		super(props);
-		utils.autoBind(this);
-	}
+let ModelLibrary = React.createClass({
+	propTypes: {
+		dispatch: React.PropTypes.func.isRequired,
+	},
 
-	loadModel(item) {
-		var flux = this.props.flux;
-		var graphActions = flux.getActions(constants.GRAPH);
-		graphActions.loadModel(item.filename);
-	}
+	// getDefaultProps: function() {
+	// 	return {};
+	// },
 
-	renderItem(item, index) {
-		var onClick = R.partial(this.loadModel, [item]);
+	loadModel: function(item) {
+		this.props.dispatch( actionCreators.loadModel(item.filename) );
+	},
+
+	renderItem: function(item, index) {
+		let onClick = R.partial(this.loadModel, [item]);
 		return (
-			<li
-			onClick={onClick}
-			key={item.id || index}
-			>
+			<li onClick={onClick} key={item.id || index}>
 				<b>{item.name}</b>
 			</li>
 		);
-	}
+	},
 
-	render() {
-		var list = this.props.list;
-
+	render: function() {
+		const props = this.props;
 		return (
 			<div>
 				<Library
 					onClick={this.loadModel}
 					renderItem={this.renderItem}
-					{...this.props}>
+					{...props}>
 				</Library>
 			</div>
 		);
-	}
-}
+	},
+});
 
 
 module.exports = ModelLibrary;
