@@ -56,10 +56,15 @@ function hideContextMenu(event, context, menuItems) {
 
 module.exports.importModelFragment =
 function importModelFragment(fragment, xy) {
-	return {
-		type: constants.ACTION_importModelFragment,
-		fragment,
-		xy
+	return function(dispatch, getState) {
+		dispatch({
+			type: constants.ACTION_importModelFragment,
+			fragment,
+			xy
+		});
+
+		// update model afterwards:
+		dispatch({ type: constants.ACTION_updateModel });
 	};
 };
 

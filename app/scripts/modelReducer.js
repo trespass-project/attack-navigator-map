@@ -19,6 +19,13 @@ const initialState = {
 };
 
 
+const modelFromGraph = _.debounce(
+	modelHelpers.modelFromGraph,
+	2000,
+	{ leading: true, trailing: true }
+);
+
+
 module.exports =
 function reducer(state=initialState, action) {
 	const mergeWithState = R.partial(mergeWith, [state]);
@@ -41,7 +48,16 @@ function reducer(state=initialState, action) {
 		case constants.ACTION_importModelFragment: {
 			const {fragment, xy} = action;
 			const graph = modelHelpers.importModelFragment(state.graph, fragment, xy);
-			return _.merge({}, state, { graph });
+
+			return _.merge({}, state, { graph: graph });
+		}
+
+		case constants.ACTION_updateModel: {
+			const model = modelFromGraph(state.graph);
+			if (!model) { // debounced
+				return state;
+			}
+			return _.merge({}, state, { model: model })
 		}
 
 		case constants.ACTION_loadXML: {

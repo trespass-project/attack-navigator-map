@@ -108,3 +108,57 @@ module.exports.modelAsFragment =
 function(model) {
 	return R.pick(modelComponents, model.system);
 };
+
+
+let modelFromGraph =
+module.exports.modelFromGraph =
+function(graph) {
+	let model = trespass.model.create();
+
+	graph.edges.forEach(function(edge) {
+		trespass.model.addEdge(model, {
+			// TODO: ?
+			_relation: edge.relation || null,
+			source: edge.from,
+			target: edge.to,
+		});
+	});
+
+	graph.nodes.forEach(function(node) {
+		try {
+			switch (node.type) {
+				case 'location':
+					trespass.model.addLocation(model, node);
+					break;
+				// case 'asset':
+				case 'item':
+					trespass.model.addItem(model, node);
+					break;
+				case 'data':
+					trespass.model.addData(model, node);
+					break;
+				case 'actor':
+					trespass.model.addActor(model, node);
+					break;
+				case 'role':
+					trespass.model.addRole(model, node);
+					break;
+				case 'predicate':
+					trespass.model.addPredicate(model, node);
+					break;
+				case 'process':
+					trespass.model.addProcess(model, node);
+					break;
+				case 'policy':
+					trespass.model.addPolicy(model, node);
+					break;
+				default:
+					break;
+			}
+		} catch (e) {
+			// console.error(e.message);
+		}
+	});
+
+	return model;
+};
