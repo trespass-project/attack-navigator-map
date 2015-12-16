@@ -33,9 +33,6 @@ let GraphEditor = React.createClass({
 		const props = this.props;
 		let $svg = $(this.getDOMNode()).find('svg');
 
-		// TODO: do this elsewhere
-		props.dispatch( actionCreators.setEditorElem($svg[0]) );
-
 		let that = this;
 		$svg.on('contextmenu', function(event) {
 			const menuItems = [ // TODO: have these all in one place?
@@ -59,7 +56,6 @@ let GraphEditor = React.createClass({
 	componentWillUnmount: function() {
 		let $svg = $(this.props.editorElem);
 		$svg.off('contextmenu');
-		this.props.dispatch( actionCreators.setEditorElem(null) );
 	},
 
 	_onClick: function(event) {
