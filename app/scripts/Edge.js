@@ -7,6 +7,7 @@ var mout = require('mout');
 var classnames = require('classnames');
 var icons = require('./icons.js');
 var helpers = require('./helpers.js');
+let actionCreators = require('./actionCreators.js');
 
 
 // var diagonal = d3.svg.diagonal()
@@ -65,7 +66,6 @@ function bezierPoint(p1, c1, c2, p2, t) {
 }
 
 
-
 var Edge = React.createClass({
 	propTypes: {
 		edge: React.PropTypes.object.isRequired,
@@ -79,11 +79,6 @@ var Edge = React.createClass({
 			preview: false,
 			selected: false,
 		};
-	},
-
-	contextTypes: {
-		graphActions: React.PropTypes.object,
-		interfaceActions: React.PropTypes.object
 	},
 
 	renderLabel: function(edgeNodes) {
@@ -111,7 +106,8 @@ var Edge = React.createClass({
 	_onClick: function(event) {
 		event.preventDefault();
 		event.stopPropagation();
-		this.context.interfaceActions.select(this.props.edge, 'edge');
+		const props = this.props;
+		props.dispatch( actionCreators.select(props.edge, 'edge') );
 	},
 
 	render: function() {
@@ -175,16 +171,19 @@ var Edge = React.createClass({
 
 	componentDidMount: function() {
 		var that = this;
+		const props = this.props;
 
 		$(this.getDOMNode()).on('contextmenu', function(event) {
 			let menuItems = [
 				{
 					label: 'delete',
 					icon: icons['fa-trash'],
-					action: function() { that.context.graphActions.removeEdge(that.props.edge); }
+					action: function() {
+						props.dispatch( actionCreators.removeEdge(props.edge) );
+					}
 				}
 			];
-			that.context.interfaceActions.showContextMenu(event, that.props.group, menuItems);
+			props.dispatch( actionCreators.showContextMenu(event, props.group, menuItems) );
 			return false;
 		});
 	},
