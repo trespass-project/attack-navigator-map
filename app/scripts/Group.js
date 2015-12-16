@@ -8,6 +8,7 @@ var React = require('react');
 var SchleppMixin = require('./SchleppMixin.js');
 var icons = require('./icons.js');
 var helpers = require('./helpers.js');
+var actionCreators = require('./actionCreators.js');
 
 
 var Dropzone = React.createClass({
@@ -47,7 +48,6 @@ var Group = React.createClass({
 		group: React.PropTypes.object.isRequired,
 		selected: React.PropTypes.bool,
 		hovered: React.PropTypes.bool,
-		flux: React.PropTypes.object.isRequired,
 		theme: React.PropTypes.object.isRequired,
 	},
 
@@ -58,19 +58,13 @@ var Group = React.createClass({
 		};
 	},
 
-	contextTypes: {
-		graphActions: React.PropTypes.object,
-		interfaceActions: React.PropTypes.object
-	},
-
 	renderLabel: function() {
-		if (!this.props.showGroupLabels) { return null; }
-		return (
-			<text
-				dx={this.props.width*0.5}
-				dy={this.props.height*0.5 + 16}
-				className='label'>{this.props.group.name}</text>
-		);
+		const props = this.props;
+		if (!props.showGroupLabels) { return null; }
+		return <text
+			dx={props.width*0.5}
+			dy={props.height*0.5 + 16}
+			className='label'>{props.group.name}</text>;
 	},
 
 	renderDropzone: function() {
@@ -107,10 +101,11 @@ var Group = React.createClass({
 	},
 
 	render: function() {
-		var props = this.props;
+		const props = this.props;
 
-		let style = {};
-		if (!props.showGroups) { style.display = 'none'; }
+		const style = (!props.showGroups)
+			? { display: 'none' }
+			: {};
 
 		return (
 			<g
@@ -134,41 +129,43 @@ var Group = React.createClass({
 	},
 
 	_handleHover: function(event) {
-		this.context.interfaceActions.setHoverGroup(this.props.group);
+		const props = this.props;
+		props.dispatch( actionCreators.setHoverGroup(props.group) );
 	},
 
 	_handleHoverOut: function(event) {
-		this.context.interfaceActions.setHoverGroup(null);
+		const props = this.props;
+		props.dispatch( actionCreators.setHoverGroup(null) );
 	},
 
 	componentDidMount: function() {
 		var that = this;
-		var context = this.context;
+		const props = this.props;
 
 		var elem = this.getDOMNode();
 		$(elem).on('contextmenu', function(event) {
 			let bgimg = { label: 'image', icon: icons['fa-plus'], action: that.openFileDialog };
-			if (!_.isEmpty(that.props.group._bgImage)) {
+			if (!_.isEmpty(props.group._bgImage)) {
 				bgimg.icon = icons['fa-remove'];
 				bgimg.action = function() {
-					context.interfaceActions.removeGroupBackgroundImage(that.props.group);
+					props.dispatch( actionCreators.removeGroupBackgroundImage(props.group) );
 				};
 			}
 
 			let menuItems = [
 				{ label: 'delete', destructive: true, icon: icons['fa-trash'], action:
 					function(/*event*/) {
-						context.graphActions.removeGroup(that.props.group, true);
+						props.dispatch( actionCreators.removeGroup(props.group, true) );
 					}
 				},
 				{ label: 'ungroup', destructive: true, icon: icons['fa-remove'], action:
 					function(/*event*/) {
-						context.graphActions.removeGroup(that.props.group);
+						props.dispatch( actionCreators.removeGroup(props.group) );
 					}
 				},
 				{ label: 'clone', icon: icons['fa-files-o'], action:
 					function() {
-						context.graphActions.cloneGroup(that.props.group);
+						props.dispatch( actionCreators.cloneGroup(props.group) );
 					}
 				},
 				bgimg,
@@ -177,13 +174,13 @@ var Group = React.createClass({
 						let node = {
 							x: event.offsetX,
 							y: event.offsetY,
-							group: that.props.group
+							group: props.group
 						};
-						context.graphActions.addNode(node);
+						props.dispatch( actionCreators.addNode(node) );
 					}
 				},
 			];
-			context.interfaceActions.showContextMenu(event, that.props.group, menuItems);
+			props.dispatch( actionCreators.showContextMenu(event, props.group, menuItems) );
 			return false;
 		});
 	},
@@ -199,6 +196,8 @@ var Group = React.createClass({
 	},
 	loadBackgroundFile: function(event) { // TODO: do this elsewhere
 		var that = this;
+		const props = this.props;
+
 		var file = $('#add-file')[0].files[0];
 		var reader = new FileReader();
 		reader.onload = function(event) {
@@ -209,7 +208,7 @@ var Group = React.createClass({
 			var aspectRatio = w / h;
 			// var dataURI = 'data:image/svg+xml;utf8,'+svg;
 			var dataURI = 'data:image/svg+xml;base64,'+btoa(svg);
-			that.context.interfaceActions.addGroupBackgroundImage(that.props.group, dataURI, aspectRatio, w);
+			props.dispatch( actionCreators.addGroupBackgroundImage(props.group, dataURI, aspectRatio, w) );
 		};
 		// reader.readAsDataURL(file);
 		reader.readAsText(file);
@@ -220,14 +219,17 @@ var Group = React.createClass({
 	_onClick: function(event) {
 		event.preventDefault();
 		event.stopPropagation();
-		this.context.interfaceActions.select(this.props.group, 'group');
+		const props = this.props;
+		props.dispatch( actionCreators.select(props.group, 'group') );
 	},
 
 	_onMouseOver: function(event) {
-		this.context.interfaceActions.setHoverGroup(this.props.group);
+		const props = this.props;
+		props.dispatch( actionCreators.setHoverGroup(props.group) );
 	},
 	_onMouseOut: function(event) {
-		this.context.interfaceActions.setHoverGroup(null);
+		const props = this.props;
+		props.dispatch( actionCreators.setHoverGroup(null) );
 	},
 
 	_onDragStart: function(event) {
@@ -265,12 +267,14 @@ var Group = React.createClass({
 		var newPositionX = this.originalPositionX + modelXYDelta.x;
 		var newPositionY = this.originalPositionY + modelXYDelta.y;
 
-		this.context.interfaceActions.moveGroup(
-			props.group,
-			{ // delta of the delta
-				x: newPositionX - this.currentPositionX,
-				y: newPositionY - this.currentPositionY
-			}
+		props.dispatch(
+			actionCreators.moveGroup(
+				props.group,
+				{ // delta of the delta
+					x: newPositionX - this.currentPositionX,
+					y: newPositionY - this.currentPositionY
+				}
+			)
 		);
 	},
 
