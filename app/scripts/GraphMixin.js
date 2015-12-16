@@ -33,16 +33,16 @@ let GraphMixin = {
 		interfaceActions: React.PropTypes.object
 	},
 
-	_makeGroup: function(group) {
+	renderGroup: function(group) {
 		const props = this.props;
 
 		let bounds = null;
 		const extraPadding = 5;
+		const s = (props.theme.node.size * 0.5) + (2 * extraPadding);
 
 		if (group.nodeIds.length === 0) {
 			const xOffset = group.x || 0;
 			const yOffset = group.y || 0;
-			const s = props.theme.node.size*0.5 + 2*extraPadding;
 			bounds = { // TODO: improve this
 				minX: xOffset + extraPadding,
 				minY: yOffset + extraPadding,
@@ -51,7 +51,6 @@ let GraphMixin = {
 			};
 		} else {
 			bounds = helpers.getGroupBBox(props.graph.nodes, group);
-			const s = props.theme.node.size*0.5 + extraPadding;
 			bounds.minX -= s;
 			bounds.minY -= s;
 			bounds.maxX += s;
@@ -70,11 +69,11 @@ let GraphMixin = {
 				height={bounds.maxY-bounds.minY} />;
 	},
 
-	_makePreviewEdge: function(edge, index, collection) {
-		return this._makeEdge(edge, index, collection, true);
+	renderPreviewEdge: function(edge, index, collection) {
+		return this.renderEdge(edge, index, collection, true);
 	},
 
-	_makeEdge: function(edge, index, collection, isPreview) {
+	renderEdge: function(edge, index, collection, isPreview) {
 		const props = this.props;
 		return <Edge
 				{...props}
@@ -84,7 +83,7 @@ let GraphMixin = {
 				preview={isPreview} />;
 	},
 
-	_makeNode: function(node, index) {
+	renderNode: function(node, index) {
 		const props = this.props;
 		return <Node
 				{...this.props}
@@ -96,7 +95,7 @@ let GraphMixin = {
 				node={node} />;
 	},
 
-	_makeBgImage: function(group, index) {
+	renderBgImage: function(group, index) {
 		return <BackgroundImage
 				{...this.props}
 				key={index}
@@ -133,14 +132,19 @@ let GraphMixin = {
 		return (
 			/* prevent event propagation from map up to svg elem */
 			<g ref='map-group' onClick={ function(event) { event.stopPropagation(); } }>
-				{graph.groups.filter(function(group) { return !!group._bgImage; }).map(this._makeBgImage)}
-				{graph.groups.map(this._makeGroup)}
-				{graph.edges.map(this._makeEdge)}
+				{graph.groups
+					.filter(function(group) {
+						return !!group._bgImage;
+					})
+					.map(this.renderBgImage)
+				}
+				{graph.groups.map(this.renderGroup)}
+				{graph.edges.map(this.renderEdge)}
 				{ (props.previewEdge && !props.isMinimap)
-					? [props.previewEdge].map(this._makePreviewEdge)
+					? [props.previewEdge].map(this.renderPreviewEdge)
 					: null
 				}
-				{graph.nodes.map(this._makeNode)}
+				{graph.nodes.map(this.renderNode)}
 				{this.renderVisibleRect()}
 			</g>
 		);

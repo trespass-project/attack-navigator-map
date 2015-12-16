@@ -1,12 +1,12 @@
 'use strict';
 
-var _ = require('lodash');
-var R = require('ramda');
-var $ = require('jquery');
+let _ = require('lodash');
+let R = require('ramda');
+let $ = require('jquery');
 
 
 function getElemByRef(component, ref) {
-	var it;
+	let it;
 	if (ref && !_.isEmpty(component.refs) && component.refs[ref]) {
 		it = component.refs.dragRoot;
 	} else {
@@ -29,7 +29,7 @@ const getItemById = R.partial(getItemByKey, ['id']);
 
 
 function getNodesBBox(nodes) {
-	var bounds = nodes.reduce(
+	let bounds = nodes.reduce(
 		function(_bounds, node) {
 			_bounds.minX = Math.min(_bounds.minX, node.x);
 			_bounds.minY = Math.min(_bounds.minY, node.y);
@@ -95,10 +95,10 @@ function isRectInsideRect(r1, r2) {
 		return (what >= low) && (what <= high);
 	}
 
-	var insideX = isBetween(r1.x, r2.x, r2.x+r2.width) || isBetween(r1.x+r1.width, r2.x, r2.x+r2.width);
-	var insideY = isBetween(r1.y, r2.y, r2.y+r2.height) || isBetween(r1.y+r1.height, r2.y, r2.y+r2.height);
+	const insideX = isBetween(r1.x, r2.x, r2.x+r2.width) || isBetween(r1.x+r1.width, r2.x, r2.x+r2.width);
+	const insideY = isBetween(r1.y, r2.y, r2.y+r2.height) || isBetween(r1.y+r1.height, r2.y, r2.y+r2.height);
 
-	var inside = insideX && insideY;
+	const inside = insideX && insideY;
 	return inside;
 }
 
@@ -136,8 +136,8 @@ function degToRad(deg) {
 
 
 function coordsRelativeToElem(elem, xy) {
-	var $elem = $(elem);
-	var elemOffset = $elem.offset();
+	const $elem = $(elem);
+	const elemOffset = $elem.offset();
 	return {
 		x: xy.x - elemOffset.left,
 		y: xy.y - elemOffset.top,
