@@ -1,17 +1,17 @@
 'use strict';
 
-var $ = require('jquery');
-var _ = require('lodash');
-var R = require('ramda');
-var classnames = require('classnames');
-var React = require('react');
-var SchleppMixin = require('./SchleppMixin.js');
-var icons = require('./icons.js');
-var helpers = require('./helpers.js');
-var actionCreators = require('./actionCreators.js');
+let $ = require('jquery');
+let _ = require('lodash');
+let R = require('ramda');
+let classnames = require('classnames');
+let React = require('react');
+let SchleppMixin = require('./SchleppMixin.js');
+let icons = require('./icons.js');
+let helpers = require('./helpers.js');
+let actionCreators = require('./actionCreators.js');
 
 
-var Dropzone = React.createClass({
+let Dropzone = React.createClass({
 	propTypes: {
 		x: React.PropTypes.number.isRequired,
 		y: React.PropTypes.number.isRequired,
@@ -37,7 +37,7 @@ var Dropzone = React.createClass({
 });
 
 
-var Group = React.createClass({
+let Group = React.createClass({
 	mixins: [SchleppMixin],
 
 	propTypes: {
@@ -139,10 +139,10 @@ var Group = React.createClass({
 	},
 
 	componentDidMount: function() {
-		var that = this;
+		let that = this;
 		const props = this.props;
 
-		var elem = this.getDOMNode();
+		let elem = this.getDOMNode();
 		$(elem).on('contextmenu', function(event) {
 			let bgimg = { label: 'image', icon: icons['fa-plus'], action: that.openFileDialog };
 			if (!_.isEmpty(props.group._bgImage)) {
@@ -195,19 +195,19 @@ var Group = React.createClass({
 		$addfile.click();
 	},
 	loadBackgroundFile: function(event) { // TODO: do this elsewhere
-		var that = this;
+		let that = this;
 		const props = this.props;
 
-		var file = $('#add-file')[0].files[0];
-		var reader = new FileReader();
+		let file = $('#add-file')[0].files[0];
+		let reader = new FileReader();
 		reader.onload = function(event) {
-			var svg = event.target.result;
-			var $svg = $($.parseXML(svg)).find('svg').first();
-			var w = parseFloat($svg.attr('width'));
-			var h = parseFloat($svg.attr('height'));
-			var aspectRatio = w / h;
-			// var dataURI = 'data:image/svg+xml;utf8,'+svg;
-			var dataURI = 'data:image/svg+xml;base64,'+btoa(svg);
+			let svg = event.target.result;
+			let $svg = $($.parseXML(svg)).find('svg').first();
+			const w = parseFloat($svg.attr('width'));
+			const h = parseFloat($svg.attr('height'));
+			const aspectRatio = w / h;
+			// const dataURI = 'data:image/svg+xml;utf8,'+svg;
+			const dataURI = 'data:image/svg+xml;base64,'+btoa(svg);
 			props.dispatch( actionCreators.addGroupBackgroundImage(props.group, dataURI, aspectRatio, w) );
 		};
 		// reader.readAsDataURL(file);
@@ -264,8 +264,8 @@ var Group = React.createClass({
 			y: (modelXYEvent.y - this.modelXYEventOrigin.y),
 		};
 
-		var newPositionX = this.originalPositionX + modelXYDelta.x;
-		var newPositionY = this.originalPositionY + modelXYDelta.y;
+		const newPositionX = this.originalPositionX + modelXYDelta.x;
+		const newPositionY = this.originalPositionY + modelXYDelta.y;
 
 		props.dispatch(
 			actionCreators.moveGroup(
