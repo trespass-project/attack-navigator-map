@@ -5,15 +5,11 @@ var React = require('react');
 var SchleppMixin = require('./SchleppMixin.js');
 var helpers = require('./helpers.js');
 var icons = require('./icons.js');
+let actionCreators = require('./actionCreators.js');
 
 
 var ResizeElem = React.createClass({
 	mixins: [SchleppMixin],
-
-	contextTypes: {
-		graphActions: React.PropTypes.object,
-		interfaceActions: React.PropTypes.object
-	},
 
 	render: function() {
 		const props = this.props;
@@ -29,7 +25,6 @@ var ResizeElem = React.createClass({
 
 	_onDragMove: function(event) {
 		const props = this.props;
-		const context = this.context;
 
 		const modelXYEvent = helpers.unTransformFromTo(
 			props.editorElem,
@@ -46,10 +41,12 @@ var ResizeElem = React.createClass({
 		const h2 = h;
 		const w2 = h * props.aspectRatio;
 
-		context.interfaceActions.resizeGroupBackgroundImage(
-			props.group,
-			Math.max(w1, w2),
-			Math.max(h1, h2)
+		props.dispatch(
+			actionCreators.resizeGroupBackgroundImage(
+				props.group,
+				Math.max(w1, w2),
+				Math.max(h1, h2)
+			)
 		);
 	}
 });
@@ -65,7 +62,6 @@ var Group = React.createClass({
 		width: React.PropTypes.number.isRequired,
 		height: React.PropTypes.number.isRequired,
 		theme: React.PropTypes.object.isRequired,
-		flux: React.PropTypes.object.isRequired,
 	},
 
 	getDefaultProps: function() {
@@ -73,11 +69,6 @@ var Group = React.createClass({
 			groupCenterOffsetX: 0,
 			groupCenterOffsetY: 0,
 		};
-	},
-
-	contextTypes: {
-		graphActions: React.PropTypes.object,
-		interfaceActions: React.PropTypes.object
 	},
 
 	render: function() {
@@ -135,17 +126,18 @@ var Group = React.createClass({
 
 	componentDidMount: function() {
 		const props = this.props;
-		const context = this.context;
 		const elem = this.getDOMNode();
 		$(elem).on('contextmenu', function(event) {
 			let menuItems = [
 				{
 					label: 'convert to nodes',
 					icon: icons['fa-magic'],
-					action: function() { context.interfaceActions.backgroundImageToNodes(props.group); }
+					action: function() {
+						props.dispatch( actionCreators.backgroundImageToNodes(props.group) );
+					}
 				}
 			];
-			context.interfaceActions.showContextMenu(event, props.group, menuItems);
+			props.dispatch( actionCreators.showContextMenu(event, props.group, menuItems) );
 			return false;
 		});
 	},
@@ -176,7 +168,6 @@ var Group = React.createClass({
 
 	_onDragMove: function(event) {
 		const props = this.props;
-		const context = this.context;
 
 		const modelXYEvent = helpers.unTransformFromTo(
 			props.editorElem,
@@ -190,12 +181,14 @@ var Group = React.createClass({
 			y: (modelXYEvent.y - this.modelXYEventOrigin.y),
 		};
 
-		context.interfaceActions.moveImage(
-			this.props.group,
-			{
-				groupCenterOffsetX: this.originalPositionX + modelXYDelta.x,
-				groupCenterOffsetY: this.originalPositionY + modelXYDelta.y
-			}
+		props.dispatch(
+			actionCreators.moveImage(
+				this.props.group,
+				{
+					groupCenterOffsetX: this.originalPositionX + modelXYDelta.x,
+					groupCenterOffsetY: this.originalPositionY + modelXYDelta.y
+				}
+			)
 		);
 	},
 
