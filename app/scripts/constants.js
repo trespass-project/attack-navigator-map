@@ -1,3 +1,5 @@
+'use strict';
+
 const constants = {
 	GRAPH: 'graph',
 	INTERFACE: 'interface',

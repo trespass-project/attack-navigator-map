@@ -54,14 +54,15 @@ function reducer(state=initialState, action) {
 	const mergeWithState = R.partial(mergeWith, [state]);
 
 	const blacklist = [
-		constants.ACTION_setMouseOverEditor
+		constants.ACTION_setMouseOverEditor,
+		constants.ACTION_hideContextMenu
 	];
 	if (!R.contains(action.type, blacklist)) {
-		console.log(action);
+		console.log(action.type, R.omit('type', action));
 	}
 
 	switch (action.type) {
-		case constants.ACTION_setEditorElem:
+		case constants.ACTION_setEditorElem: {
 			const {elem} = action;
 			const editorElem = elem;
 			const editorTransformElem = $(elem).children('g').first()[0];
@@ -76,6 +77,7 @@ function reducer(state=initialState, action) {
 			}
 
 			return mergeWithState({editorElem, editorTransformElem, editorElemSize});
+		}
 
 		case constants.ACTION_select:
 			return mergeWithState({
@@ -98,7 +100,7 @@ function reducer(state=initialState, action) {
 		case constants.ACTION_setShowEdges:
 			return mergeWithState({ showEdges: action.yesno });
 
-		case constants.ACTION_setTransformation:
+		case constants.ACTION_setTransformation: {
 			let {scale/*, panX, panY*/} = action.transformation;
 
 			let showEdgeLabels = false;
@@ -132,6 +134,7 @@ function reducer(state=initialState, action) {
 				action.transformation
 			);
 			return mergeWithState(mergeThis);
+		}
 
 		case constants.ACTION_setPreviewEdge:
 			return mergeWithState({ previewEdge: action.previewEdge });
