@@ -22,7 +22,7 @@
 		"eqeqeq": 1,
 		"key-spacing": 1,
 		"new-cap": 1,
-		"no-extra-boolean-cast": 1,
+		"no-extra-boolean-cast": 0,
 		"no-mixed-spaces-and-tabs": 0,
 		"no-multi-spaces": 0,
 		"no-use-before-define": 1,

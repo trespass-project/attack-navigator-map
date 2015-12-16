@@ -93,7 +93,7 @@ function(fragment) {
 	});
 
 	return fragment;
-}
+};
 
 
 let XMLModelToObject =
