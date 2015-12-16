@@ -1,16 +1,16 @@
 'use strict';
 
-var React = require('react');
-// var d3 = require('d3');
-var $ = require('jquery');
-var mout = require('mout');
-var classnames = require('classnames');
-var icons = require('./icons.js');
-var helpers = require('./helpers.js');
+let React = require('react');
+// let d3 = require('d3');
+let $ = require('jquery');
+let mout = require('mout');
+let classnames = require('classnames');
+let icons = require('./icons.js');
+let helpers = require('./helpers.js');
 let actionCreators = require('./actionCreators.js');
 
 
-// var diagonal = d3.svg.diagonal()
+// let diagonal = d3.svg.diagonal()
 // 	.source(function(d) { return d.fromNode; })
 // 	.target(function(d) { return d.toNode; });
 
@@ -26,7 +26,7 @@ function pathifyBezier(p1, c1, c2, p2) {
 
 
 function diagonalBezier(p1, p2) {
-	// var m = (p1.y + p2.y) / 2;
+	// const m = (p1.y + p2.y) / 2;
 	const m = p1.y + ((p2.y - p1.y) / 2);
 	const c1 = { x: p1.x, y: m };
 	const c2 = { x: p2.x, y: m };
@@ -66,7 +66,7 @@ function bezierPoint(p1, c1, c2, p2, t) {
 }
 
 
-var Edge = React.createClass({
+let Edge = React.createClass({
 	propTypes: {
 		edge: React.PropTypes.object.isRequired,
 		theme: React.PropTypes.object.isRequired,
@@ -88,7 +88,7 @@ var Edge = React.createClass({
 		if (!props.showEdgeLabels) { return null; }
 
 		const t = 0.5;
-		var center = {
+		const center = {
 			x: mout.math.lerp(t, edgeNodes.fromNode.x, edgeNodes.toNode.x),
 			y: mout.math.lerp(t, edgeNodes.fromNode.y, edgeNodes.toNode.y),
 		};
@@ -138,14 +138,14 @@ var Edge = React.createClass({
 
 		let arrow = null;
 		if (edge.directed) {
-			var arrowPosition = bezierPoint(p1, c1, c2, p2, 0.75);
-			var size = 10;
-			var x = arrowPosition.x;
-			var y = arrowPosition.y;
+			const arrowPosition = bezierPoint(p1, c1, c2, p2, 0.75);
+			const size = 10;
+			const x = arrowPosition.x;
+			const y = arrowPosition.y;
 
-			var arrowShape = arrowHead(size);
+			const arrowShape = arrowHead(size);
 
-			var angleDeg = vectorAngle(edgeNodes.toNode.x - edgeNodes.fromNode.x, edgeNodes.toNode.y - edgeNodes.fromNode.y);
+			let angleDeg = vectorAngle(edgeNodes.toNode.x - edgeNodes.fromNode.x, edgeNodes.toNode.y - edgeNodes.fromNode.y);
 			angleDeg = radians(angleDeg);
 
 			arrow = (
@@ -170,7 +170,7 @@ var Edge = React.createClass({
 	},
 
 	componentDidMount: function() {
-		var that = this;
+		let that = this;
 		const props = this.props;
 
 		$(this.getDOMNode()).on('contextmenu', function(event) {
