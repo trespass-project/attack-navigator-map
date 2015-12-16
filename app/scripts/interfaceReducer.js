@@ -65,11 +65,11 @@ function reducer(state=initialState, action) {
 		case constants.ACTION_setEditorElem: {
 			const {elem} = action;
 			const editorElem = elem;
-			const editorTransformElem = $(elem).children('g').first()[0];
+			const $editor = $(editorElem);
+			const editorTransformElem = $editor.children('g').first()[0];
 			let editorElemSize = state.editorElemSize || null;
 
 			if (!state.editorElem) {
-				const $editor = $(editorElem);
 				editorElemSize = {
 					width: $editor.width(),
 					height: $editor.height(),
@@ -139,8 +139,10 @@ function reducer(state=initialState, action) {
 		case constants.ACTION_setPreviewEdge:
 			return mergeWithState({ previewEdge: action.previewEdge });
 
-		case constants.ACTION_setDrag:
-			return mergeWithState({ drag: action.data });
+		case constants.ACTION_setDrag: {
+			const newState = _.merge({}, state, { drag: action.data });
+			return newState;
+		}
 
 		case constants.ACTION_setDragNode:
 			return mergeWithState({ dragNode: action.node });

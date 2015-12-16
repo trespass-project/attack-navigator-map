@@ -150,7 +150,7 @@ let Group = React.createClass({
 				};
 			}
 
-			let menuItems = [
+			const menuItems = [
 				{ label: 'delete', destructive: true, icon: icons['fa-trash'], action:
 					function(/*event*/) {
 						props.dispatch( actionCreators.removeGroup(props.group, true) );

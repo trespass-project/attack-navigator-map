@@ -16,110 +16,6 @@ var klay = require('klayjs');
 module.exports =
 class InterfaceStore extends Store {
 
-	constructor(flux) {
-		super();
-		let that = this;
-
-		_.pairs(flux.getActionIds(constants.INTERFACE))
-			.forEach(function(pair, index, collection) {
-				let key = pair[0];
-				let actionId = pair[1];
-				that.register(actionId, that[key]);
-			});
-
-		this.graphStore = flux.getStore(constants.GRAPH); // TODO: is this bad practice?
-
-		this.state = {
-			drag: null,
-			dragNode: null,
-			hoverNode: null,
-			hoverGroup: null,
-			previewEdge: null,
-
-			spacePressed: false,
-			mouseOverEditor: false,
-			panning: false,
-			pannable: false,
-
-			interfaceMode: 'light', // pro
-			wizard: {
-				selectedSection: 'import'
-			},
-
-			showEdgeLabels: true,
-			showNodeLabels: true,
-			showGroupLabels: true,
-			showImages: true,
-			showEdges: true,
-			showGroups: true,
-			contextMenu: null,
-
-			selected: null,
-
-			editorElem: null,
-			editorTransformElem: null,
-			editorElemSize: null,
-			visibleRect: null,
-
-			theme,
-			scale: 1,
-			panX: 0,
-			panY: 0,
-		};
-	}
-
-	setEditorElem(action) {
-		let {elem} = action;
-
-		const editorElem = elem;
-		const editorTransformElem = $(elem).children('g').first()[0];
-
-		let editorElemSize = this.state.editorElemSize || null;
-		if (!this.state.editorElem) {
-			const $editor = $(editorElem);
-			editorElemSize = {
-				width: $editor.width(),
-				height: $editor.height(),
-			};
-		}
-
-		this.setState({
-			editorElem,
-			editorTransformElem,
-			editorElemSize
-		});
-	}
-
-	select(action) {
-		this.setState({ selected: action });
-	}
-
-	showContextMenu(action) {
-		let {event, context, menuItems} = action;
-		let props = {
-			x: event.offsetX,
-			y: event.offsetY,
-			context,
-			menuItems
-		};
-		this.setState({ contextMenu: props });
-	}
-	hideContextMenu() {
-		this.setState({ contextMenu: null });
-	}
-
-	setShowGroups(action) {
-		this.setState({ showGroups: action.yesno });
-	}
-
-	setShowImages(action) {
-		this.setState({ showImages: action.yesno });
-	}
-
-	setShowEdges(action) {
-		this.setState({ showEdges: action.yesno });
-	}
-
 	removeGroupBackgroundImage(action) {
 		let {group} = action;
 		delete group._bgImage;
@@ -330,30 +226,6 @@ class InterfaceStore extends Store {
 		});
 	}
 
-	setPreviewEdge(action) {
-		let {edge} = action;
-		this.setState({ previewEdge: edge });
-	}
-
-	setDrag(action) {
-		this.setState({ drag: action });
-	}
-
-	setDragNode(action) {
-		let {node} = action;
-		this.setState({ dragNode: node });
-	}
-
-	setHoverNode(action) {
-		let {node} = action;
-		this.setState({ hoverNode: node });
-	}
-
-	setHoverGroup(action) {
-		let {group} = action;
-		this.setState({ hoverGroup: group });
-	}
-
 	moveNode(action) {
 		let {node, newPos} = action;
 		node.x = newPos.x;
@@ -383,26 +255,6 @@ class InterfaceStore extends Store {
 		group._bgImage.groupCenterOffsetY = newPos.groupCenterOffsetY;
 
 		this.graphStore._updateModel();
-	}
-
-	setSpacePressed(action) {
-		this.setState({ spacePressed: action.yesno });
-	}
-
-	setMouseOverEditor(action) {
-		this.setState({ mouseOverEditor: action.yesno });
-	}
-
-	setPanning(action) {
-		this.setState({ panning: action.yesno });
-	}
-
-	setPannable(action) {
-		this.setState({ pannable: action.yesno });
-	}
-
-	setSelectWizardStep(action) {
-		this.setState({ wizard: { selectedSection: action.name } });
 	}
 
 };

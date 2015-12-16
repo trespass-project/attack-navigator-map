@@ -32,122 +32,9 @@ var graph = {
 	groups: [],
 };
 
-// graph.nodes = R.map(
-// 	function(i) {
-// 		return {
-// 			label: i+'',
-// 			id: i+'',
-// 			type: _.sample(types),
-// 			x: Math.random() * 400,
-// 			y: Math.random() * 400,
-// 		};
-// 	},
-// 	R.range(0, 5)
-// );
-
-// graph.groups = [
-// 	{
-// 		name: 'group 1',
-// 		id: 'group1',
-// 		nodeIds: ['1', '2'/*, '4'*/],
-// 		_bgImage: {
-// 			url: dirs['images']+'/floorplan2.svg'
-// 		}
-// 	},
-// 	{
-// 		name: 'group 2',
-// 		id: 'group2',
-// 		nodeIds: ['3', '0']
-// 	}
-// ];
-
-// graph.edges = [
-// 	{
-// 		id: 'edge1',
-// 		from: graph.nodes[0].id,
-// 		to: graph.nodes[1].id,
-// 		relation: 'edge'
-// 	}
-// ];
-
 
 module.exports =
 class GraphStore extends Store {
-
-	constructor(flux) {
-		super();
-		let that = this;
-
-		_.pairs(flux.getActionIds(constants.GRAPH))
-			.forEach(function(pair, index, collection) {
-				let key = pair[0];
-				let actionId = pair[1];
-				that.register(actionId, that[key]);
-			});
-
-		this.state = {
-			graph,
-			model: null
-		};
-
-		this._updateModel();
-	}
-
-	_updateModel(graph) {
-		graph = graph || this.state.graph;
-		var model = trespass.model.create();
-
-		graph.edges.forEach(function(edge) {
-			var e = {
-				// TODO: ?
-				_relation: edge.relation || null,
-				source: edge.from,
-				target: edge.to,
-			};
-			trespass.model.addEdge(model, e);
-		});
-
-		graph.nodes.forEach(function(node) {
-			try {
-				switch (node.type) {
-					case 'location':
-						trespass.model.addLocation(model, node);
-						break;
-					// case 'asset':
-					case 'item':
-						trespass.model.addItem(model, node);
-						break;
-					case 'data':
-						trespass.model.addData(model, node);
-						break;
-					case 'actor':
-						trespass.model.addActor(model, node);
-						break;
-					case 'role':
-						trespass.model.addRole(model, node);
-						break;
-					case 'predicate':
-						trespass.model.addPredicate(model, node);
-						break;
-					case 'process':
-						trespass.model.addProcess(model, node);
-						break;
-					case 'policy':
-						trespass.model.addPolicy(model, node);
-						break;
-					default: // TODO
-						break;
-				}
-			} catch (e) {
-				// console.error(e.message);
-			}
-		});
-
-		this.setState({
-			graph: graph,
-			model: model,
-		});
-	}
 
 	loadModel(action) {
 		var that = this;
@@ -361,34 +248,6 @@ class GraphStore extends Store {
 		}
 		let model = trespass.model[method](this.state.model, data);
 		this.setState({ model: model });
-	}
-
-	importModelFragment(action) {
-		let {nodes, edges, groups} = action.fragment;
-		let xy = action.xy || { x: 0, y: 0 };
-		let graph = this.state.graph;
-
-		if (!!nodes) {
-			nodes.forEach(function(node, index) {
-				node.x = xy.x + (node.x || index*60);
-				node.y = xy.y + (node.y || index*30);
-				graph.nodes.push(node);
-			});
-		}
-
-		if (!!groups) {
-			groups.forEach(function(group, index) {
-				graph.groups.push(group);
-			});
-		}
-
-		if (!!edges) {
-			edges.forEach(function(edge, index) {
-				graph.edges.push(edge);
-			});
-		}
-
-		this._updateModel(graph);
 	}
 
 	addEdge(action) {

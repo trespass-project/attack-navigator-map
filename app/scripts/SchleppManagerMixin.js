@@ -1,20 +1,21 @@
 'use strict';
 
 let $ = require('jquery');
+let _ = require('lodash');
 let React = require('react');
 let helpers = require('./helpers.js');
 let actionCreators = require('./actionCreators.js');
 
 
 let SchleppManagerMixin = {
+	propTypes: {
+		drag: React.PropTypes.object.isRequired,
+	},
+
 	componentDidMount: function() {
 		const props = this.props;
 
-		let elem = helpers.getElemByRef(this, 'dragRoot');
-		let $elem = $(elem);
-
 		let $body = $('body');
-
 		$body.on('keydown', function(event) {
 			if (event.keyCode === 32) {
 				if (props.mouseOverEditor) {
@@ -38,6 +39,8 @@ let SchleppManagerMixin = {
 			}
 		});
 
+		let elem = helpers.getElemByRef(this, 'dragRoot');
+		let $elem = $(elem);
 		$elem.on('mousemove', function(event) {
 			event.preventDefault();
 			event.stopPropagation();
@@ -67,15 +70,13 @@ let SchleppManagerMixin = {
 	},
 
 	componentWillUnmount: function() {
-		let elem = helpers.getElemByRef(this, 'dragRoot');
-		let $elem = $(elem);
-
 		let $body = $('body');
-
 		$body
 			.off('keydown')
 			.off('keyup');
 
+		let elem = helpers.getElemByRef(this, 'dragRoot');
+		let $elem = $(elem);
 		$elem
 			.off('mousedown')
 			.off('mousemove')
