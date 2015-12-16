@@ -227,7 +227,7 @@ module.exports.loadXMLFile =
 function(file) {
 	return function(dispatch, getState) {
 		const action = {
-			type: constants.Action_loadXMLFile,
+			type: constants.ACTION_loadXMLFile,
 			file,
 		};
 		dispatch(action);
@@ -248,7 +248,7 @@ const loadXML =
 module.exports.loadXML =
 function(xmlString) {
 	return {
-		type: constants.Action_loadXML,
+		type: constants.ACTION_loadXML,
 		xml: xmlString,
 	};
 };
