@@ -1,12 +1,12 @@
 'use strict';
 
-var React = require('react');
-var SchleppMixin = require('./SchleppMixin.js');
-var helpers = require('./helpers.js');
+let React = require('react');
+let SchleppMixin = require('./SchleppMixin.js');
+let helpers = require('./helpers.js');
 let actionCreators = require('./actionCreators.js');
 
 
-var Port = React.createClass({
+let Port = React.createClass({
 	mixins: [SchleppMixin],
 
 	propTypes: {
