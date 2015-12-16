@@ -74,7 +74,7 @@ function select(it, itsType) {
 	return {
 		type: constants.ACTION_select,
 		selected: it,
-		itsType // TODO: is this used?
+		itsType: itsType,
 	};
 };
 

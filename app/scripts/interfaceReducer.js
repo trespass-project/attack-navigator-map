@@ -78,7 +78,12 @@ function reducer(state=initialState, action) {
 			return mergeWithState({editorElem, editorTransformElem, editorElemSize});
 
 		case constants.ACTION_select:
-			return mergeWithState({ selected: action.selected });
+			return mergeWithState({
+				selected: {
+					it: action.selected,
+					type: action.itsType,
+				},
+			});
 
 		case constants.ACTION_showContextMenu:
 		case constants.ACTION_hideContextMenu:
