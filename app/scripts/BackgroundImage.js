@@ -1,14 +1,14 @@
 'use strict';
 
-var $ = require('jquery');
-var React = require('react');
-var SchleppMixin = require('./SchleppMixin.js');
-var helpers = require('./helpers.js');
-var icons = require('./icons.js');
+let $ = require('jquery');
+let React = require('react');
+let SchleppMixin = require('./SchleppMixin.js');
+let helpers = require('./helpers.js');
+let icons = require('./icons.js');
 let actionCreators = require('./actionCreators.js');
 
 
-var ResizeElem = React.createClass({
+let ResizeElem = React.createClass({
 	mixins: [SchleppMixin],
 
 	render: function() {
@@ -52,7 +52,7 @@ var ResizeElem = React.createClass({
 });
 
 
-var Group = React.createClass({
+let Group = React.createClass({
 	mixins: [SchleppMixin],
 
 	propTypes: {
@@ -72,27 +72,27 @@ var Group = React.createClass({
 	},
 
 	render: function() {
-		var props = this.props;
+		const props = this.props;
 		if (!props.showImages || !props.showGroups) { return null; }
 
 		// TODO: DRY
-		var bounds = helpers.getGroupBBox(props.graph.nodes, props.group);
+		let bounds = helpers.getGroupBBox(props.graph.nodes, props.group);
 		bounds.minX -= props.theme.node.size*0.5;
 		bounds.minY -= props.theme.node.size*0.5;
 		bounds.maxX += props.theme.node.size*0.5;
 		bounds.maxY += props.theme.node.size*0.5;
-		var groupCenter = {
+		const groupCenter = {
 			x: bounds.minX + (bounds.maxX - bounds.maxX) * 0.5,
 			y: bounds.minY + (bounds.maxY - bounds.maxY) * 0.5,
 		};
-		var x = groupCenter.x + props.groupCenterOffsetX;
-		var y = groupCenter.y + props.groupCenterOffsetY;
+		const x = groupCenter.x + props.groupCenterOffsetX;
+		const y = groupCenter.y + props.groupCenterOffsetY;
 
-		var width = props.width;
-		var height = props.height;
-		var aspectRatio = width / height;
+		const width = props.width;
+		const height = props.height;
+		const aspectRatio = width / height;
 
-		var img = '<image class="background-image" xlink:href="'+props.group._bgImage.url+'" x="'+0+'" y="'+0+'" height="'+height+'" width="'+width+'"/>';
+		const img = '<image class="background-image" xlink:href="'+props.group._bgImage.url+'" x="'+0+'" y="'+0+'" height="'+height+'" width="'+width+'"/>';
 
 		return (
 			<g transform={'translate('+x+','+y+')'}
@@ -106,8 +106,8 @@ var Group = React.createClass({
 
 	renderResizeElem: function(imgX, imgY, aspectRatio) {
 		if (!this.state.hover) { return null; }
-		var props = this.props;
-		var size = 50;
+		const props = this.props;
+		const size = 50;
 		return <ResizeElem
 			{...props}
 			x={props.width-size}
