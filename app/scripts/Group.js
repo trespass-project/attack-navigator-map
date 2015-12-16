@@ -22,9 +22,7 @@ let Dropzone = React.createClass({
 	render: function() {
 		const props = this.props;
 		return (
-			<g
-				transform={'translate('+props.x+','+props.y+')'}
-			>
+			<g transform={'translate('+props.x+','+props.y+')'}>
 				<circle
 					className='dropzone'
 					cx={0}
