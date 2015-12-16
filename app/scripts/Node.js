@@ -8,6 +8,7 @@ var SchleppMixin = require('./SchleppMixin.js');
 var Port = require('./Port.js');
 var icons = require('./icons.js');
 var helpers = require('./helpers.js');
+var actionCreators = require('./actionCreators.js');
 
 
 const typeIcons = {
@@ -41,14 +42,10 @@ var Node = React.createClass({
 		};
 	},
 
-	contextTypes: {
-		graphActions: React.PropTypes.object,
-		interfaceActions: React.PropTypes.object
-	},
-
 	renderIcon: function() {
-		if (!this.props.showGroupLabels) { return null; }
-		const icon = icons[typeIcons[this.props.node.type]];
+		const props = this.props;
+		if (!props.showGroupLabels) { return null; }
+		const icon = icons[typeIcons[props.node.type]];
 		return <text
 			ref='icon'
 			className='icon fa'
@@ -58,10 +55,11 @@ var Node = React.createClass({
 	},
 
 	renderLabel: function() {
-		if (!this.props.showGroupLabels) { return null; }
-		let label = this.props.node.label || 'no label';
+		const props = this.props;
+		if (!props.showGroupLabels) { return null; }
+		let label = props.node.label || 'no label';
 		label = helpers.ellipsize(15, label);
-		return <text ref='label' className='label' x='0' y={2+this.props.theme.node.size*0.5}>{label}</text>;
+		return <text ref='label' className='label' x='0' y={2+props.theme.node.size*0.5}>{label}</text>;
 	},
 
 	render: function() {
@@ -104,26 +102,29 @@ var Node = React.createClass({
 
 	componentDidMount: function() {
 		const props = this.props;
-		const context = this.context;
 
 		$(this.getDOMNode()).on('contextmenu', function(event) {
 			let menuItems = [
 				{	label: 'delete',
 					icon: icons['fa-trash'],
-					action: function() { context.graphActions.removeNode(props.node); }
-				},
-				{	label: 'clone', icon: icons['fa-files-o'], action:
-					function() {
-						context.graphActions.cloneNode(props.node);
+					action: function() {
+						props.dispatch( actionCreators.removeNode(props.node) );
 					}
 				},
-				{	label: 'remove\nfrom group', icon: icons['fa-object-group'], action:
-					function() {
-						context.graphActions.ungroupNode(props.node);
+				{	label: 'clone',
+					icon: icons['fa-files-o'],
+					action: function() {
+						props.dispatch( actionCreators.cloneNode(props.node) );
+					}
+				},
+				{	label: 'remove\nfrom group',
+					icon: icons['fa-object-group'],
+					action: function() {
+						props.dispatch( actionCreators.ungroupNode(props.node) );
 					}
 				},
 			];
-			context.interfaceActions.showContextMenu(event, props.group, menuItems);
+			props.dispatch( actionCreators.showContextMenu(event, props.group, menuItems) );
 			return false;
 		});
 	},
@@ -160,16 +161,17 @@ var Node = React.createClass({
 	// },
 
 	_onClick: function(event) {
+		const props = this.props;
 		event.preventDefault();
 		event.stopPropagation();
-		this.context.interfaceActions.select(this.props.node, 'node');
+		props.dispatch( actionCreators.select(props.node, 'node') );
 	},
 
 	_onDragStart: function(event) {
 		const props = this.props;
 		const node = props.node;
 
-		this.context.interfaceActions.setDragNode(node);
+		props.dispatch( actionCreators.setDragNode(node) );
 
 		this.originalPositionX = node.x;
 		this.originalPositionY = node.y;
@@ -198,11 +200,13 @@ var Node = React.createClass({
 			y: (modelXYEvent.y - this.modelXYEventOrigin.y),
 		};
 
-		this.context.interfaceActions.moveNode(
-			this.props.node, {
-				x: this.originalPositionX + modelXYDelta.x,
-				y: this.originalPositionY + modelXYDelta.y,
-			}
+		props.dispatch(
+			actionCreators.moveNode(
+				props.node, {
+					x: this.originalPositionX + modelXYDelta.x,
+					y: this.originalPositionY + modelXYDelta.y,
+				}
+			)
 		);
 	},
 
@@ -240,18 +244,20 @@ var Node = React.createClass({
 			return false;
 		});
 		if (dropGroups.length) {
-			this.context.graphActions.addNodeToGroup(node, R.last(dropGroups));
+			props.dispatch( actionCreators.addNodeToGroup(node, R.last(dropGroups)) );
 		}
 
-		this.context.interfaceActions.setDragNode(null);
+		props.dispatch( actionCreators.setDragNode(null) );
 	},
 
 	_handleHover: function(event) {
-		this.context.interfaceActions.setHoverNode(this.props.node);
+		const props = this.props;
+		props.dispatch( actionCreators.setHoverNode(props.node) );
 	},
 
 	_handleHoverOut: function(event) {
-		this.context.interfaceActions.setHoverNode(null);
+		const props = this.props;
+		props.dispatch( actionCreators.setHoverNode(null) );
 	}
 });
 
