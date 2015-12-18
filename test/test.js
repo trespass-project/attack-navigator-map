@@ -90,7 +90,7 @@ describe(f1('model-helpers.js'), function() {
 			assert(newGraph.nodes.length === 0);
 		});
 
-		it(f3('should remove nodes'), function() {
+		it(f3('should leave nodes alone'), function() {
 			const nodeId = 'node-id';
 			const groupId = 'group-id';
 			let graph = {
