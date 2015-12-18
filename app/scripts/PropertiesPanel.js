@@ -10,25 +10,25 @@ let constants = require('./constants.js');
 let PropertiesPanel = React.createClass({
 	propTypes: {
 		relationsLibUrl: React.PropTypes.string.isRequired,
+		id: React.PropTypes.string.isRequired,
+		graph: React.PropTypes.object.isRequired,
+		selected: React.PropTypes.object.isRequired,
+		dispatch: React.PropTypes.func.isRequired,
 	},
 
-	getDefaultProps: function() {
-		return {
-			//
-		};
-	},
+	// getDefaultProps: function() {
+	// 	return {};
+	// },
 
 	_onChange: function(data, event) {
 		data[event.target.name] = event.target.value;
 
-		// TODO:
 		if (!!data.relation) { // it's an edge
+			// TODO: handle this elsewhere
 			data.directed = (R.contains(data.relation, ['network', 'connects'])) ? false : true;
 		}
 
-		// TODO: less hacky?
-		this.props.flux.getStore(constants.GRAPH)
-			._updateModel(this.props.graph);
+		// TODO: action → update item
 	},
 
 	_onSubmit: function(event) {
@@ -50,8 +50,9 @@ let PropertiesPanel = React.createClass({
 			});
 	},
 
-	renderProperties: function(args) {
+	renderProperties: function() {
 		const props = this.props;
+
 		if (!props.selected) { return null; }
 
 		switch (props.selected.type) {

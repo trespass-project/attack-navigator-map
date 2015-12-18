@@ -38,8 +38,12 @@ let Wizard = React.createClass({
 
 	renderProperties: function(props) {
 		return <PropertiesPanel
+			id='propspanel'
+			selected={props.selected}
+			graph={props.graph}
+			dispatch={props.dispatch}
 			relationsLibUrl={apiUrl(api.relations.url)}
-			id='propspanel' />;
+		/>;
 	},
 
 	renderImport: function(props) {
