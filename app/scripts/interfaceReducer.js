@@ -4,6 +4,7 @@ let $ = require('jquery');
 let R = require('ramda');
 let _ = require('lodash');
 const mergeWith = require('./reducer-utils.js').mergeWith;
+const omitType = require('./reducer-utils.js').omitType;
 const constants = require('./constants.js');
 let helpers = require('./helpers.js');
 const theme = require('./graph-theme-default.js');
@@ -49,16 +50,22 @@ const initialState = {
 };
 
 
+const blacklist = [
+	constants.ACTION_setMouseOverEditor,
+	constants.ACTION_hideContextMenu,
+	constants.ACTION_moveNode,
+	constants.ACTION_setHoverNode,
+	constants.ACTION_setHoverGroup,
+	constants.ACTION_setTransformation
+];
+
+
 module.exports =
 function reducer(state=initialState, action) {
 	const mergeWithState = R.partial(mergeWith, [state]);
 
-	const blacklist = [
-		constants.ACTION_setMouseOverEditor,
-		constants.ACTION_hideContextMenu
-	];
 	if (!R.contains(action.type, blacklist)) {
-		console.log(action.type, R.omit('type', action));
+		console.log(action.type, omitType(action));
 	}
 
 	switch (action.type) {

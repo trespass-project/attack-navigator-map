@@ -4,7 +4,8 @@ var R = require('ramda');
 var _ = require('lodash');
 
 
-const omitType = R.omit(['type']);
+const omitType =
+module.exports.omitType = R.omit(['type']);
 
 const mergeWith =
 module.exports.mergeWith =
