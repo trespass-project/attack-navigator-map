@@ -4,7 +4,7 @@ let $ = require('jquery');
 let React = require('react');
 let R = require('ramda');
 let helpers = require('./helpers.js');
-let constants = require('./constants.js');
+const constants = require('./constants.js');
 
 
 let PropertiesPanel = React.createClass({

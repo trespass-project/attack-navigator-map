@@ -87,15 +87,20 @@ function distBetweenPoints(a, b) {
 }
 
 
+function isBetween(what, low, high) {
+	return (what >= low) && (what <= high);
+}
+
+
 function isRectInsideRect(r1, r2) {
 	// expects a rect to have: x, y, width, height
 
-	function isBetween(what, low, high) {
-		return (what >= low) && (what <= high);
-	}
-
-	const insideX = isBetween(r1.x, r2.x, r2.x+r2.width) || isBetween(r1.x+r1.width, r2.x, r2.x+r2.width);
-	const insideY = isBetween(r1.y, r2.y, r2.y+r2.height) || isBetween(r1.y+r1.height, r2.y, r2.y+r2.height);
+	const insideX =
+		isBetween(r1.x, r2.x, r2.x+r2.width) ||
+		isBetween(r1.x+r1.width, r2.x, r2.x+r2.width);
+	const insideY =
+		isBetween(r1.y, r2.y, r2.y+r2.height) ||
+		isBetween(r1.y+r1.height, r2.y, r2.y+r2.height);
 
 	const inside = insideX && insideY;
 	return inside;

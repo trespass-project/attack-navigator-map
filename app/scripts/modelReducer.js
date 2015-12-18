@@ -22,7 +22,7 @@ const initialState = {
 
 const modelFromGraph = _.debounce(
 	modelHelpers.modelFromGraph,
-	2000,
+	1000,
 	{ leading: true, trailing: true }
 );
 
@@ -78,6 +78,7 @@ function reducer(state=initialState, action) {
 
 		case constants.ACTION_moveGroup: {
 			const {group, posDelta} = action;
+
 			// TODO: is this necessary?
 			let newState = _.merge({}, state);
 			group.nodeIds
@@ -95,7 +96,6 @@ function reducer(state=initialState, action) {
 			// TODO: is this necessary?
 			let newState = _.merge({}, state);
 			newState.graph.edges.push( _.merge(edge, { id: helpers.makeId(0, 'edge') }) );
-
 			return newState;
 		}
 
