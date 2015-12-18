@@ -299,18 +299,7 @@ class GraphStore extends Store {
 		this.importModelFragment({fragment});
 	}
 
-	addGroup(action) {
-		let {group} = action;
 
-		group = _.defaults(group, {
-			id: helpers.makeId(),
-			label: 'new group',
-			nodeIds: []
-		});
-
-		this.state.graph.groups.push(group);
-		this._updateModel();
-	}
 
 	removeGroup(action) {
 		let that = this;

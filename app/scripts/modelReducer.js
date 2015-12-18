@@ -99,6 +99,21 @@ function reducer(state=initialState, action) {
 			return newState;
 		}
 
+		case constants.ACTION_addGroup: {
+			const {group} = action;
+
+			// TODO: is this necessary?
+			let newState = _.merge({}, state);
+			newState.graph.groups.push(
+				_.merge(group, {
+					id: helpers.makeId(0, 'group'),
+					label: 'new group',
+					nodeIds: []
+				})
+			);
+			return newState;
+		}
+
 		default: {
 			return state;
 		}

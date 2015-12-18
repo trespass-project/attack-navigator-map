@@ -298,6 +298,16 @@ function(edge) {
 };
 
 
+const addGroup =
+module.exports.addGroup =
+function(group) {
+	return {
+		type: constants.ACTION_addGroup,
+		group
+	};
+};
+
+
 // ——————————
 /*
 module.exports.openDir =

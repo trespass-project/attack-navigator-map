@@ -36,6 +36,7 @@ const constants = {
 	ACTION_setHoverNode: 'ACTION_setHoverNode',
 	ACTION_setHoverGroup: 'ACTION_setHoverGroup',
 	ACTION_moveNode: 'ACTION_moveNode',
+	ACTION_addGroup: 'ACTION_addGroup',
 	ACTION_moveGroup: 'ACTION_moveGroup',
 	ACTION_moveImage: 'ACTION_moveImage',
 	ACTION_setSpacePressed: 'ACTION_setSpacePressed',
