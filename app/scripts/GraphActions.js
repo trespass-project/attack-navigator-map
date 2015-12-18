@@ -31,14 +31,6 @@ class GraphActions extends Actions {
 
 	// —————
 
-	importModelFragment(fragment, xy) {
-		return {fragment, xy};
-	}
-
-	addEdge(edge) {
-		return {edge};
-	}
-
 	removeEdge(edge) {
 		return {edge};
 	}

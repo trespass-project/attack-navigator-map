@@ -288,6 +288,16 @@ function(xmlString) {
 };
 
 
+const addEdge =
+module.exports.addEdge =
+function(edge) {
+	return {
+		type: constants.ACTION_addEdge,
+		edge
+	};
+};
+
+
 // ——————————
 /*
 module.exports.openDir =

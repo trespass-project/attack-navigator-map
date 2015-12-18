@@ -51,6 +51,7 @@ const initialState = {
 
 
 const blacklist = [
+	constants.ACTION_setEditorElem,
 	constants.ACTION_setMouseOverEditor,
 	constants.ACTION_hideContextMenu,
 	constants.ACTION_moveNode,

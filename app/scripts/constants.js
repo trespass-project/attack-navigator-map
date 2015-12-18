@@ -47,6 +47,7 @@ const constants = {
 	ACTION_loadXMLFile: 'ACTION_loadXMLFile',
 	ACTION_loadXML: 'ACTION_loadXML',
 	ACTION_updateModel: 'ACTION_updateModel',
+	ACTION_addEdge: 'ACTION_addEdge',
 };
 
 

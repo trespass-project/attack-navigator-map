@@ -250,15 +250,6 @@ class GraphStore extends Store {
 		this.setState({ model: model });
 	}
 
-	addEdge(action) {
-		let {edge} = action;
-		_.defaults(edge, {
-			id: helpers.makeId()
-		});
-		this.state.graph.edges.push(edge);
-		this._updateModel();
-	}
-
 	removeEdge(action) {
 		let {edge} = action;
 		this.state.graph.edges = this.state.graph.edges.filter(function(e) {

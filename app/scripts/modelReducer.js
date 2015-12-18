@@ -78,6 +78,7 @@ function reducer(state=initialState, action) {
 
 		case constants.ACTION_moveGroup: {
 			const {group, posDelta} = action;
+			// TODO: is this necessary?
 			let newState = _.merge({}, state);
 			group.nodeIds
 				.forEach(function(id) {
@@ -85,6 +86,16 @@ function reducer(state=initialState, action) {
 					node.x += posDelta.x;
 					node.y += posDelta.y;
 				});
+			return newState;
+		}
+
+		case constants.ACTION_addEdge: {
+			const {edge} = action;
+
+			// TODO: is this necessary?
+			let newState = _.merge({}, state);
+			newState.graph.edges.push( _.merge(edge, { id: helpers.makeId(0, 'edge') }) );
+
 			return newState;
 		}
 

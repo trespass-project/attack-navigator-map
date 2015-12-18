@@ -135,7 +135,11 @@ let PropertiesPanel = React.createClass({
 								<td>
 									<select name='relation' value={edge.relation||null}>
 										{this.state.relationsLib.map(function(relation) {
-											return <option value={relation.value}>{relation.label}</option>;
+											return <option
+												key={relation.value}
+												value={relation.value}>
+												{relation.label}
+											</option>;
 										})}
 									</select>
 								</td>
