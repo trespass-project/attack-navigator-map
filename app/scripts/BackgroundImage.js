@@ -2,6 +2,7 @@
 
 let $ = require('jquery');
 let React = require('react');
+let reactDOM = require('react-dom');
 let SchleppMixin = require('./SchleppMixin.js');
 let helpers = require('./helpers.js');
 let icons = require('./icons.js');
@@ -126,7 +127,7 @@ let Group = React.createClass({
 
 	componentDidMount: function() {
 		const props = this.props;
-		const elem = this;
+		const elem = reactDOM.findDOMNode(this);
 		$(elem).on('contextmenu', function(event) {
 			let menuItems = [
 				{
@@ -143,7 +144,8 @@ let Group = React.createClass({
 	},
 
 	componentWillUnmount: function() {
-		$(this).off('contextmenu');
+		const elem = reactDOM.findDOMNode(this);
+		$(elem).off('contextmenu');
 	},
 
 	_onMouseOver: function(event) {

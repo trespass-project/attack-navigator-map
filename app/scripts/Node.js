@@ -3,6 +3,7 @@
 let $ = require('jquery');
 let R = require('ramda');
 let React = require('react');
+let reactDOM = require('react-dom');
 let classnames = require('classnames');
 let SchleppMixin = require('./SchleppMixin.js');
 let Port = require('./Port.js');
@@ -103,7 +104,8 @@ let Node = React.createClass({
 	componentDidMount: function() {
 		const props = this.props;
 
-		$(this).on('contextmenu', function(event) {
+		const elem = reactDOM.findDOMNode(this);
+		$(elem).on('contextmenu', function(event) {
 			let menuItems = [
 				{	label: 'delete',
 					icon: icons['fa-trash'],
@@ -130,7 +132,8 @@ let Node = React.createClass({
 	},
 
 	componentWillUnmount: function() {
-		$(this).off('contextmenu');
+		const elem = reactDOM.findDOMNode(this);
+		$(elem).off('contextmenu');
 	},
 
 	// _getLabelWidth: function() {

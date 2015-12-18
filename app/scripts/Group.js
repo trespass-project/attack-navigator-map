@@ -5,6 +5,7 @@ let _ = require('lodash');
 let R = require('ramda');
 let classnames = require('classnames');
 let React = require('react');
+let reactDOM = require('react-dom');
 let SchleppMixin = require('./SchleppMixin.js');
 let icons = require('./icons.js');
 let helpers = require('./helpers.js');
@@ -140,7 +141,7 @@ let Group = React.createClass({
 		let that = this;
 		const props = this.props;
 
-		let elem = this;
+		const elem = reactDOM.findDOMNode(this);
 		$(elem).on('contextmenu', function(event) {
 			let bgimg = { label: 'image', icon: icons['fa-plus'], action: that.openFileDialog };
 			if (!_.isEmpty(props.group._bgImage)) {
@@ -184,7 +185,8 @@ let Group = React.createClass({
 	},
 
 	componentWillUnmount: function() {
-		$(this).off('contextmenu');
+		const elem = reactDOM.findDOMNode(this);
+		$(elem).off('contextmenu');
 	},
 
 	openFileDialog: function() {

@@ -1,6 +1,7 @@
 'use strict';
 
 let React = require('react');
+let reactDOM = require('react-dom');
 let $ = require('jquery');
 let mout = require('mout');
 let GraphMixin = require('./GraphMixin.js');
@@ -32,7 +33,9 @@ let GraphEditor = React.createClass({
 
 	componentDidMount: function() {
 		const props = this.props;
-		let $svg = $(this).find('svg');
+
+		const elem = reactDOM.findDOMNode(this);
+		let $svg = $(elem).find('svg');
 
 		let that = this;
 		$svg.on('contextmenu', function(event) {

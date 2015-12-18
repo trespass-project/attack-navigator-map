@@ -3,16 +3,15 @@
 let _ = require('lodash');
 let R = require('ramda');
 let $ = require('jquery');
+let reactDOM = require('react-dom');
 
 
-function getElemByRef(component, ref) {
-	let it;
-	if (ref && !_.isEmpty(component.refs) && component.refs[ref]) {
-		it = component.refs.dragRoot;
+function getElemByRef(component, refName) {
+	if (refName && component.refs[refName]) {
+		return component.refs[refName];
 	} else {
-		it = component;
+		return reactDOM.findDOMNode(component);
 	}
-	return it;
 }
 
 

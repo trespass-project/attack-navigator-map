@@ -1,5 +1,7 @@
 'use strict';
+
 let React = require('react');
+let reactDOM = require('react-dom');
 let helpers = require('./helpers.js');
 
 
@@ -65,7 +67,8 @@ let GraphMinimap = React.createClass({
 	_setSize: function() {
 		const props = this.props;
 
-		let $minimap = $(this);
+		const elem = reactDOM.findDOMNode(this);
+		let $minimap = $(elem);
 		this.size = {
 			width: $minimap.width(),
 			height: $minimap.height(),

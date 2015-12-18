@@ -1,6 +1,7 @@
 'use strict';
 
 let React = require('react');
+let reactDOM = require('react-dom');
 // let d3 = require('d3');
 let $ = require('jquery');
 let mout = require('mout');
@@ -173,7 +174,8 @@ let Edge = React.createClass({
 		let that = this;
 		const props = this.props;
 
-		$(this).on('contextmenu', function(event) {
+		const elem = reactDOM.findDOMNode(this);
+		$(elem).on('contextmenu', function(event) {
 			let menuItems = [
 				{
 					label: 'delete',
@@ -189,7 +191,8 @@ let Edge = React.createClass({
 	},
 
 	componentWillUnmount: function() {
-		$(this).off('contextmenu');
+		const elem = reactDOM.findDOMNode(this);
+		$(elem).off('contextmenu');
 	},
 });
 
