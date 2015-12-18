@@ -8,34 +8,30 @@ let actionCreators = require('./actionCreators.js');
 
 
 let SchleppManagerMixin = {
-	propTypes: {
-		drag: React.PropTypes.object.isRequired,
-	},
-
 	componentDidMount: function() {
-		const props = this.props;
+		let that = this;
 
 		let $body = $('body');
 		$body.on('keydown', function(event) {
 			if (event.keyCode === 32) {
-				if (props.mouseOverEditor) {
+				if (that.props.mouseOverEditor) {
 					event.preventDefault();
 					event.stopPropagation();
 				}
 
-				props.dispatch( actionCreators.setSpacePressed(true) );
+				that.props.dispatch( actionCreators.setSpacePressed(true) );
 
 				// pannable:
 				if ($elem[0].tagName === 'svg') {
-					props.dispatch( actionCreators.setPannable(true) );
+					that.props.dispatch( actionCreators.setPannable(true) );
 				}
 			}
 		});
 
 		$body.on('keyup', function(event) {
 			if (event.keyCode === 32) {
-				props.dispatch( actionCreators.setSpacePressed(false) );
-				props.dispatch( actionCreators.setPannable(false) );
+				that.props.dispatch( actionCreators.setSpacePressed(false) );
+				that.props.dispatch( actionCreators.setPannable(false) );
 			}
 		});
 
@@ -45,27 +41,29 @@ let SchleppManagerMixin = {
 			event.preventDefault();
 			event.stopPropagation();
 
-			props.dispatch( actionCreators.setMouseOverEditor(true) );
+			console.log(that.props.drag);
 
-			if (props.drag) {
-				(props.drag.onMove || helpers.noop)(event);
+			that.props.dispatch( actionCreators.setMouseOverEditor(true) );
+
+			if (that.props.drag) {
+				(that.props.drag.onMove || helpers.noop)(event);
 			}
 		});
 
 		$elem.on('mouseleave', function(event) {
 			event.preventDefault();
 			event.stopPropagation();
-			props.dispatch( actionCreators.setMouseOverEditor(false) );
+			that.props.dispatch( actionCreators.setMouseOverEditor(false) );
 		});
 
 		$elem.on('mouseup', function(event) {
 			event.preventDefault();
 			event.stopPropagation();
-			if (props.drag) {
-				(props.drag.onEnd || helpers.noop)(event);
+			if (that.props.drag) {
+				(that.props.drag.onEnd || helpers.noop)(event);
 			}
-			props.dispatch( actionCreators.setDrag(null) );
-			props.dispatch( actionCreators.setPanning(false) );
+			that.props.dispatch( actionCreators.setDrag(null) );
+			that.props.dispatch( actionCreators.setPanning(false) );
 		});
 	},
 
