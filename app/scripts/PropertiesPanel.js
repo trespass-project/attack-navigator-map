@@ -53,7 +53,7 @@ let PropertiesPanel = React.createClass({
 	renderProperties: function() {
 		const props = this.props;
 
-		if (!props.selected) { return null; }
+		if (!props.selected || !props.selected.it) { return null; }
 
 		switch (props.selected.type) {
 
@@ -164,15 +164,25 @@ let PropertiesPanel = React.createClass({
 			? R.partial(this._onChange, [props.selected.it])
 			: null;
 
+		const selectedItem = (props.selected && props.selected.it)
+			? props.selected.it : null;
+		const selectedType = (selectedItem)
+			? props.selected.type || 'unknown type'
+			: '';
+
 		return (
 			<div id={props.id} className='panel-section'>
 				<h3 className='title'>
-					selection{(props.selected) ? ': '+props.selected.type : ''}
+					selection{(selectedItem) ? ': '+selectedType : ''}
 				</h3>
 				<form className='form' onSubmit={this._onSubmit}>{/* form-horizontal */}
 					<div className='form-group' onChange={onChange}>
-						<span className='disabled'>{(!props.selected) ? 'nothing selected' : ''}</span>
-						{this.renderProperties()}
+						<span className='disabled'>
+							{(!selectedItem)
+								? 'nothing selected'
+								: this.renderProperties()
+							}
+						</span>
 					</div>
 				</form>
 			</div>
