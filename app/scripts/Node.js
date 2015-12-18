@@ -89,13 +89,20 @@ let Node = React.createClass({
 					{this.renderLabel()}
 					{this.renderIcon()}
 				</g>
-				<Port
-					style={portStyle}
-					{...this.props}
-					x={0}
-					y={-radius}
-					size={props.theme.port.size}
-					node={this.props.node} />
+				{(props.editable)
+					? <Port
+						style={portStyle}
+						x={0}
+						y={-radius}
+						size={props.theme.port.size}
+						node={props.node}
+						editorElem={props.editorElem}
+						editorTransformElem={props.editorTransformElem}
+						hoverNode={props.hoverNode}
+						dragNode={props.dragNode}
+						dispatch={props.dispatch} />
+					: null
+				}
 			</g>
 		);
 	},

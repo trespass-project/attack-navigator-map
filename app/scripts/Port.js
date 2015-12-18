@@ -14,13 +14,22 @@ let Port = React.createClass({
 		y: React.PropTypes.number.isRequired,
 		size: React.PropTypes.number.isRequired,
 		node: React.PropTypes.object.isRequired,
+		style: React.PropTypes.object.isRequired,
+		dispatch: React.PropTypes.func.isRequired,
+		editorElem: React.PropTypes.object.isRequired,
+		editorTransformElem: React.PropTypes.object.isRequired,
+		hoverNode: React.PropTypes.object.isRequired,
+		dragNode: React.PropTypes.object.isRequired,
+	},
+
+	getDefaultProps: function() {
+		return {
+			style: {}
+		};
 	},
 
 	render: function() {
 		const props = this.props;
-
-		if (!props.editable) { return null; }
-
 		const iconHTML = { __html: '&#xf100;' };
 
 		return (
