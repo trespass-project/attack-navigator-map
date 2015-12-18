@@ -198,6 +198,16 @@ function setMouseOverEditor(yesno) {
 };
 
 
+module.exports.moveNode =
+function moveNode(node, xy) {
+	return {
+		type: constants.ACTION_moveNode,
+		node,
+		xy
+	};
+};
+
+
 module.exports.setPanning =
 function setPanning(yesno) {
 	return {

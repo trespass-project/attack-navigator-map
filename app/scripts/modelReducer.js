@@ -3,6 +3,7 @@
 let R = require('ramda');
 let _ = require('lodash');
 let trespass = require('trespass.js');
+let helpers = require('./helpers.js');
 let modelHelpers = require('./model-helpers.js');
 const mergeWith = require('./reducer-utils.js').mergeWith;
 const constants = require('./constants.js');
@@ -62,6 +63,17 @@ function reducer(state=initialState, action) {
 
 		case constants.ACTION_loadXML: {
 			return state; // TODO: implement
+		}
+
+		case constants.ACTION_moveNode: {
+			const {node, xy} = action;
+
+			// TODO: is this necessary?
+			let newState = _.merge({}, state);
+			let n = helpers.getItemById(newState.graph.nodes, node.id);
+			n.x = xy.x;
+			n.y = xy.y;
+			return newState;
 		}
 
 		default: {
