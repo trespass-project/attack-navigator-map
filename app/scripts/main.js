@@ -1,6 +1,7 @@
 'use strict';
 
 let React = require('react');
+let reactDOM = require('react-dom');
 let _ = require('lodash');
 
 let createStore = require('redux').createStore;
@@ -79,9 +80,9 @@ function mapStateToProps(state) {
 App = DragDropContext(HTML5Backend)(App);
 App = connect(mapStateToProps)(App);
 
-React.render(
+reactDOM.render(
 	<Provider store={store}>
-		{ function() { return <App />; } }
+		<App />
 	</Provider>,
 	document.querySelector('#app')
 );
