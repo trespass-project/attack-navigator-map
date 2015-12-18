@@ -162,3 +162,48 @@ function(graph) {
 
 	return model;
 };
+
+
+let removeGroup =
+module.exports.removeGroup =
+function(graph, groupId, removeNodes=false) {
+	graph.groups = graph.groups
+		.filter(function(group) {
+			const keep = (groupId != group.id);
+			if (!keep && removeNodes) {
+				// remove nodes
+				group.nodeIds.forEach(function(nodeId) {
+					removeNode(graph, nodeId);
+				});
+			}
+			return keep;
+		});
+	return graph;
+};
+
+
+let removeNode =
+module.exports.removeNode =
+function(graph, nodeId) {
+	// remove node
+	graph.nodes = graph.nodes
+		.filter(function(node) {
+			return nodeId != node.id;
+		});
+
+	// and also all edges connected to it
+	graph.edges = graph.edges
+		.filter(function(edge) {
+			return (edge.from !== nodeId) && (edge.to !== nodeId);
+		});
+
+	// remove from groups
+	graph.groups
+		.forEach(function(group) {
+			group.nodeIds = group.nodeIds
+				.filter(function(groupNodeId) {
+					return groupNodeId !== nodeId;
+				});
+		});
+	return graph;
+};

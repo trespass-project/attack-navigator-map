@@ -406,24 +406,7 @@ class GraphStore extends Store {
 		this.importModelFragment({fragment});
 	}
 
-	_removeNode(id) {
-		let graph = this.state.graph;
 
-		// remove node
-		graph.nodes = graph.nodes.filter(function(node) {
-			return id != node.id;
-		});
-
-		// and also all edges connected to it
-		graph.edges
-			.filter(function(edge) {
-				return (edge.from === id) || (edge.to === id);
-			})
-			.map(function(edge) {
-				return {edge};
-			})
-			.forEach(this.removeEdge.bind(this));
-	}
 
 	removeNode(action) {
 		let {node} = action;

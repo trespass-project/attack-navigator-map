@@ -114,6 +114,13 @@ function reducer(state=initialState, action) {
 			return newState;
 		}
 
+		case constants.ACTION_removeGroup: {
+			const {group, removeNodes} = action;
+			return _.merge({}, state, {
+				graph: modelHelpers.removeGroup(_.merge({}, state.graph), group.id, removeNodes)
+			});
+		}
+
 		default: {
 			return state;
 		}

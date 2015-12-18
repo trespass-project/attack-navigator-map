@@ -308,6 +308,16 @@ function(group) {
 };
 
 
+const removeGroup =
+module.exports.removeGroup =
+function(group, removeNodes=false) {
+	return {
+		type: constants.ACTION_removeGroup,
+		group, removeNodes
+	};
+};
+
+
 // ——————————
 /*
 module.exports.openDir =

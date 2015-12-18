@@ -38,6 +38,7 @@ const constants = {
 	ACTION_moveNode: 'ACTION_moveNode',
 	ACTION_addGroup: 'ACTION_addGroup',
 	ACTION_moveGroup: 'ACTION_moveGroup',
+	ACTION_removeGroup: 'ACTION_removeGroup',
 	ACTION_moveImage: 'ACTION_moveImage',
 	ACTION_setSpacePressed: 'ACTION_setSpacePressed',
 	ACTION_setMouseOverEditor: 'ACTION_setMouseOverEditor',
