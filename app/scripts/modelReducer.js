@@ -57,7 +57,7 @@ function reducer(state=initialState, action) {
 			if (!model) { // debounced
 				return state;
 			}
-			return _.merge({}, state, { model: model })
+			return _.merge({}, state, { model: model });
 		}
 
 		case constants.ACTION_loadXML: {

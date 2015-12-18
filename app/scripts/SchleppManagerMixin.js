@@ -41,8 +41,6 @@ let SchleppManagerMixin = {
 			event.preventDefault();
 			event.stopPropagation();
 
-			console.log(that.props.drag);
-
 			that.props.dispatch( actionCreators.setMouseOverEditor(true) );
 
 			if (that.props.drag) {

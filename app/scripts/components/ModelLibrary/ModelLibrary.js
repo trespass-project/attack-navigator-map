@@ -3,7 +3,6 @@
 let R = require('ramda');
 let React = require('react');
 let actionCreators = require('../../actionCreators.js');
-const constants = require('../../constants.js');
 let Library = require('../Library/Library.js');
 
 
