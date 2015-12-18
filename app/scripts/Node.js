@@ -103,7 +103,7 @@ let Node = React.createClass({
 	componentDidMount: function() {
 		const props = this.props;
 
-		$(this.getDOMNode()).on('contextmenu', function(event) {
+		$(this).on('contextmenu', function(event) {
 			let menuItems = [
 				{	label: 'delete',
 					icon: icons['fa-trash'],
@@ -130,7 +130,7 @@ let Node = React.createClass({
 	},
 
 	componentWillUnmount: function() {
-		$(this.getDOMNode()).off('contextmenu');
+		$(this).off('contextmenu');
 	},
 
 	// _getLabelWidth: function() {

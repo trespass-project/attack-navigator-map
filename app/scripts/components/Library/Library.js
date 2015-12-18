@@ -163,12 +163,12 @@ let Library = React.createClass({
 	// 	},
 
 	clearSearch: function() {
-		$(this.refs['searchInput'].getDOMNode()).val('');
+		$(this.refs['searchInput']).val('');
 		this._search('');
 	},
 
 	search: function(event) {
-		this._search($(this.refs['searchInput'].getDOMNode()).val());
+		this._search($(this.refs['searchInput']).val());
 	},
 
 	_search: function(query) {

@@ -140,7 +140,7 @@ let Group = React.createClass({
 		let that = this;
 		const props = this.props;
 
-		let elem = this.getDOMNode();
+		let elem = this;
 		$(elem).on('contextmenu', function(event) {
 			let bgimg = { label: 'image', icon: icons['fa-plus'], action: that.openFileDialog };
 			if (!_.isEmpty(props.group._bgImage)) {
@@ -184,7 +184,7 @@ let Group = React.createClass({
 	},
 
 	componentWillUnmount: function() {
-		$(this.getDOMNode()).off('contextmenu');
+		$(this).off('contextmenu');
 	},
 
 	openFileDialog: function() {

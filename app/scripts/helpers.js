@@ -12,7 +12,7 @@ function getElemByRef(component, ref) {
 	} else {
 		it = component;
 	}
-	return it.getDOMNode();
+	return it;
 }
 
 

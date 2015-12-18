@@ -65,7 +65,7 @@ let GraphMinimap = React.createClass({
 	_setSize: function() {
 		const props = this.props;
 
-		let $minimap = $(this.getDOMNode());
+		let $minimap = $(this);
 		this.size = {
 			width: $minimap.width(),
 			height: $minimap.height(),

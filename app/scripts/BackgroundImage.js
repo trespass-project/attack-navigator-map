@@ -126,7 +126,7 @@ let Group = React.createClass({
 
 	componentDidMount: function() {
 		const props = this.props;
-		const elem = this.getDOMNode();
+		const elem = this;
 		$(elem).on('contextmenu', function(event) {
 			let menuItems = [
 				{
@@ -143,7 +143,7 @@ let Group = React.createClass({
 	},
 
 	componentWillUnmount: function() {
-		$(this.getDOMNode()).off('contextmenu');
+		$(this).off('contextmenu');
 	},
 
 	_onMouseOver: function(event) {

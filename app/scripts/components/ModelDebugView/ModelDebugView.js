@@ -41,7 +41,7 @@ let ModelDebugView = React.createClass({
 
 	loadXMLFile: function(event) {
 		event.preventDefault();
-		let $fileInput = $(this.refs['load-model'].getDOMNode());
+		let $fileInput = $(this.refs['load-model']);
 		let file = $fileInput[0].files[0];
 		this.props.dispatch( actionCreators.loadXMLFile(file) );
 	},

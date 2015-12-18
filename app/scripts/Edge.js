@@ -173,7 +173,7 @@ let Edge = React.createClass({
 		let that = this;
 		const props = this.props;
 
-		$(this.getDOMNode()).on('contextmenu', function(event) {
+		$(this).on('contextmenu', function(event) {
 			let menuItems = [
 				{
 					label: 'delete',
@@ -189,7 +189,7 @@ let Edge = React.createClass({
 	},
 
 	componentWillUnmount: function() {
-		$(this.getDOMNode()).off('contextmenu');
+		$(this).off('contextmenu');
 	},
 });
 

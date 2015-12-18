@@ -1,4 +1,5 @@
 'use strict';
+
 let React = require('react');
 let $ = require('jquery');
 let mout = require('mout');
@@ -31,7 +32,7 @@ let GraphEditor = React.createClass({
 
 	componentDidMount: function() {
 		const props = this.props;
-		let $svg = $(this.getDOMNode()).find('svg');
+		let $svg = $(this).find('svg');
 
 		let that = this;
 		$svg.on('contextmenu', function(event) {
