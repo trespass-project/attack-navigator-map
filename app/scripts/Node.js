@@ -134,7 +134,7 @@ let Node = React.createClass({
 	},
 
 	// _getLabelWidth: function() {
-	// 	var label = this.refs.label.getDOMNode();
+	// 	var label = this.refs.label;
 	// 	var bbox = label.getBBox();
 	// 	var width = bbox.width;
 	// 	return width;
