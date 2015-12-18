@@ -226,27 +226,6 @@ class InterfaceStore extends Store {
 		});
 	}
 
-	moveNode(action) {
-		let {node, newPos} = action;
-		node.x = newPos.x;
-		node.y = newPos.y;
-		this.graphStore._updateModel();
-	}
-
-	moveGroup(action) {
-		let that = this;
-		let {group, posDelta} = action;
-
-		group.nodeIds
-			.forEach(function(id) {
-				let node = helpers.getItemById(that.graphStore.state.graph.nodes, id);
-				node.x += posDelta.x;
-				node.y += posDelta.y;
-			});
-
-		this.graphStore._updateModel();
-	}
-
 	moveImage(action) {
 		let that = this;
 		let {group, newPos} = action;

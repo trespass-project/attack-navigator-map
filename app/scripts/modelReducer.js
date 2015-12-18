@@ -76,6 +76,18 @@ function reducer(state=initialState, action) {
 			return newState;
 		}
 
+		case constants.ACTION_moveGroup: {
+			const {group, posDelta} = action;
+			let newState = _.merge({}, state);
+			group.nodeIds
+				.forEach(function(id) {
+					let node = helpers.getItemById(newState.graph.nodes, id);
+					node.x += posDelta.x;
+					node.y += posDelta.y;
+				});
+			return newState;
+		}
+
 		default: {
 			return state;
 		}

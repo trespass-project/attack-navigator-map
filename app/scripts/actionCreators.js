@@ -146,10 +146,19 @@ function setPreviewEdge(previewEdge) {
 
 module.exports.setDrag =
 function setDrag(data) {
-	return {
-		type: constants.ACTION_setDrag,
-		data
+	return function(dispatch, getState) {
+		dispatch({
+			type: constants.ACTION_setDrag,
+			data
+		});
+
+		if (data == null) { // done dragging
+			dispatch({ type: constants.ACTION_updateModel });
+			// TODO: actually, updating the model is not necessary.
+			// only for live debug view
+		}
 	};
+
 };
 
 
@@ -204,6 +213,16 @@ function moveNode(node, xy) {
 		type: constants.ACTION_moveNode,
 		node,
 		xy
+	};
+};
+
+
+module.exports.moveGroup =
+function moveGroup(group, posDelta) {
+	return {
+		type: constants.ACTION_moveGroup,
+		group,
+		posDelta
 	};
 };
 

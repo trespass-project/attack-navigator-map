@@ -54,8 +54,10 @@ const blacklist = [
 	constants.ACTION_setMouseOverEditor,
 	constants.ACTION_hideContextMenu,
 	constants.ACTION_moveNode,
+	constants.ACTION_moveGroup,
 	constants.ACTION_setHoverNode,
 	constants.ACTION_setHoverGroup,
+	constants.ACTION_setPreviewEdge,
 	constants.ACTION_setTransformation
 ];
 

@@ -80,14 +80,6 @@ class InterfaceActions extends Actions {
 		return {group};
 	}
 
-	moveNode(node, newPos) {
-		return {node, newPos};
-	}
-
-	moveGroup(group, posDelta) {
-		return {group, posDelta};
-	}
-
 	moveImage(group, newPos) {
 		return {group, newPos};
 	}
