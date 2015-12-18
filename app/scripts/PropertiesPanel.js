@@ -1,15 +1,13 @@
 'use strict';
 
-var $ = require('jquery');
-var React = require('react');
-var R = require('ramda');
-var helpers = require('./helpers.js');
-var constants = require('./constants.js');
+let $ = require('jquery');
+let React = require('react');
+let R = require('ramda');
+let helpers = require('./helpers.js');
+let constants = require('./constants.js');
 
 
-var ContextMenu = React.createClass({
-	mixins: [],
-
+let PropertiesPanel = React.createClass({
 	propTypes: {
 		relationsLibUrl: React.PropTypes.string.isRequired,
 	},
@@ -53,13 +51,13 @@ var ContextMenu = React.createClass({
 	},
 
 	renderProperties: function(args) {
-		var props = this.props;
+		const props = this.props;
 		if (!props.selected) { return null; }
 
 		switch (props.selected.type) {
 
 			case 'node':
-				let node = props.selected.it;
+				const node = props.selected.it;
 				return (
 					<table>
 						<tbody>
@@ -90,7 +88,7 @@ var ContextMenu = React.createClass({
 				);
 
 			case 'group':
-				let group = props.selected.it;
+				const group = props.selected.it;
 				return (
 					<table>
 						<tbody>
@@ -155,12 +153,11 @@ var ContextMenu = React.createClass({
 	},
 
 	render: function() {
-		var props = this.props;
+		const props = this.props;
 
-		var onChange = null;
-		if (props.selected) {
-			onChange = R.partial(this._onChange, [props.selected.it]);
-		}
+		const onChange = (props.selected)
+			? R.partial(this._onChange, [props.selected.it])
+			: null;
 
 		return (
 			<div id={props.id} className='panel-section'>
@@ -178,7 +175,7 @@ var ContextMenu = React.createClass({
 	},
 
 	componentWillMount: function() {
-		const that = this;
+		let that = this;
 
 		// TODO: use flux pattern for this
 		$.ajax({
@@ -198,4 +195,4 @@ var ContextMenu = React.createClass({
 });
 
 
-module.exports = ContextMenu;
+module.exports = PropertiesPanel;
