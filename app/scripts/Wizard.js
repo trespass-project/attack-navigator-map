@@ -10,6 +10,9 @@ let GraphMinimap = require('./Graph.js').GraphMinimap;
 let PropertiesPanel = require('./PropertiesPanel.js');
 let Library = require('./components/Library/Library.js');
 
+let OverlayTrigger = require('react-bootstrap').OverlayTrigger;
+let Tooltip = require('react-bootstrap').Tooltip;
+
 const api = require('../../api.js').api;
 const serverPort = require('../../api.js').serverPort;
 const serverDomain = require('../../api.js').serverDomain;
@@ -166,48 +169,60 @@ let Wizard = React.createClass({
 
 				<div id='wizard-container'>
 					<div id='steps-container'>
-						<div
-							className={classnames('step-icon',
-								{ selected: (selectedSection === 'import') })
-							}
-							onClick={R.partial(this.selectWizardStep, ['import'])} >
-							<img src='images/icons/import-01.svg' />
-						</div>
-						<div
-							className={classnames('step-icon',
-								{ selected: (selectedSection === 'locations') })
-							}
-							onClick={R.partial(this.selectWizardStep, ['locations'])} >
-							<img src='images/icons/Location-01.svg' />
-						</div>
-						<div
-							className={classnames('step-icon',
-								{ selected: (selectedSection === 'assets') })
-							}
-							onClick={R.partial(this.selectWizardStep, ['assets'])} >
-							<img src='images/icons/Assets-01.svg' />
-						</div>
-						<div
-							className={classnames('step-icon',
-								{ selected: (selectedSection === 'actors') })
-							}
-							onClick={R.partial(this.selectWizardStep, ['actors'])} >
-							<img src='images/icons/Actors-01.svg' />
-						</div>
-						<div
-							className={classnames('step-icon',
-								{ selected: (selectedSection === 'policies') })
-							}
-							onClick={R.partial(this.selectWizardStep, ['policies'])} >
-							<img src='images/icons/policies-01.svg' />
-						</div>
-						<div
-							className={classnames('step-icon',
-								{ selected: (selectedSection === 'attacker profile') })
-							}
-							onClick={R.partial(this.selectWizardStep, ['attacker profile'])} >
-							<img src='images/icons/attacker_profile-01.svg' />
-						</div>
+						<OverlayTrigger placement='left' overlay={<Tooltip>Import model</Tooltip>}>
+							<div
+								className={classnames('step-icon',
+									{ selected: (selectedSection === 'import') })
+								}
+								onClick={R.partial(this.selectWizardStep, ['import'])} >
+								<img src='images/icons/import-01.svg' />
+							</div>
+						</OverlayTrigger>
+						<OverlayTrigger placement='left' overlay={<Tooltip>Import model</Tooltip>}>
+							<div
+								className={classnames('step-icon',
+									{ selected: (selectedSection === 'locations') })
+								}
+								onClick={R.partial(this.selectWizardStep, ['locations'])} >
+								<img src='images/icons/Location-01.svg' />
+							</div>
+						</OverlayTrigger>
+						<OverlayTrigger placement='left' overlay={<Tooltip>Locations</Tooltip>}>
+							<div
+								className={classnames('step-icon',
+									{ selected: (selectedSection === 'assets') })
+								}
+								onClick={R.partial(this.selectWizardStep, ['assets'])} >
+								<img src='images/icons/Assets-01.svg' />
+							</div>
+						</OverlayTrigger>
+						<OverlayTrigger placement='left' overlay={<Tooltip>Actors</Tooltip>}>
+							<div
+								className={classnames('step-icon',
+									{ selected: (selectedSection === 'actors') })
+								}
+								onClick={R.partial(this.selectWizardStep, ['actors'])} >
+								<img src='images/icons/Actors-01.svg' />
+							</div>
+						</OverlayTrigger>
+						<OverlayTrigger placement='left' overlay={<Tooltip>Policies</Tooltip>}>
+							<div
+								className={classnames('step-icon',
+									{ selected: (selectedSection === 'policies') })
+								}
+								onClick={R.partial(this.selectWizardStep, ['policies'])} >
+								<img src='images/icons/policies-01.svg' />
+							</div>
+						</OverlayTrigger>
+						<OverlayTrigger placement='left' overlay={<Tooltip>Attacker profile</Tooltip>}>
+							<div
+								className={classnames('step-icon',
+									{ selected: (selectedSection === 'attacker profile') })
+								}
+								onClick={R.partial(this.selectWizardStep, ['attacker profile'])} >
+								<img src='images/icons/attacker_profile-01.svg' />
+							</div>
+						</OverlayTrigger>
 					</div>
 
 					{renderFn(props)}
