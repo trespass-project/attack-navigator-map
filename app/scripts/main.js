@@ -19,7 +19,7 @@ let Wizard = require('./Wizard.js');
 let GraphEditor = require('./GraphEditor.js');
 let actionCreators = require('./actionCreators.js');
 
-let HTML5Backend = require('react-dnd/modules/backends/HTML5');
+let HTML5Backend = require('react-dnd-html5-backend');
 let DragDropContext = require('react-dnd').DragDropContext;
 
 
