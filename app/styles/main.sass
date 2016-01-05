@@ -20,6 +20,11 @@ body
 	position: relative
 	overflow: hidden
 
+
+$panelPadding: 10px
+$panelWidth: 300px
+
+
 #app
 	position: absolute
 	width: 100%
@@ -37,62 +42,26 @@ body
 			flex: 1
 			// background: green
 
-		$padding: 10px
 		#model-debug-view
-			$w: 300px
 			flex: 1
-			width: $w
-			max-width: $w
+			width: $panelWidth
+			max-width: $panelWidth
 			overflow-y: auto
 			overflow-x: hidden
-			padding: $padding
+			padding: $panelPadding
 
 			.title
 				margin-bottom: 0.3em
 
 		#panel-container
-			$w: 300px
 			flex: 1
-			width: $w
-			max-width: $w
+			width: $panelWidth
+			max-width: $panelWidth
 			// background: blue
 			border-left: solid lightgrey 2px
 			padding: 10px
 			// overflow-y: auto
 			overflow: visible // ← must be this!
-
-			#wizard-container
-				position: relative
-				#steps-container
-					position: absolute
-					$w: 30px
-					left: -$w - $padding
-					.step-icon
-						width: $w
-						height: $w
-						z-index: 999
-						cursor: pointer
-						// ----
-						word-wrap: break-word
-						font-size: 10px
-						line-height: 1em
-						margin-bottom: 1em
-
-					// currently selected one
-					.step-icon.selected
-						background-color: yellow
-
-					// all the ones before selected one
-					.step-icon.selected ~ .step-icon
-						background-color: rgb(100, 100, 100)
-
-					// all the ones after selected one
-					.step-icon
-						background-color: rgb(240, 240, 240)
-
-					// visited ones: override everything else
-					.step-icon.visited
-						background-color: orange !important
 
 
 
@@ -176,3 +145,4 @@ svg.graph
 @import 'main-menu'
 @import 'context-menu'
 @import 'props-panel'
+@import 'wizard'

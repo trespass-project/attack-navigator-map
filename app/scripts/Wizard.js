@@ -171,42 +171,42 @@ let Wizard = React.createClass({
 								{ selected: (selectedSection === 'import') })
 							}
 							onClick={R.partial(this.selectWizardStep, ['import'])} >
-							import
+							<img src='images/icons/import-01.svg' />
 						</div>
 						<div
 							className={classnames('step-icon',
 								{ selected: (selectedSection === 'locations') })
 							}
 							onClick={R.partial(this.selectWizardStep, ['locations'])} >
-							locations
+							<img src='images/icons/Location-01.svg' />
 						</div>
 						<div
 							className={classnames('step-icon',
 								{ selected: (selectedSection === 'assets') })
 							}
 							onClick={R.partial(this.selectWizardStep, ['assets'])} >
-							assets
+							<img src='images/icons/Assets-01.svg' />
 						</div>
 						<div
 							className={classnames('step-icon',
 								{ selected: (selectedSection === 'actors') })
 							}
 							onClick={R.partial(this.selectWizardStep, ['actors'])} >
-							actors
+							<img src='images/icons/Actors-01.svg' />
 						</div>
 						<div
 							className={classnames('step-icon',
 								{ selected: (selectedSection === 'policies') })
 							}
 							onClick={R.partial(this.selectWizardStep, ['policies'])} >
-							policies
+							<img src='images/icons/policies-01.svg' />
 						</div>
 						<div
 							className={classnames('step-icon',
 								{ selected: (selectedSection === 'attacker profile') })
 							}
 							onClick={R.partial(this.selectWizardStep, ['attacker profile'])} >
-							attacker profile
+							<img src='images/icons/attacker_profile-01.svg' />
 						</div>
 					</div>
 

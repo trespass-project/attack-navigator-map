@@ -1,0 +1,40 @@
+#wizard-container
+	position: relative
+
+	#steps-container
+		position: absolute
+		$tabWidth: 50px
+		left: -$tabWidth - $panelPadding
+
+		.step-icon
+			width: $tabWidth
+			// height: $tabWidth
+			padding: 4px
+			z-index: 999
+			cursor: pointer
+			// ----
+			word-wrap: break-word
+			font-size: 10px
+			line-height: 1em
+			margin-bottom: 1em
+			// ----
+			border-radius: $tabWidth/2 0 0 $tabWidth/2
+
+		.step-icon img
+			width: 100%
+
+		// currently selected one
+		.step-icon.selected
+			background-color: yellow
+
+		// all the ones before selected one
+		.step-icon.selected ~ .step-icon
+			background-color: rgb(100, 100, 100)
+
+		// all the ones after selected one
+		.step-icon
+			background-color: rgb(240, 240, 240)
+
+		// visited ones: override everything else
+		.step-icon.visited
+			background-color: orange !important
