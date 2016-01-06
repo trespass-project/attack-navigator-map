@@ -288,6 +288,15 @@ function(xmlString) {
 };
 
 
+const downloadAsXML =
+module.exports.downloadAsXML =
+function() {
+	return {
+		type: constants.ACTION_downloadAsXML,
+	};
+};
+
+
 const addEdge =
 module.exports.addEdge =
 function(edge) {

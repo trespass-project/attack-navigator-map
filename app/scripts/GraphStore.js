@@ -234,12 +234,6 @@ class GraphStore extends Store {
 		});
 	}
 
-	generateXML(action) {
-		var xml = trespass.model.xmlify(this.state.model);
-		var blob = new Blob([xml], { type: 'text/plain;charset=utf-8' });
-		saveAs(blob, action.filename || 'model.xml');
-	}
-
 	modelAdd(action) {
 		const {type, data} = action;
 		let method = 'add' + mout.string.pascalCase(type);

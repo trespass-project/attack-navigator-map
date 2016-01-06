@@ -4,6 +4,7 @@ let _ = require('lodash');
 let R = require('ramda');
 let trespass = require('trespass.js');
 let helpers = require('./helpers.js');
+let saveAs = require('browser-saveas');
 
 
 const modelComponents =
@@ -100,6 +101,18 @@ let XMLModelToObject =
 module.exports.XMLModelToObject =
 function(xml) {
 	return trespass.model.parse(xml);
+};
+
+
+let downloadAsXML =
+module.exports.downloadAsXML =
+function(model, filename) {
+	const xml = trespass.model.xmlify(model);
+	const blob = new Blob(
+		[xml],
+		{ type: 'text/plain;charset=utf-8' }
+	);
+	saveAs(blob, filename || 'model.xml');
 };
 
 

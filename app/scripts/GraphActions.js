@@ -17,14 +17,6 @@ class GraphActions extends Actions {
 		return {promise};
 	}
 
-	loadXML(content) {
-		return {content};
-	}
-
-	generateXML(filename) {
-		return {filename};
-	}
-
 	modelAdd(type, data) {
 		return {type, data};
 	}

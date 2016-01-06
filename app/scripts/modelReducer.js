@@ -65,6 +65,15 @@ function reducer(state=initialState, action) {
 			return state; // TODO: implement
 		}
 
+		case constants.ACTION_downloadAsXML: {
+			const model = modelHelpers.modelFromGraph(state.graph);
+			modelHelpers.downloadAsXML(
+				model,
+				model.system.title.replace(/\s/g, '-') + '.xml'
+			);
+			return state;
+		}
+
 		case constants.ACTION_moveNode: {
 			const {node, xy} = action;
 

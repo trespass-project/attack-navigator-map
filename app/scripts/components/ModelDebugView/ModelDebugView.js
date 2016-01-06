@@ -30,25 +30,12 @@ let ModelDebugView = React.createClass({
 			<div>
 				{/*<input ref='load-model' type='file' accept='.xml' onChange={this.loadXMLFile} />
 								<hr/>*/}
-				<button onClick={this.generateXML} className='btn btn-default btn-xs'>save as XML</button>
 				{/*<br/><br/>
 								<pre className='debug-json'>
 									{JSON.stringify(model, null, 2)}
 								</pre>*/}
 			</div>
 		);
-	},
-
-	loadXMLFile: function(event) {
-		event.preventDefault();
-		let $fileInput = $(this.refs['load-model']);
-		let file = $fileInput[0].files[0];
-		this.props.dispatch( actionCreators.loadXMLFile(file) );
-	},
-
-	generateXML: function(event) {
-		event.preventDefault();
-		this.props.dispatch( actionCreators.generateXML() );
 	},
 });
 

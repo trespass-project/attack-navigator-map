@@ -91,6 +91,12 @@ let Wizard = React.createClass({
 				type='file'
 				accept='.xml'
 				onChange={this.loadXMLFile} />
+			<hr />
+			<button
+				onClick={this.downloadAsXML}
+				className='btn btn-default btn-xs'>
+				save as XML
+			</button>
 		</div>;
 	},
 
@@ -263,6 +269,11 @@ let Wizard = React.createClass({
 		let $fileInput = $(this.refs['load-model']);
 		let file = $fileInput[0].files[0];
 		this.props.dispatch( actionCreators.loadXMLFile(file) );
+	},
+
+	downloadAsXML: function(event) {
+		event.preventDefault();
+		this.props.dispatch( actionCreators.downloadAsXML() );
 	},
 
 	selectWizardStep(name, event) {
