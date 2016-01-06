@@ -10,6 +10,7 @@ var notifier = require('node-notifier');
 var execSync = require('child_process').execSync;
 var moment = require('moment');
 var chalk = require('chalk');
+var koutoSwiss = require('kouto-swiss');
 
 var $ = gulpLoadPlugins();
 var reload = browserSync.reload;
@@ -93,54 +94,29 @@ function rebundle() {
 
 
 gulp.task('stylus', function() {
-	var stream = gulp.src(appDir(stylesDir('*.styl')));
-	stream = stylesPipelinePre(stream);
-	stream = stream.pipe($.stylus({
-			paths: ['.']
-		}))
-		.on('error', function() {
-			notifier.notify({
-				title: 'gulp: '+projectName,
-				message: 'stylus error',
-			});
-		});
-	return stylesPipelinePost(stream);
-});
-
-
-gulp.task('sass', function() {
-	var stream = gulp.src(appDir(stylesDir('*.{sass,scss}')));
-	stream = stylesPipelinePre(stream);
-	stream = stream.pipe($.sass.sync({
-				outputStyle: 'expanded',
-				indentedSyntax: true,
-				includePaths: ['.']
-			})
-			.on('error', $.sass.logError)
-			.on('error', function() {
+	gulp.src(appDir(stylesDir('main.styl')))
+		.pipe($.plumber({
+			errorHandler: function(err) {
+				console.log(err.message);
 				notifier.notify({
 					title: 'gulp: '+projectName,
-					message: 'sass error',
+					message: 'stylus error',
 				});
-			})
-		);
-	return stylesPipelinePost(stream);
-});
-
-function stylesPipelinePre(stream) {
-	return stream
-		.pipe($.plumber())
-		.pipe($.sourcemaps.init());
-}
-function stylesPipelinePost(stream) {
-	return stream
+			}
+		}))
+		.pipe($.sourcemaps.init())
+		.pipe($.stylus({
+			paths: ['.'],
+			use: [koutoSwiss()]
+		}))
 		.pipe($.autoprefixer({ browsers: ['last 2 versions'] }))
 		.pipe($.sourcemaps.write())
 		.pipe(gulp.dest(tempDir(stylesDir())))
 		.pipe(reload({ stream: true }));
-}
+});
 
-gulp.task('styles', ['sass', 'stylus']);
+
+gulp.task('styles', ['stylus']);
 
 
 function lint(files, options) {
@@ -282,9 +258,22 @@ gulp.task('serve', ['jade', 'scripts', 'styles', 'fonts'], function() {
 });
 
 
-gulp.task('fontcustom', function() {
+gulp.task('fontcustom', ['fontcustom:sass-to-stylus'], function() {
+	execSync('mv icons.css icons.styl', { cwd: appDir(iconsDir()) });
+});
+gulp.task('fontcustom:compile', function() {
 	execSync('fontcustom compile', { cwd: appDir(iconsDir()) });
 	gulp.start('fonts'); // copy fonts
+});
+gulp.task('fontcustom:sass-to-stylus', ['fontcustom:compile'], function() {
+	var iconsFile = appDir(iconsDir('icons.scss'));
+	var stream = gulp.src(iconsFile)
+		.pipe($.sass.sync({
+			// outputStyle: 'expanded',
+			// indentedSyntax: true,
+			// includePaths: ['.']
+		}))
+		.pipe(gulp.dest(appDir(iconsDir())));
 });
 
 

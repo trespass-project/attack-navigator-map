@@ -1,23 +1,9 @@
 {
-  "name": "generator-web-freder",
+  "name": "gulp-setup",
   "private": true,
   "dependencies": {
-    "bootstrap-sass": "~3.3.5",
+    "modernizr": "^2.8.3",
     "bootstrap-stylus": "~4.0.5",
-    "modernizr": "~2.8.1",
-    "fontawesome": "~4.4.0"
-  },
-  "overrides": {
-    "bootstrap-sass": {
-      "main": [
-        "assets/stylesheets/_bootstrap.scss",
-        "assets/fonts/bootstrap/*",
-        "assets/javascripts/bootstrap.js"
-      ]
-    }
-  },
-  "devDependencies": {
-    "chai": "~3.0.0",
-    "mocha": "~2.2.5"
+    "Font-Awesome-Stylus": "font-awesome-stylus#~4.4.0"
   }
 }

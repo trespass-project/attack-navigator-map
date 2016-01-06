@@ -8,6 +8,7 @@ module.exports = {
 		scripts: 'scripts',
 		images: 'images',
 		icons: 'icons',
+		data: 'data',
 		fonts: 'fonts',
 		test: 'test',
 		spec: 'spec',

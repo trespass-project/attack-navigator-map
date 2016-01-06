@@ -3,8 +3,8 @@
 
 	#steps-container
 		position: absolute
-		$tabWidth: 50px
-		left: -$tabWidth - $panelPadding
+		$tabWidth = 50px
+		left: - $tabWidth - $panelPadding
 
 		.step-icon
 			width: $tabWidth
@@ -18,7 +18,7 @@
 			line-height: 1em
 			margin-bottom: 1em
 			// ----
-			border-radius: $tabWidth/2 0 0 $tabWidth/2
+			border-radius: ($tabWidth / 2) 0 0 ($tabWidth / 2)
 
 		.step-icon img
 			width: 100%
@@ -42,4 +42,4 @@
 
 .tooltip
 	.tooltip-inner
-		font-size: 24px
+		font-size: 16px

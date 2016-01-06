@@ -1,10 +1,16 @@
-$icon-font-path: '../fonts/';
+@import 'kouto-swiss'
 
-@import 'bower_components/bootstrap-sass/assets/stylesheets/_bootstrap.scss'
-@import 'bower_components/fontawesome/scss/font-awesome.scss'
+@import 'variables.styl'
+$icon-font-path = '../fonts/'
+$bootstrap-path = 'bower_components/bootstrap-stylus/bootstrap/index.styl'
+@import $bootstrap-path
 
-@import 'components'
-@import '../icons/icons/icons'
+@import 'bower_components/Font-Awesome-Stylus/stylus/index.styl'
+
+@import 'common.styl'
+
+@import 'components.styl'
+@import '../icons/icons.styl'
 
 
 // LAYOUT
@@ -21,8 +27,8 @@ body
 	overflow: hidden
 
 
-$panelPadding: 10px
-$panelWidth: 300px
+$panelPadding = 10px
+$panelWidth = 300px
 
 
 #app
@@ -78,7 +84,7 @@ span.disabled
 svg.graph
 	width: 100%
 	height: 100%
-	$bgcolor: rgb(50, 50, 50)
+	$bgcolor = rgb(50, 50, 50)
 	background-color: $bgcolor
 
 	*
@@ -138,11 +144,11 @@ svg.graph
 
 
 
-@import 'node'
-@import 'edge'
-@import 'group'
-@import 'background-image'
-@import 'main-menu'
-@import 'context-menu'
-@import 'props-panel'
-@import 'wizard'
+@import 'node.styl'
+@import 'edge.styl'
+@import 'group.styl'
+@import 'background-image.styl'
+@import 'main-menu.styl'
+@import 'context-menu.styl'
+@import 'props-panel.styl'
+@import 'wizard.styl'
