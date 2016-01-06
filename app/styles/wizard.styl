@@ -3,11 +3,11 @@
 
 	#steps-container
 		position: absolute
-		left: - $tabWidth - $panelPadding
+		left: - $wizard-tabWidth - $panelPadding
 
 		.step-icon
-			width: $tabWidth
-			// height: $tabWidth
+			width: $wizard-tabWidth
+			// height: $wizard-tabWidth
 			padding: 4px
 			z-index: 999
 			cursor: pointer
@@ -17,22 +17,22 @@
 			line-height: 1em
 			margin-bottom: 1em
 			// ----
-			border-radius: ($tabWidth / 2) 0 0 ($tabWidth / 2)
+			border-radius: ($wizard-tabWidth / 2) 0 0 ($wizard-tabWidth / 2)
 
 		.step-icon img
 			width: 100%
 
 		// currently selected one
 		.step-icon.selected
-			background-color: yellow
+			background-color: $wizard-selectedColor
 
 		// all the ones before selected one
 		.step-icon.selected ~ .step-icon
-			background-color: rgb(100, 100, 100)
+			background-color: $wizard-prevColor
 
 		// all the ones after selected one
 		.step-icon
-			background-color: rgb(240, 240, 240)
+			background-color: $wizard-nextColor
 
 		// visited ones: override everything else
 		.step-icon.visited
