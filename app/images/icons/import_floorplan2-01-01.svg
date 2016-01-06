@@ -3,8 +3,8 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 width="25.941px" height="25.94px" viewBox="0 0 25.941 25.94" enable-background="new 0 0 25.941 25.94" xml:space="preserve">
-<circle fill="#58595B" cx="12.971" cy="12.97" r="10.85"/>
-<circle fill="none" stroke="#58595B" stroke-miterlimit="10" cx="12.971" cy="12.969" r="12.471"/>
+<circle fill="#000000" cx="12.971" cy="12.97" r="10.85"/>
+<circle fill="none" stroke="#000000" stroke-miterlimit="10" cx="12.971" cy="12.969" r="12.471"/>
 <path fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" d="M13.426,16.053c0.268-0.279,0.523-0.541,0.771-0.809
 	c0.295-0.32,0.632-0.346,0.949-0.014c1.205,1.258,2.435,2.49,3.645,3.742c0.158,0.164,0.314,0.23,0.552,0.178
 	c0-0.064,0-0.135,0-0.205c0-1.863-0.001-3.727,0.001-5.59c0-0.352,0.252-0.564,0.564-0.479c0.167,0.045,0.271,0.16,0.312,0.324

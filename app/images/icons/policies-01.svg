@@ -3,8 +3,8 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 width="25.941px" height="25.941px" viewBox="0 0 25.941 25.941" enable-background="new 0 0 25.941 25.941" xml:space="preserve">
-<circle fill="none" stroke="#58595B" stroke-miterlimit="10" cx="12.971" cy="12.971" r="12.471"/>
-<path fill-rule="evenodd" clip-rule="evenodd" fill="#58595B" d="M10.335,20.329c0-0.106,0-0.167,0-0.229
+<circle fill="none" stroke="#000000" stroke-miterlimit="10" cx="12.971" cy="12.971" r="12.471"/>
+<path fill-rule="evenodd" clip-rule="evenodd" fill="#000000" d="M10.335,20.329c0-0.106,0-0.167,0-0.229
 	c0-1.508-0.002-3.017,0.003-4.524c0-0.119-0.033-0.169-0.148-0.204c-1.889-0.58-3.506-1.624-4.971-2.922
 	c-0.45-0.398-0.877-0.822-1.335-1.252c0.196-0.191,0.379-0.365,0.558-0.545c1.272-1.287,2.705-2.348,4.365-3.084
 	c1.447-0.642,2.96-0.967,4.546-0.91c1.724,0.062,3.315,0.574,4.811,1.416c1.464,0.824,2.726,1.898,3.896,3.111
