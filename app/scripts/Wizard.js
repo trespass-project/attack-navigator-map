@@ -149,12 +149,20 @@ let Wizard = React.createClass({
 		</div>;
 	},
 
+	renderConnections: function(props) {
+		return <div>Connections</div>;
+	},
+
 	renderPolicies: function(props) {
 		return <div>policies</div>;
 	},
 
 	renderAttackerProfile: function(props) {
 		return <div>attacker profile</div>;
+	},
+
+	renderRunAnalysis: function(props) {
+		return <div>run analysis</div>;
 	},
 
 	render: function() {
@@ -175,11 +183,17 @@ let Wizard = React.createClass({
 			'actors': {
 				renderFn: this.renderActors,
 			},
+			'connections': {
+				renderFn: this.renderConnections,
+			},
 			'policies': {
 				renderFn: this.renderPolicies,
 			},
 			'attackerprofile': {
 				renderFn: this.renderAttackerProfile,
+			},
+			'runanalysis': {
+				renderFn: this.renderRunAnalysis,
 			},
 		};
 
@@ -223,6 +237,12 @@ let Wizard = React.createClass({
 							tooltip='Actors'
 							handleClick={R.partial(this.selectWizardStep, ['actors'])}
 						/>
+						<Tab name='connections'
+							selectedSection={selectedSection}
+							icon='images/icons/connections-01.svg'
+							tooltip='Connections'
+							handleClick={R.partial(this.selectWizardStep, ['connections'])}
+						/>
 						<Tab name='policies'
 							selectedSection={selectedSection}
 							icon='images/icons/policies-01.svg'
@@ -234,6 +254,12 @@ let Wizard = React.createClass({
 							icon='images/icons/attacker_profile-01.svg'
 							tooltip='Attacker profile'
 							handleClick={R.partial(this.selectWizardStep, ['attackerprofile'])}
+						/>
+						<Tab name='runanalysis'
+							selectedSection={selectedSection}
+							icon='images/icons/run-01.svg'
+							tooltip='Run analysis'
+							handleClick={R.partial(this.selectWizardStep, ['runanalysis'])}
 						/>
 					</div>
 
