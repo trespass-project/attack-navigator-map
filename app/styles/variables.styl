@@ -8,9 +8,17 @@ $font = 'SourceSansPro', sans-serif
 $panelPadding = 10px
 $panelWidth = 300px
 
-$trespassRed = rgb(255, 40, 0)
-$bgcolor = rgb(50, 50, 50)
-$highlightColor = $trespassRed
+// colors
+$trespass_red = rgb(255, 40, 0);
+$trespass_grey = rgb(237, 237, 235);
+$trespass_black = rgb(17, 17, 14);
+$trespass_grey_light = mix($trespass_grey, $trespass_black, 75%);
+$trespass_grey_medium = mix($trespass_grey, $trespass_black, 50%);
+$trespass_grey_dark = mix($trespass_grey, $trespass_black, 25%);
+$trespass_grey_darker = mix($trespass_grey, $trespass_black, 15%);
+
+$bgcolor = $trespass_grey_darker
+$highlightColor = $trespass_red
 
 // wizard
 $wizard-tabWidth = 40px
