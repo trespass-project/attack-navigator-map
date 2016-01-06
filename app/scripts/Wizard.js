@@ -171,30 +171,14 @@ let Wizard = React.createClass({
 		const selectedSection = wizard.selectedSection;
 
 		const wizardSteps = {
-			'import': {
-				renderFn: this.renderImport,
-			},
-			'locations': {
-				renderFn: this.renderLocations,
-			},
-			'assets': {
-				renderFn: this.renderAssets,
-			},
-			'actors': {
-				renderFn: this.renderActors,
-			},
-			'connections': {
-				renderFn: this.renderConnections,
-			},
-			'policies': {
-				renderFn: this.renderPolicies,
-			},
-			'attackerprofile': {
-				renderFn: this.renderAttackerProfile,
-			},
-			'runanalysis': {
-				renderFn: this.renderRunAnalysis,
-			},
+			'import': { renderFn: this.renderImport },
+			'locations': { renderFn: this.renderLocations },
+			'assets': { renderFn: this.renderAssets },
+			'actors': { renderFn: this.renderActors },
+			'connections': { renderFn: this.renderConnections },
+			'policies': { renderFn: this.renderPolicies },
+			'attackerprofile': { renderFn: this.renderAttackerProfile },
+			'runanalysis': { renderFn: this.renderRunAnalysis },
 		};
 
 		let defaultRenderFn = function() {
