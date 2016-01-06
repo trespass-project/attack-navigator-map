@@ -169,7 +169,7 @@ let Wizard = React.createClass({
 
 				<div id='wizard-container'>
 					<div id='steps-container'>
-						<OverlayTrigger placement='left' overlay={<Tooltip>Import model</Tooltip>}>
+						<OverlayTrigger placement='left' overlay={<Tooltip id="import">Import model</Tooltip>}>
 							<div
 								className={classnames('step-icon',
 									{ selected: (selectedSection === 'import') })
@@ -178,7 +178,7 @@ let Wizard = React.createClass({
 								<img src='images/icons/import-01.svg' />
 							</div>
 						</OverlayTrigger>
-						<OverlayTrigger placement='left' overlay={<Tooltip>Import model</Tooltip>}>
+						<OverlayTrigger placement='left' overlay={<Tooltip id="locations">Locations</Tooltip>}>
 							<div
 								className={classnames('step-icon',
 									{ selected: (selectedSection === 'locations') })
@@ -187,7 +187,7 @@ let Wizard = React.createClass({
 								<img src='images/icons/Location-01.svg' />
 							</div>
 						</OverlayTrigger>
-						<OverlayTrigger placement='left' overlay={<Tooltip>Locations</Tooltip>}>
+						<OverlayTrigger placement='left' overlay={<Tooltip id="assets">Assets</Tooltip>}>
 							<div
 								className={classnames('step-icon',
 									{ selected: (selectedSection === 'assets') })
@@ -196,7 +196,7 @@ let Wizard = React.createClass({
 								<img src='images/icons/Assets-01.svg' />
 							</div>
 						</OverlayTrigger>
-						<OverlayTrigger placement='left' overlay={<Tooltip>Actors</Tooltip>}>
+						<OverlayTrigger placement='left' overlay={<Tooltip id="actors">Actors</Tooltip>}>
 							<div
 								className={classnames('step-icon',
 									{ selected: (selectedSection === 'actors') })
@@ -205,7 +205,7 @@ let Wizard = React.createClass({
 								<img src='images/icons/Actors-01.svg' />
 							</div>
 						</OverlayTrigger>
-						<OverlayTrigger placement='left' overlay={<Tooltip>Policies</Tooltip>}>
+						<OverlayTrigger placement='left' overlay={<Tooltip id="policies">Policies</Tooltip>}>
 							<div
 								className={classnames('step-icon',
 									{ selected: (selectedSection === 'policies') })
@@ -214,7 +214,7 @@ let Wizard = React.createClass({
 								<img src='images/icons/policies-01.svg' />
 							</div>
 						</OverlayTrigger>
-						<OverlayTrigger placement='left' overlay={<Tooltip>Attacker profile</Tooltip>}>
+						<OverlayTrigger placement='left' overlay={<Tooltip id="attackerprofile">Attacker profile</Tooltip>}>
 							<div
 								className={classnames('step-icon',
 									{ selected: (selectedSection === 'attacker profile') })
