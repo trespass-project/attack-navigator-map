@@ -207,6 +207,33 @@ function setMouseOverEditor(yesno) {
 };
 
 
+module.exports.addNode =
+function addNode(node) {
+	return {
+		type: constants.ACTION_addNode,
+		node
+	};
+};
+
+
+module.exports.addNodeToGroup =
+function addNodeToGroup(node, group) {
+	return {
+		type: constants.ACTION_addNodeToGroup,
+		node, group
+	};
+};
+
+
+module.exports.removeNode =
+function removeNode(node) {
+	return {
+		type: constants.ACTION_removeNode,
+		node
+	};
+};
+
+
 module.exports.moveNode =
 function moveNode(node, xy) {
 	return {
@@ -302,6 +329,16 @@ module.exports.addEdge =
 function(edge) {
 	return {
 		type: constants.ACTION_addEdge,
+		edge
+	};
+};
+
+
+const removeEdge =
+module.exports.removeEdge =
+function(edge) {
+	return {
+		type: constants.ACTION_removeEdge,
 		edge
 	};
 };

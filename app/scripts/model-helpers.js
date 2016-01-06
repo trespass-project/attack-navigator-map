@@ -195,6 +195,35 @@ function(graph, groupId, removeNodes=false) {
 };
 
 
+let addNode =
+module.exports.addNode =
+function(graph, node, opts) {
+	opts = opts || {};
+	node = _.defaults(node, {
+		id: helpers.makeId(0, 'node'),
+		label: 'new node'
+	});
+
+	if (opts.toGroup) {
+		console.log(opts.toGroup);
+		opts.toGroup.nodeIds.push(node.id);
+		opts.toGroup.nodeIds = R.uniq(opts.toGroup.nodeIds);
+	}
+
+	graph.nodes.push(node);
+	return graph;
+};
+
+
+let getNodeGroups =
+module.exports.getNodeGroups =
+function(nodeId, groups) {
+	return groups.filter(function(group) {
+		return R.contains(nodeId, group.nodeIds);
+	});
+}
+
+
 let removeNode =
 module.exports.removeNode =
 function(graph, nodeId) {

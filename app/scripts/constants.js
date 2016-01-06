@@ -35,6 +35,9 @@ const constants = {
 	ACTION_setDragNode: 'ACTION_setDragNode',
 	ACTION_setHoverNode: 'ACTION_setHoverNode',
 	ACTION_setHoverGroup: 'ACTION_setHoverGroup',
+	ACTION_addNode: 'ACTION_addNode',
+	ACTION_addNodeToGroup: 'ACTION_addNodeToGroup',
+	ACTION_removeNode: 'ACTION_removeNode',
 	ACTION_moveNode: 'ACTION_moveNode',
 	ACTION_addGroup: 'ACTION_addGroup',
 	ACTION_moveGroup: 'ACTION_moveGroup',
@@ -51,6 +54,7 @@ const constants = {
 	ACTION_loadXML: 'ACTION_loadXML',
 	ACTION_updateModel: 'ACTION_updateModel',
 	ACTION_addEdge: 'ACTION_addEdge',
+	ACTION_removeEdge: 'ACTION_removeEdge',
 };
 
 

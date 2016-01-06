@@ -244,14 +244,6 @@ class GraphStore extends Store {
 		this.setState({ model: model });
 	}
 
-	removeEdge(action) {
-		let {edge} = action;
-		this.state.graph.edges = this.state.graph.edges.filter(function(e) {
-			return edge.id != e.id;
-		});
-		this._updateModel();
-	}
-
 	cloneGroup(action) {
 		const that = this;
 
@@ -313,18 +305,6 @@ class GraphStore extends Store {
 		this.setState({ graph: graph }); // TODO: be more specific?
 	}
 
-	addNodeToGroup(action) {
-		let {node, group} = action;
-
-		// only if not already in group
-		let nodeGroups = helpers.getNodeGroups(node.id, this.state.graph.groups);
-		if (nodeGroups.length === 0) {
-			group.nodeIds.push(node.id);
-			group.nodeIds = R.uniq(group.nodeIds);
-			this._updateModel();
-		}
-	}
-
 	ungroupNode(action) {
 		let {node} = action;
 
@@ -334,23 +314,6 @@ class GraphStore extends Store {
 			group.nodeIds = R.uniq(group.nodeIds);
 			return group;
 		});
-		this._updateModel();
-	}
-
-	addNode(action) {
-		let {node} = action;
-
-		node = _.defaults(node, {
-			id: helpers.makeId(),
-			label: 'new node'
-		});
-
-		if (node.group) {
-			node.group.nodeIds.push(node.id);
-			delete node.group;
-		}
-
-		this.state.graph.nodes.push(node);
 		this._updateModel();
 	}
 
@@ -398,15 +361,6 @@ class GraphStore extends Store {
 
 		// add fragment
 		this.importModelFragment({fragment});
-	}
-
-
-
-	removeNode(action) {
-		let {node} = action;
-		this._removeNode(node.id);
-		this._cleanupGroups();
-		this._updateModel();
 	}
 
 	// remove missing nodes

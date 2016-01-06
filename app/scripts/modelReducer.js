@@ -74,6 +74,39 @@ function reducer(state=initialState, action) {
 			return state;
 		}
 
+		case constants.ACTION_addNode: {
+			const {node} = action;
+
+			// TODO: is this necessary?
+			let newState = _.merge({}, state);
+			newState.graph = modelHelpers.addNode(newState.graph, node);
+			return newState;
+		}
+
+		case constants.ACTION_addNodeToGroup: {
+			const {node, group} = action;
+
+			let newState = _.merge({}, state);
+			newState.graph = modelHelpers.addNode(
+				newState.graph,
+				node,
+				{ toGroup: helpers.getItemById(
+					newState.graph.groups,
+					group.id
+				) }
+			);
+			return newState;
+		}
+
+		case constants.ACTION_removeNode: {
+			const {node} = action;
+
+			// TODO: is this necessary?
+			let newState = _.merge({}, state);
+			newState.graph = modelHelpers.removeNode(newState.graph, node.id);
+			return newState;
+		}
+
 		case constants.ACTION_moveNode: {
 			const {node, xy} = action;
 
@@ -105,6 +138,18 @@ function reducer(state=initialState, action) {
 			// TODO: is this necessary?
 			let newState = _.merge({}, state);
 			newState.graph.edges.push( _.merge(edge, { id: helpers.makeId(0, 'edge') }) );
+			return newState;
+		}
+
+		case constants.ACTION_removeEdge: {
+			const {edge} = action;
+
+			// TODO: is this necessary?
+			let newState = _.merge({}, state);
+			newState.graph.edges = state.graph.edges
+				.filter(function(e) {
+					return edge.id !== e.id;
+				});
 			return newState;
 		}
 

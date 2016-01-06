@@ -107,13 +107,6 @@ function isRectInsideRect(r1, r2) {
 }
 
 
-function getNodeGroups(nodeId, groups) {
-	return groups.filter(function(group) {
-		return R.contains(nodeId, group.nodeIds);
-	});
-}
-
-
 function makeId(index, type) {
 	return [Date.now(), index||0, type||''].join('-');
 }
@@ -170,7 +163,6 @@ module.exports = {
 	getGroupInitialPosition,
 	distBetweenPoints,
 	isRectInsideRect,
-	getNodeGroups,
 	makeId,
 	ellipsize,
 	degToRad,

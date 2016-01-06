@@ -172,10 +172,11 @@ let Group = React.createClass({
 					function(/*event*/) {
 						let node = {
 							x: event.offsetX,
-							y: event.offsetY,
-							group: props.group
+							y: event.offsetY
 						};
-						props.dispatch( actionCreators.addNode(node) );
+						props.dispatch(
+							actionCreators.addNodeToGroup(node, props.group)
+						);
 					}
 				},
 			];
