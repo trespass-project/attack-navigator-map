@@ -1,16 +1,10 @@
 @import 'kouto-swiss'
 
 @import 'variables.styl'
-$icon-font-path = '../fonts/'
-$bootstrap-path = 'bower_components/bootstrap-stylus/bootstrap/index.styl'
 @import $bootstrap-path
-
-@import 'bower_components/Font-Awesome-Stylus/stylus/index.styl'
+@import $fontawesome-path
 
 @import 'common.styl'
-
-@import 'components.styl'
-@import '../icons/icons.styl'
 
 
 // LAYOUT
@@ -25,10 +19,6 @@ body
 	background: white
 	position: relative
 	overflow: hidden
-
-
-$panelPadding = 10px
-$panelWidth = 300px
 
 
 #app
@@ -73,8 +63,7 @@ $panelWidth = 300px
 
 // TYPOGRAPHY
 body
-	font-family: "Helvetica" sans-serif
-	font-size: 16px
+	font-size: $baseFontSize
 
 
 span.disabled
@@ -84,7 +73,6 @@ span.disabled
 svg.graph
 	width: 100%
 	height: 100%
-	$bgcolor = rgb(50, 50, 50)
 	background-color: $bgcolor
 
 	*
@@ -143,7 +131,8 @@ svg.graph
 		line-height: 0.7em
 
 
-
+@import 'components.styl'
+@import '../icons/icons.styl'
 @import 'node.styl'
 @import 'edge.styl'
 @import 'group.styl'
