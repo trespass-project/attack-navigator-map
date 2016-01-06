@@ -14,13 +14,8 @@ let GraphOutline = React.createClass({
 	// },
 
 	renderItem: function(item) {
-		const style = {
-			float: 'right',
-			fontWeight: 'normal',
-			marginTop: '0.15em'
-		};
 		return <li key={item.type} className='list-group-item'>
-			<div className='badge' style={style}>
+			<div className='badge'>
 				{item.count}
 			</div>
 			<div>
@@ -33,7 +28,7 @@ let GraphOutline = React.createClass({
 		const props = this.props;
 		const edge = props.edge;
 
-		return <ul className='list-group'>
+		return <ul className='list-group' id='graph-outline'>
 			{['nodes', 'edges', 'groups']
 				.map(function(key) {
 					return {
