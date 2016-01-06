@@ -8,6 +8,7 @@ const actionCreators = require('./actionCreators.js');
 
 let GraphMinimap = require('./GraphMinimap.js');
 let PropertiesPanel = require('./PropertiesPanel.js');
+let GraphOutline = require('./GraphOutline.js');
 let Library = require('./components/Library/Library.js');
 
 let OverlayTrigger = require('react-bootstrap').OverlayTrigger;
@@ -72,6 +73,13 @@ let Wizard = React.createClass({
 			theme={props.theme}
 			showEdges={true}
 		/>;
+	},
+
+	renderOutline: function(props) {
+		return <div>
+			<h3 className='title'>outline</h3>
+			<GraphOutline graph={props.graph} dispatch={props.dispatch} />
+		</div>;
 	},
 
 	renderProperties: function(props) {
@@ -204,6 +212,7 @@ let Wizard = React.createClass({
 		return (
 			<div>
 				{this.renderMinimap(props)}
+				{this.renderOutline(props)}
 				{this.renderProperties(props)}
 
 				<div id='wizard-container'>

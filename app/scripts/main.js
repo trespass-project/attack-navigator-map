@@ -12,7 +12,6 @@ let Provider = require('react-redux').Provider;
 let thunk = require('redux-thunk');
 
 let ModelDebugView = require('./components/ModelDebugView/ModelDebugView.js');
-let GraphOutline = require('./GraphOutline.js');
 let MainMenu = require('./MainMenu.js');
 let Wizard = require('./Wizard.js');
 
@@ -46,14 +45,10 @@ let App = React.createClass({
 						<h3 className='title'>debug</h3>
 						<MainMenu id='main-menu' {...props} />
 					</div>
-					<div className='panel-section'>
-						<h3 className='title'>outline</h3>
-							<GraphOutline graph={props.graph} dispatch={props.dispatch} />
-					</div>
-					<div className='panel-section'>
-						<h3 className='title'>model</h3>
-						<ModelDebugView {...props} />
-					</div>
+					{/*<div className='panel-section'>
+											<h3 className='title'>model</h3>
+											<ModelDebugView {...props} />
+										</div>*/}
 				</div>
 
 				<div id='panel-container'>
