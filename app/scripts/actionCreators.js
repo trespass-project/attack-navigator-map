@@ -244,6 +244,15 @@ function moveNode(node, xy) {
 };
 
 
+module.exports.ungroupNode =
+function ungroupNode(node) {
+	return {
+		type: constants.ACTION_ungroupNode,
+		node
+	};
+};
+
+
 module.exports.moveGroup =
 function moveGroup(group, posDelta) {
 	return {

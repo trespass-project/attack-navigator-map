@@ -39,6 +39,7 @@ const constants = {
 	ACTION_addNodeToGroup: 'ACTION_addNodeToGroup',
 	ACTION_removeNode: 'ACTION_removeNode',
 	ACTION_moveNode: 'ACTION_moveNode',
+	ACTION_ungroupNode: 'ACTION_ungroupNode',
 	ACTION_addGroup: 'ACTION_addGroup',
 	ACTION_moveGroup: 'ACTION_moveGroup',
 	ACTION_removeGroup: 'ACTION_removeGroup',

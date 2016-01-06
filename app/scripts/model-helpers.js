@@ -221,7 +221,7 @@ function(nodeId, groups) {
 	return groups.filter(function(group) {
 		return R.contains(nodeId, group.nodeIds);
 	});
-}
+};
 
 
 let removeNode =

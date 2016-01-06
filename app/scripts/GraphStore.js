@@ -305,18 +305,6 @@ class GraphStore extends Store {
 		this.setState({ graph: graph }); // TODO: be more specific?
 	}
 
-	ungroupNode(action) {
-		let {node} = action;
-
-		// remove node from all groups it is in
-		this.state.graph.groups = this.state.graph.groups.map(function(group) {
-			group.nodeIds = R.reject(function(a) { return R.equals(a, node.id); }, group.nodeIds);
-			group.nodeIds = R.uniq(group.nodeIds);
-			return group;
-		});
-		this._updateModel();
-	}
-
 	cloneNode(action) {
 		const that = this;
 

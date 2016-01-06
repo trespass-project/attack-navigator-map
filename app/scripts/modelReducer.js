@@ -118,6 +118,27 @@ function reducer(state=initialState, action) {
 			return newState;
 		}
 
+		case constants.ACTION_ungroupNode: {
+			const {node} = action;
+
+			// TODO: is this necessary?
+			let newState = _.merge({}, state);
+
+			// remove node from all groups it is in
+			newState.graph.groups = newState.graph.groups
+				.map(function(group) {
+					group.nodeIds = R.reject(
+						function(nodeId) {
+							return R.equals(nodeId, node.id);
+						}, group.nodeIds
+					);
+					group.nodeIds = R.uniq(group.nodeIds);
+					return group;
+				});
+
+			return newState;
+		}
+
 		case constants.ACTION_moveGroup: {
 			const {group, posDelta} = action;
 

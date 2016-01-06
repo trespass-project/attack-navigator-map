@@ -27,10 +27,6 @@ class GraphActions extends Actions {
 		return {group};
 	}
 
-	ungroupNode(node) {
-		return {node};
-	}
-
 	cloneNode(node) {
 		return {node};
 	}
