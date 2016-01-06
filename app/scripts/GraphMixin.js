@@ -134,8 +134,11 @@ let GraphMixin = {
 					.map(this.renderBgImage)
 				}
 				{graph.groups.map(this.renderGroup)}
-				{graph.edges.map(this.renderEdge)}
-				{ (props.previewEdge && !props.isMinimap)
+				{(props.showEdges)
+					? graph.edges.map(this.renderEdge)
+					: null
+				}
+				{(props.previewEdge && !props.isMinimap)
 					? [props.previewEdge].map(this.renderPreviewEdge)
 					: null
 				}

@@ -6,7 +6,7 @@ let React = require('react');
 let classnames = require('classnames');
 const actionCreators = require('./actionCreators.js');
 
-let GraphMinimap = require('./Graph.js').GraphMinimap;
+let GraphMinimap = require('./GraphMinimap.js');
 let PropertiesPanel = require('./PropertiesPanel.js');
 let Library = require('./components/Library/Library.js');
 
@@ -66,7 +66,12 @@ let Wizard = React.createClass({
 	// },
 
 	renderMinimap: function(props) {
-		return <GraphMinimap id='minimap' />;
+		return <GraphMinimap
+			id='minimap'
+			graph={props.graph}
+			theme={props.theme}
+			showEdges={true}
+		/>;
 	},
 
 	renderProperties: function(props) {
@@ -192,7 +197,7 @@ let Wizard = React.createClass({
 		// TODO: activate minimap
 		return (
 			<div>
-				{/*{this.renderMinimap(props)}*/}
+				{this.renderMinimap(props)}
 				{this.renderProperties(props)}
 
 				<div id='wizard-container'>

@@ -2,7 +2,9 @@
 
 let React = require('react');
 let reactDOM = require('react-dom');
+let $ = require('jquery');
 let helpers = require('./helpers.js');
+let Graph = require('./Graph.js');
 
 
 let GraphMinimap = React.createClass({

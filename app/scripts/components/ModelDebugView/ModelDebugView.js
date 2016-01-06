@@ -28,13 +28,13 @@ let ModelDebugView = React.createClass({
 		const connectDropTarget = this.props.connectDropTarget;
 		return connectDropTarget(
 			<div>
-				<input ref='load-model' type='file' accept='.xml' onChange={this.loadXMLFile} />
-				<hr/>
+				{/*<input ref='load-model' type='file' accept='.xml' onChange={this.loadXMLFile} />
+								<hr/>*/}
 				<button onClick={this.generateXML} className='btn btn-default btn-xs'>save as XML</button>
-				<br/><br/>
-				<pre className='debug-json'>
-					{JSON.stringify(model, null, 2)}
-				</pre>
+				{/*<br/><br/>
+								<pre className='debug-json'>
+									{JSON.stringify(model, null, 2)}
+								</pre>*/}
 			</div>
 		);
 	},

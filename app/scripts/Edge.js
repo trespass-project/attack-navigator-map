@@ -115,8 +115,6 @@ let Edge = React.createClass({
 		const props = this.props;
 		const edge = props.edge;
 
-		if (!props.showEdges) { return null; }
-
 		// look up actual nodes by id
 		let edgeNodes = {
 			fromNode: helpers.getItemById(props.graph.nodes, edge.from),
