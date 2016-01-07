@@ -4,6 +4,7 @@ let _ = require('lodash');
 let R = require('ramda');
 let $ = require('jquery');
 let reactDOM = require('react-dom');
+let shortid = require('shortid');
 
 
 function getElemByRef(component, refName) {
@@ -107,8 +108,8 @@ function isRectInsideRect(r1, r2) {
 }
 
 
-function makeId(index, type) {
-	return [Date.now(), index||0, type||''].join('-');
+function makeId(type) {
+	return [Date.now(), shortid(), type || ''].join('-');
 }
 
 
