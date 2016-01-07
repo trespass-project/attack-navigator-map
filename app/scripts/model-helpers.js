@@ -214,8 +214,8 @@ function cloneGroup(graph, _group) {
 	});
 	const nodes = groupNodes.map(function(node) {
 		let newNode = _.merge({}, node);
-		newNode.x = node.x + 100;
-		newNode.y = node.y + 100;
+		newNode.x = (node.x || 0);
+		newNode.y = (node.y || 0);
 		return newNode;
 	});
 	const nodeIds = nodes.map(function(node) {
@@ -237,12 +237,20 @@ function cloneGroup(graph, _group) {
 		groups: [group]
 	};
 
+	const offset = 100;
+	const diff = function(a, b) { return b - a; };
+	const smallestX = R.sort(diff, nodes.map(R.prop('x')));
+	const smallestY = R.sort(diff, nodes.map(R.prop('y')));
+	const xy = {
+		x: smallestX[0] + offset,
+		y: smallestY[0] + offset
+	};
+
 	// prepare fragment
 	fragment = prepareFragment(graph, fragment);
 
-	// add fragment
-	// returns new graph
-	return importModelFragment(graph, fragment);
+	// add fragment; returns new graph
+	return importModelFragment(graph, fragment, xy);
 };
 
 
