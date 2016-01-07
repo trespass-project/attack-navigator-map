@@ -34,14 +34,19 @@
 		// currently selected one
 		.step-icon.selected
 			background-color: $wizard-selectedColor
-
-		// all the ones before selected one
-		.step-icon.selected ~ .step-icon
-			background-color: $wizard-prevColor
+			img
+				opacity: 1
 
 		// all the ones after selected one
+		.step-icon.selected ~ .step-icon
+			img
+				opacity: 1
+
+		// all the ones before selected one
 		.step-icon
-			background-color: $wizard-nextColor
+			background-color: white
+			img
+				opacity: 0.25
 
 		// visited ones: override everything else
 		.step-icon.visited

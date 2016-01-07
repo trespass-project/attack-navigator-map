@@ -42,15 +42,21 @@ let Tab = React.createClass({
 
 	render: function() {
 		const props = this.props;
+		const isSelected = (props.selectedSection === props.name);
+		// const imgSrc = (isSelected)
+		// 	? props.icon.replace('.svg', '-inverted.svg')
+		// 	: props.icon;
+		const imgSrc = props.icon;
+
 		return <OverlayTrigger
 			placement='left'
 			overlay={<Tooltip id={props.name}>{props.tooltip}</Tooltip>}>
 			<div
 				className={classnames('step-icon',
-					{ selected: (props.selectedSection === props.name) })
+					{ selected: isSelected })
 				}
 				onClick={props.handleClick} >
-				<img src={props.icon} />
+				<img src={imgSrc} />
 			</div>
 		</OverlayTrigger>;
 	},
