@@ -120,7 +120,7 @@ class InterfaceStore extends Store {
 				});
 
 			return {
-				id: helpers.makeId(index, 'group'),
+				id: helpers.makeId('group'),
 				children: children,
 				group: true
 			};
@@ -152,7 +152,7 @@ class InterfaceStore extends Store {
 				return {
 					source: edge.from,
 					target: edge.to,
-					id: helpers.makeId(index, 'edge')
+					id: helpers.makeId('edge')
 				};
 			}
 		);

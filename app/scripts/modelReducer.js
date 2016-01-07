@@ -158,7 +158,7 @@ function reducer(state=initialState, action) {
 
 			// TODO: is this necessary?
 			let newState = _.merge({}, state);
-			newState.graph.edges.push( _.merge(edge, { id: helpers.makeId(0, 'edge') }) );
+			newState.graph.edges.push( _.merge(edge, { id: helpers.makeId('edge') }) );
 			return newState;
 		}
 
@@ -181,11 +181,19 @@ function reducer(state=initialState, action) {
 			let newState = _.merge({}, state);
 			newState.graph.groups.push(
 				_.merge(group, {
-					id: helpers.makeId(0, 'group'),
+					id: helpers.makeId('group'),
 					label: 'new group',
 					nodeIds: []
 				})
 			);
+			return newState;
+		}
+
+		case constants.ACTION_cloneGroup: {
+			const {group} = action;
+			// TODO: is this necessary?
+			let newState = _.merge({}, state);
+			newState.graph = modelHelpers.cloneGroup(newState.graph, group);
 			return newState;
 		}
 

@@ -263,6 +263,15 @@ function moveGroup(group, posDelta) {
 };
 
 
+module.exports.cloneGroup =
+function cloneGroup(group) {
+	return {
+		type: constants.ACTION_cloneGroup,
+		group
+	};
+};
+
+
 module.exports.setPanning =
 function setPanning(yesno) {
 	return {

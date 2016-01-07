@@ -42,6 +42,7 @@ const constants = {
 	ACTION_ungroupNode: 'ACTION_ungroupNode',
 	ACTION_addGroup: 'ACTION_addGroup',
 	ACTION_moveGroup: 'ACTION_moveGroup',
+	ACTION_cloneGroup: 'ACTION_cloneGroup',
 	ACTION_removeGroup: 'ACTION_removeGroup',
 	ACTION_moveImage: 'ACTION_moveImage',
 	ACTION_setSpacePressed: 'ACTION_setSpacePressed',

@@ -104,4 +104,24 @@ describe(f1('model-helpers.js'), function() {
 		});
 	});
 
+	describe(f2('cloneGroup()'), function() {
+		const nodeId = 'node-id';
+		const groupId = 'group-id';
+		const group = { id: groupId, nodeIds: [nodeId] };
+		const graph = {
+			nodes: [ { id: nodeId } ],
+			edges: [],
+			groups: [group],
+		};
+		const newGraph = modelHelpers.cloneGroup(graph, group);
+
+		it(f3('should create a new group'), function() {
+			assert(newGraph.groups.length === 2);
+		});
+
+		it(f3('should give cloned objects a new id'), function() {
+			assert(newGraph.nodes[0].id != newGraph.nodes[1].id);
+		});
+	});
+
 });

@@ -4,12 +4,11 @@ let _ = require('lodash');
 let R = require('ramda');
 let trespass = require('trespass.js');
 let helpers = require('./helpers.js');
-let saveAs = require('browser-saveas');
 
 
 const modelComponents =
 module.exports.modelComponents = [
-	'locations',
+	' modelComponents =locations',
 	'edges',
 	'assets',
 	'actors',
@@ -22,7 +21,7 @@ module.exports.modelComponents = [
 
 let importModelFragment =
 module.exports.importModelFragment =
-function(currentGraph, fragment, xy) {
+function importModelFragment(currentGraph, fragment, xy) {
 	xy = xy || { x: 0, y: 0 };
 	fragment = prepareFragment( _.merge({}, fragment) );
 
@@ -33,7 +32,7 @@ function(currentGraph, fragment, xy) {
 			return _.merge({}, node, {
 				x: xy.x + (node.x || index * 60),
 				y: xy.y + (node.y || index * 30),
-				// id: helpers.makeId(index, 'node')
+				// id: helpers.makeId('node')
 			});
 		});
 	graph.nodes = graph.nodes.concat(nodes);
@@ -41,7 +40,7 @@ function(currentGraph, fragment, xy) {
 	const groups = (fragment.groups || [])
 		.map(function(group, index) {
 			// return _.merge({}, group, {
-			// 	id: helpers.makeId(index, 'group')
+			// 	id: helpers.makeId('group')
 			// });
 			return group;
 		});
@@ -50,7 +49,7 @@ function(currentGraph, fragment, xy) {
 	const edges = (fragment.edges || [])
 		.map(function(edge, index) {
 			// return _.merge({}, edge, {
-			// 	id: helpers.makeId(index, 'edge')
+			// 	id: helpers.makeId('edge')
 			// });
 			return edge;
 		});
@@ -62,12 +61,16 @@ function(currentGraph, fragment, xy) {
 
 let prepareFragment =
 module.exports.prepareFragment =
-function(fragment) {
+function prepareFragment(fragment) {
+	let nodeIds = [];
 	(fragment.nodes || []).forEach(function(node, index) {
-		let oldId = node.id;
+		const oldId = node.id;
 
 		// create unique id
-		node.id = helpers.makeId(index, node.type);
+		do {
+			node.id = helpers.makeId(node.type);
+		} while (R.contains(node.id, nodeIds));
+		nodeIds.push(node.id);
 
 		// rename existing ids in edges and groups
 		if (oldId) {
@@ -81,7 +84,7 @@ function(fragment) {
 			});
 
 			(fragment.groups || []).forEach(function(group, index) {
-				group.id = helpers.makeId(index, 'group');
+				group.id = helpers.makeId('group');
 				group.nodeIds = group.nodeIds.map(function(nodeId) {
 					if (nodeId === oldId) {
 						return node.id;
@@ -99,33 +102,37 @@ function(fragment) {
 
 let XMLModelToObject =
 module.exports.XMLModelToObject =
-function(xml) {
+function XMLModelToObject(xml) {
 	return trespass.model.parse(xml);
 };
 
 
 let downloadAsXML =
 module.exports.downloadAsXML =
-function(model, filename) {
+function downloadAsXML(model, filename) {
 	const xml = trespass.model.xmlify(model);
 	const blob = new Blob(
 		[xml],
 		{ type: 'text/plain;charset=utf-8' }
 	);
-	saveAs(blob, filename || 'model.xml');
+	if (document) {
+		let saveAs = require('browser-saveas');
+		saveAs(blob, filename || 'model.xml');
+	}
+	return blob;
 };
 
 
 let modelAsFragment =
 module.exports.modelAsFragment =
-function(model) {
+function modelAsFragment(model) {
 	return R.pick(modelComponents, model.system);
 };
 
 
 let modelFromGraph =
 module.exports.modelFromGraph =
-function(graph) {
+function modelFromGraph(graph) {
 	let model = trespass.model.create();
 
 	graph.edges.forEach(function(edge) {
@@ -179,7 +186,7 @@ function(graph) {
 
 let removeGroup =
 module.exports.removeGroup =
-function(graph, groupId, removeNodes=false) {
+function removeGroup(graph, groupId, removeNodes=false) {
 	graph.groups = graph.groups
 		.filter(function(group) {
 			const keep = (groupId != group.id);
@@ -195,17 +202,60 @@ function(graph, groupId, removeNodes=false) {
 };
 
 
+let cloneGroup =
+module.exports.cloneGroup =
+function cloneGroup(graph, _group) {
+	let group = _.merge({}, _group);
+
+	// create fragment from group
+	const groupNodes = group.nodeIds.map(function(nodeId) {
+		// all nodes referenced in group
+		return helpers.getItemById(graph.nodes, nodeId);
+	});
+	const nodes = groupNodes.map(function(node) {
+		let newNode = _.merge({}, node);
+		newNode.x = node.x + 100;
+		newNode.y = node.y + 100;
+		return newNode;
+	});
+	const nodeIds = nodes.map(function(node) {
+		return node.id;
+	});
+	const edges = graph.edges
+		.filter(function(edge) {
+			// of all edges return only those,
+			// where `from` and `to` are in this group
+			return R.contains(edge.from, nodeIds) &&
+				R.contains(edge.to, nodeIds);
+		})
+		.map(function(edge) {
+			return _.merge({}, edge);
+		});
+	let fragment = {
+		nodes: nodes,
+		edges: edges,
+		groups: [group]
+	};
+
+	// prepare fragment
+	fragment = prepareFragment(graph, fragment);
+
+	// add fragment
+	// returns new graph
+	return importModelFragment(graph, fragment);
+};
+
+
 let addNode =
 module.exports.addNode =
-function(graph, node, opts) {
+function addNode(graph, node, opts) {
 	opts = opts || {};
 	node = _.defaults(node, {
-		id: helpers.makeId(0, 'node'),
+		id: helpers.makeId('node'),
 		label: 'new node'
 	});
 
 	if (opts.toGroup) {
-		console.log(opts.toGroup);
 		opts.toGroup.nodeIds.push(node.id);
 		opts.toGroup.nodeIds = R.uniq(opts.toGroup.nodeIds);
 	}
@@ -217,7 +267,7 @@ function(graph, node, opts) {
 
 let getNodeGroups =
 module.exports.getNodeGroups =
-function(nodeId, groups) {
+function getNodeGroups(nodeId, groups) {
 	return groups.filter(function(group) {
 		return R.contains(nodeId, group.nodeIds);
 	});
@@ -226,7 +276,7 @@ function(nodeId, groups) {
 
 let removeNode =
 module.exports.removeNode =
-function(graph, nodeId) {
+function removeNode(graph, nodeId) {
 	// remove node
 	graph.nodes = graph.nodes
 		.filter(function(node) {
