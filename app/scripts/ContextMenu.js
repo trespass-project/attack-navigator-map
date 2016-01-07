@@ -19,7 +19,7 @@ var ContextMenu = React.createClass({
 		};
 	},
 
-	_makePiePiece: function(fromAngle, toAngle, innerRadius, outerRadius, index, item) {
+	renderPiePiece: function(fromAngle, toAngle, innerRadius, outerRadius, index, item) {
 		const halfPI = Math.PI * 0.5;
 		let arc = d3.svg.arc()
 			.innerRadius(innerRadius)
@@ -55,7 +55,7 @@ var ContextMenu = React.createClass({
 						{
 							labelLines.map(function(line) {
 								var lineHTML = { __html: (line || '') };
-								return <tspan x='0' dy='1.1em' dangerouslySetInnerHTML={lineHTML} />;
+								return <tspan key={index} x='0' dy='1.1em' dangerouslySetInnerHTML={lineHTML} />;
 							})
 						}
 					</text>
@@ -82,7 +82,7 @@ var ContextMenu = React.createClass({
 		// const endAngle = center + (totalAngle * 0.5);
 
 		let pieces = props.contextMenu.menuItems.map(function(item, index) {
-			return that._makePiePiece(
+			return that.renderPiePiece(
 				helpers.degToRad(startAngle + angleStep * index),
 				helpers.degToRad(startAngle + angleStep * (index + 1)),
 				props.theme.contextMenu.innerRadius,
