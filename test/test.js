@@ -2,6 +2,7 @@
 
 var assert = require('assert');
 var chalk = require('chalk');
+var R = require('ramda');
 
 
 var f1 = function(s) {
@@ -119,8 +120,17 @@ describe(f1('model-helpers.js'), function() {
 			assert(newGraph.groups.length === 2);
 		});
 
-		it(f3('should give cloned objects a new id'), function() {
+		it(f3('should give cloned group a new id'), function() {
+			assert(newGraph.groups[0].id != newGraph.groups[1].id);
+		});
+
+		it(f3('should give cloned nodes a new id'), function() {
 			assert(newGraph.nodes[0].id != newGraph.nodes[1].id);
+		});
+
+		it(f3('should clone only one group'), function() {
+			const newNewGraph = modelHelpers.cloneGroup(newGraph, newGraph.groups[1]);
+			assert(newNewGraph.groups.length === 3);
 		});
 	});
 

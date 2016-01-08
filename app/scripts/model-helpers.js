@@ -62,15 +62,11 @@ function importModelFragment(currentGraph, fragment, xy) {
 let prepareFragment =
 module.exports.prepareFragment =
 function prepareFragment(fragment) {
-	let nodeIds = [];
 	(fragment.nodes || []).forEach(function(node, index) {
 		const oldId = node.id;
 
 		// create unique id
-		do {
-			node.id = helpers.makeId(node.type);
-		} while (R.contains(node.id, nodeIds));
-		nodeIds.push(node.id);
+		node.id = helpers.makeId('node');
 
 		// rename existing ids in edges and groups
 		if (oldId) {
@@ -218,15 +214,13 @@ function cloneGroup(graph, _group) {
 			y: (node.y || 0),
 		});
 	});
-	const nodeIds = nodes.map(function(node) {
-		return node.id;
-	});
+	const groupNodeIds = nodes.map(R.prop('id'));
 	const edges = graph.edges
 		.filter(function(edge) {
 			// of all edges return only those,
 			// where `from` and `to` are in this group
-			return R.contains(edge.from, nodeIds) &&
-				R.contains(edge.to, nodeIds);
+			return R.contains(edge.from, groupNodeIds) &&
+				R.contains(edge.to, groupNodeIds);
 		})
 		.map(function(edge) {
 			return _.merge({}, edge);
@@ -244,7 +238,7 @@ function cloneGroup(graph, _group) {
 	};
 
 	// prepare fragment
-	fragment = prepareFragment(graph, fragment);
+	fragment = prepareFragment(fragment);
 
 	// add fragment; returns new graph
 	return importModelFragment(graph, fragment, xy);
