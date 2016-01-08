@@ -12,7 +12,7 @@ let PropertiesPanel = React.createClass({
 		relationsLibUrl: React.PropTypes.string.isRequired,
 		id: React.PropTypes.string.isRequired,
 		graph: React.PropTypes.object.isRequired,
-		selected: React.PropTypes.object.isRequired,
+		selected: React.PropTypes.object/*.isRequired*/,
 		dispatch: React.PropTypes.func.isRequired,
 	},
 

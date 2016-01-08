@@ -10,7 +10,7 @@ var helpers = require('./helpers.js');
 var ContextMenu = React.createClass({
 	propTypes: {
 		theme: React.PropTypes.object.isRequired,
-		contextMenu: React.PropTypes.any.isRequired,
+		contextMenu: React.PropTypes.any/*.isRequired*/,
 	},
 
 	getDefaultProps: function() {
