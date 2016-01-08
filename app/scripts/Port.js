@@ -17,8 +17,8 @@ let Port = React.createClass({
 		dispatch: React.PropTypes.func.isRequired,
 		editorElem: React.PropTypes.object.isRequired,
 		editorTransformElem: React.PropTypes.object.isRequired,
-		hoverNode: React.PropTypes.object.isRequired,
-		dragNode: React.PropTypes.object.isRequired,
+		hoverNode: React.PropTypes.object/*.isRequired*/,
+		dragNode: React.PropTypes.object/*.isRequired*/,
 	},
 
 	getDefaultProps: function() {
