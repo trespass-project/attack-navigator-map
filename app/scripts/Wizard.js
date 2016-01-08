@@ -214,7 +214,6 @@ let Wizard = React.createClass({
 				|| defaultRenderFn
 			: defaultRenderFn;
 
-		// TODO: activate minimap
 		return (
 			<div>
 				{this.renderMinimap(props)}

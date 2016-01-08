@@ -192,7 +192,7 @@ let PropertiesPanel = React.createClass({
 	componentWillMount: function() {
 		let that = this;
 
-		// TODO: use flux pattern for this
+		// TODO: use flux pattern for this?
 		$.ajax({
 			url: this.props.relationsLibUrl,
 			dataType: 'json',
