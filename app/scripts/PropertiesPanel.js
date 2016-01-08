@@ -3,7 +3,7 @@
 let $ = require('jquery');
 let React = require('react');
 let R = require('ramda');
-let helpers = require('./helpers.js');
+let modelHelpers = require('./model-helpers.js');
 const constants = require('./constants.js');
 
 
@@ -36,16 +36,8 @@ let PropertiesPanel = React.createClass({
 	},
 
 	renderTypeOptions: function() {
-		return [
-			'location',
-			// 'edge',
-			'asset',
-			'actor',
-			'role',
-			'predicate',
-			'process',
-			'policy'
-			].map(function(type) {
+		return R.without(['edges'], modelHelpers.modelComponents)
+			.map(function(type) {
 				return <option key={type} value={type}>{type}</option>;
 			});
 	},
