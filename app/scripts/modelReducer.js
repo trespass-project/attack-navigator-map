@@ -76,7 +76,6 @@ function reducer(state=initialState, action) {
 
 		case constants.ACTION_addNode: {
 			const {node} = action;
-
 			// TODO: is this necessary?
 			let newState = _.merge({}, state);
 			newState.graph = modelHelpers.addNode(newState.graph, node);
@@ -85,7 +84,6 @@ function reducer(state=initialState, action) {
 
 		case constants.ACTION_addNodeToGroup: {
 			const {node, group} = action;
-
 			let newState = _.merge({}, state);
 			newState.graph = modelHelpers.addNode(
 				newState.graph,
@@ -100,8 +98,6 @@ function reducer(state=initialState, action) {
 
 		case constants.ACTION_cloneNode: {
 			const {node} = action;
-
-			// TODO: is this necessary?
 			let newState = _.merge({}, state);
 			newState.graph = modelHelpers.cloneNode(newState.graph, node);
 			return newState;
@@ -109,8 +105,6 @@ function reducer(state=initialState, action) {
 
 		case constants.ACTION_removeNode: {
 			const {node} = action;
-
-			// TODO: is this necessary?
 			let newState = _.merge({}, state);
 			newState.graph = modelHelpers.removeNode(newState.graph, node.id);
 			return newState;
@@ -118,8 +112,6 @@ function reducer(state=initialState, action) {
 
 		case constants.ACTION_moveNode: {
 			const {node, xy} = action;
-
-			// TODO: is this necessary?
 			let newState = _.merge({}, state);
 			let n = helpers.getItemById(newState.graph.nodes, node.id);
 			n.x = xy.x;
@@ -129,8 +121,6 @@ function reducer(state=initialState, action) {
 
 		case constants.ACTION_ungroupNode: {
 			const {node} = action;
-
-			// TODO: is this necessary?
 			let newState = _.merge({}, state);
 
 			// remove node from all groups it is in
@@ -150,8 +140,6 @@ function reducer(state=initialState, action) {
 
 		case constants.ACTION_moveGroup: {
 			const {group, posDelta} = action;
-
-			// TODO: is this necessary?
 			let newState = _.merge({}, state);
 			group.nodeIds
 				.forEach(function(id) {
@@ -164,8 +152,6 @@ function reducer(state=initialState, action) {
 
 		case constants.ACTION_addEdge: {
 			const {edge} = action;
-
-			// TODO: is this necessary?
 			let newState = _.merge({}, state);
 			newState.graph.edges.push( _.merge(edge, { id: helpers.makeId('edge') }) );
 			return newState;
@@ -173,8 +159,6 @@ function reducer(state=initialState, action) {
 
 		case constants.ACTION_removeEdge: {
 			const {edge} = action;
-
-			// TODO: is this necessary?
 			let newState = _.merge({}, state);
 			newState.graph.edges = state.graph.edges
 				.filter(function(e) {
@@ -185,8 +169,6 @@ function reducer(state=initialState, action) {
 
 		case constants.ACTION_addGroup: {
 			const {group} = action;
-
-			// TODO: is this necessary?
 			let newState = _.merge({}, state);
 			newState.graph.groups.push(
 				_.merge(group, {
@@ -200,7 +182,6 @@ function reducer(state=initialState, action) {
 
 		case constants.ACTION_cloneGroup: {
 			const {group} = action;
-			// TODO: is this necessary?
 			let newState = _.merge({}, state);
 			newState.graph = modelHelpers.cloneGroup(newState.graph, group);
 			return newState;
