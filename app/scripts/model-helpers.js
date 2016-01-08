@@ -476,6 +476,17 @@ function getNodeGroups(nodeId, groups) {
 };
 
 
+let getEdgeNodes =
+module.exports.getEdgeNodes =
+function getEdgeNodes(edge, nodes) {
+	const edgeNodes = {
+		fromNode: helpers.getItemById(nodes, edge.from),
+		toNode: helpers.getItemById(nodes, edge.to),
+	};
+	return edgeNodes;
+};
+
+
 let removeNode =
 module.exports.removeNode =
 function removeNode(graph, nodeId) {

@@ -8,6 +8,7 @@ let mout = require('mout');
 let classnames = require('classnames');
 let icons = require('./icons.js');
 let helpers = require('./helpers.js');
+let modelHelpers = require('./model-helpers.js');
 let actionCreators = require('./actionCreators.js');
 
 
@@ -116,15 +117,11 @@ let Edge = React.createClass({
 		const edge = props.edge;
 
 		// look up actual nodes by id
-		let edgeNodes = {
-			fromNode: helpers.getItemById(props.graph.nodes, edge.from),
-		};
+		let edgeNodes = modelHelpers.getEdgeNodes(edge, props.graph.nodes);
 		// in preview edges 'to' is not an id,
 		// an actual object, with x and y properties.
 		if (props.preview) {
 			edgeNodes.toNode = edge.to;
-		} else {
-			edgeNodes.toNode = helpers.getItemById(props.graph.nodes, edge.to);
 		}
 
 		// both nodes need to exist, obviously

@@ -109,11 +109,7 @@ let PropertiesPanel = React.createClass({
 				const edge = props.selected.it;
 
 				// look up actual nodes by id
-				// TODO: DRY — make a utility function for this
-				const edgeNodes = {
-					fromNode: helpers.getItemById(props.graph.nodes, edge.from),
-					toNode: helpers.getItemById(props.graph.nodes, edge.to),
-				};
+				const edgeNodes = modelHelpers.getEdgeNodes(edge, props.graph.nodes);
 
 				return (
 					<table>
