@@ -213,10 +213,10 @@ function cloneGroup(graph, _group) {
 		return helpers.getItemById(graph.nodes, nodeId);
 	});
 	const nodes = groupNodes.map(function(node) {
-		let newNode = _.merge({}, node);
-		newNode.x = (node.x || 0);
-		newNode.y = (node.y || 0);
-		return newNode;
+		return _.merge({}, node, {
+			x: (node.x || 0),
+			y: (node.y || 0),
+		});
 	});
 	const nodeIds = nodes.map(function(node) {
 		return node.id;
@@ -238,12 +238,9 @@ function cloneGroup(graph, _group) {
 	};
 
 	const offset = 100;
-	const diff = function(a, b) { return b - a; };
-	const smallestX = R.sort(diff, nodes.map(R.prop('x')));
-	const smallestY = R.sort(diff, nodes.map(R.prop('y')));
 	const xy = {
-		x: smallestX[0] + offset,
-		y: smallestY[0] + offset
+		x: offset,
+		y: offset,
 	};
 
 	// prepare fragment
