@@ -14,7 +14,6 @@ let Port = React.createClass({
 		y: React.PropTypes.number.isRequired,
 		size: React.PropTypes.number.isRequired,
 		node: React.PropTypes.object.isRequired,
-		style: React.PropTypes.object.isRequired,
 		dispatch: React.PropTypes.func.isRequired,
 		editorElem: React.PropTypes.object.isRequired,
 		editorTransformElem: React.PropTypes.object.isRequired,
@@ -24,7 +23,6 @@ let Port = React.createClass({
 
 	getDefaultProps: function() {
 		return {
-			style: {}
 		};
 	},
 
@@ -34,7 +32,6 @@ let Port = React.createClass({
 
 		return (
 			<g
-				style={props.style}
 				className='port-group'
 				transform={'translate('+props.x+','+props.y+')'}
 			>

@@ -23,13 +23,7 @@ let LibraryItem = React.createClass({
 		const props = this.props;
 		if (!props.showType) { return null; }
 
-		// TODO: css
-		const styles = {
-			float: 'right',
-			fontWeight: 'normal',
-			marginTop: '0.15em'
-		};
-		return <div className='badge' style={styles}>
+		return <div className='badge'>
 			{props.data.type}
 		</div>;
 	},
