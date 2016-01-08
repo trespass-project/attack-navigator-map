@@ -216,6 +216,15 @@ function addNode(node) {
 };
 
 
+module.exports.cloneNode =
+function cloneNode(node) {
+	return {
+		type: constants.ACTION_cloneNode,
+		node
+	};
+};
+
+
 module.exports.addNodeToGroup =
 function addNodeToGroup(node, group) {
 	return {

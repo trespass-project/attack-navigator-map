@@ -23,8 +23,4 @@ class GraphActions extends Actions {
 
 	// —————
 
-	cloneNode(node) {
-		return {node};
-	}
-
 };

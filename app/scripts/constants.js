@@ -36,6 +36,7 @@ const constants = {
 	ACTION_setHoverNode: 'ACTION_setHoverNode',
 	ACTION_setHoverGroup: 'ACTION_setHoverGroup',
 	ACTION_addNode: 'ACTION_addNode',
+	ACTION_cloneNode: 'ACTION_cloneNode',
 	ACTION_addNodeToGroup: 'ACTION_addNodeToGroup',
 	ACTION_removeNode: 'ACTION_removeNode',
 	ACTION_moveNode: 'ACTION_moveNode',
@@ -57,6 +58,8 @@ const constants = {
 	ACTION_updateModel: 'ACTION_updateModel',
 	ACTION_addEdge: 'ACTION_addEdge',
 	ACTION_removeEdge: 'ACTION_removeEdge',
+
+	CLONE_OFFSET: 100,
 };
 
 

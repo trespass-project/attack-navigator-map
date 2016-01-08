@@ -134,4 +134,39 @@ describe(f1('model-helpers.js'), function() {
 		});
 	});
 
+	describe(f2('cloneNode()'), function() {
+		const nodeId1 = 'node-id-1';
+		const nodeId2 = 'node-id-2';
+		const groupId = 'group-id';
+		const group = { id: groupId, nodeIds: [nodeId1] };
+		const graph = {
+			nodes: [ { id: nodeId1 }, { id: nodeId2 } ],
+			edges: [ { from: nodeId1, to: nodeId2 } ],
+			groups: [group],
+		};
+		const newGraph = modelHelpers.cloneNode(graph, graph.nodes[0]);
+
+		it(f3('should create a new node'), function() {
+			assert(newGraph.nodes.length === graph.nodes.length+1);
+		});
+
+		const origNode = newGraph.nodes[0];
+		const clonedNode = newGraph.nodes[2];
+
+		it(f3('should give cloned node a new id'), function() {
+			assert(clonedNode.id != origNode.id);
+		});
+
+		it(f3('cloned node should be in original group'), function() {
+			assert( R.contains(clonedNode.id, newGraph.groups[0].nodeIds) );
+		});
+
+		it(f3('cloned node should have original edges'), function() {
+			assert(newGraph.edges.length === 2);
+			const clonedEdge = newGraph.edges[1];
+			assert(clonedEdge.to === nodeId2);
+			assert(clonedEdge.from === clonedNode.id);
+		});
+	});
+
 });

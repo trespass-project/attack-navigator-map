@@ -4,6 +4,7 @@ let _ = require('lodash');
 let R = require('ramda');
 let trespass = require('trespass.js');
 let helpers = require('./helpers.js');
+let constants = require('./constants.js');
 
 
 const modelComponents =
@@ -21,38 +22,22 @@ module.exports.modelComponents = [
 
 let importModelFragment =
 module.exports.importModelFragment =
-function importModelFragment(currentGraph, fragment, xy) {
-	xy = xy || { x: 0, y: 0 };
-	fragment = prepareFragment( _.merge({}, fragment) );
-
+function importModelFragment(currentGraph, fragment, xy={ x: 0, y: 0 }) {
 	let graph = _.merge({}, currentGraph);
 
 	const nodes = (fragment.nodes || [])
 		.map(function(node, index) {
 			return _.merge({}, node, {
 				x: xy.x + (node.x || index * 60),
-				y: xy.y + (node.y || index * 30),
-				// id: helpers.makeId('node')
+				y: xy.y + (node.y || index * 30)
 			});
 		});
 	graph.nodes = graph.nodes.concat(nodes);
 
-	const groups = (fragment.groups || [])
-		.map(function(group, index) {
-			// return _.merge({}, group, {
-			// 	id: helpers.makeId('group')
-			// });
-			return group;
-		});
+	const groups = (fragment.groups || []);
 	graph.groups = graph.groups.concat(groups);
 
-	const edges = (fragment.edges || [])
-		.map(function(edge, index) {
-			// return _.merge({}, edge, {
-			// 	id: helpers.makeId('edge')
-			// });
-			return edge;
-		});
+	const edges = (fragment.edges || []);
 	graph.edges = graph.edges.concat(edges);
 
 	return graph;
@@ -198,6 +183,66 @@ function removeGroup(graph, groupId, removeNodes=false) {
 };
 
 
+function createNode(node={}) {
+	return _.merge({}, node, {
+		x: (node.x || 0),
+		y: (node.y || 0),
+	});
+}
+function createEdge(edge={}) {
+	return _.merge({}, edge);
+}
+function createGroup(group={}) {
+	return _.merge({}, group);
+}
+
+
+let cloneNode =
+module.exports.cloneNode =
+function cloneNode(graph, origNode) {
+	// duplicate node
+	const nodes = [origNode]
+		.map(createNode)
+		.map(function(node) { // new id + offset
+			return _.merge(node, {
+				id: helpers.makeId('node'),
+				x: node.x + constants.CLONE_OFFSET,
+				y: node.y + constants.CLONE_OFFSET,
+			});
+		});
+	const newNode = nodes[0];
+
+	// also duplicate any existing edges
+	const edges = graph.edges
+		// find edges to / from original node
+		.filter(function(edge) {
+			return R.contains(edge.from, [origNode.id]) || R.contains(edge.to, [origNode.id]);
+		})
+		// change reference to new node
+		.map(function(_edge) {
+			let edge = createEdge(_edge);
+			if (edge.from === origNode.id) { edge.from = newNode.id; }
+			if (edge.to === origNode.id) { edge.to = newNode.id; }
+			return edge;
+		});
+
+	// if node is in a group, so is the clone
+	let groups = getNodeGroups(origNode.id, graph.groups);
+	groups.forEach(function(group) {
+		group.nodeIds.push(newNode.id);
+	});
+
+	const fragment = {
+		nodes: nodes,
+		edges: edges,
+		groups: []
+	};
+
+	// add fragment
+	return importModelFragment(graph, fragment/*, xy*/);
+};
+
+
 let cloneGroup =
 module.exports.cloneGroup =
 function cloneGroup(graph, _group) {
@@ -208,19 +253,14 @@ function cloneGroup(graph, _group) {
 		// all nodes referenced in group
 		return helpers.getItemById(graph.nodes, nodeId);
 	});
-	const nodes = groupNodes.map(function(node) {
-		return _.merge({}, node, {
-			x: (node.x || 0),
-			y: (node.y || 0),
-		});
-	});
-	const groupNodeIds = nodes.map(R.prop('id'));
+	const nodes = groupNodes.map(createNode);
+	const nodeIds = nodes.map(R.prop('id'));
 	const edges = graph.edges
 		.filter(function(edge) {
 			// of all edges return only those,
 			// where `from` and `to` are in this group
-			return R.contains(edge.from, groupNodeIds) &&
-				R.contains(edge.to, groupNodeIds);
+			return R.contains(edge.from, nodeIds) &&
+				R.contains(edge.to, nodeIds);
 		})
 		.map(function(edge) {
 			return _.merge({}, edge);
@@ -231,10 +271,9 @@ function cloneGroup(graph, _group) {
 		groups: [group]
 	};
 
-	const offset = 100;
 	const xy = {
-		x: offset,
-		y: offset,
+		x: constants.CLONE_OFFSET,
+		y: constants.CLONE_OFFSET,
 	};
 
 	// prepare fragment

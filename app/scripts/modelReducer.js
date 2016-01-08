@@ -98,6 +98,15 @@ function reducer(state=initialState, action) {
 			return newState;
 		}
 
+		case constants.ACTION_cloneNode: {
+			const {node} = action;
+
+			// TODO: is this necessary?
+			let newState = _.merge({}, state);
+			newState.graph = modelHelpers.cloneNode(newState.graph, node);
+			return newState;
+		}
+
 		case constants.ACTION_removeNode: {
 			const {node} = action;
 
