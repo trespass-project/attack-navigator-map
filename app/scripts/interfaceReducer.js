@@ -62,7 +62,8 @@ const blacklist = [
 	constants.ACTION_setTransformation
 ];
 const whitelist = [
-	//
+	constants.ACTION_loadXMLFile,
+	constants.ACTION_loadXML,
 ];
 
 

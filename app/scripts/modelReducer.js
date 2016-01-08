@@ -62,7 +62,9 @@ function reducer(state=initialState, action) {
 		}
 
 		case constants.ACTION_loadXML: {
-			return state; // TODO: implement
+			const {xml} = action;
+			const graph = modelHelpers.XMLModelToObject(xml);
+			return _.merge({}, state, { graph: graph });
 		}
 
 		case constants.ACTION_downloadAsXML: {
