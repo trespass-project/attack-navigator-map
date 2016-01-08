@@ -117,7 +117,7 @@ function addGroupBackgroundImage(group, dataURI, aspectRatio, width) {
 
 const setTransformation =
 module.exports.setTransformation =
-function(transformation) {
+function setTransformation(transformation) {
 	return {
 		type: constants.ACTION_setTransformation,
 		transformation
@@ -312,7 +312,7 @@ function selectWizardStep(name) {
 
 const loadXMLFile =
 module.exports.loadXMLFile =
-function(file) {
+function loadXMLFile(file) {
 	return function(dispatch, getState) {
 		const action = {
 			type: constants.ACTION_loadXMLFile,
@@ -334,7 +334,7 @@ function(file) {
 
 const loadXML =
 module.exports.loadXML =
-function(xmlString) {
+function loadXML(xmlString) {
 	return {
 		type: constants.ACTION_loadXML,
 		xml: xmlString,
@@ -344,7 +344,7 @@ function(xmlString) {
 
 const downloadAsXML =
 module.exports.downloadAsXML =
-function() {
+function downloadAsXML() {
 	return {
 		type: constants.ACTION_downloadAsXML,
 	};
@@ -353,7 +353,7 @@ function() {
 
 const addEdge =
 module.exports.addEdge =
-function(edge) {
+function addEdge(edge) {
 	return {
 		type: constants.ACTION_addEdge,
 		edge
@@ -363,7 +363,7 @@ function(edge) {
 
 const removeEdge =
 module.exports.removeEdge =
-function(edge) {
+function removeEdge(edge) {
 	return {
 		type: constants.ACTION_removeEdge,
 		edge
@@ -373,7 +373,7 @@ function(edge) {
 
 const addGroup =
 module.exports.addGroup =
-function(group) {
+function addGroup(group) {
 	return {
 		type: constants.ACTION_addGroup,
 		group
@@ -383,7 +383,7 @@ function(group) {
 
 const removeGroup =
 module.exports.removeGroup =
-function(group, removeNodes=false) {
+function removeGroup(group, removeNodes=false) {
 	return {
 		type: constants.ACTION_removeGroup,
 		group, removeNodes
