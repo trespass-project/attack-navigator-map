@@ -102,14 +102,11 @@ let Group = React.createClass({
 	render: function() {
 		const props = this.props;
 
-		const style = (!props.showGroups)
-			? { display: 'none' }
-			: {};
+		if (!props.showGroups) { return null; }
 
 		return (
 			<g
 				className='group-group'
-				style={style}
 				onClick={this._onClick}
 				onMouseEnter={this._handleHover}
 				onMouseLeave={this._handleHoverOut}

@@ -66,6 +66,9 @@ let Node = React.createClass({
 		const props = this.props;
 		const radius = props.theme.node.size * 0.5;
 
+		// DON'T TOUCH THIS!
+		// trying to 'clean this up' resulted in dragging edges
+		// not working anymore, previously.
 		const portStyle = (!props.hovered)
 			? { display: 'none' }
 			: {};
