@@ -154,8 +154,16 @@ function reducer(state=initialState, action) {
 
 		case constants.ACTION_addEdge: {
 			const {edge} = action;
+
+			if (edge.from === edge.to) {
+				console.warn('edge.from and edge.to cannot be the same');
+				return state;
+			}
+
 			let newState = _.merge({}, state);
-			newState.graph.edges.push( _.merge(edge, { id: helpers.makeId('edge') }) );
+			newState.graph.edges.push(
+				_.merge(edge, { id: helpers.makeId('edge') })
+			);
 			return newState;
 		}
 
