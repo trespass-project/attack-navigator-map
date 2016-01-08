@@ -20,7 +20,4 @@ class GraphActions extends Actions {
 	modelAdd(type, data) {
 		return {type, data};
 	}
-
-	// —————
-
 };

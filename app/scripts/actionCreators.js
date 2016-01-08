@@ -1,8 +1,8 @@
 'use strict';
 
-var $ = require('jquery');
-var R = require('ramda');
-var Q = require('q');
+// var $ = require('jquery');
+// var R = require('ramda');
+// var Q = require('q');
 const constants = require('./constants.js');
 
 

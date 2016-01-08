@@ -36,7 +36,7 @@ function reducer(state=initialState, action) {
 
 	switch (action.type) {
 		case constants.ACTION_addGroupBackgroundImage: {
-			let {group, dataURI, aspectRatio, width} = action;
+			let {group, dataURI, aspectRatio/*, width*/} = action;
 			group._bgImage = group._bgImage || {};
 			group._bgImage.url = dataURI;
 			group._bgImage.width = 550;

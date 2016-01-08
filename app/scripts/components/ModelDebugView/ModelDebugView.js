@@ -1,10 +1,8 @@
 'use strict';
 
-let $ = require('jquery');
 let React = require('react');
 let DropTarget = require('react-dnd').DropTarget;
 
-let actionCreators = require('../../actionCreators.js');
 const constants = require('../../constants.js');
 
 
@@ -42,7 +40,7 @@ let ModelDebugView = React.createClass({
 
 const spec = {
 	drop: function (props, monitor, component) {
-		let data = monitor.getItem().data;
+		// let data = monitor.getItem().data;
 		return { target: constants.DND_TARGET_DEBUG };
 	}
 };

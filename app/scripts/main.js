@@ -11,7 +11,7 @@ let connect = require('react-redux').connect;
 let Provider = require('react-redux').Provider;
 let thunk = require('redux-thunk');
 
-let ModelDebugView = require('./components/ModelDebugView/ModelDebugView.js');
+// let ModelDebugView = require('./components/ModelDebugView/ModelDebugView.js');
 let MainMenu = require('./MainMenu.js');
 let Wizard = require('./Wizard.js');
 

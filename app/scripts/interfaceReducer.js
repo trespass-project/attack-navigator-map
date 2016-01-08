@@ -42,7 +42,7 @@ const initialState = {
 	panX: 0,
 	panY: 0,
 
-	interfaceMode: 'light', // pro
+	interfaceMode: 'light', // 'pro'
 
 	wizard: {
 		selectedSection: 'import'
@@ -61,13 +61,19 @@ const blacklist = [
 	constants.ACTION_setPreviewEdge,
 	constants.ACTION_setTransformation
 ];
+const whitelist = [
+	//
+];
 
 
 module.exports =
 function reducer(state=initialState, action) {
 	const mergeWithState = R.partial(mergeWith, [state]);
 
-	if (!R.contains(action.type, blacklist)) {
+	// if (!R.contains(action.type, blacklist)) {
+	// 	console.log(action.type, omitType(action));
+	// }
+	if (R.contains(action.type, whitelist)) {
 		console.log(action.type, omitType(action));
 	}
 
@@ -127,8 +133,7 @@ function reducer(state=initialState, action) {
 				const visibleRectPosition = helpers.unTransformFromTo(
 					editorElem,
 					editorTransformElem,
-					{ x: 0,
-					  y: 0 }
+					{ x: 0, y: 0 }
 				);
 				visibleRect = {
 					x: visibleRectPosition.x,
