@@ -15,8 +15,8 @@ const initialState = {
 		edges: [],
 		groups: [],
 	},
-	// model: null,
-	model: trespass.model.create(),
+	model: null,
+	// model: trespass.model.create(),
 };
 
 
@@ -63,7 +63,10 @@ function reducer(state=initialState, action) {
 
 		case constants.ACTION_loadXML: {
 			const {xml} = action;
-			const graph = modelHelpers.XMLModelToObject(xml);
+			const graph = modelHelpers.XMLModelToGraph(xml);
+			const model = modelHelpers.modelFromGraph(graph);
+			console.log('graph:', graph);
+			console.log('model:', model);
 			return _.merge({}, state, { graph: graph });
 		}
 

@@ -81,171 +81,166 @@ function prepareFragment(fragment) {
 };
 
 
-let XMLModelToObject =
-module.exports.XMLModelToObject =
-function XMLModelToObject(xml) {
+let XMLModelToGraph =
+module.exports.XMLModelToGraph =
+function XMLModelToGraph(xml) {
 	const $system = trespass.model.parse(xml)('system');
 	const model = trespass.model.prepare($system);
 
 	// generate graph from model
-	let graph = {
-		nodes: [],
-		edges: [],
-		groups: [],
-	};
+	let graph = graphFromModel(model);
 
-	// for each edge in model, create edge in graph
-	graph.edges = model.system.edges.map(function(edge) {
-		edge = edge.edge;
-		return {
-			from: edge.source,
-			to: edge.target,
-			relation: edge._relation,
-			directed: edge.directed,
-		};
-	});
+	// let locationsGroup = {
+	// 	name: 'locations', // TODO: should be `label`
+	// 	id: 'locations',
+	// 	nodeIds: []
+	// };
+	// (graph.locations || []).forEach(function(location) {
+	// 	location = location.location;
+	// 	locationsGroup.nodeIds.push(location.id);
+	// 	// TODO: set position, if not present
+	// });
+	// if (locationsGroup.nodeIds.length) {
+	// 	graph.groups.push(locationsGroup);
+	// }
 
-	// for each location in model, create node
-	let locationsGroup = {
-		name: 'locations', // TODO: should be `label`
-		id: 'locations',
-		nodeIds: []
-	};
-	let locations = model.system.locations.map(function(location) {
-		location = location.location;
-		locationsGroup.nodeIds.push(location.id);
-		return {
-			type: 'location',
-			label: location.label || location.id || 'untitled',
-			value: location.id,
-			id: location.id,
-			domain: location.domain,
-			x: 200,
-			y: 200,
-		};
-	});
-	graph.nodes = R.concat(graph.nodes, locations);
-	if (locationsGroup.nodeIds.length) { graph.groups.push(locationsGroup); }
+	// let assetsGroup = {
+	// 	name: 'assets', // TODO: should be `label`
+	// 	id: 'assets',
+	// 	nodeIds: []
+	// };
+	// (graph.assets || []).forEach(function(asset) {
+	// 	console.log(asset);
+	// 	asset = asset.asset;
+	// 	assetsGroup.nodeIds.push(asset.id);
+	// 	// TODO: set position, if not present
+	// });
+	// if (assetsGroup.nodeIds.length) {
+	// 	graph.groups.push(assetsGroup);
+	// }
 
-	let assetsGroup = {
-		name: 'assets',
-		id: 'assets',
-		nodeIds: []
-	};
-	let assets = model.system.assets.map(function(asset) {
-		asset = asset.asset;
-		assetsGroup.nodeIds.push(asset.id);
-		return {
-			type: 'asset',
-			label: asset.label || asset.id || 'untitled',
-			value: asset.id,
-			id: asset.id,
-			x: 400,
-			y: 200,
-		};
-	});
-	graph.nodes = R.concat(graph.nodes, assets);
-	if (assetsGroup.nodeIds.length) { graph.groups.push(assetsGroup); }
+	// ——————————
 
-	let actorsGroup = {
-		name: 'actors',
-		id: 'actors',
-		nodeIds: []
-	};
-	let actors = model.system.actors.map(function(actor) {
-		actor = actor.actor;
-		actorsGroup.nodeIds.push(actor.id);
-		return {
-			type: 'actor',
-			label: actor.label || actor.id || 'untitled',
-			value: actor.id,
-			id: actor.id,
-			x: 400,
-			y: 400,
-		};
-	});
-	graph.nodes = R.concat(graph.nodes, actors);
-	if (actorsGroup.nodeIds.length) { graph.groups.push(actorsGroup); }
+	// let assetsGroup = {
+	// 	name: 'assets',
+	// 	id: 'assets',
+	// 	nodeIds: []
+	// };
+	// let assets = model.system.assets.map(function(asset) {
+	// 	// console.log(asset);
 
-	let rolesGroup = {
-		name: 'roles',
-		id: 'roles',
-		nodeIds: []
-	};
-	let roles = model.system.roles.map(function(role) {
-		role = role.role;
-		rolesGroup.nodeIds.push(role.id);
-		return {
-			type: 'role',
-			label: role.label || role.id || 'untitled',
-			value: role.id,
-			id: role.id,
-			x: 600,
-			y: 200,
-		};
-	});
-	graph.nodes = R.concat(graph.nodes, roles);
-	if (rolesGroup.nodeIds.length) { graph.groups.push(rolesGroup); }
+	// 	asset = asset.asset || asset.item || asset.data; // TODO: clean up
+	// 	assetsGroup.nodeIds.push(asset.id);
 
-	let predicatesGroup = {
-		name: 'predicates',
-		id: 'predicates',
-		nodeIds: []
-	};
-	let predicates = model.system.predicates.map(function(predicate) {
-		predicate = predicate.predicate;
-		predicatesGroup.nodeIds.push(predicate.id);
-		return {
-			type: 'predicate',
-			label: predicate.label || predicate.id || 'untitled',
-			value: predicate.id,
-			id: predicate.id,
-			x: 600,
-			y: 400,
-		};
-	});
-	graph.nodes = R.concat(graph.nodes, predicates);
-	if (predicatesGroup.nodeIds.length) { graph.groups.push(predicatesGroup); }
+	// 	const name = asset.label || asset.name || asset.id || 'untitled';
+	// 	// console.log(name);
 
-	let processesGroup = {
-		name: 'processs',
-		id: 'processs',
-		nodeIds: []
-	};
-	let processes = model.system.processes.map(function(process) {
-		process = process.process;
-		processesGroup.nodeIds.push(process.id);
-		return {
-			type: 'process',
-			label: process.label || process.id || 'untitled',
-			value: process.id,
-			id: process.id,
-			x: 600,
-			y: 600,
-		};
-	});
-	graph.nodes = R.concat(graph.nodes, processes);
-	if (processesGroup.nodeIds.length) { graph.groups.push(processesGroup); }
+	// 	return {
+	// 		type: 'asset',
+	// 		label: name,
+	// 		value: name,
+	// 		id: name,
+	// 		x: 400,
+	// 		y: 200,
+	// 	};
+	// });
+	// if (assetsGroup.nodeIds.length) { graph.groups.push(assetsGroup); }
 
-	let policiesGroup = {
-		name: 'policies',
-		id: 'policies',
-		nodeIds: []
-	};
-	let policies = model.system.policies.map(function(policy) {
-		policy = policy.policy;
-		policiesGroup.nodeIds.push(policy.id);
-		return {
-			type: 'policy',
-			label: policy.label || policy.id || 'untitled',
-			value: policy.id,
-			id: policy.id,
-			x: 600,
-			y: 200,
-		};
-	});
-	graph.nodes = R.concat(graph.nodes, policies);
-	if (policiesGroup.nodeIds.length) { graph.groups.push(policiesGroup); }
+	// let actorsGroup = {
+	// 	name: 'actors',
+	// 	id: 'actors',
+	// 	nodeIds: []
+	// };
+	// let actors = model.system.actors.map(function(actor) {
+	// 	actor = actor.actor;
+	// 	actorsGroup.nodeIds.push(actor.id);
+	// 	return {
+	// 		type: 'actor',
+	// 		label: actor.label || actor.id || 'untitled',
+	// 		value: actor.id,
+	// 		id: actor.id,
+	// 		x: 400,
+	// 		y: 400,
+	// 	};
+	// });
+	// if (actorsGroup.nodeIds.length) { graph.groups.push(actorsGroup); }
+
+	// let rolesGroup = {
+	// 	name: 'roles',
+	// 	id: 'roles',
+	// 	nodeIds: []
+	// };
+	// let roles = model.system.roles.map(function(role) {
+	// 	role = role.role;
+	// 	rolesGroup.nodeIds.push(role.id);
+	// 	return {
+	// 		type: 'role',
+	// 		label: role.label || role.id || 'untitled',
+	// 		value: role.id,
+	// 		id: role.id,
+	// 		x: 600,
+	// 		y: 200,
+	// 	};
+	// });
+	// if (rolesGroup.nodeIds.length) { graph.groups.push(rolesGroup); }
+
+	// let predicatesGroup = {
+	// 	name: 'predicates',
+	// 	id: 'predicates',
+	// 	nodeIds: []
+	// };
+	// let predicates = model.system.predicates.map(function(predicate) {
+	// 	predicate = predicate.predicate;
+	// 	predicatesGroup.nodeIds.push(predicate.id);
+	// 	return {
+	// 		type: 'predicate',
+	// 		label: predicate.label || predicate.id || 'untitled',
+	// 		value: predicate.id,
+	// 		id: predicate.id,
+	// 		x: 600,
+	// 		y: 400,
+	// 	};
+	// });
+	// if (predicatesGroup.nodeIds.length) { graph.groups.push(predicatesGroup); }
+
+	// let processesGroup = {
+	// 	name: 'processs',
+	// 	id: 'processs',
+	// 	nodeIds: []
+	// };
+	// let processes = model.system.processes.map(function(process) {
+	// 	process = process.process;
+	// 	processesGroup.nodeIds.push(process.id);
+	// 	return {
+	// 		type: 'process',
+	// 		label: process.label || process.id || 'untitled',
+	// 		value: process.id,
+	// 		id: process.id,
+	// 		x: 600,
+	// 		y: 600,
+	// 	};
+	// });
+	// if (processesGroup.nodeIds.length) { graph.groups.push(processesGroup); }
+
+	// let policiesGroup = {
+	// 	name: 'policies',
+	// 	id: 'policies',
+	// 	nodeIds: []
+	// };
+	// let policies = model.system.policies.map(function(policy) {
+	// 	policy = policy.policy;
+	// 	policiesGroup.nodeIds.push(policy.id);
+	// 	return {
+	// 		type: 'policy',
+	// 		label: policy.label || policy.id || 'untitled',
+	// 		value: policy.id,
+	// 		id: policy.id,
+	// 		x: 600,
+	// 		y: 200,
+	// 	};
+	// });
+	// if (policiesGroup.nodeIds.length) { graph.groups.push(policiesGroup); }
+
 	// TODO: refine, generalize, ...
 
 	return graph;
@@ -275,6 +270,79 @@ function modelAsFragment(model) {
 };
 
 
+let graphFromModel =
+module.exports.graphFromModel =
+function graphFromModel(model) {
+	// empty graph
+	let graph = {
+		nodes: [],
+		edges: [],
+		groups: [],
+	};
+
+	// for each edge in model, create edge in graph
+	graph.edges = model.system.edges.map(function(elem) {
+		const edge = elem.edge;
+		return {
+			from: edge.source,
+			to: edge.target,
+			directed: edge.directed,
+			relation: edge._relation, // TODO
+		};
+	});
+
+	const locations = model.system.locations.map(function(elem) {
+		return _.merge({}, elem.location, { type: 'location' });
+	});
+	graph.nodes = R.concat(graph.nodes, locations);
+
+	const assets = model.system.assets.map(function(elem) {
+		const type = (elem.item)
+			? 'item'
+			: 'data';
+		return {
+			type,
+			atLocations: elem[type].atLocations,
+			id: elem[type].id,
+			name: elem[type].name,
+			value: elem[type].value || undefined,
+		};
+	});
+	graph.nodes = R.concat(graph.nodes, assets);
+
+	const actors = model.system.actors.map(function(elem) {
+		return _.merge({}, elem.actor, { type: 'actor' });
+	});
+	graph.nodes = R.concat(graph.nodes, actors);
+
+	const roles = model.system.roles.map(R.identity);
+	graph.nodes = R.concat(graph.nodes, roles);
+
+	const predicates = model.system.predicates.map(function(elem) {
+		// console.log(elem.predicate);
+		let p = _.merge({}, elem.predicate, {
+			type: 'predicate',
+			'_type': elem.type,
+			// 'id': elem.type,
+		});
+		p.__ = p.values;
+		delete p.values;
+		return p;
+	});
+	graph.nodes = R.concat(graph.nodes, predicates);
+
+	const processes = model.system.processes.map(R.identity);
+	graph.nodes = R.concat(graph.nodes, processes);
+
+	const policies = model.system.policies.map(R.identity);
+	graph.nodes = R.concat(graph.nodes, policies);
+
+	// TODO: implement
+
+	return graph;
+};
+
+
 let modelFromGraph =
 module.exports.modelFromGraph =
 function modelFromGraph(graph) {
@@ -286,22 +354,27 @@ function modelFromGraph(graph) {
 			_relation: edge.relation || null,
 			source: edge.from,
 			target: edge.to,
+			directed: edge.directed,
 		});
 	});
 
 	graph.nodes.forEach(function(node) {
 		try {
+			// console.log(node.type);
 			switch (node.type) {
 				case 'location':
 					trespass.model.addLocation(model, node);
 					break;
 				// case 'asset':
 				case 'item':
-					trespass.model.addItem(model, node);
+					trespass.model.addItem(model, R.without(['name', 'label'], node));
 					break;
 				case 'data':
-					trespass.model.addData(model, node);
+					trespass.model.addData(model, R.without(['name', 'label'], node));
 					break;
+				// case 'asset':
+				// 	trespass.model.addAsset(model, R.without(['name', 'label'], node));
+				// 	break;
 				case 'actor':
 					trespass.model.addActor(model, node);
 					break;
