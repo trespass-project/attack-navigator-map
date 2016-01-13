@@ -14,6 +14,8 @@ let Library = require('./components/Library/Library.js');
 let OverlayTrigger = require('react-bootstrap').OverlayTrigger;
 let Tooltip = require('react-bootstrap').Tooltip;
 
+const analysisTools = require('../data/analysis-tools.js');
+
 const api = require('../../api.js').api;
 const serverPort = require('../../api.js').serverPort;
 const serverDomain = require('../../api.js').serverDomain;
@@ -207,6 +209,29 @@ let Wizard = React.createClass({
 	renderRunAnalysis: function(props) {
 		return <div>
 			<h2 className='title'>Run analysis</h2>
+
+			<h3>Tool</h3>
+			<select>
+				{R.values(analysisTools)
+					.map(function(tool) {
+						return <option key={tool.name} value={tool.id}>{tool.name}</option>;
+					})
+				}
+			</select>
+			<br/>
+
+			<h3>Attacker goal</h3>
+			<select value='asdf' disabled={true}>
+				<option value="asdf">default goal</option>
+			</select>
+			<br/>
+
+			<hr/>
+			<button
+				onClick={this.runAnalysis}
+				className='btn btn-default btn-xs'>
+				Run
+			</button>
 		</div>;
 	},
 
