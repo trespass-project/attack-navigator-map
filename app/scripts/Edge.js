@@ -126,7 +126,7 @@ let Edge = React.createClass({
 
 		// both nodes need to exist, obviously
 		if (!edgeNodes.fromNode || !edgeNodes.toNode) {
-			console.warn('ignoring edge with missing nodes');
+			// console.warn('ignoring edge with missing nodes'/*, edgeNodes.fromNode.id, edgeNodes.toNode.id*/);
 			return null;
 		}
 

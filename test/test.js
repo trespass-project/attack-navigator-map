@@ -16,6 +16,7 @@ var f3 = function(s) {
 };
 
 
+var trespass = require('trespass.js');
 var helpers = require('../app/scripts/helpers.js');
 var modelHelpers = require('../app/scripts/model-helpers.js');
 
@@ -60,6 +61,31 @@ describe(f1('model-helpers.js'), function() {
 			let keepId = false;
 			let newNode = modelHelpers.createNode(node, keepId);
 			assert(newNode.id !== nodeId);
+		});
+	});
+
+	describe(f2('graphFromModel()'), function() {
+		let model = trespass.model.create();
+		model = trespass.model.addEdge(model, {
+			source: 'source',
+			target: 'target'
+		});
+		model = trespass.model.addLocation(model, {
+			id: 'location'
+		});
+
+		let graph = modelHelpers.graphFromModel(model);
+
+		// TODO: more
+
+		it(f3('should create edges'), function() {
+			assert(graph.edges.length === 1);
+			assert(graph.edges[0].from === 'source');
+			assert(graph.edges[0].to === 'target');
+		});
+
+		it(f3('should create locations'), function() {
+			assert(graph.nodes.length === 1);
 		});
 	});
 

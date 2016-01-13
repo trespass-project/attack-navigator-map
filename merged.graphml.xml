@@ -1,0 +1,190 @@
+<?xml version='1.0' encoding='utf-8'?>
+<system author="attack navigator map (trespass.js)" date="25-09-2015" version="0.0.0" 
+  xmlns="https://www.trespass-project.eu/schemas/TREsPASS_model" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://www.trespass-project.eu/schemas/TREsPASS_model.xsd">
+  <title>ANM-generated TREsPASS model</title>
+  <locations>
+    <location id="Outside" />
+    <location id="Hallway" />
+    <location id="RoomInternal" />
+    <location id="RoomDatacenter" />
+    <location id="DoorOutside" />
+    <location id="DoorInternal" />
+    <location id="DoorDatacenter" />
+    <location id="WindowInternal" />
+    <location id="WindowDatacenter" />
+  </locations>
+  <edges>
+    <edge directed="true">
+      <source>Outside</source>
+      <target>DoorOutside</target>
+    </edge>
+    <edge directed="true">
+      <source>DoorOutside</source>
+      <target>Hallway</target>
+    </edge>
+    <edge directed="true">
+      <source>Hallway</source>
+      <target>Outside</target>
+    </edge>
+    <edge directed="true">
+      <source>Hallway</source>
+      <target>DoorInternal</target>
+    </edge>
+    <edge directed="true">
+      <source>DoorInternal</source>
+      <target>RoomInternal</target>
+    </edge>
+    <edge directed="true">
+      <source>RoomInternal</source>
+      <target>Hallway</target>
+    </edge>
+    <edge directed="true">
+      <source>RoomInternal</source>
+      <target>DoorDatacenter</target>
+    </edge>
+    <edge directed="true">
+      <source>DoorDatacenter</source>
+      <target>RoomDatacenter</target>
+    </edge>
+    <edge directed="true">
+      <source>RoomDatacenter</source>
+      <target>RoomInternal</target>
+    </edge>
+    <edge directed="true">
+      <source>Outside</source>
+      <target>WindowInternal</target>
+    </edge>
+    <edge directed="true">
+      <source>WindowInternal</source>
+      <target>RoomInternal</target>
+    </edge>
+    <edge directed="true">
+      <source>WindowInternal</source>
+      <target>Outside</target>
+    </edge>
+    <edge directed="true">
+      <source>RoomInternal</source>
+      <target>WindowInternal</target>
+    </edge>
+    <edge directed="true">
+      <source>Hallway</source>
+      <target>WindowDatacenter</target>
+    </edge>
+    <edge directed="true">
+      <source>WindowDatacenter</source>
+      <target>RoomDatacenter</target>
+    </edge>
+    <edge directed="true">
+      <source>WindowDatacenter</source>
+      <target>Hallway</target>
+    </edge>
+    <edge directed="true">
+      <source>RoomDatacenter</source>
+      <target>WindowDatacenter</target>
+    </edge>
+  </edges>
+  <assets>
+    <item id="entity_vim.Network_network-43" name="entity_vim.Network_network-43">
+      <atLocations>RoomDatacenter</atLocations>
+    </item>
+    <item id="entity_vim.Network_network-44" name="entity_vim.Network_network-44">
+      <atLocations>RoomDatacenter</atLocations>
+    </item>
+    <item id="entity_vim.Network_network-45" name="entity_vim.Network_network-45">
+      <atLocations>RoomDatacenter</atLocations>
+    </item>
+    <item id="entity_vim.Network_network-42" name="entity_vim.Network_network-42">
+      <atLocations>RoomDatacenter</atLocations>
+    </item>
+    <item id="entity_vim.Datastore_datastore-41" name="entity_vim.Datastore_datastore-41">
+      <atLocations>RoomDatacenter</atLocations>
+    </item>
+    <item id="entity_vim.HostSystem_host-40" name="entity_vim.HostSystem_host-40">
+      <atLocations>entity_vim.Datastore_datastore-41 entity_vim.Network_network-45 entity_vim.Network_network-42 entity_vim.Network_network-44 entity_vim.Network_network-43 RoomDatacenter</atLocations>
+    </item>
+    <item id="entity_vim.VirtualMachine_vm-47" name="entity_vim.VirtualMachine_vm-47">
+      <atLocations>entity_vim.HostSystem_host-40 entity_vim.Datastore_datastore-41 entity_vim.Network_network-45</atLocations>
+    </item>
+    <item id="entity_vim.VirtualMachine_vm-122" name="entity_vim.VirtualMachine_vm-122">
+      <atLocations>entity_vim.HostSystem_host-40 entity_vim.Datastore_datastore-41 entity_vim.Network_network-45</atLocations>
+    </item>
+    <item id="entity_vim.VirtualMachine_vm-50" name="entity_vim.VirtualMachine_vm-50">
+      <atLocations>entity_vim.HostSystem_host-40 entity_vim.Datastore_datastore-41 entity_vim.Network_network-42</atLocations>
+    </item>
+    <item id="entity_vim.VirtualMachine_vm-51" name="entity_vim.VirtualMachine_vm-51">
+      <atLocations>entity_vim.Datastore_datastore-41 entity_vim.Network_network-43 entity_vim.HostSystem_host-49</atLocations>
+    </item>
+    <item id="entity_vim.HostSystem_host-52" name="entity_vim.HostSystem_host-52">
+      <atLocations>entity_vim.Datastore_datastore-41 entity_vim.Network_network-44 entity_vim.Network_network-42 entity_vim.Network_network-43 entity_vim.Network_network-45 RoomDatacenter</atLocations>
+    </item>
+    <item id="entity_vim.HostSystem_host-49" name="entity_vim.HostSystem_host-49">
+      <atLocations>entity_vim.Datastore_datastore-41 entity_vim.Network_network-43 entity_vim.Network_network-44 entity_vim.Network_network-42 entity_vim.Network_network-45 RoomDatacenter</atLocations>
+    </item>
+    <item id="entity_vim.VirtualMachine_vm-102" name="entity_vim.VirtualMachine_vm-102">
+      <atLocations>entity_vim.Datastore_datastore-41 entity_vim.Network_network-45 entity_vim.HostSystem_host-49</atLocations>
+    </item>
+    <item id="entity_vim.VirtualMachine_vm-161" name="entity_vim.VirtualMachine_vm-161">
+      <atLocations>entity_vim.HostSystem_host-52 entity_vim.Datastore_datastore-41 entity_vim.Network_network-45</atLocations>
+    </item>
+    <item id="entity_vim.VirtualMachine_vm-55" name="entity_vim.VirtualMachine_vm-55">
+      <atLocations>entity_vim.Datastore_datastore-41 entity_vim.Network_network-45 entity_vim.HostSystem_host-52</atLocations>
+    </item>
+    <item id="entity_vim.VirtualMachine_vm-82" name="entity_vim.VirtualMachine_vm-82">
+      <atLocations>entity_vim.HostSystem_host-49 entity_vim.Datastore_datastore-41 entity_vim.Network_network-45</atLocations>
+    </item>
+    <item id="entity_vim.VirtualMachine_vm-54" name="entity_vim.VirtualMachine_vm-54">
+      <atLocations>entity_vim.Datastore_datastore-41 entity_vim.Network_network-43 entity_vim.HostSystem_host-52</atLocations>
+    </item>
+    <item id="entity_vim.VirtualMachine_vm-101" name="entity_vim.VirtualMachine_vm-101">
+      <atLocations>entity_vim.HostSystem_host-49 entity_vim.Datastore_datastore-41 entity_vim.Network_network-43</atLocations>
+    </item>
+    <item id="entity_vim.VirtualMachine_vm-46" name="entity_vim.VirtualMachine_vm-46">
+      <atLocations>entity_vim.HostSystem_host-49 entity_vim.Datastore_datastore-41 entity_vim.Network_network-42</atLocations>
+    </item>
+    <data id="fileX" name="fileX" value="TODO">
+      <atLocations>entity_vim.VirtualMachine_vm-51</atLocations>
+    </data>
+  </assets>
+  <actors>
+    <actor id="sydney">
+      <atLocations>Outside</atLocations>
+    </actor>
+    <actor id="cleo">
+      <atLocations>Outside</atLocations>
+    </actor>
+    <actor id="terry">
+      <atLocations>Outside</atLocations>
+    </actor>
+    <actor id="finn">
+      <atLocations>Outside</atLocations>
+    </actor>
+    <actor id="administrators">
+      <atLocations>Outside</atLocations>
+    </actor>
+    <actor id="big">
+      <atLocations>Outside</atLocations>
+    </actor>
+    <actor id="administrator">
+      <atLocations>Outside</atLocations>
+    </actor>
+    <actor id="ethan">
+      <atLocations>Outside</atLocations>
+    </actor>
+    <actor id="grey">
+      <atLocations>Outside</atLocations>
+    </actor>
+  </actors>
+  <predicates>
+    <predicate arity="2" id="userID">
+      <value>administrators principal_VSPHERE.LOCAL_Administrators</value>
+      <value>sydney principal_VSPHERE.LOCAL_sydney</value>
+      <value>terry principal_VSPHERE.LOCAL_terry</value>
+      <value>cleo principal_VSPHERE.LOCAL_cleo</value>
+      <value>administrator principal_VSPHERE.LOCAL_Administrator</value>
+      <value>big principal_VSPHERE.LOCAL_big</value>
+      <value>finn principal_VSPHERE.LOCAL_finn</value>
+      <value>ethan principal_VSPHERE.LOCAL_ethan</value>
+    </predicate>
+  </predicates>
+</system>
