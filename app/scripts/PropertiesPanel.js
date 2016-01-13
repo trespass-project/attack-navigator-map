@@ -70,6 +70,9 @@ let PropertiesPanel = React.createClass({
 
 			case 'node':
 				const node = selectedItem;
+				const groupNames = modelHelpers.getNodeGroups(node.id, props.graph.groups)
+					.map(R.prop('name'))
+					.join(', ');
 				return (
 					<table>
 						<tbody>
@@ -103,7 +106,7 @@ let PropertiesPanel = React.createClass({
 							</tr>
 							<tr>
 								<td><label>groups:</label></td>
-								<td><span>TODO</span></td>
+								<td><span>{groupNames}</span></td>
 							</tr>
 						</tbody>
 					</table>
