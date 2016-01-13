@@ -31,16 +31,17 @@ function importModelFragment(currentGraph, fragment, xy={ x: 0, y: 0 }) {
 				_.merge({}, node, {
 					x: xy.x + (node.x || index * 60),
 					y: xy.y + (node.y || index * 30)
-				})
+				}),
+				(!!node.id) // if it has an id, keep it
 			);
 		});
-	graph.nodes = graph.nodes.concat(nodes);
+	graph.nodes = (graph.nodes || []).concat(nodes);
 
 	const groups = (fragment.groups || []);
-	graph.groups = graph.groups.concat(groups);
+	graph.groups = (graph.groups || []).concat(groups);
 
 	const edges = (fragment.edges || []);
-	graph.edges = graph.edges.concat(edges);
+	graph.edges = (graph.edges || []).concat(edges);
 
 	return graph;
 };
@@ -349,11 +350,17 @@ function removeGroup(graph, groupId, removeNodes=false) {
 };
 
 
-function createNode(node={}) {
+let createNode =
+module.exports.createNode =
+function createNode(node={}, keepId=false) {
+	const id = (keepId && node.id)
+		? node.id
+		: helpers.makeId('node');
+
 	return _.merge({}, node, {
 		x: (node.x || 0),
 		y: (node.y || 0),
-		id: (node.id || helpers.makeId('node')),
+		id: id
 	});
 }
 function createEdge(edge={}) {
@@ -369,10 +376,9 @@ module.exports.cloneNode =
 function cloneNode(graph, origNode) {
 	// duplicate node
 	const nodes = [origNode]
-		.map(createNode)
-		.map(function(node) { // new id + offset
-			return _.merge(node, {
-				id: helpers.makeId('node'),
+		.map(createNode) // new id + offset
+		.map(function(node) {
+			return _.merge({}, node, {
 				x: node.x + constants.CLONE_OFFSET,
 				y: node.y + constants.CLONE_OFFSET,
 			});

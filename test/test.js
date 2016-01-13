@@ -46,6 +46,23 @@ describe(f1('helpers.js'), function() {
 
 describe(f1('model-helpers.js'), function() {
 
+	describe(f2('createNode()'), function() {
+		const nodeId = 'old-id';
+		const node = { id: nodeId };
+
+		it(f3('should keep id'), function() {
+			let keepId = true;
+			let newNode = modelHelpers.createNode(node, keepId);
+			assert(newNode.id === nodeId);
+		});
+
+		it(f3('should create new id'), function() {
+			let keepId = false;
+			let newNode = modelHelpers.createNode(node, keepId);
+			assert(newNode.id !== nodeId);
+		});
+	});
+
 	describe(f2('removeNode()'), function() {
 		const nodeId = 'node-id';
 		let graph = {
@@ -144,17 +161,19 @@ describe(f1('model-helpers.js'), function() {
 			edges: [ { from: nodeId1, to: nodeId2 } ],
 			groups: [group],
 		};
+
 		const newGraph = modelHelpers.cloneNode(graph, graph.nodes[0]);
+
+		const origNode = newGraph.nodes[0];
+		const clonedNode = newGraph.nodes[2];
+		const clonedEdge = newGraph.edges[1];
 
 		it(f3('should create a new node'), function() {
 			assert(newGraph.nodes.length === graph.nodes.length+1);
 		});
 
-		const origNode = newGraph.nodes[0];
-		const clonedNode = newGraph.nodes[2];
-
 		it(f3('should give cloned node a new id'), function() {
-			assert(clonedNode.id != origNode.id);
+			assert(clonedNode.id !== origNode.id);
 		});
 
 		it(f3('cloned node should be in original group'), function() {
@@ -163,9 +182,23 @@ describe(f1('model-helpers.js'), function() {
 
 		it(f3('cloned node should have original edges'), function() {
 			assert(newGraph.edges.length === 2);
-			const clonedEdge = newGraph.edges[1];
 			assert(clonedEdge.to === nodeId2);
 			assert(clonedEdge.from === clonedNode.id);
+		});
+	});
+
+	describe(f2('importModelFragment()'), function() {
+		const fragment = {
+			nodes: [
+				{ id: 'old-id' },
+				{},
+			]
+		};
+		const graph = {};
+		const newGraph = modelHelpers.importModelFragment(graph, fragment);
+
+		it(f3('should give nodes a new id'), function() {
+			// assert(clonedNode.id != origNode.id);
 		});
 	});
 
