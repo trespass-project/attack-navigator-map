@@ -131,7 +131,7 @@ let Library = React.createClass({
 
 		return (
 			<div className='panel-section library-component'>
-				<h3 className='title'>{props.title}</h3>
+				<h3 className='title' style={{ textTransform: 'capitalize' }}>{props.title}</h3>
 				<div className='search form-group'>
 					<div className='input-group'>
 						<input ref='searchInput' type='search' className='form-control' placeholder='search' onChange={this.search}></input>

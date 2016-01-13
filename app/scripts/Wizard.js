@@ -101,6 +101,7 @@ let Wizard = React.createClass({
 
 	renderImport: function(props) {
 		return <div>
+			<h2 className='title'>Import</h2>
 			<input
 				ref='load-model'
 				type='file'
@@ -120,6 +121,7 @@ let Wizard = React.createClass({
 			return R.contains(a.type, ['location']);
 		};
 		return <div>
+			<h2 className='title'>Locations</h2>
 			<div id='pattern-lib'>
 				<Library {...props}
 					key={'locations-patterns'}
@@ -142,6 +144,7 @@ let Wizard = React.createClass({
 			return R.contains(a.type, ['asset/item', 'asset/data']);
 		};
 		return <div>
+			<h2 className='title'>Assets</h2>
 			<div id='component-lib'>
 				<Library {...props}
 					key={'assets-components'}
@@ -158,6 +161,7 @@ let Wizard = React.createClass({
 			return R.contains(a.type, ['actor', 'role']);
 		};
 		return <div>
+			<h2 className='title'>Actors</h2>
 			<div id='pattern-lib'>
 				<Library {...props}
 					key={'actors-patterns'}
@@ -176,19 +180,27 @@ let Wizard = React.createClass({
 	},
 
 	renderConnections: function(props) {
-		return <div>Connections</div>;
+		return <div>
+			<h2 className='title'>Connections</h2>
+		</div>;
 	},
 
 	renderPolicies: function(props) {
-		return <div>policies</div>;
+		return <div>
+			<h2 className='title'>Policies</h2>
+		</div>;
 	},
 
 	renderAttackerProfile: function(props) {
-		return <div>attacker profile</div>;
+		return <div>
+			<h2 className='title'>Attacker profile</h2>
+		</div>;
 	},
 
 	renderRunAnalysis: function(props) {
-		return <div>run analysis</div>;
+		return <div>
+			<h2 className='title'>Run analysis</h2>
+		</div>;
 	},
 
 	render: function() {
@@ -220,6 +232,7 @@ let Wizard = React.createClass({
 				{this.renderMinimap(props)}
 				{this.renderOutline(props)}
 				{this.renderProperties(props)}
+				<hr/>
 
 				<div id='wizard-container'>
 					<div id='steps-container'>
