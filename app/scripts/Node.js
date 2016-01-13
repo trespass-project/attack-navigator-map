@@ -177,7 +177,7 @@ let Node = React.createClass({
 		const props = this.props;
 		event.preventDefault();
 		event.stopPropagation();
-		props.dispatch( actionCreators.select(props.node, 'node') );
+		props.dispatch( actionCreators.select(props.node.id, 'node') );
 	},
 
 	_onDragStart: function(event) {

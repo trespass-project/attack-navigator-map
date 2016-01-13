@@ -65,7 +65,8 @@ const whitelist = [
 	constants.ACTION_loadXMLFile,
 	constants.ACTION_loadXML,
 	constants.ACTION_addNode,
-	constants.ACTION_select
+	constants.ACTION_select,
+	constants.ACTION_updateComponentProperties
 ];
 
 
@@ -101,8 +102,8 @@ function reducer(state=initialState, action) {
 		case constants.ACTION_select:
 			return mergeWithState({
 				selected: {
-					it: action.selected,
-					type: action.itsType,
+					componentId: action.componentId,
+					componentType: action.componentType,
 				},
 			});
 

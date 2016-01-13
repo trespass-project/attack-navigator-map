@@ -3,7 +3,9 @@
 let $ = require('jquery');
 let React = require('react');
 let R = require('ramda');
+let helpers = require('./helpers.js');
 let modelHelpers = require('./model-helpers.js');
+let actionCreators = require('./actionCreators.js');
 const constants = require('./constants.js');
 
 
@@ -20,17 +22,25 @@ let PropertiesPanel = React.createClass({
 	// 	return {};
 	// },
 
-	onChange: function(data, event) {
-		data[event.target.name] = event.target.value;
+	onChange: function(selected, event) {
+		let newProperties = { [event.target.name]: event.target.value };
 
-		if (!!data.relation) { // it's an edge
-			// TODO: handle this elsewhere
-			data.directed = (R.contains(data.relation, ['network', 'connects'])) ? false : true;
-		}
+		// if (!!component.relation) { // it's an edge
+		// 	// TODO: handle this elsewhere
+		// 	newProperties.directed =
+		// 		(R.contains(component.relation, ['network', 'connects']))
+		// 			? false
+		// 			: true;
+		// }
 
 		const props = this.props;
-		console.log(props.selected);
-		// props.dispatch( actionCreators. );
+		props.dispatch(
+			actionCreators.updateComponentProperties(
+				selected.componentId,
+				selected.componentType,
+				newProperties
+			)
+		);
 	},
 
 	onSubmit: function(event) {
@@ -44,19 +54,21 @@ let PropertiesPanel = React.createClass({
 			});
 	},
 
-	renderProperties: function() {
+	renderProperties: function(selectedItem, componentType) {
 		const props = this.props;
 
-		if (!props.selected || !props.selected.it) { return null; }
+		if (!selectedItem) {
+			return null;
+		}
 
 		const onChange = (props.selected)
-			? R.partial(this.onChange, [props.selected.it])
+			? R.partial(this.onChange, [props.selected])
 			: null;
 
-		switch (props.selected.type) {
+		switch (props.selected.componentType) {
 
 			case 'node':
-				const node = props.selected.it;
+				const node = selectedItem;
 				return (
 					<table>
 						<tbody>
@@ -97,13 +109,19 @@ let PropertiesPanel = React.createClass({
 				);
 
 			case 'group':
-				const group = props.selected.it;
+				const group = selectedItem;
 				return (
 					<table>
 						<tbody>
 							<tr>
 								<td><label>name:</label></td>
-								<td><input type='text' className='form-control' name='name' placeholder='name' value={group.name || ''} /></td>
+								<td><input
+									onChange={onChange}
+									type='text'
+									className='form-control'
+									name='name'
+									placeholder='name' value={group.name || ''} />
+								</td>
 							</tr>
 							<tr>
 								<td><label>id:</label></td>
@@ -122,7 +140,7 @@ let PropertiesPanel = React.createClass({
 				);
 
 			case 'edge':
-				const edge = props.selected.it;
+				const edge = selectedItem;
 
 				// look up actual nodes by id
 				const edgeNodes = modelHelpers.getEdgeNodes(edge, props.graph.nodes);
@@ -164,10 +182,24 @@ let PropertiesPanel = React.createClass({
 	render: function() {
 		const props = this.props;
 
-		const selectedItem = (props.selected && props.selected.it)
-			? props.selected.it : null;
+		let selectedItem;
+		let componentType;
+		let componentId;
+
+		if (props.selected) {
+			componentType = props.selected.componentType;
+			componentId = props.selected.componentId;
+
+			let list = {
+				'node': props.graph.nodes,
+				'edge': props.graph.edges,
+				'group': props.graph.groups,
+			}[componentType] || [];
+			selectedItem = helpers.getItemById(list, componentId);
+		}
+
 		const selectedType = (selectedItem)
-			? props.selected.type || 'unknown type'
+			? componentType || '(unknown type)'
 			: '';
 
 		return (
@@ -180,7 +212,7 @@ let PropertiesPanel = React.createClass({
 						<span className='disabled'>
 							{(!selectedItem)
 								? 'nothing selected'
-								: this.renderProperties()
+								: this.renderProperties(selectedItem, componentType)
 							}
 						</span>
 					</div>

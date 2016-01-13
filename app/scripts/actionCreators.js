@@ -3,7 +3,9 @@
 // var $ = require('jquery');
 // var R = require('ramda');
 // var Q = require('q');
+var _ = require('lodash');
 const constants = require('./constants.js');
+const helpers = require('./helpers.js');
 
 
 // var requests = {};
@@ -70,11 +72,10 @@ function importModelFragment(fragment, xy) {
 
 
 module.exports.select =
-function select(it, itsType) {
+function select(componentId, componentType) {
 	return {
 		type: constants.ACTION_select,
-		selected: it,
-		itsType: itsType,
+		componentId, componentType
 	};
 };
 
@@ -387,6 +388,16 @@ function removeGroup(group, removeNodes=false) {
 	return {
 		type: constants.ACTION_removeGroup,
 		group, removeNodes
+	};
+};
+
+
+const updateComponentProperties =
+module.exports.updateComponentProperties =
+function updateComponentProperties(componentId, componentType, newProperties) {
+	return {
+		type: constants.ACTION_updateComponentProperties,
+		componentId, componentType, newProperties
 	};
 };
 

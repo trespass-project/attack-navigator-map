@@ -65,8 +65,8 @@ function reducer(state=initialState, action) {
 			const {xml} = action;
 			const graph = modelHelpers.XMLModelToGraph(xml);
 			const model = modelHelpers.modelFromGraph(graph);
-			console.log('graph:', graph);
-			console.log('model:', model);
+			// console.log('graph:', graph);
+			// console.log('model:', model);
 			return _.merge({}, state, { graph: graph });
 		}
 
@@ -205,6 +205,18 @@ function reducer(state=initialState, action) {
 			return _.merge({}, state, {
 				graph: modelHelpers.removeGroup(_.merge({}, state.graph), group.id, removeNodes)
 			});
+		}
+
+		case constants.ACTION_updateComponentProperties: {
+			const {componentId, componentType, newProperties} = action;
+			let newState = _.merge({}, state);
+			newState.graph = modelHelpers.updateComponentProperties(
+				newState.graph,
+				componentType,
+				componentId,
+				newProperties
+			);
+			return newState;
 		}
 
 		default: {

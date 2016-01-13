@@ -594,3 +594,21 @@ function removeNode(graph, nodeId) {
 		});
 	return graph;
 };
+
+
+let updateComponentProperties =
+module.exports.updateComponentProperties =
+function updateComponentProperties(graph, componentType, componentId, newProperties) {
+	let list = {
+		'node': graph.nodes,
+		'edge': graph.edges,
+		'group': graph.groups,
+	}[componentType] || [];
+
+	list = list.map(function(item) {
+		return (item.id === componentId)
+			? _.merge(item, newProperties)
+			: item;
+	});
+	return graph;
+};

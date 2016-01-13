@@ -218,7 +218,7 @@ let Group = React.createClass({
 		event.preventDefault();
 		event.stopPropagation();
 		const props = this.props;
-		props.dispatch( actionCreators.select(props.group, 'group') );
+		props.dispatch( actionCreators.select(props.group.id, 'group') );
 	},
 
 	_onMouseOver: function(event) {

@@ -109,7 +109,7 @@ let Edge = React.createClass({
 		event.preventDefault();
 		event.stopPropagation();
 		const props = this.props;
-		props.dispatch( actionCreators.select(props.edge, 'edge') );
+		props.dispatch( actionCreators.select(props.edge.id, 'edge') );
 	},
 
 	render: function() {
