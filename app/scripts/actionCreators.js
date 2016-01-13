@@ -1,14 +1,14 @@
 'use strict';
 
-// var $ = require('jquery');
-// var R = require('ramda');
-// var Q = require('q');
-var _ = require('lodash');
+// let $ = require('jquery');
+// let R = require('ramda');
+// let Q = require('q');
+let _ = require('lodash');
 const constants = require('./constants.js');
 const helpers = require('./helpers.js');
 
 
-// var requests = {};
+// let requests = {};
 // function abortRequests(requests, key) {
 // 	requests[key] = requests[key] || [];
 // 	requests[key].forEach(function(req) { req.abort(); });
@@ -34,13 +34,12 @@ function setEditorElem(elem) {
 
 
 module.exports.showContextMenu =
-function showContextMenu(event, context, menuItems) {
+function showContextMenu(event, menuItems) {
 	return {
 		type: constants.ACTION_showContextMenu,
 		contextMenu: {
 			x: event.offsetX,
 			y: event.offsetY,
-			context,
 			menuItems
 		}
 	};

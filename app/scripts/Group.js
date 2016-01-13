@@ -177,7 +177,7 @@ let Group = React.createClass({
 					}
 				},
 			];
-			props.dispatch( actionCreators.showContextMenu(event, props.group, menuItems) );
+			props.dispatch( actionCreators.showContextMenu(event, menuItems) );
 			return false;
 		});
 	},

@@ -1,30 +1,28 @@
 'use strict';
 
-var React = require('react');
-var d3 = require('d3');
-var classnames = require('classnames');
-var sf = require('sf');
-var helpers = require('./helpers.js');
+let React = require('react');
+let d3 = require('d3');
+let classnames = require('classnames');
+let sf = require('sf');
+let helpers = require('./helpers.js');
 
 
 const halfPI = Math.PI * 0.5;
+let arc = d3.svg.arc();
 
 
-var ContextMenu = React.createClass({
+let ContextMenu = React.createClass({
 	propTypes: {
 		theme: React.PropTypes.object.isRequired,
 		contextMenu: React.PropTypes.any/*.isRequired*/,
 	},
 
 	// getDefaultProps: function() {
-	// 	return {
-
-	// 	};
+	// 	return {};
 	// },
 
 	renderPiePiece: function(fromAngle, toAngle, innerRadius, outerRadius, index, item) {
-		let arc = d3.svg.arc()
-			.innerRadius(innerRadius)
+		arc.innerRadius(innerRadius)
 			.outerRadius(outerRadius)
 			.startAngle(fromAngle + halfPI)
 			.endAngle(toAngle + halfPI);
@@ -41,12 +39,14 @@ var ContextMenu = React.createClass({
 
 		let iconHTML = { __html: (item.icon || '').trim() };
 		let labelLines = item.label.split('\n')
-			.map(function(line) { return line.trim(); });
+			.map(function(line) {
+				return line.trim();
+			});
 
 		let pathClasses = classnames('menu-item', { 'destructive': item.destructive });
 
 		return (
-			<g key={index}>
+			<g key={'piece-' + index}>
 				<path
 					className={pathClasses}
 					d={d}
@@ -56,8 +56,8 @@ var ContextMenu = React.createClass({
 					<text dy='-6' className='icon fa' dangerouslySetInnerHTML={iconHTML} />
 					<text dy='7' className='label'>
 						{labelLines.map(function(line) {
-							var lineHTML = { __html: (line || '') };
-							return <tspan key={index} x='0' dy='1.1em' dangerouslySetInnerHTML={lineHTML} />;
+							const lineHTML = { __html: (line || '') };
+							return <tspan key={'label-' + index} x='0' dy='1.1em' dangerouslySetInnerHTML={lineHTML} />;
 						})}
 					</text>
 				</g>
@@ -66,8 +66,8 @@ var ContextMenu = React.createClass({
 	},
 
 	render: function() {
-		var that = this;
-		var props = this.props;
+		let that = this;
+		const props = this.props;
 
 		if (!props.contextMenu) { return null; }
 
@@ -82,7 +82,7 @@ var ContextMenu = React.createClass({
 		const startAngle = center - (totalAngle * 0.5);
 		// const endAngle = center + (totalAngle * 0.5);
 
-		let pieces = props.contextMenu.menuItems.map(function(item, index) {
+		const pieces = props.contextMenu.menuItems.map(function(item, index) {
 			return that.renderPiePiece(
 				helpers.degToRad(startAngle + angleStep * index),
 				helpers.degToRad(startAngle + angleStep * (index + 1)),
@@ -100,22 +100,6 @@ var ContextMenu = React.createClass({
 			</g>
 		);
 	},
-
-	// componentWillMount: function() {
-	// 	//
-	// },
-
-	// componentDidMount: function() {
-	// 	//
-	// },
-
-	// componentWillReceiveProps: function() {
-	// 	//
-	// },
-
-	// componentWillUnmount: function() {
-	// 	//
-	// },
 
 });
 

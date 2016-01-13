@@ -171,7 +171,7 @@ let Edge = React.createClass({
 
 		const elem = reactDOM.findDOMNode(this);
 		$(elem).on('contextmenu', function(event) {
-			let menuItems = [
+			const menuItems = [
 				{
 					label: 'delete',
 					destructive: true,
@@ -181,7 +181,7 @@ let Edge = React.createClass({
 					}
 				}
 			];
-			props.dispatch( actionCreators.showContextMenu(event, props.group, menuItems) );
+			props.dispatch( actionCreators.showContextMenu(event, menuItems) );
 			return false;
 		});
 	},

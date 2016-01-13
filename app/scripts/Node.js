@@ -116,7 +116,7 @@ let Node = React.createClass({
 
 		const elem = reactDOM.findDOMNode(this);
 		$(elem).on('contextmenu', function(event) {
-			let menuItems = [
+			const menuItems = [
 				{	label: 'delete',
 					destructive: true,
 					icon: icons['fa-trash'],
@@ -137,7 +137,7 @@ let Node = React.createClass({
 					}
 				},
 			];
-			props.dispatch( actionCreators.showContextMenu(event, props.group, menuItems) );
+			props.dispatch( actionCreators.showContextMenu(event, menuItems) );
 			return false;
 		});
 	},

@@ -129,7 +129,7 @@ let Group = React.createClass({
 		const props = this.props;
 		const elem = reactDOM.findDOMNode(this);
 		$(elem).on('contextmenu', function(event) {
-			let menuItems = [
+			const menuItems = [
 				{
 					label: 'convert to nodes',
 					icon: icons['fa-magic'],
@@ -138,7 +138,7 @@ let Group = React.createClass({
 					}
 				}
 			];
-			props.dispatch( actionCreators.showContextMenu(event, props.group, menuItems) );
+			props.dispatch( actionCreators.showContextMenu(event, menuItems) );
 			return false;
 		});
 	},
