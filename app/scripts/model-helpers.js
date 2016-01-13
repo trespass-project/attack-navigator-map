@@ -31,6 +31,10 @@ module.exports.modelComponentsSingular = {
 	'policies': 'policy',
 };
 
+const nondirectedRelationTypes =
+module.exports.nondirectedRelationTypes =
+['network', 'connects'];
+
 
 
 let importModelFragment =
@@ -619,9 +623,17 @@ function updateComponentProperties(graph, componentType, componentId, newPropert
 	}[componentType] || [];
 
 	list = list.map(function(item) {
-		return (item.id === componentId)
-			? _.merge(item, newProperties)
-			: item;
+		if (item.id === componentId) {
+			if (componentType === 'edge') {
+				newProperties.directed =
+					(R.contains(item.relation, nondirectedRelationTypes))
+						? false
+						: true;
+			}
+			return _.merge(item, newProperties);
+		} else {
+			return item;
+		}
 	});
 	return graph;
 };

@@ -25,14 +25,6 @@ let PropertiesPanel = React.createClass({
 	onChange: function(selected, event) {
 		let newProperties = { [event.target.name]: event.target.value };
 
-		// if (!!component.relation) { // it's an edge
-		// 	// TODO: handle this elsewhere
-		// 	newProperties.directed =
-		// 		(R.contains(component.relation, ['network', 'connects']))
-		// 			? false
-		// 			: true;
-		// }
-
 		const props = this.props;
 		props.dispatch(
 			actionCreators.updateComponentProperties(
@@ -135,10 +127,10 @@ let PropertiesPanel = React.createClass({
 								<td><label>bg image:</label></td>
 								<td><span>{(group._bgImage) ? group._bgImage.url : '—'}</span></td>
 							</tr>
-							<tr>
-								<td><label>children:</label></td>
-								<td><span>TODO</span></td>
-							</tr>
+							{/*<tr>
+															<td><label>children:</label></td>
+															<td><span>TODO</span></td>
+														</tr>*/}
 						</tbody>
 					</table>
 				);
@@ -159,7 +151,10 @@ let PropertiesPanel = React.createClass({
 							<tr>
 								<td><label>relation:</label></td>
 								<td>
-									<select name='relation' value={edge.relation||null}>
+									<select
+										onChange={onChange}
+										name='relation'
+										value={edge.relation || null}>
 										{this.state.relationsLib.map(function(relation) {
 											return <option
 												key={relation.value}
