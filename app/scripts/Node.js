@@ -118,6 +118,7 @@ let Node = React.createClass({
 		$(elem).on('contextmenu', function(event) {
 			let menuItems = [
 				{	label: 'delete',
+					destructive: true,
 					icon: icons['fa-trash'],
 					action: function() {
 						props.dispatch( actionCreators.removeNode(props.node) );

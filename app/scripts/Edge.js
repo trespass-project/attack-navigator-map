@@ -174,6 +174,7 @@ let Edge = React.createClass({
 			let menuItems = [
 				{
 					label: 'delete',
+					destructive: true,
 					icon: icons['fa-trash'],
 					action: function() {
 						props.dispatch( actionCreators.removeEdge(props.edge) );
