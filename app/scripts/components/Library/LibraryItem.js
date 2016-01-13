@@ -70,10 +70,6 @@ const spec = {
 				: { nodes: [item] }; // treat single nodes like fragments
 
 			props.dispatch( actionCreators.importModelFragment(fragment, modelXY) );
-
-			if (item.type === 'node') {
-				props.dispatch( actionCreators.select(item, 'node') );
-			}
 		}
 	}
 };

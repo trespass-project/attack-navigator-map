@@ -27,10 +27,12 @@ function importModelFragment(currentGraph, fragment, xy={ x: 0, y: 0 }) {
 
 	const nodes = (fragment.nodes || [])
 		.map(function(node, index) {
-			return _.merge({}, node, {
-				x: xy.x + (node.x || index * 60),
-				y: xy.y + (node.y || index * 30)
-			});
+			return createNode(
+				_.merge({}, node, {
+					x: xy.x + (node.x || index * 60),
+					y: xy.y + (node.y || index * 30)
+				})
+			);
 		});
 	graph.nodes = graph.nodes.concat(nodes);
 
@@ -351,6 +353,7 @@ function createNode(node={}) {
 	return _.merge({}, node, {
 		x: (node.x || 0),
 		y: (node.y || 0),
+		id: (node.id || helpers.makeId('node')),
 	});
 }
 function createEdge(edge={}) {
