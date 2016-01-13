@@ -59,14 +59,14 @@ const blacklist = [
 	constants.ACTION_setHoverNode,
 	constants.ACTION_setHoverGroup,
 	constants.ACTION_setPreviewEdge,
-	constants.ACTION_setTransformation
+	constants.ACTION_setTransformation,
+	constants.ACTION_updateComponentProperties
 ];
 const whitelist = [
 	constants.ACTION_loadXMLFile,
 	constants.ACTION_loadXML,
 	constants.ACTION_addNode,
-	constants.ACTION_select,
-	constants.ACTION_updateComponentProperties
+	constants.ACTION_select
 ];
 
 

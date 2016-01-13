@@ -19,6 +19,19 @@ module.exports.modelComponents = [
 	'policies'
 ];
 
+const modelComponentsSingular =
+module.exports.modelComponentsSingular = {
+	'locations': 'location',
+	'edges': 'edge',
+	'assets': 'asset',
+	'actors': 'actor',
+	'roles': 'role',
+	'predicates': 'predicate',
+	'processes': 'process',
+	'policies': 'policy',
+};
+
+
 
 let importModelFragment =
 module.exports.importModelFragment =
