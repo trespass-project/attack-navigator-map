@@ -103,11 +103,18 @@ let Wizard = React.createClass({
 		return <div>
 			<h2 className='title'>Import</h2>
 			<input
+				style={{ display: 'none' }}
 				ref='load-model'
 				type='file'
 				accept='.xml'
 				onChange={this.loadXMLFile} />
-			<hr />
+
+			<button
+				onClick={this.clickFileButton}
+				className='btn btn-default btn-xs'>
+				load XML file
+			</button>
+			<br/>
 			<button
 				onClick={this.downloadAsXML}
 				className='btn btn-default btn-xs'>
@@ -290,6 +297,11 @@ let Wizard = React.createClass({
 				</div>
 			</div>
 		);
+	},
+
+	clickFileButton: function(event) {
+		event.preventDefault();
+		$(this.refs['load-model']).click();
 	},
 
 	loadXMLFile: function(event) {
