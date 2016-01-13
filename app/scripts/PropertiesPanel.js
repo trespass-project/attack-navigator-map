@@ -20,7 +20,7 @@ let PropertiesPanel = React.createClass({
 	// 	return {};
 	// },
 
-	_onChange: function(data, event) {
+	onChange: function(data, event) {
 		data[event.target.name] = event.target.value;
 
 		if (!!data.relation) { // it's an edge
@@ -28,10 +28,12 @@ let PropertiesPanel = React.createClass({
 			data.directed = (R.contains(data.relation, ['network', 'connects'])) ? false : true;
 		}
 
-		// TODO: action → update item
+		const props = this.props;
+		console.log(props.selected);
+		// props.dispatch( actionCreators. );
 	},
 
-	_onSubmit: function(event) {
+	onSubmit: function(event) {
 		event.preventDefault();
 	},
 
@@ -47,6 +49,10 @@ let PropertiesPanel = React.createClass({
 
 		if (!props.selected || !props.selected.it) { return null; }
 
+		const onChange = (props.selected)
+			? R.partial(this.onChange, [props.selected.it])
+			: null;
+
 		switch (props.selected.type) {
 
 			case 'node':
@@ -57,7 +63,13 @@ let PropertiesPanel = React.createClass({
 							<tr>
 								<td><label>label:</label></td>
 								<td>
-									<input type='text' className='form-control' name='label' placeholder='label' value={node.label || ''} />
+									<input
+										onChange={onChange}
+										type='text'
+										className='form-control'
+										name='label'
+										placeholder='label'
+										value={node.label || ''} />
 								</td>
 							</tr>
 							<tr>
@@ -67,7 +79,11 @@ let PropertiesPanel = React.createClass({
 							<tr>
 								<td><label>type:</label></td>
 								<td>
-									<select name='type' className='form-control' value={node.type}>
+									<select
+										onChange={onChange}
+										name='type'
+										className='form-control'
+										value={node.type}>
 										{this.renderTypeOptions()}
 									</select>
 								</td>
@@ -148,10 +164,6 @@ let PropertiesPanel = React.createClass({
 	render: function() {
 		const props = this.props;
 
-		const onChange = (props.selected)
-			? R.partial(this._onChange, [props.selected.it])
-			: null;
-
 		const selectedItem = (props.selected && props.selected.it)
 			? props.selected.it : null;
 		const selectedType = (selectedItem)
@@ -163,8 +175,8 @@ let PropertiesPanel = React.createClass({
 				<h3 className='title'>
 					selection{(selectedItem) ? ': '+selectedType : ''}
 				</h3>
-				<form className='form' onSubmit={this._onSubmit}>{/* form-horizontal */}
-					<div className='form-group' onChange={onChange}>
+				<form className='form' onSubmit={this.onSubmit}>{/* form-horizontal */}
+					<div className='form-group'>
 						<span className='disabled'>
 							{(!selectedItem)
 								? 'nothing selected'
