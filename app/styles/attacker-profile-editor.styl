@@ -1,0 +1,83 @@
+.language
+	ul
+		list-style-type: none
+		padding: 0
+
+	li
+		position: relative
+		.bar
+			height: 1.3em
+			top: 0
+			background-color: white
+			position: absolute
+			width: 0%
+			z-index: -1
+			transition: width 0.5s, height 0.5s, background-color 0.5s;
+			&.low
+				width: 5%
+				background-color: hsla(5, 0, 50, 0.2)
+			&.medium
+				width: 33%
+				background-color: hsla(5, 50, 50, 0.2)
+			&.high
+				width: 66%
+				background-color: hsla(5, 100, 50, 0.4)
+			&.veryhigh
+				width: 100%
+				background-color: hsla(5, 100, 50, 0.6)
+
+
+
+
+.selectize-control
+	*
+		border-radius: 0 !important
+
+.selectize-dropdown
+	padding: 5px !important
+
+// .selectize-input .item
+// 	@extend .label.tag
+
+
+.dropdown-selectize
+	&, & *
+		box-shadow: none !important
+
+	.selectize-control
+		min-width: 200px
+
+	.selectize-dropdown, .selectize-dropdown-content
+		top: 0px
+		left: 0px
+		position: static
+		float: none
+		border: none !important
+		box-shadow: none
+		margin: 0 !important
+		padding: 0 !important
+		visibility: visible !important
+		display: block !important
+
+.dropdown-menu
+	&, & *
+		box-shadow: none !important
+
+.dropdown-menu .input-group.filter
+	padding-left: 0.5em
+	padding-right: 0.5em
+
+.dropdown-menu, .dropdown-menu *
+	border-radius: 0
+
+.dropdown-menu li[role=presentation]
+	background: none
+	padding-left: 0
+
+
+.language
+	font-size: 16px
+	font-weight: 500
+	a
+		color: grey
+		text-decoration: none

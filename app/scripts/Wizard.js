@@ -14,6 +14,9 @@ let Library = require('./components/Library/Library.js');
 let OverlayTrigger = require('react-bootstrap').OverlayTrigger;
 let Tooltip = require('react-bootstrap').Tooltip;
 
+let AttackerProfileEditor = require('./AttackerProfileEditor/AttackerProfileEditorLanguage.js');
+// let AttackerProfileEditor = require('../../node_modules/attacker-profile-editor/app/scripts/AttackerProfileEditorLanguage.js');
+
 const analysisTools = require('../data/analysis-tools.js');
 
 const api = require('../../api.js').api;
@@ -203,6 +206,7 @@ let Wizard = React.createClass({
 	renderAttackerProfile: function(props) {
 		return <div>
 			<h2 className='title'>Attacker profile</h2>
+			<AttackerProfileEditor />
 		</div>;
 	},
 
