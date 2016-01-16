@@ -116,6 +116,8 @@ function XMLModelToGraph(xml) {
 	let rowCounter = 0;
 	let lastGroupIndex = 0;
 	const maxNodesPerCol = 7;
+
+	// create groups for the different types
 	['locations', // TODO: get this from somewhere else
 	'items',
 	'data',
@@ -133,9 +135,9 @@ function XMLModelToGraph(xml) {
 		coll.forEach(function(item) {
 			group.nodeIds.push(item.id);
 
-			// TODO: set position, if not present
 			let node = helpers.getItemById(graph.nodes, item.id);
 
+			// basic auto-layout
 			if (rowCounter > maxNodesPerCol || lastGroupIndex !== index) {
 				rowCounter = 0;
 				colCounter++;
