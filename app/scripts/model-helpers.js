@@ -226,7 +226,7 @@ module.exports.modelFromGraph =
 function modelFromGraph(graph) {
 	let model = trespass.model.create();
 
-	graph.edges.forEach(function(edge) {
+	(graph.edges || []).forEach(function(edge) {
 		trespass.model.addEdge(model, {
 			source: edge.from,
 			target: edge.to,
@@ -234,7 +234,7 @@ function modelFromGraph(graph) {
 		});
 	});
 
-	graph.nodes.forEach(function(_node) {
+	(graph.nodes || []).forEach(function(_node) {
 		const type = _node.modelComponentType;
 		let node = R.omit(['name', 'label', 'x', 'y', 'modelComponentType'], _node);
 		try {

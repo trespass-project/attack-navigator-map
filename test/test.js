@@ -225,7 +225,27 @@ describe(f1('model-helpers.js'), function() {
 
 		it(f3('should give nodes a new id'), function() {
 			// assert(clonedNode.id != origNode.id);
+			// TODO: ?
 		});
+	});
+
+	describe(f2('modelFromGraph()'), function() {
+		const graph = {
+			nodes: [
+				{ id: 'node-1', modelComponentType: 'item' },
+				{ id: 'node-2', modelComponentType: 'data' },
+				{ id: 'node-3', modelComponentType: 'predicate' }
+			]
+		};
+		const model = modelHelpers.modelFromGraph(graph);
+
+		it(f3('should create elements'), function() {
+			assert(model.system.items.length === 1);
+			assert(model.system.data.length === 1);
+			assert(model.system.predicates.length === 1);
+		});
+
+		// TODO: more
 	});
 
 });
