@@ -29,7 +29,7 @@ let PropertiesPanel = React.createClass({
 		props.dispatch(
 			actionCreators.updateComponentProperties(
 				selected.componentId,
-				selected.componentType,
+				selected.graphComponentType,
 				newProperties
 			)
 		);
@@ -47,7 +47,7 @@ let PropertiesPanel = React.createClass({
 			});
 	},
 
-	renderProperties: function(selectedItem, componentType) {
+	renderProperties: function(selectedItem, graphComponentType) {
 		const props = this.props;
 
 		if (!selectedItem) {
@@ -58,7 +58,7 @@ let PropertiesPanel = React.createClass({
 			? R.partial(this.onChange, [props.selected])
 			: null;
 
-		switch (props.selected.componentType) {
+		switch (props.selected.graphComponentType) {
 
 			case 'node':
 				const node = selectedItem;
@@ -91,7 +91,7 @@ let PropertiesPanel = React.createClass({
 										onChange={onChange}
 										name='type'
 										className='form-control'
-										value={node.modelComponentType}>
+										value={node.modelgraphComponentType}>
 										{this.renderTypeOptions()}
 									</select>
 								</td>
@@ -182,23 +182,23 @@ let PropertiesPanel = React.createClass({
 		const props = this.props;
 
 		let selectedItem;
-		let componentType;
+		let graphComponentType;
 		let componentId;
 
 		if (props.selected) {
-			componentType = props.selected.componentType;
+			graphComponentType = props.selected.graphComponentType;
 			componentId = props.selected.componentId;
 
 			let list = {
 				'node': props.graph.nodes,
 				'edge': props.graph.edges,
 				'group': props.graph.groups,
-			}[componentType] || [];
+			}[graphComponentType] || [];
 			selectedItem = helpers.getItemById(list, componentId);
 		}
 
 		const selectedType = (selectedItem)
-			? componentType || '(unknown type)'
+			? graphComponentType || '(unknown type)'
 			: '';
 
 		return (
@@ -211,7 +211,7 @@ let PropertiesPanel = React.createClass({
 						<span className='disabled'>
 							{(!selectedItem)
 								? 'nothing selected'
-								: this.renderProperties(selectedItem, componentType)
+								: this.renderProperties(selectedItem, graphComponentType)
 							}
 						</span>
 					</div>

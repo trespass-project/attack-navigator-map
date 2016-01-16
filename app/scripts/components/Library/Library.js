@@ -18,8 +18,8 @@ let Library = React.createClass({
 		renderItem: React.PropTypes.func,
 
 		showFilter: React.PropTypes.bool,
-		componentTypes: React.PropTypes.array.isRequired,
-		componentTypesFilter: React.PropTypes.array.isRequired,
+		modelComponentTypes: React.PropTypes.array.isRequired,
+		modelComponentTypesFilter: React.PropTypes.array.isRequired,
 	},
 
 	getDefaultProps: function() {
@@ -28,8 +28,8 @@ let Library = React.createClass({
 			renderItem: this.renderListItem,
 
 			showFilter: false,
-			componentTypes: [],
-			componentTypesFilter: [],
+			modelComponentTypes: [],
+			modelComponentTypesFilter: [],
 		};
 	},
 
@@ -87,7 +87,7 @@ let Library = React.createClass({
 
 	renderFilterItem: function(item) {
 		const props = this.props;
-		const checked = R.contains(item, props.componentTypesFilter);
+		const checked = R.contains(item, props.modelComponentTypesFilter);
 		return (
 			<label key={item}>
 				<input type='checkbox' value={item} checked={checked} className=''> {item}</input>
@@ -101,7 +101,7 @@ let Library = React.createClass({
 		if (!props.showFilter) { return null; }
 
 		return <form className='form-inline type-filter' onChange={this.filterType} onSubmit={this.onSubmit}>
-			{props.componentTypes.map(this.renderFilterItem)}
+			{props.modelComponentTypes.map(this.renderFilterItem)}
 		</form>;
 	},
 

@@ -71,10 +71,10 @@ function importModelFragment(fragment, xy) {
 
 
 module.exports.select =
-function select(componentId, componentType) {
+function select(componentId, graphComponentType) {
 	return {
 		type: constants.ACTION_select,
-		componentId, componentType
+		componentId, graphComponentType
 	};
 };
 
@@ -393,10 +393,10 @@ function removeGroup(group, removeNodes=false) {
 
 const updateComponentProperties =
 module.exports.updateComponentProperties =
-function updateComponentProperties(componentId, componentType, newProperties) {
+function updateComponentProperties(componentId, graphComponentType, newProperties) {
 	return {
 		type: constants.ACTION_updateComponentProperties,
-		componentId, componentType, newProperties
+		componentId, graphComponentType, newProperties
 	};
 };
 

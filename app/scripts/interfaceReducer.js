@@ -103,7 +103,7 @@ function reducer(state=initialState, action) {
 			return mergeWithState({
 				selected: {
 					componentId: action.componentId,
-					componentType: action.componentType,
+					graphComponentType: action.graphComponentType,
 				},
 			});
 

@@ -471,16 +471,16 @@ function removeNode(graph, nodeId) {
 
 let updateComponentProperties =
 module.exports.updateComponentProperties =
-function updateComponentProperties(graph, componentType, componentId, newProperties) {
+function updateComponentProperties(graph, graphComponentType, componentId, newProperties) {
 	let list = {
 		'node': graph.nodes,
 		'edge': graph.edges,
 		'group': graph.groups,
-	}[componentType] || [];
+	}[graphComponentType] || [];
 
 	list = list.map(function(item) {
 		if (item.id === componentId) {
-			if (componentType === 'edge') {
+			if (graphComponentType === 'edge') {
 				newProperties.directed =
 					(R.contains(item.relation, nondirectedRelationTypes))
 						? false

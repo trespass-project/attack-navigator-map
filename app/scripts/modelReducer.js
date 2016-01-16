@@ -208,11 +208,11 @@ function reducer(state=initialState, action) {
 		}
 
 		case constants.ACTION_updateComponentProperties: {
-			const {componentId, componentType, newProperties} = action;
+			const {componentId, graphComponentType, newProperties} = action;
 			let newState = _.merge({}, state);
 			newState.graph = modelHelpers.updateComponentProperties(
 				newState.graph,
-				componentType,
+				graphComponentType,
 				componentId,
 				newProperties
 			);
