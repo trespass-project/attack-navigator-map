@@ -66,7 +66,8 @@ const whitelist = [
 	constants.ACTION_loadXMLFile,
 	constants.ACTION_loadXML,
 	constants.ACTION_addNode,
-	constants.ACTION_select
+	constants.ACTION_select,
+	constants.ACTION_removeGroup
 ];
 
 

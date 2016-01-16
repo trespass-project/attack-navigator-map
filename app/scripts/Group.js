@@ -151,12 +151,12 @@ let Group = React.createClass({
 			const menuItems = [
 				{ label: 'delete', destructive: true, icon: icons['fa-trash'], action:
 					function(/*event*/) {
-						props.dispatch( actionCreators.removeGroup(props.group, true) );
+						props.dispatch( actionCreators.removeGroup(props.group.id, true) );
 					}
 				},
 				{ label: 'ungroup', destructive: true, icon: icons['fa-remove'], action:
 					function(/*event*/) {
-						props.dispatch( actionCreators.removeGroup(props.group) );
+						props.dispatch( actionCreators.removeGroup(props.group.id) );
 					}
 				},
 				{ label: 'clone', icon: icons['fa-files-o'], action:

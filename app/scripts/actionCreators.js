@@ -383,10 +383,10 @@ function addGroup(group) {
 
 const removeGroup =
 module.exports.removeGroup =
-function removeGroup(group, removeNodes=false) {
+function removeGroup(groupId, removeNodes=false) {
 	return {
 		type: constants.ACTION_removeGroup,
-		group, removeNodes
+		groupId, removeNodes
 	};
 };
 
