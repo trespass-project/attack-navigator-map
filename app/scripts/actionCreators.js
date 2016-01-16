@@ -273,10 +273,10 @@ function moveGroup(group, posDelta) {
 
 
 module.exports.cloneGroup =
-function cloneGroup(group) {
+function cloneGroup(groupId) {
 	return {
 		type: constants.ACTION_cloneGroup,
-		group
+		groupId
 	};
 };
 

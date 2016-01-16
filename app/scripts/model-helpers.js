@@ -366,8 +366,9 @@ function cloneNode(graph, origNode) {
 
 let cloneGroup =
 module.exports.cloneGroup =
-function cloneGroup(graph, _group) {
-	let group = _.merge({}, _group);
+function cloneGroup(graph, groupId) {
+	let origGroup = helpers.getItemById(graph.groups, groupId);
+	let group = _.merge({}, origGroup);
 
 	// create fragment from group
 	const groupNodes = group.nodeIds.map(function(nodeId) {

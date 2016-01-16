@@ -161,7 +161,7 @@ let Group = React.createClass({
 				},
 				{ label: 'clone', icon: icons['fa-files-o'], action:
 					function() {
-						props.dispatch( actionCreators.cloneGroup(props.group) );
+						props.dispatch( actionCreators.cloneGroup(props.group.id) );
 					}
 				},
 				bgimg,

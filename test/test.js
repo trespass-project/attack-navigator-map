@@ -157,7 +157,7 @@ describe(f1('model-helpers.js'), function() {
 			edges: [],
 			groups: [group],
 		};
-		const newGraph = modelHelpers.cloneGroup(graph, group);
+		const newGraph = modelHelpers.cloneGroup(graph, group.id);
 
 		it(f3('should create a new group'), function() {
 			assert(newGraph.groups.length === 2);
@@ -172,7 +172,7 @@ describe(f1('model-helpers.js'), function() {
 		});
 
 		it(f3('should clone only one group'), function() {
-			const newNewGraph = modelHelpers.cloneGroup(newGraph, newGraph.groups[1]);
+			const newNewGraph = modelHelpers.cloneGroup(newGraph, newGraph.groups[1].id);
 			assert(newNewGraph.groups.length === 3);
 		});
 	});
