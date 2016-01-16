@@ -47,7 +47,7 @@ let Node = React.createClass({
 	renderIcon: function() {
 		const props = this.props;
 		if (!props.showGroupLabels) { return null; }
-		const icon = icons[typeIcons[props.node.type]];
+		const icon = icons[typeIcons[props.node.modelComponentType]];
 		return <text
 			ref='icon'
 			className='icon fa'

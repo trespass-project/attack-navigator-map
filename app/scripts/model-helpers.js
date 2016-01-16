@@ -115,7 +115,7 @@ function XMLModelToGraph(xml) {
 	let colCounter = 0;
 	let rowCounter = 0;
 	let lastGroupIndex = 0;
-	const maxNodesPerCol = 10;
+	const maxNodesPerCol = 7;
 	['locations', // TODO: get this from somewhere else
 	'items',
 	'data',
@@ -143,9 +143,9 @@ function XMLModelToGraph(xml) {
 			}
 			const col = colCounter;
 			const row = rowCounter;
-			const spacing = 60;
+			const spacing = 75;
 			node.label = item.id;
-			node.type = modelComponentsSingular[key];
+			node.modelComponentType = modelComponentsSingular[key];
 			node.x = col * spacing;
 			node.y = row * spacing;
 			rowCounter++;
@@ -154,143 +154,6 @@ function XMLModelToGraph(xml) {
 			graph.groups.push(group);
 		}
 	});
-
-	// let assetsGroup = {
-	// 	name: 'assets', // TODO: should be `label`
-	// 	id: 'assets',
-	// 	nodeIds: []
-	// };
-	// (graph.assets || []).forEach(function(asset) {
-	// 	console.log(asset);
-	// 	asset = asset.asset;
-	// 	assetsGroup.nodeIds.push(asset.id);
-	// 	// TODO: set position, if not present
-	// });
-	// if (assetsGroup.nodeIds.length) {
-	// 	graph.groups.push(assetsGroup);
-	// }
-
-	// ——————————
-
-	// let assetsGroup = {
-	// 	name: 'assets',
-	// 	id: 'assets',
-	// 	nodeIds: []
-	// };
-	// let assets = model.system.assets.map(function(asset) {
-	// 	// console.log(asset);
-
-	// 	asset = asset.asset || asset.item || asset.data; // TODO: clean up
-	// 	assetsGroup.nodeIds.push(asset.id);
-
-	// 	const name = asset.label || asset.name || asset.id || 'untitled';
-	// 	// console.log(name);
-
-	// 	return {
-	// 		type: 'asset',
-	// 		label: name,
-	// 		value: name,
-	// 		id: name,
-	// 		x: 400,
-	// 		y: 200,
-	// 	};
-	// });
-	// if (assetsGroup.nodeIds.length) { graph.groups.push(assetsGroup); }
-
-	// let actorsGroup = {
-	// 	name: 'actors',
-	// 	id: 'actors',
-	// 	nodeIds: []
-	// };
-	// let actors = model.system.actors.map(function(actor) {
-	// 	actor = actor.actor;
-	// 	actorsGroup.nodeIds.push(actor.id);
-	// 	return {
-	// 		type: 'actor',
-	// 		label: actor.label || actor.id || 'untitled',
-	// 		value: actor.id,
-	// 		id: actor.id,
-	// 		x: 400,
-	// 		y: 400,
-	// 	};
-	// });
-	// if (actorsGroup.nodeIds.length) { graph.groups.push(actorsGroup); }
-
-	// let rolesGroup = {
-	// 	name: 'roles',
-	// 	id: 'roles',
-	// 	nodeIds: []
-	// };
-	// let roles = model.system.roles.map(function(role) {
-	// 	role = role.role;
-	// 	rolesGroup.nodeIds.push(role.id);
-	// 	return {
-	// 		type: 'role',
-	// 		label: role.label || role.id || 'untitled',
-	// 		value: role.id,
-	// 		id: role.id,
-	// 		x: 600,
-	// 		y: 200,
-	// 	};
-	// });
-	// if (rolesGroup.nodeIds.length) { graph.groups.push(rolesGroup); }
-
-	// let predicatesGroup = {
-	// 	name: 'predicates',
-	// 	id: 'predicates',
-	// 	nodeIds: []
-	// };
-	// let predicates = model.system.predicates.map(function(predicate) {
-	// 	predicate = predicate.predicate;
-	// 	predicatesGroup.nodeIds.push(predicate.id);
-	// 	return {
-	// 		type: 'predicate',
-	// 		label: predicate.label || predicate.id || 'untitled',
-	// 		value: predicate.id,
-	// 		id: predicate.id,
-	// 		x: 600,
-	// 		y: 400,
-	// 	};
-	// });
-	// if (predicatesGroup.nodeIds.length) { graph.groups.push(predicatesGroup); }
-
-	// let processesGroup = {
-	// 	name: 'processs',
-	// 	id: 'processs',
-	// 	nodeIds: []
-	// };
-	// let processes = model.system.processes.map(function(process) {
-	// 	process = process.process;
-	// 	processesGroup.nodeIds.push(process.id);
-	// 	return {
-	// 		type: 'process',
-	// 		label: process.label || process.id || 'untitled',
-	// 		value: process.id,
-	// 		id: process.id,
-	// 		x: 600,
-	// 		y: 600,
-	// 	};
-	// });
-	// if (processesGroup.nodeIds.length) { graph.groups.push(processesGroup); }
-
-	// let policiesGroup = {
-	// 	name: 'policies',
-	// 	id: 'policies',
-	// 	nodeIds: []
-	// };
-	// let policies = model.system.policies.map(function(policy) {
-	// 	policy = policy.policy;
-	// 	policiesGroup.nodeIds.push(policy.id);
-	// 	return {
-	// 		type: 'policy',
-	// 		label: policy.label || policy.id || 'untitled',
-	// 		value: policy.id,
-	// 		id: policy.id,
-	// 		x: 600,
-	// 		y: 200,
-	// 	};
-	// });
-	// if (policiesGroup.nodeIds.length) { graph.groups.push(policiesGroup); }
 
 	// TODO: refine, generalize, ...
 
@@ -301,7 +164,7 @@ function XMLModelToGraph(xml) {
 let downloadAsXML =
 module.exports.downloadAsXML =
 function downloadAsXML(model, filename) {
-	const xml = trespass.model.xmlify(model);
+	const xml = trespass.model.toXML(model);
 	const blob = new Blob(
 		[xml],
 		{ type: 'text/plain;charset=utf-8' }
@@ -369,22 +232,22 @@ function modelFromGraph(graph) {
 		});
 	});
 
-	graph.nodes.forEach(function(node) {
+	graph.nodes.forEach(function(_node) {
+		const type = _node.modelComponentType;
+		let node = R.omit(['name', 'label', 'x', 'y', 'modelComponentType'], _node);
 		try {
-			// console.log(node.type);
-			switch (node.type) {
+			switch (type) {
 				case 'location':
 					trespass.model.addLocation(model, node);
 					break;
-				// case 'asset':
 				case 'item':
-					trespass.model.addItem(model, R.without(['name', 'label'], node));
+					trespass.model.addItem(model, node);
 					break;
 				case 'data':
-					trespass.model.addData(model, R.without(['name', 'label'], node));
+					trespass.model.addData(model, node);
 					break;
 				// case 'asset':
-				// 	trespass.model.addAsset(model, R.without(['name', 'label'], node));
+				// 	trespass.model.addAsset(model, node);
 				// 	break;
 				case 'actor':
 					trespass.model.addActor(model, node);

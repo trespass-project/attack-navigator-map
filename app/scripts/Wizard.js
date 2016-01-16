@@ -127,7 +127,7 @@ let Wizard = React.createClass({
 
 	renderLocations: function(props) {
 		const filterFn = function(a) {
-			return R.contains(a.type, ['location']);
+			return R.contains(a.modelComponentType, ['location']);
 		};
 		return <div>
 			<h2 className='title'>Locations</h2>
@@ -150,7 +150,7 @@ let Wizard = React.createClass({
 
 	renderAssets: function(props) {
 		const filterFn = function(a) {
-			return R.contains(a.type, ['asset/item', 'asset/data']);
+			return R.contains(a.modelComponentType, ['asset/item', 'asset/data']);
 		};
 		return <div>
 			<h2 className='title'>Assets</h2>
@@ -167,7 +167,7 @@ let Wizard = React.createClass({
 
 	renderActors: function(props) {
 		const filterFn = function(a) {
-			return R.contains(a.type, ['actor', 'role']);
+			return R.contains(a.modelComponentType, ['actor', 'role']);
 		};
 		return <div>
 			<h2 className='title'>Actors</h2>

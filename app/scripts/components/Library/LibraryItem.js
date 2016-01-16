@@ -24,7 +24,7 @@ let LibraryItem = React.createClass({
 		if (!props.showType) { return null; }
 
 		return <div className='badge'>
-			{props.data.type}
+			{props.data.modelComponentType}
 		</div>;
 	},
 

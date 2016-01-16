@@ -6,35 +6,35 @@
 			"value": {
 				"nodes": [
 					{
-						"type": "location",
+						"modelComponentType": "location",
 						"id": "room1",
 						"x": 240,
 						"y": -120,
 						"label": "Room 1"
 					},
 					{
-						"type": "location",
+						"modelComponentType": "location",
 						"id": "room2",
 						"x": 240,
 						"y": 120,
 						"label": "Room 2"
 					},
 					{
-						"type": "location",
+						"modelComponentType": "location",
 						"id": "door1",
 						"x": 130,
 						"y": -70,
 						"label": "Door 1"
 					},
 					{
-						"type": "location",
+						"modelComponentType": "location",
 						"id": "door2",
 						"x": 130,
 						"y": 70,
 						"label": "Door 2"
 					},
 					{
-						"type": "location",
+						"modelComponentType": "location",
 						"id": "corridor",
 						"x": 1,
 						"y": 1,
@@ -85,42 +85,42 @@
 			"value": {
 				"nodes": [
 					{
-						"type": "location",
+						"modelComponentType": "location",
 						"id": "vm1",
 						"x": 300,
 						"y": 1,
 						"label": "VM1"
 					},
 					{
-						"type": "location",
+						"modelComponentType": "location",
 						"id": "vm2",
 						"x": 300,
 						"y": 100,
 						"label": "VM2"
 					},
 					{
-						"type": "asset",
+						"modelComponentType": "asset",
 						"id": "file1",
 						"x": 450,
 						"y": 1,
 						"label": "File 1"
 					},
 					{
-						"type": "asset",
+						"modelComponentType": "asset",
 						"id": "file2",
 						"x": 450,
 						"y": 100,
 						"label": "File 2"
 					},
 					{
-						"type": "location",
+						"modelComponentType": "location",
 						"id": "vsw",
 						"x": 150,
 						"y": 50,
 						"label": "Virtual switch"
 					},
 					{
-						"type": "location",
+						"modelComponentType": "location",
 						"id": "vfw",
 						"x": 1,
 						"y": 50,
@@ -178,9 +178,9 @@
 			"fragment": true,
 			"value": {
 				"nodes": [
-					{ "type": "actor", "value": "boss", "label": "Boss" },
-					{ "type": "actor", "value": "assistant", "label": "Personal assistant" },
-					{ "type": "actor", "value": "employee", "label": "Employee" }
+					{ "modelComponentType": "actor", "value": "boss", "label": "Boss" },
+					{ "modelComponentType": "actor", "value": "assistant", "label": "Personal assistant" },
+					{ "modelComponentType": "actor", "value": "employee", "label": "Employee" }
 				],
 				"edges": [],
 				"groups": []
