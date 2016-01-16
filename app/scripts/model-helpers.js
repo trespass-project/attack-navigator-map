@@ -452,10 +452,12 @@ function createNode(node={}, keepId=false) {
 		y: (node.y || 0),
 		id: id
 	});
-}
+};
+
 function createEdge(edge={}) {
 	return _.merge({}, edge);
 }
+
 function createGroup(group={}) {
 	return _.merge({}, group);
 }

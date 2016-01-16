@@ -85,10 +85,10 @@ let Wizard = React.createClass({
 
 	renderOutline: function(props) {
 		return null; // TODO: implement some sort of debug view
-		return <div>
-			<h3 className='title'>outline</h3>
-			<GraphOutline graph={props.graph} dispatch={props.dispatch} />
-		</div>;
+		// return <div>
+		// 	<h3 className='title'>outline</h3>
+		// 	<GraphOutline graph={props.graph} dispatch={props.dispatch} />
+		// </div>;
 	},
 
 	renderProperties: function(props) {
