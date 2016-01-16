@@ -178,9 +178,9 @@
 			"fragment": true,
 			"value": {
 				"nodes": [
-					{ "modelComponentType": "actor", "value": "boss", "label": "Boss" },
-					{ "modelComponentType": "actor", "value": "assistant", "label": "Personal assistant" },
-					{ "modelComponentType": "actor", "value": "employee", "label": "Employee" }
+					{ "modelComponentType": "actor", "label": "Boss" },
+					{ "modelComponentType": "actor", "label": "Personal assistant" },
+					{ "modelComponentType": "actor", "label": "Employee" }
 				],
 				"edges": [],
 				"groups": []

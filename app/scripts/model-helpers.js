@@ -4,7 +4,7 @@ let _ = require('lodash');
 let R = require('ramda');
 let trespass = require('trespass.js');
 let helpers = require('./helpers.js');
-let constants = require('./constants.js');
+const constants = require('./constants.js');
 
 
 const modelComponents =

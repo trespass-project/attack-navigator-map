@@ -150,7 +150,7 @@ let Wizard = React.createClass({
 
 	renderAssets: function(props) {
 		const filterFn = function(a) {
-			return R.contains(a.modelComponentType, ['asset/item', 'asset/data']);
+			return R.contains(a.modelComponentType, ['item', 'data']);
 		};
 		return <div>
 			<h2 className='title'>Assets</h2>
