@@ -14,7 +14,9 @@ let actionCreators = require('./actionCreators.js');
 
 const typeIcons = {
 	location: 'fa-square-o',
-	asset: 'fa-file-o',
+	// asset: 'fa-file-o',
+	data: 'fa-file-o',
+	item: 'fa-laptop',
 	actor: 'fa-male',
 	role: 'fa-user',
 	predicate: 'fa-tags',

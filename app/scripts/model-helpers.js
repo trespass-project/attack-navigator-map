@@ -11,7 +11,9 @@ const modelComponents =
 module.exports.modelComponents = [
 	'locations',
 	'edges',
-	'assets',
+	// 'assets',
+	'data',
+	'items',
 	'actors',
 	'roles',
 	'predicates',
@@ -23,7 +25,9 @@ const modelComponentsSingular =
 module.exports.modelComponentsSingular = {
 	'locations': 'location',
 	'edges': 'edge',
-	'assets': 'asset',
+	// 'assets': 'asset',
+	'data': 'data',
+	'items': 'item',
 	'actors': 'actor',
 	'roles': 'role',
 	'predicates': 'predicate',
@@ -106,23 +110,50 @@ module.exports.XMLModelToGraph =
 function XMLModelToGraph(xml) {
 	const $system = trespass.model.parse(xml)('system');
 	const model = trespass.model.prepare($system);
-
-	// generate graph from model
 	let graph = graphFromModel(model);
 
-	// let locationsGroup = {
-	// 	name: 'locations', // TODO: should be `label`
-	// 	id: 'locations',
-	// 	nodeIds: []
-	// };
-	// (graph.locations || []).forEach(function(location) {
-	// 	location = location.location;
-	// 	locationsGroup.nodeIds.push(location.id);
-	// 	// TODO: set position, if not present
-	// });
-	// if (locationsGroup.nodeIds.length) {
-	// 	graph.groups.push(locationsGroup);
-	// }
+	let colCounter = 0;
+	let rowCounter = 0;
+	let lastGroupIndex = 0;
+	const maxNodesPerCol = 10;
+	['locations', // TODO: get this from somewhere else
+	'items',
+	'data',
+	'actors',
+	'roles',
+	'predicates',
+	'processes',
+	'policies'].forEach(function(key, index) {
+		const coll = model.system[key] || [];
+		let group = {
+			name: key,
+			id: helpers.makeId('group'),
+			nodeIds: []
+		};
+		coll.forEach(function(item) {
+			group.nodeIds.push(item.id);
+
+			// TODO: set position, if not present
+			let node = helpers.getItemById(graph.nodes, item.id);
+
+			if (rowCounter > maxNodesPerCol || lastGroupIndex !== index) {
+				rowCounter = 0;
+				colCounter++;
+				lastGroupIndex = index;
+			}
+			const col = colCounter;
+			const row = rowCounter;
+			const spacing = 60;
+			node.label = item.id;
+			node.type = modelComponentsSingular[key];
+			node.x = col * spacing;
+			node.y = row * spacing;
+			rowCounter++;
+		});
+		if (group.nodeIds.length) {
+			graph.groups.push(group);
+		}
+	});
 
 	// let assetsGroup = {
 	// 	name: 'assets', // TODO: should be `label`
@@ -293,7 +324,6 @@ function modelAsFragment(model) {
 let graphFromModel =
 module.exports.graphFromModel =
 function graphFromModel(model) {
-	// empty graph
 	let graph = {
 		nodes: [],
 		edges: [],
@@ -301,64 +331,27 @@ function graphFromModel(model) {
 	};
 
 	// for each edge in model, create edge in graph
-	graph.edges = model.system.edges.map(function(elem) {
-		const edge = elem.edge;
+	graph.edges = model.system.edges.map(function(edge) {
 		return {
 			from: edge.source,
 			to: edge.target,
-			directed: edge.directed,
-			relation: edge._relation, // TODO
+			directed: edge.directed
 		};
 	});
 
-	const locations = model.system.locations.map(function(elem) {
-		return _.merge({}, elem.location, { type: 'location' });
+	['locations', // TODO: get this from somewhere else
+	'items',
+	'data',
+	'actors',
+	'roles',
+	'predicates',
+	'processes',
+	'policies'].forEach(function(key) {
+		const coll = model.system[key].map(R.identity);
+		graph.nodes = R.concat(graph.nodes, coll);
 	});
-	graph.nodes = R.concat(graph.nodes, locations);
 
-	const assets = model.system.assets.map(function(elem) {
-		const type = (elem.item)
-			? 'item'
-			: 'data';
-		return {
-			type,
-			atLocations: elem[type].atLocations,
-			id: elem[type].id,
-			name: elem[type].name,
-			value: elem[type].value || undefined,
-		};
-	});
-	graph.nodes = R.concat(graph.nodes, assets);
-
-	const actors = model.system.actors.map(function(elem) {
-		return _.merge({}, elem.actor, { type: 'actor' });
-	});
-	graph.nodes = R.concat(graph.nodes, actors);
-
-	const roles = model.system.roles.map(R.identity);
-	graph.nodes = R.concat(graph.nodes, roles);
-
-	const predicates = model.system.predicates.map(function(elem) {
-		// console.log(elem.predicate);
-		let p = _.merge({}, elem.predicate, {
-			type: 'predicate',
-			'_type': elem.type,
-			// 'id': elem.type,
-		});
-		p.__ = p.values;
-		delete p.values;
-		return p;
-	});
-	graph.nodes = R.concat(graph.nodes, predicates);
-
-	const processes = model.system.processes.map(R.identity);
-	graph.nodes = R.concat(graph.nodes, processes);
-
-	const policies = model.system.policies.map(R.identity);
-	graph.nodes = R.concat(graph.nodes, policies);
-
-	// TODO: implement
-
+	// TODO: anything missing?
 	return graph;
 };
 
@@ -370,8 +363,6 @@ function modelFromGraph(graph) {
 
 	graph.edges.forEach(function(edge) {
 		trespass.model.addEdge(model, {
-			// TODO: ?
-			_relation: edge.relation || null,
 			source: edge.from,
 			target: edge.to,
 			directed: edge.directed,
