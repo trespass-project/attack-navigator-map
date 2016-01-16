@@ -164,11 +164,11 @@ describe(f1('model-helpers.js'), function() {
 		});
 
 		it(f3('should give cloned group a new id'), function() {
-			assert(newGraph.groups[0].id != newGraph.groups[1].id);
+			assert(newGraph.groups[0].id !== newGraph.groups[1].id);
 		});
 
 		it(f3('should give cloned nodes a new id'), function() {
-			assert(newGraph.nodes[0].id != newGraph.nodes[1].id);
+			assert(newGraph.nodes[0].id !== newGraph.nodes[1].id);
 		});
 
 		it(f3('should clone only one group'), function() {
@@ -224,7 +224,7 @@ describe(f1('model-helpers.js'), function() {
 		const newGraph = modelHelpers.importModelFragment(graph, fragment);
 
 		it(f3('should give nodes a new id'), function() {
-			// assert(clonedNode.id != origNode.id);
+			// assert(clonedNode.id !== origNode.id);
 			// TODO: ?
 		});
 	});
