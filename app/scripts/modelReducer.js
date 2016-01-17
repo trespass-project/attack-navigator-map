@@ -48,7 +48,11 @@ function reducer(state=initialState, action) {
 
 		case constants.ACTION_importModelFragment: {
 			const {fragment, xy} = action;
-			const graph = modelHelpers.importModelFragment(state.graph, fragment, xy);
+			const graph = modelHelpers.importModelFragment(
+				state.graph,
+				modelHelpers.prepareFragment(fragment),
+				xy
+			);
 
 			return _.merge({}, state, { graph: graph });
 		}

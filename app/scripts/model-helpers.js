@@ -71,32 +71,31 @@ function importModelFragment(currentGraph, fragment, xy={ x: 0, y: 0 }) {
 let prepareFragment =
 module.exports.prepareFragment =
 function prepareFragment(fragment) {
+	// let fragment = _.merge({}, fragment);
+
 	(fragment.nodes || []).forEach(function(node, index) {
+		// TODO: id should be optional
 		const oldId = node.id;
 
-		// create unique id
+		// new id
 		node.id = helpers.makeId('node');
 
 		// rename existing ids in edges and groups
 		if (oldId) {
-			(fragment.edges || []).forEach(function(edge) {
-				if (edge.from === oldId) {
-					edge.from = node.id;
-				}
-				if (edge.to === oldId) {
-					edge.to = node.id;
-				}
+			fragment.edges = (fragment.edges || []).map(function(_edge) {
+				let edge = createEdge(_edge); // new id
+				edge = replaceIdInEdge(edge, oldId, node.id);
+				return edge;
 			});
 
-			(fragment.groups || []).forEach(function(group, index) {
-				group.id = helpers.makeId('group');
-				group.nodeIds = group.nodeIds.map(function(nodeId) {
-					if (nodeId === oldId) {
-						return node.id;
-					} else {
-						return nodeId;
-					}
+			fragment.groups = (fragment.groups || []).map(function(_group) {
+				let group = createGroup(_group); // new id
+				group.nodeIds = (group.nodeIds || []).map(function(nodeId) {
+					return (nodeId === oldId)
+						? node.id
+						: nodeId;
 				});
+				return group;
 			});
 		}
 	});
@@ -305,7 +304,7 @@ function createNode(node={}, keepId=false) {
 	return _.merge({}, node, {
 		x: (node.x || 0),
 		y: (node.y || 0),
-		id: id
+		id
 	});
 };
 
@@ -318,8 +317,13 @@ function createEdge(edge={}, keepId=false) {
 	});
 }
 
-function createGroup(group={}) {
-	return _.merge({}, group);
+function createGroup(group={}, keepId=false) {
+	const id = (keepId === true && node.id)
+		? node.id
+		: helpers.makeId('edge');
+	return _.merge({}, group, {
+		id
+	});
 }
 
 
@@ -441,7 +445,7 @@ function cloneGroup(graph, groupId) {
 	};
 
 	// prepare fragment
-	fragment = prepareFragment(fragment);
+	fragment = prepareFragment(fragment); // TODO: is this needed?
 
 	// add fragment; returns new graph
 	return importModelFragment(graph, fragment, xy);

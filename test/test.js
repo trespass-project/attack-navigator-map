@@ -3,6 +3,7 @@
 var assert = require('assert');
 var chalk = require('chalk');
 var R = require('ramda');
+var _ = require('lodash');
 
 
 var f1 = function(s) {
@@ -291,16 +292,70 @@ describe(f1('model-helpers.js'), function() {
 	describe(f2('importModelFragment()'), function() {
 		const fragment = {
 			nodes: [
-				{ id: 'old-id' },
-				{},
+				{ id: 'node-id-1' },
+				{ id: 'node-id-2' },
+			],
+			edges: [
+				{ id: 'edge-id-1' },
+				{ id: 'edge-id-2' },
+			],
+			groups: [
+				{ id: 'group-id-1' },
+				{ id: 'group-id-2' },
 			]
 		};
 		const graph = {};
 		const newGraph = modelHelpers.importModelFragment(graph, fragment);
 
-		it(f3('should give nodes a new id'), function() {
-			// assert(clonedNode.id !== origNode.id);
-			// TODO: ?
+		it(f3('should import everything'), function() {
+			assert(newGraph.nodes.length === fragment.nodes.length);
+			assert(newGraph.edges.length === fragment.edges.length);
+			assert(newGraph.groups.length === fragment.groups.length);
+		});
+
+		// TODO: what else?
+	});
+
+	describe(f2('prepareFragment()'), function() {
+		const fragment = {
+			nodes: [
+				{ id: 'node-id-1' },
+				{ id: 'node-id-2' },
+			],
+			edges: [
+				{ id: 'edge-id-1', from: 'node-id-1', to: 'node-id-2' },
+				{ id: 'edge-id-2' },
+			],
+			groups: [
+				{ id: 'group-id-1', nodeIds: ['node-id-1', 'node-id-2'] },
+				{ id: 'group-id-2' },
+			]
+		};
+		const preparedFragment = modelHelpers.prepareFragment( _.merge({}, fragment) );
+
+		it(f3('everything should get a new id'), function() {
+			assert(preparedFragment.nodes.length === fragment.nodes.length);
+			assert(preparedFragment.nodes[0].id !== fragment.nodes[0].id);
+			assert(preparedFragment.nodes[1].id !== fragment.nodes[1].id);
+
+			assert(preparedFragment.edges.length === fragment.edges.length);
+			assert(preparedFragment.edges[0].id !== fragment.edges[0].id);
+			assert(preparedFragment.edges[1].id !== fragment.edges[1].id);
+
+			assert(preparedFragment.groups.length === fragment.groups.length);
+			assert(preparedFragment.groups[0].id !== fragment.groups[0].id);
+			assert(preparedFragment.groups[1].id !== fragment.groups[1].id);
+		});
+
+		it(f3('edges should stay intact'), function() {
+			// console.log(preparedFragment.edges[0]);
+			assert(preparedFragment.edges[0].from === preparedFragment.nodes[0].id);
+			assert(preparedFragment.edges[0].to === preparedFragment.nodes[1].id);
+		});
+
+		it(f3('groups should stay intact'), function() {
+			assert(preparedFragment.groups[0].nodeIds[0] === preparedFragment.nodes[0].id);
+			assert(preparedFragment.groups[0].nodeIds[1] === preparedFragment.nodes[1].id);
 		});
 	});
 
