@@ -35,48 +35,6 @@ class InterfaceStore extends Store {
 		this.graphStore._updateModel();
 	}
 
-	setTransformation(action) {
-		var {scale/*, panX, panY*/} = action.transformation;
-
-		var showEdgeLabels = false;
-		var threshold = 0.5;
-		scale = scale || this.state.scale;
-		showEdgeLabels = (scale >= threshold);
-		var showNodeLabels = showEdgeLabels;
-		var showGroupLabels = showEdgeLabels;
-
-		let visibleRect = null;
-		if (this.state.editorElem) {
-			const editorElem = this.state.editorElem;
-			const editorTransformElem = this.state.editorTransformElem;
-			const visibleRectPosition = helpers.unTransformFromTo(
-				editorElem,
-				editorTransformElem,
-				{ x: 0,
-				  y: 0 }
-			);
-			visibleRect = {
-				x: visibleRectPosition.x,
-				y: visibleRectPosition.y,
-				width: this.state.editorElemSize.width / scale,
-				height: this.state.editorElemSize.height / scale,
-			};
-		}
-
-		this.setState(
-			_.merge(
-				{},
-				{
-					showEdgeLabels: showEdgeLabels,
-					showNodeLabels: showNodeLabels,
-					showGroupLabels: showGroupLabels,
-					visibleRect,
-				},
-				action.transformation
-			)
-		);
-	}
-
 	_autoLayout() {
 		const that = this;
 		let state = this.graphStore.state;
@@ -200,16 +158,6 @@ class InterfaceStore extends Store {
 				console.error(err);
 			}
 		});
-	}
-
-	moveImage(action) {
-		let that = this;
-		let {group, newPos} = action;
-
-		group._bgImage.groupCenterOffsetX = newPos.groupCenterOffsetX;
-		group._bgImage.groupCenterOffsetY = newPos.groupCenterOffsetY;
-
-		this.graphStore._updateModel();
 	}
 
 };
