@@ -61,7 +61,7 @@ let Node = React.createClass({
 		if (!props.showGroupLabels) { return null; }
 		let label = props.node.label || 'no label';
 		label = helpers.ellipsize(15, label);
-		return <text ref='label' className='label' x='0' y={2+props.theme.node.size*0.5}>{label}</text>;
+		return <text ref='label' className='label' x='0' y={10+props.theme.node.size*0.5}>{label}</text>;
 	},
 
 	render: function() {
