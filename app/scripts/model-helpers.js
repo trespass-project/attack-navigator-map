@@ -308,6 +308,8 @@ function createNode(node={}, keepId=false) {
 	});
 };
 
+let createEdge =
+module.exports.createEdge =
 function createEdge(edge={}, keepId=false) {
 	const id = (keepId === true && edge.id)
 		? edge.id
@@ -315,8 +317,10 @@ function createEdge(edge={}, keepId=false) {
 	return _.merge({}, edge, {
 		id
 	});
-}
+};
 
+let createGroup =
+module.exports.createGroup =
 function createGroup(group={}, keepId=false) {
 	const id = (keepId === true && group.id)
 		? group.id
@@ -324,7 +328,7 @@ function createGroup(group={}, keepId=false) {
 	return _.merge({}, group, {
 		id
 	});
-}
+};
 
 
 let cloneNode =
