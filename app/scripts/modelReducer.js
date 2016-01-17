@@ -49,6 +49,14 @@ function reducer(state=initialState, action) {
 			return newState;
 		}
 
+		case constants.ACTION_removeGroupBackgroundImage: {
+			let {groupId} = action;
+			let newState = _.merge({}, state);
+			let group = helpers.getItemById(newState.graph.groups, groupId);
+			delete group._bgImage;
+			return newState;
+		}
+
 		case constants.ACTION_importModelFragment: {
 			const {fragment, xy} = action;
 			const graph = modelHelpers.importModelFragment(

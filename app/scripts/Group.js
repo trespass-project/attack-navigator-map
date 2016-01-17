@@ -136,7 +136,6 @@ let Group = React.createClass({
 
 	componentDidMount: function() {
 		let that = this;
-		const props = this.props;
 
 		const elem = reactDOM.findDOMNode(this);
 		$(elem).on('contextmenu', function(event) {
@@ -145,27 +144,27 @@ let Group = React.createClass({
 				icon: icons['fa-plus'],
 				action: that.openFileDialog
 			};
-			if (!_.isEmpty(props.group._bgImage)) {
+			if (!_.isEmpty(that.props.group._bgImage)) {
 				bgimg.icon = icons['fa-remove'];
 				bgimg.action = function() {
-					props.dispatch( actionCreators.removeGroupBackgroundImage(props.group) );
+					that.props.dispatch( actionCreators.removeGroupBackgroundImage(that.props.group.id) );
 				};
 			}
 
 			const menuItems = [
 				{ label: 'delete', destructive: true, icon: icons['fa-trash'], action:
 					function(/*event*/) {
-						props.dispatch( actionCreators.removeGroup(props.group.id, true) );
+						that.props.dispatch( actionCreators.removeGroup(that.props.group.id, true) );
 					}
 				},
 				{ label: 'ungroup', destructive: true, icon: icons['fa-remove'], action:
 					function(/*event*/) {
-						props.dispatch( actionCreators.removeGroup(props.group.id) );
+						that.props.dispatch( actionCreators.removeGroup(that.props.group.id) );
 					}
 				},
 				{ label: 'clone', icon: icons['fa-files-o'], action:
 					function() {
-						props.dispatch( actionCreators.cloneGroup(props.group.id) );
+						that.props.dispatch( actionCreators.cloneGroup(that.props.group.id) );
 					}
 				},
 				bgimg,
@@ -175,13 +174,13 @@ let Group = React.createClass({
 							x: event.offsetX,
 							y: event.offsetY
 						};
-						props.dispatch(
-							actionCreators.addNodeToGroup(node, props.group)
+						that.props.dispatch(
+							actionCreators.addNodeToGroup(node, that.props.group)
 						);
 					}
 				},
 			];
-			props.dispatch( actionCreators.showContextMenu(event, menuItems) );
+			that.props.dispatch( actionCreators.showContextMenu(event, menuItems) );
 			return false;
 		});
 	},

@@ -115,6 +115,15 @@ function addGroupBackgroundImage(groupId, dataURI, aspectRatio, width) {
 };
 
 
+module.exports.removeGroupBackgroundImage =
+function removeGroupBackgroundImage(groupId) {
+	return {
+		type: constants.ACTION_removeGroupBackgroundImage,
+		groupId
+	};
+};
+
+
 const setTransformation =
 module.exports.setTransformation =
 function setTransformation(transformation) {
