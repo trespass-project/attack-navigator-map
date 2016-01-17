@@ -271,7 +271,7 @@ let Wizard = React.createClass({
 						<Tab name='import'
 							selectedSection={selectedSection}
 							icon='images/icons/import-01.svg'
-							tooltip='Import model'
+							tooltip='Import / export model'
 							handleClick={R.partial(this.selectWizardStep, ['import'])}
 						/>
 						<Tab name='locations'
