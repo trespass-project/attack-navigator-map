@@ -49,7 +49,21 @@ let GraphEditor = React.createClass({
 						};
 						that.props.dispatch( actionCreators.addGroup(group) );
 					}
-				}
+				},
+				{
+					label: 'reset\nview',
+					icon: icons['fa-sliders'],
+					action: function(/*event*/) {
+						that.props.dispatch( actionCreators.resetTransformation() );
+					}
+				},
+				{
+					label: 'auto-layout',
+					icon: icons['fa-magic'],
+					action: function(/*event*/) {
+						that.props.dispatch( actionCreators.autoLayout() );
+					}
+				},
 			];
 			that.props.dispatch( actionCreators.showContextMenu(event, menuItems) );
 			return false;
