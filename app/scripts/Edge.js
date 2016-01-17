@@ -145,7 +145,7 @@ let Edge = React.createClass({
 			angleDeg = radians(angleDeg);
 
 			arrow = (
-				<g transform={'translate('+x+','+y+') rotate('+angleDeg+')'}>
+				<g transform={'translate('+x+','+y+') rotate('+angleDeg+')'} fill='white'>
 					<path d={arrowShape} />
 				</g>
 			);
