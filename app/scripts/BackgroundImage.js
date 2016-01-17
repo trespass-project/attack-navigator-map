@@ -187,11 +187,11 @@ let Group = React.createClass({
 		};
 
 		props.dispatch(
-			actionCreators.moveImage(
-				this.props.group,
+			actionCreators.moveGroupBackgroundImage(
+				props.group.id,
 				{
-					groupCenterOffsetX: this.originalPositionX + modelXYDelta.x,
-					groupCenterOffsetY: this.originalPositionY + modelXYDelta.y
+					x: this.originalPositionX + modelXYDelta.x,
+					y: this.originalPositionY + modelXYDelta.y
 				}
 			)
 		);

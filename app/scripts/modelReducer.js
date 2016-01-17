@@ -66,6 +66,22 @@ function reducer(state=initialState, action) {
 			return newState;
 		}
 
+		case constants.ACTION_moveGroupBackgroundImage: {
+			let {groupId, groupCenterOffsetXY} = action;
+
+			let newState = _.merge({}, state);
+			let group = helpers.getItemById(newState.graph.groups, groupId);
+
+			if (!group._bgImage) {
+				return state;
+			}
+
+			group._bgImage.groupCenterOffsetX = groupCenterOffsetXY.x;
+			group._bgImage.groupCenterOffsetY = groupCenterOffsetXY.y;
+
+			return newState;
+		}
+
 		case constants.ACTION_removeGroupBackgroundImage: {
 			let {groupId} = action;
 			let newState = _.merge({}, state);

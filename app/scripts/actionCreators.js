@@ -133,6 +133,15 @@ function resizeGroupBackgroundImage(groupId, width, height) {
 };
 
 
+module.exports.moveGroupBackgroundImage =
+function moveGroupBackgroundImage(groupId, groupCenterOffsetXY) {
+	return {
+		type: constants.ACTION_moveGroupBackgroundImage,
+		groupId, groupCenterOffsetXY
+	};
+};
+
+
 const setTransformation =
 module.exports.setTransformation =
 function setTransformation(transformation) {
