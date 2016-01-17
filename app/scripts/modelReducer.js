@@ -36,14 +36,17 @@ function reducer(state=initialState, action) {
 
 	switch (action.type) {
 		case constants.ACTION_addGroupBackgroundImage: {
-			let {group, dataURI, aspectRatio/*, width*/} = action;
+			let {groupId, dataURI, aspectRatio/*, width*/} = action;
+
+			let newState = _.merge({}, state);
+			let group = helpers.getItemById(newState.graph.groups, groupId);
+
 			group._bgImage = group._bgImage || {};
 			group._bgImage.url = dataURI;
 			group._bgImage.width = 550;
 			group._bgImage.height = 550 / aspectRatio;
-			// return mergeWithState({ showEdges: action.yesno });
-			// TODO:
-			return state;
+
+			return newState;
 		}
 
 		case constants.ACTION_importModelFragment: {

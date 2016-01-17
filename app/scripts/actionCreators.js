@@ -107,10 +107,10 @@ function setShowEdges(yesno) {
 
 
 module.exports.addGroupBackgroundImage =
-function addGroupBackgroundImage(group, dataURI, aspectRatio, width) {
+function addGroupBackgroundImage(groupId, dataURI, aspectRatio, width) {
 	return {
 		type: constants.ACTION_addGroupBackgroundImage,
-		group, dataURI, aspectRatio, width
+		groupId, dataURI, aspectRatio, width
 	};
 };
 

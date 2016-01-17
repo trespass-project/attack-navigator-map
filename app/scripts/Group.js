@@ -140,7 +140,11 @@ let Group = React.createClass({
 
 		const elem = reactDOM.findDOMNode(this);
 		$(elem).on('contextmenu', function(event) {
-			let bgimg = { label: 'image', icon: icons['fa-plus'], action: that.openFileDialog };
+			let bgimg = {
+				label: 'background\nimage',
+				icon: icons['fa-plus'],
+				action: that.openFileDialog
+			};
 			if (!_.isEmpty(props.group._bgImage)) {
 				bgimg.icon = icons['fa-remove'];
 				bgimg.action = function() {
@@ -192,6 +196,7 @@ let Group = React.createClass({
 		$addfile.on('change', this.loadBackgroundFile);
 		$addfile.click();
 	},
+
 	loadBackgroundFile: function(event) { // TODO: do this elsewhere
 		let that = this;
 		const props = this.props;
@@ -206,7 +211,7 @@ let Group = React.createClass({
 			const aspectRatio = w / h;
 			// const dataURI = 'data:image/svg+xml;utf8,'+svg;
 			const dataURI = 'data:image/svg+xml;base64,'+btoa(svg);
-			props.dispatch( actionCreators.addGroupBackgroundImage(props.group, dataURI, aspectRatio, w) );
+			props.dispatch( actionCreators.addGroupBackgroundImage(props.group.id, dataURI, aspectRatio, w) );
 		};
 		// reader.readAsDataURL(file);
 		reader.readAsText(file);
