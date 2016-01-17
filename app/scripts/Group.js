@@ -168,6 +168,11 @@ let Group = React.createClass({
 						that.props.dispatch( actionCreators.cloneGroup(that.props.group.id) );
 					}
 				},
+				{ label: 'save as\npattern', icon: icons['fa-floppy-o'], action:
+					function() {
+						// that.props.dispatch( actionCreators.cloneGroup(that.props.group.id) );
+					}
+				},
 				bgimg
 			];
 			that.props.dispatch( actionCreators.showContextMenu(event, menuItems) );
