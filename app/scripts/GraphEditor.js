@@ -51,7 +51,7 @@ let GraphEditor = React.createClass({
 					}
 				}
 			];
-			that.props.dispatch( actionCreators.showContextMenu(event, that.props.graph, menuItems) );
+			that.props.dispatch( actionCreators.showContextMenu(event, menuItems) );
 			return false;
 		});
 	},
