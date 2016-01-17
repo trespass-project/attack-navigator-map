@@ -231,11 +231,18 @@ let Wizard = React.createClass({
 			<br/>
 
 			<hr/>
-			<button
-				onClick={this.runAnalysis}
-				className='btn btn-default btn-xs'>
-				Run
-			</button>
+			<div style={{
+				display: 'flex',
+				flexDirection: 'column',
+				alignItems: 'center',
+				justifyContent: 'center',
+			}}>
+				<button
+					onClick={this.runAnalysis}
+					className='btn btn-primary'>
+					<b>Run</b>
+				</button>
+			</div>
 		</div>;
 	},
 
