@@ -245,8 +245,8 @@ let Node = React.createClass({
 				height: props.theme.node.size,
 			};
 			const groupCenter = {
-				x: groupRect.x + groupRect.width*0.5,
-				y: groupRect.y + groupRect.height*0.5,
+				x: groupRect.x + groupRect.width * 0.5,
+				y: groupRect.y + groupRect.height * 0.5,
 			};
 			// console.log(helpers.distBetweenPoints(node, groupCenter));
 			// if (helpers.isRectInsideRect(nodeRect, groupRect)
@@ -260,7 +260,9 @@ let Node = React.createClass({
 			return false;
 		});
 		if (dropGroups.length) {
-			props.dispatch( actionCreators.addNodeToGroup(node, R.last(dropGroups)) );
+			props.dispatch(
+				actionCreators.addNodeToGroup(node.id, R.last(dropGroups).id)
+			);
 		}
 
 		props.dispatch( actionCreators.setDragNode(null) );

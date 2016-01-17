@@ -458,19 +458,22 @@ function cloneGroup(graph, groupId) {
 
 let addNode =
 module.exports.addNode =
-function addNode(graph, node, opts) {
-	opts = opts || {};
-	node = _.defaults(node, {
+function addNode(graph, node) {
+	node = _.defaults(node, { // TODO: createNode
 		id: helpers.makeId('node'),
 		label: 'new node'
 	});
-
-	if (opts.toGroup) {
-		opts.toGroup.nodeIds.push(node.id);
-		opts.toGroup.nodeIds = R.uniq(opts.toGroup.nodeIds);
-	}
-
 	graph.nodes.push(node);
+	return graph;
+};
+
+
+let addNodeToGroup =
+module.exports.addNodeToGroup =
+function addNodeToGroup(graph, nodeId, groupId) {
+	let group = helpers.getItemById(graph.groups, groupId);
+	group.nodeIds.push(nodeId);
+	group.nodeIds = R.uniq(group.nodeIds);
 	return graph;
 };
 

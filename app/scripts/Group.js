@@ -167,18 +167,7 @@ let Group = React.createClass({
 						that.props.dispatch( actionCreators.cloneGroup(that.props.group.id) );
 					}
 				},
-				bgimg,
-				{ label: 'node', icon: icons['fa-plus'], action:
-					function(/*event*/) {
-						let node = {
-							x: event.offsetX,
-							y: event.offsetY
-						};
-						that.props.dispatch(
-							actionCreators.addNodeToGroup(node, that.props.group)
-						);
-					}
-				},
+				bgimg
 			];
 			that.props.dispatch( actionCreators.showContextMenu(event, menuItems) );
 			return false;

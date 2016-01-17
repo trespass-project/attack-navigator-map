@@ -253,10 +253,10 @@ function cloneNode(node) {
 
 
 module.exports.addNodeToGroup =
-function addNodeToGroup(node, group) {
+function addNodeToGroup(nodeId, groupId) {
 	return {
 		type: constants.ACTION_addNodeToGroup,
-		node, group
+		nodeId, groupId
 	};
 };
 

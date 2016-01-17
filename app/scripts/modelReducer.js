@@ -136,16 +136,9 @@ function reducer(state=initialState, action) {
 		}
 
 		case constants.ACTION_addNodeToGroup: {
-			const {node, group} = action;
+			const {nodeId, groupId} = action;
 			let newState = _.merge({}, state);
-			newState.graph = modelHelpers.addNode(
-				newState.graph,
-				node,
-				{ toGroup: helpers.getItemById(
-					newState.graph.groups,
-					group.id
-				) }
-			);
+			newState.graph = modelHelpers.addNodeToGroup(newState.graph, nodeId, groupId);
 			return newState;
 		}
 
@@ -234,7 +227,7 @@ function reducer(state=initialState, action) {
 			newState.graph.groups.push(
 				_.merge(group, {
 					id: helpers.makeId('group'),
-					label: 'new group',
+					name: 'new group', // TODO: should be label
 					nodeIds: []
 				})
 			);

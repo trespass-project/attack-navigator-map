@@ -90,6 +90,22 @@ describe(f1('model-helpers.js'), function() {
 		});
 	});
 
+	describe(f2('addNodeToGroup()'), function() {
+		const node = { id: 'node-id' };
+		const group = { id: 'group-id', nodeIds: [] };
+		let graph = {
+			nodes: [node],
+			edges: [],
+			groups: [group],
+		};
+		const newGraph = modelHelpers.addNodeToGroup(graph, node.id, group.id);
+
+		it(f3('should work'), function() {
+			assert(newGraph.groups[0].nodeIds.length === 1);
+			assert(newGraph.groups[0].nodeIds[0] === newGraph.nodes[0].id);
+		});
+	});
+
 	describe(f2('removeNode()'), function() {
 		const nodeId = 'node-id';
 		let graph = {
