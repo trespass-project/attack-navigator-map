@@ -429,10 +429,10 @@ function cloneGroup(graph, groupId) {
 		})
 		.map(function(edge) {
 			if (mapOldToNewNodeId[edge.from]) {
-				edge = replaceIdInEdge(edge, edge.from, mapOldToNewNodeId[edge.from])
+				edge = replaceIdInEdge(edge, edge.from, mapOldToNewNodeId[edge.from]);
 			}
 			if (mapOldToNewNodeId[edge.to]) {
-				edge = replaceIdInEdge(edge, edge.to, mapOldToNewNodeId[edge.to])
+				edge = replaceIdInEdge(edge, edge.to, mapOldToNewNodeId[edge.to]);
 			}
 			return createEdge(edge);
 		});
