@@ -44,20 +44,22 @@ var DropdownSelectize = React.createClass({
 					{props.title}{common.caret}
 				</a>
 				<ul role='menu' className='dropdown-menu'>
-					<div>
-						<form className='form'>
-							<div className='input-group filter' role='search'>
-								<Selectize
-									type='text'
-									value={state.tags.join(',')}
-									onChange={this.updateTags}
-									displayAttribute={props.displayAttribute}
-									valueAttribute={props.valueAttribute}
-									options={props.items}
-								/>
-							</div>
-						</form>
-					</div>
+					<li>
+						<div style={{ marginTop: '7px' }}>
+							<form className='form'>
+								<div className='input-group filter' role='search'>
+									<Selectize
+										type='text'
+										value={state.tags.join(',')}
+										onChange={this.updateTags}
+										displayAttribute={props.displayAttribute}
+										valueAttribute={props.valueAttribute}
+										options={props.items}
+									/>
+								</div>
+							</form>
+						</div>
+					</li>
 				</ul>
 			</span>
 		);
