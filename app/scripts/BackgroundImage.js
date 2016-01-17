@@ -44,7 +44,7 @@ let ResizeElem = React.createClass({
 
 		props.dispatch(
 			actionCreators.resizeGroupBackgroundImage(
-				props.group,
+				props.group.id,
 				Math.max(w1, w2),
 				Math.max(h1, h2)
 			)

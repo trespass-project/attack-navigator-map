@@ -49,6 +49,23 @@ function reducer(state=initialState, action) {
 			return newState;
 		}
 
+		case constants.ACTION_resizeGroupBackgroundImage: {
+			let {groupId, width, height} = action;
+
+			let newState = _.merge({}, state);
+			let group = helpers.getItemById(newState.graph.groups, groupId);
+
+			if (!group._bgImage) {
+				return state;
+			}
+
+			const minSize = 100;
+			group._bgImage.width = Math.max(width, minSize);
+			group._bgImage.height = Math.max(height, minSize);
+
+			return newState;
+		}
+
 		case constants.ACTION_removeGroupBackgroundImage: {
 			let {groupId} = action;
 			let newState = _.merge({}, state);
