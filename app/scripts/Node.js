@@ -61,7 +61,9 @@ let Node = React.createClass({
 		if (!props.showGroupLabels) { return null; }
 		let label = props.node.label || 'no label';
 		label = helpers.ellipsize(15, label);
-		return <text ref='label' className='label' x='0' y={10+props.theme.node.size*0.5}>{label}</text>;
+		return <text ref='label' className='label' x='0' y={10+props.theme.node.size*0.5}>
+			{label}
+		</text>;
 	},
 
 	render: function() {
@@ -236,11 +238,12 @@ let Node = React.createClass({
 		const graph = props.graph;
 		const groups = graph.groups;
 		const node = props.node;
+		const halfSize = 0.5 * props.theme.node.size;
 		const dropGroups = groups.filter(function(group) {
 			const groupRect = helpers.getGroupBBox(graph.nodes, group);
 			const nodeRect = {
-				x: node.x - 0.5*props.theme.node.size,
-				y: node.y - 0.5*props.theme.node.size,
+				x: node.x - halfSize,
+				y: node.y - halfSize,
 				width: props.theme.node.size,
 				height: props.theme.node.size,
 			};

@@ -76,14 +76,15 @@ let Group = React.createClass({
 				width: props.width,
 				height: props.height,
 			};
+			const halfSize = 0.5 * props.theme.node.size;
 			const nodeRect = {
-				x: props.dragNode.x - 0.5*props.theme.node.size,
-				y: props.dragNode.y - 0.5*props.theme.node.size,
+				x: props.dragNode.x - halfSize,
+				y: props.dragNode.y - halfSize,
 				width: props.theme.node.size,
 				height: props.theme.node.size,
 			};
-			if (helpers.isRectInsideRect(nodeRect, groupRect)
-				|| helpers.isRectInsideRect(groupRect, nodeRect) // or, when group is smaller than node
+			if (helpers.isRectInsideRect(nodeRect, groupRect) ||
+				helpers.isRectInsideRect(groupRect, nodeRect) // or, when group is smaller than node
 				) {
 				return (
 					<Dropzone
