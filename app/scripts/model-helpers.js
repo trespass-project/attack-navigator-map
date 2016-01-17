@@ -299,10 +299,9 @@ function removeGroup(graph, groupId, removeNodes=false) {
 let createNode =
 module.exports.createNode =
 function createNode(node={}, keepId=false) {
-	const id = (keepId && node.id)
+	const id = (keepId === true && node.id)
 		? node.id
 		: helpers.makeId('node');
-
 	return _.merge({}, node, {
 		x: (node.x || 0),
 		y: (node.y || 0),
@@ -310,8 +309,13 @@ function createNode(node={}, keepId=false) {
 	});
 };
 
-function createEdge(edge={}) {
-	return _.merge({}, edge);
+function createEdge(edge={}, keepId=false) {
+	const id = (keepId === true && node.id)
+		? node.id
+		: helpers.makeId('edge');
+	return _.merge({}, edge, {
+		id
+	});
 }
 
 function createGroup(group={}) {
@@ -323,8 +327,10 @@ let cloneNode =
 module.exports.cloneNode =
 function cloneNode(graph, origNode) {
 	// duplicate node
-	const nodes = [origNode]
-		.map(createNode) // new id + offset
+	const nodes = [origNode] // new id + offset
+		.map(function(node) {
+			return createNode(node);
+		})
 		.map(function(node) {
 			return _.merge({}, node, {
 				x: node.x + constants.CLONE_OFFSET,
@@ -364,29 +370,65 @@ function cloneNode(graph, origNode) {
 };
 
 
+let replaceIdInEdge =
+module.exports.replaceIdInEdge =
+function replaceIdInEdge(_edge, oldId, newId) {
+	let edge = _.merge({}, _edge);
+	if (edge.from === oldId) {
+		edge.from = newId;
+	}
+	if (edge.to === oldId) {
+		edge.to = newId;
+	}
+	return edge;
+};
+
+
 let cloneGroup =
 module.exports.cloneGroup =
 function cloneGroup(graph, groupId) {
 	let origGroup = helpers.getItemById(graph.groups, groupId);
 	let group = _.merge({}, origGroup);
 
+	// TODO: write the following functions:
+	// - nodeToFragment (includes node + edges)
+	// - groupToFragment (includes group + nodes + edges)
+
 	// create fragment from group
-	const groupNodes = group.nodeIds.map(function(nodeId) {
-		// all nodes referenced in group
-		return helpers.getItemById(graph.nodes, nodeId);
-	});
-	const nodes = groupNodes.map(createNode);
+
+	const origGroupIds = group.nodeIds;
+	const origGroupNodes = group.nodeIds
+		.map(function(nodeId) {
+			// all nodes referenced in group
+			return helpers.getItemById(graph.nodes, nodeId);
+		});
+
+	let mapOldToNewNodeId = {};
+	const nodes = origGroupNodes
+		.map(function(node) {
+			const newNode = createNode(node);
+			mapOldToNewNodeId[node.id] = newNode.id;
+			return newNode;
+		});
 	const nodeIds = nodes.map(R.prop('id'));
+	group.nodeIds = nodeIds;
+
 	const edges = graph.edges
 		.filter(function(edge) {
-			// of all edges return only those,
-			// where `from` and `to` are in this group
-			return R.contains(edge.from, nodeIds) &&
-				R.contains(edge.to, nodeIds);
+			// of all edges return only those, where `from` and `to` are in original group
+			return R.contains(edge.from, origGroupIds) ||
+				R.contains(edge.to, origGroupIds);
 		})
 		.map(function(edge) {
-			return _.merge({}, edge);
+			if (mapOldToNewNodeId[edge.from]) {
+				edge = replaceIdInEdge(edge, edge.from, mapOldToNewNodeId[edge.from])
+			}
+			if (mapOldToNewNodeId[edge.to]) {
+				edge = replaceIdInEdge(edge, edge.to, mapOldToNewNodeId[edge.to])
+			}
+			return createEdge(edge);
 		});
+
 	let fragment = {
 		nodes: nodes,
 		edges: edges,

@@ -148,12 +148,31 @@ describe(f1('model-helpers.js'), function() {
 		});
 	});
 
+	describe(f2('replaceIdInEdge()'), function() {
+		it(f3('should stay the same'), function() {
+			const edge = { from: 'a', to: 'b' }
+			const newEdge = modelHelpers.replaceIdInEdge(edge, 'unknown', 'something');
+			assert(newEdge.from === edge.from);
+		});
+
+		it(f3('should work with `from`'), function() {
+			const edge = { from: 'a', to: 'b' }
+			const newEdge = modelHelpers.replaceIdInEdge(edge, 'a', 'something');
+			assert(newEdge.from === 'something');
+		});
+
+		it(f3('should work with `to`'), function() {
+			const edge = { from: 'a', to: 'b' }
+			const newEdge = modelHelpers.replaceIdInEdge(edge, 'b', 'something');
+			assert(newEdge.to === 'something');
+		});
+	});
+
 	describe(f2('cloneGroup()'), function() {
-		const nodeId = 'node-id';
 		const groupId = 'group-id';
-		const group = { id: groupId, nodeIds: [nodeId] };
+		const group = { id: groupId, nodeIds: ['node-id-1', 'node-id-2', 'node-id-3'] };
 		const graph = {
-			nodes: [ { id: nodeId } ],
+			nodes: [ { id: 'node-id-1' }, { id: 'node-id-2' }, { id: 'node-id-3' } ],
 			edges: [],
 			groups: [group],
 		};
@@ -164,11 +183,67 @@ describe(f1('model-helpers.js'), function() {
 		});
 
 		it(f3('should give cloned group a new id'), function() {
-			assert(newGraph.groups[0].id !== newGraph.groups[1].id);
+			assert(newGraph.groups[1].id !== groupId);
+		});
+
+		it(f3('original group and cloned group should contain the same number of nodes'), function() {
+			assert(newGraph.groups[0].nodeIds.length === newGraph.groups[1].nodeIds.length);
 		});
 
 		it(f3('should give cloned nodes a new id'), function() {
-			assert(newGraph.nodes[0].id !== newGraph.nodes[1].id);
+			assert(newGraph.groups[0].nodeIds[0] !== newGraph.groups[1].nodeIds[0]);
+			assert(newGraph.groups[0].nodeIds[1] !== newGraph.groups[1].nodeIds[1]);
+			assert(newGraph.groups[0].nodeIds[2] !== newGraph.groups[1].nodeIds[2]);
+		});
+
+		it(f3('all nodes should exist afterwards'), function() {
+			assert(newGraph.nodes.length === 6);
+		});
+
+		it(f3('all original nodes should be in original group'), function() {
+			const origNodeIds = newGraph.groups[0].nodeIds;
+			const origNodes = [newGraph.nodes[0], newGraph.nodes[1], newGraph.nodes[2]];
+			assert(R.contains(origNodes[0].id, origNodeIds));
+			assert(R.contains(origNodes[1].id, origNodeIds));
+			assert(R.contains(origNodes[2].id, origNodeIds));
+		});
+
+		it(f3('all new nodes should be in new group'), function() {
+			const newNodeIds = newGraph.groups[1].nodeIds;
+			const newNodes = [newGraph.nodes[3], newGraph.nodes[4], newGraph.nodes[5]];
+			assert(R.contains(newNodes[0].id, newNodeIds));
+			assert(R.contains(newNodes[1].id, newNodeIds));
+			assert(R.contains(newNodes[2].id, newNodeIds));
+		});
+
+		it(f3('edges should stay intact, and be cloned as well'), function() {
+			const graph = {
+				nodes: [
+					{ id: 'node-id-1' },
+					{ id: 'node-id-2' },
+					{ id: 'external-node' }
+				],
+				groups: [{
+					id: 'group-id',
+					nodeIds: ['node-id-1', 'node-id-2']
+				}],
+				edges: [
+					{ id: 'edge-1', from: 'node-id-1', to: 'node-id-2' },
+					{ id: 'edge-2', from: 'node-id-1', to: 'external-node' },
+				],
+			};
+			const newGraph = modelHelpers.cloneGroup(graph, group.id);
+
+			assert(newGraph.edges.length === 4);
+
+			assert(newGraph.edges[2].id !== newGraph.edges[0].id);
+			assert(newGraph.edges[3].id !== newGraph.edges[1].id);
+
+			assert(newGraph.edges[2].from !== newGraph.edges[0].from);
+			assert(newGraph.edges[2].to !== newGraph.edges[0].to);
+
+			assert(newGraph.edges[3].from !== newGraph.edges[1].from);
+			assert(newGraph.edges[3].to === 'external-node');
 		});
 
 		it(f3('should clone only one group'), function() {
