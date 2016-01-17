@@ -78,10 +78,11 @@ let Group = React.createClass({
 
 		// TODO: DRY
 		let bounds = helpers.getGroupBBox(props.graph.nodes, props.group);
-		bounds.minX -= props.theme.node.size*0.5;
-		bounds.minY -= props.theme.node.size*0.5;
-		bounds.maxX += props.theme.node.size*0.5;
-		bounds.maxY += props.theme.node.size*0.5;
+		const halfNodeSize = props.theme.node.size * 0.5;
+		bounds.minX -= halfNodeSize;
+		bounds.minY -= halfNodeSize;
+		bounds.maxX += halfNodeSize;
+		bounds.maxY += halfNodeSize;
 		const groupCenter = {
 			x: bounds.minX + (bounds.maxX - bounds.maxX) * 0.5,
 			y: bounds.minY + (bounds.maxY - bounds.maxY) * 0.5,
@@ -158,12 +159,13 @@ let Group = React.createClass({
 	},
 
 	_onDragStart: function(event) {
-		this.originalPositionX = this.props.groupCenterOffsetX;
-		this.originalPositionY = this.props.groupCenterOffsetY;
+		const props = this.props;
+		this.originalPositionX = props.groupCenterOffsetX;
+		this.originalPositionY = props.groupCenterOffsetY;
 
 		this.modelXYEventOrigin = helpers.unTransformFromTo(
-			this.props.editorElem,
-			this.props.editorTransformElem,
+			props.editorElem,
+			props.editorTransformElem,
 			{ x: event.offsetX,
 			  y: event.offsetY }
 		);

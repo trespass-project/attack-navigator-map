@@ -16,21 +16,6 @@ var klay = require('klayjs');
 module.exports =
 class InterfaceStore extends Store {
 
-	removeGroupBackgroundImage(action) {
-		let {group} = action;
-		delete group._bgImage;
-		this.graphStore._updateModel();
-	}
-
-	addGroupBackgroundImage(action) {
-		let {group, dataURI, aspectRatio, width} = action;
-		group._bgImage = group._bgImage || {};
-		group._bgImage.url = dataURI;
-		group._bgImage.width = 550;
-		group._bgImage.height = 550 / aspectRatio;
-		this.graphStore._updateModel();
-	}
-
 	resizeGroupBackgroundImage(action) {
 		let {group, width, height} = action;
 		if (!group._bgImage) { return; }
