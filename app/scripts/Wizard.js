@@ -329,9 +329,37 @@ let Wizard = React.createClass({
 					</div>
 
 					{renderFn(props)}
+
+					{this.renderOverlay()}
 				</div>
 			</div>
 		);
+	},
+
+	getInitialState: function() {
+		return {
+			analysisRunning: false
+		};
+	},
+
+	runAnalysis: function() {
+		this.setState({ analysisRunning: true });
+	},
+
+	renderOverlay: function() {
+		const state = this.state;
+		if (!state.analysisRunning) {
+			return null;
+		}
+
+		return <div id='task-overlay'>
+			<div>
+				<h3>Generating attack tree...</h3>
+				<h3>Attack Pattern Library...</h3>
+				<h3>Tree Evaluator...</h3>
+				<h3><a href='http://lustlab.net/dev/trespass/visualizations/analytics3/' target='_blank'>Visualise results</a></h3>
+			</div>
+		</div>;
 	},
 
 	clickFileButton: function(event) {
