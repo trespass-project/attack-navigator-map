@@ -309,8 +309,8 @@ function createNode(node={}, keepId=false) {
 };
 
 function createEdge(edge={}, keepId=false) {
-	const id = (keepId === true && node.id)
-		? node.id
+	const id = (keepId === true && edge.id)
+		? edge.id
 		: helpers.makeId('edge');
 	return _.merge({}, edge, {
 		id
@@ -318,9 +318,9 @@ function createEdge(edge={}, keepId=false) {
 }
 
 function createGroup(group={}, keepId=false) {
-	const id = (keepId === true && node.id)
-		? node.id
-		: helpers.makeId('edge');
+	const id = (keepId === true && group.id)
+		? group.id
+		: helpers.makeId('group');
 	return _.merge({}, group, {
 		id
 	});
