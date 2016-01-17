@@ -126,19 +126,20 @@ let Group = React.createClass({
 	},
 
 	componentDidMount: function() {
-		const props = this.props;
+		let that = this;
 		const elem = reactDOM.findDOMNode(this);
+
 		$(elem).on('contextmenu', function(event) {
 			const menuItems = [
 				{
 					label: 'convert to nodes',
 					icon: icons['fa-magic'],
 					action: function() {
-						props.dispatch( actionCreators.backgroundImageToNodes(props.group) );
+						that.props.dispatch( actionCreators.backgroundImageToNodes(that.props.group) );
 					}
 				}
 			];
-			props.dispatch( actionCreators.showContextMenu(event, menuItems) );
+			that.props.dispatch( actionCreators.showContextMenu(event, menuItems) );
 			return false;
 		});
 	},

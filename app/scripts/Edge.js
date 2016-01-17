@@ -167,7 +167,6 @@ let Edge = React.createClass({
 
 	componentDidMount: function() {
 		let that = this;
-		const props = this.props;
 
 		const elem = reactDOM.findDOMNode(this);
 		$(elem).on('contextmenu', function(event) {
@@ -177,11 +176,11 @@ let Edge = React.createClass({
 					destructive: true,
 					icon: icons['fa-trash'],
 					action: function() {
-						props.dispatch( actionCreators.removeEdge(props.edge) );
+						that.props.dispatch( actionCreators.removeEdge(that.props.edge) );
 					}
 				}
 			];
-			props.dispatch( actionCreators.showContextMenu(event, menuItems) );
+			that.props.dispatch( actionCreators.showContextMenu(event, menuItems) );
 			return false;
 		});
 	},

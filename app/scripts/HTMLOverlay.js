@@ -52,22 +52,6 @@ var HTMLOverlay = React.createClass({
 		);
 	},
 
-	componentWillMount: function() {
-		//
-	},
-
-	componentDidMount: function() {
-		//
-	},
-
-	componentWillReceiveProps: function() {
-		//
-	},
-
-	componentWillUnmount: function() {
-		//
-	}
-
 });
 
 

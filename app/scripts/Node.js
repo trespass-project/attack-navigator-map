@@ -114,7 +114,7 @@ let Node = React.createClass({
 
 
 	componentDidMount: function() {
-		const props = this.props;
+		let that = this;
 
 		const elem = reactDOM.findDOMNode(this);
 		$(elem).on('contextmenu', function(event) {
@@ -123,23 +123,23 @@ let Node = React.createClass({
 					destructive: true,
 					icon: icons['fa-trash'],
 					action: function() {
-						props.dispatch( actionCreators.removeNode(props.node) );
+						that.props.dispatch( actionCreators.removeNode(that.props.node) );
 					}
 				},
 				{	label: 'clone',
 					icon: icons['fa-files-o'],
 					action: function() {
-						props.dispatch( actionCreators.cloneNode(props.node) );
+						that.props.dispatch( actionCreators.cloneNode(that.props.node) );
 					}
 				},
 				{	label: 'remove\nfrom group',
 					icon: icons['fa-object-group'],
 					action: function() {
-						props.dispatch( actionCreators.ungroupNode(props.node) );
+						that.props.dispatch( actionCreators.ungroupNode(that.props.node) );
 					}
 				},
 			];
-			props.dispatch( actionCreators.showContextMenu(event, menuItems) );
+			that.props.dispatch( actionCreators.showContextMenu(event, menuItems) );
 			return false;
 		});
 	},

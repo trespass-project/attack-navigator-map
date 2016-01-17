@@ -32,12 +32,11 @@ let GraphEditor = React.createClass({
 	},
 
 	componentDidMount: function() {
-		const props = this.props;
+		let that = this;
 
 		const elem = reactDOM.findDOMNode(this);
 		let $svg = $(elem).find('svg');
 
-		let that = this;
 		$svg.on('contextmenu', function(event) {
 			const menuItems = [ // TODO: have these all in one place?
 				{
@@ -48,11 +47,11 @@ let GraphEditor = React.createClass({
 							x: event.offsetX,
 							y: event.offsetY,
 						};
-						props.dispatch( actionCreators.addGroup(group) );
+						that.props.dispatch( actionCreators.addGroup(group) );
 					}
 				}
 			];
-			props.dispatch( actionCreators.showContextMenu(event, that.props.graph, menuItems) );
+			that.props.dispatch( actionCreators.showContextMenu(event, that.props.graph, menuItems) );
 			return false;
 		});
 	},
