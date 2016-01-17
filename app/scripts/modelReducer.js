@@ -111,8 +111,9 @@ function reducer(state=initialState, action) {
 
 		case constants.ACTION_loadXML: {
 			const {xml} = action;
+			const state = _.merge({}, initialState);
 			const graph = modelHelpers.XMLModelToGraph(xml);
-			const model = modelHelpers.modelFromGraph(graph);
+			// const model = modelHelpers.modelFromGraph(graph);
 			// console.log('graph:', graph);
 			// console.log('model:', model);
 			return _.merge({}, state, { graph: graph });
