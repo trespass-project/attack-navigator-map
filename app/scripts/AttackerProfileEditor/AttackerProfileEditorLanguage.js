@@ -90,7 +90,7 @@ var AttackerProfileEditorLanguage = React.createClass({
 
 		return (
 			<div className='attackerProfile-editor-language language'>
-				<span>The attacker's</span>
+				<span><b>The attacker's</b></span>
 				<ul>
 					<li>
 						<div className={'bar ' + accessClass}></div>
@@ -101,19 +101,6 @@ var AttackerProfileEditorLanguage = React.createClass({
 							value={state.access}
 							searchable={false}
 							items={accessOptions}
-							displayAttribute='title'
-							valueAttribute='eventKey'
-							handleSelection={this.update}
-						/>
-					</li>
-					<li>
-						<span>desired outcome is </span>
-						<DropdownSearchable
-							name={'outcome'}
-							title={state.outcome || '<outcome>'}
-							value={state.outcome}
-							searchable={false}
-							items={outcomeOptions}
 							displayAttribute='title'
 							valueAttribute='eventKey'
 							handleSelection={this.update}
@@ -156,6 +143,19 @@ var AttackerProfileEditorLanguage = React.createClass({
 							value={state.skill}
 							searchable={false}
 							items={skillOptions}
+							displayAttribute='title'
+							valueAttribute='eventKey'
+							handleSelection={this.update}
+						/>
+					</li>
+					<li>
+						<span>desired outcome is </span>
+						<DropdownSearchable
+							name={'outcome'}
+							title={state.outcome || '<outcome>'}
+							value={state.outcome}
+							searchable={false}
+							items={outcomeOptions}
 							displayAttribute='title'
 							valueAttribute='eventKey'
 							handleSelection={this.update}
