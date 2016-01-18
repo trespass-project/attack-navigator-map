@@ -62,7 +62,7 @@ let Group = React.createClass({
 		if (!props.showGroupLabels) { return null; }
 		return <text
 			dx={props.width*0.5}
-			dy={props.height*0.5 + 16}
+			dy={/*props.height*0.5 + 16*/ -10}
 			className='label'>{props.group.name}</text>;
 	},
 

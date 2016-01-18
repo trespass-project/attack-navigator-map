@@ -69,7 +69,7 @@ gulp.task('build:scripts', ['lint'], function() {
 
 		.pipe(buffer()) // convert from stream to buffered vinyl file object
 		// .pipe($.sourcemaps.init())
-		.pipe($.uglify())
+		// .pipe($.uglify())
 		// .pipe($.sourcemaps.write())
 
 		.pipe(gulp.dest(distDir(scriptsDir())));
@@ -155,7 +155,7 @@ gulp.task('html', ['jade', 'styles'], function() {
 
 	return gulp.src([appDir('*.html'), tempDir('*.html')])
 		.pipe(assets)
-		.pipe($.if('*.js', $.uglify()))
+		// .pipe($.if('*.js', $.uglify()))
 		// .pipe($.if('*.css', $.minifyCss({ compatibility: '*'})))
 		.pipe(assets.restore())
 		.pipe($.useref())

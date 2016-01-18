@@ -144,7 +144,7 @@ function XMLModelToGraph(xml) {
 			}
 			const col = colCounter;
 			const row = rowCounter;
-			const spacing = 75;
+			const spacing = 100;
 			node.label = item.id;
 			node.modelComponentType = modelComponentsSingular[key];
 			node.x = col * spacing;

@@ -51,17 +51,17 @@ let GraphEditor = React.createClass({
 					}
 				},
 				{
-					label: 'reset\nview',
-					icon: icons['fa-sliders'],
-					action: function(/*event*/) {
-						that.props.dispatch( actionCreators.resetTransformation() );
-					}
-				},
-				{
 					label: 'auto-layout',
 					icon: icons['fa-magic'],
 					action: function(/*event*/) {
 						that.props.dispatch( actionCreators.autoLayout() );
+					}
+				},
+				{
+					label: 'reset\nview',
+					icon: icons['fa-sliders'],
+					action: function(/*event*/) {
+						that.props.dispatch( actionCreators.resetTransformation() );
 					}
 				},
 			];

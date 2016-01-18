@@ -357,7 +357,7 @@ let Wizard = React.createClass({
 				<h3>Generating attack tree...</h3>
 				<h3>Attack Pattern Library...</h3>
 				<h3>Tree Evaluator...</h3>
-				<h3><a href='http://lustlab.net/dev/trespass/visualizations/analytics3/' target='_blank'>Visualise results</a></h3>
+				<h3><a href='http://lustlab.net/dev/trespass/visualizations/analytics5/' target='_blank'>Visualise results</a></h3>
 			</div>
 		</div>;
 	},
