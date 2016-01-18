@@ -115,6 +115,10 @@ function XMLModelToGraph(xml) {
 	let rowCounter = 0;
 	let lastGroupIndex = 0;
 	const maxNodesPerCol = 7;
+	let isShifted = true;
+	const spacing = 100;
+	let xOffset = spacing / 2;
+	const yOffset = spacing / 2;
 
 	// create groups for the different types
 	['locations', // TODO: get this from somewhere else
@@ -138,17 +142,21 @@ function XMLModelToGraph(xml) {
 
 			// basic auto-layout
 			if (rowCounter > maxNodesPerCol || lastGroupIndex !== index) {
+				if (lastGroupIndex !== index) {
+					lastGroupIndex = index;
+					isShifted = true;
+					xOffset += spacing / 2;
+				} else {
+					isShifted = !isShifted;
+				}
+
 				rowCounter = 0;
 				colCounter++;
-				lastGroupIndex = index;
 			}
-			const col = colCounter;
-			const row = rowCounter;
-			const spacing = 100;
 			node.label = item.id;
 			node.modelComponentType = modelComponentsSingular[key];
-			node.x = col * spacing;
-			node.y = row * spacing;
+			node.x = xOffset + colCounter * spacing;
+			node.y = yOffset + rowCounter * spacing + ((isShifted) ? 0 : 20);
 			rowCounter++;
 		});
 		if (group.nodeIds.length) {
