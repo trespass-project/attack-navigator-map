@@ -158,11 +158,11 @@ function reducer(state=initialState, action) {
 		}
 
 		case constants.ACTION_moveNode: {
-			const {node, xy} = action;
+			const {nodeId, xy} = action;
 			let newState = _.merge({}, state);
-			let n = helpers.getItemById(newState.graph.nodes, node.id);
-			n.x = xy.x;
-			n.y = xy.y;
+			let node = helpers.getItemById(newState.graph.nodes, nodeId);
+			node.x = xy.x;
+			node.y = xy.y;
 			return newState;
 		}
 

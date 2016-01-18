@@ -220,7 +220,7 @@ let Node = React.createClass({
 
 		props.dispatch(
 			actionCreators.moveNode(
-				props.node, {
+				props.node.id, {
 					x: this.originalPositionX + modelXYDelta.x,
 					y: this.originalPositionY + modelXYDelta.y,
 				}

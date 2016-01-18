@@ -271,10 +271,10 @@ function removeNode(node) {
 
 
 module.exports.moveNode =
-function moveNode(node, xy) {
+function moveNode(nodeId, xy) {
 	return {
 		type: constants.ACTION_moveNode,
-		node,
+		nodeId,
 		xy
 	};
 };
