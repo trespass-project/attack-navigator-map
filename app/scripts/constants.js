@@ -57,6 +57,7 @@ const constants = {
 	ACTION_downloadAsXML: 'ACTION_downloadAsXML',
 	ACTION_loadXMLFile: 'ACTION_loadXMLFile',
 	ACTION_loadXML: 'ACTION_loadXML',
+	ACTION_loadXML_DONE: 'ACTION_loadXML_DONE',
 	ACTION_updateModel: 'ACTION_updateModel',
 	ACTION_addEdge: 'ACTION_addEdge',
 	ACTION_removeEdge: 'ACTION_removeEdge',

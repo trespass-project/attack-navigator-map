@@ -6,6 +6,7 @@
 let _ = require('lodash');
 const constants = require('./constants.js');
 const helpers = require('./helpers.js');
+const modelHelpers = require('./model-helpers.js');
 
 
 // let requests = {};
@@ -362,9 +363,18 @@ function loadXMLFile(file) {
 const loadXML =
 module.exports.loadXML =
 function loadXML(xmlString) {
-	return {
-		type: constants.ACTION_loadXML,
-		xml: xmlString,
+	return function(dispatch, getState) {
+		dispatch({
+			type: constants.ACTION_loadXML,
+			xml: xmlString,
+		});
+
+		modelHelpers.XMLModelToGraph(xmlString, function(err, graph) {
+			dispatch({
+				type: constants.ACTION_loadXML_DONE,
+				graph
+			});
+		});
 	};
 };
 

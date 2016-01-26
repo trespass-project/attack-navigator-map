@@ -106,67 +106,69 @@ function prepareFragment(fragment) {
 
 let XMLModelToGraph =
 module.exports.XMLModelToGraph =
-function XMLModelToGraph(xml) {
-	const $system = trespass.model.parse(xml)('system');
-	const model = trespass.model.prepare($system);
-	let graph = graphFromModel(model);
+function XMLModelToGraph(xmlStr, done) {
+	// TODO: write test
 
-	let colCounter = 0;
-	let rowCounter = 0;
-	let lastGroupIndex = 0;
-	const maxNodesPerCol = 7;
-	let isShifted = true;
-	const spacing = 100;
-	let xOffset = spacing / 2;
-	const yOffset = spacing / 2;
+	trespass.model.parse(xmlStr, function(err, model) {
+		let graph = graphFromModel(model);
 
-	// create groups for the different types
-	['locations', // TODO: get this from somewhere else
-	'items',
-	'data',
-	'actors',
-	'roles',
-	'predicates',
-	'processes',
-	'policies'].forEach(function(key, index) {
-		const coll = model.system[key] || [];
-		let group = {
-			name: key,
-			id: helpers.makeId('group'),
-			nodeIds: []
-		};
-		coll.forEach(function(item) {
-			group.nodeIds.push(item.id);
+		let colCounter = 0;
+		let rowCounter = 0;
+		let lastGroupIndex = 0;
+		const maxNodesPerCol = 7;
+		let isShifted = true;
+		const spacing = 100;
+		let xOffset = spacing / 2;
+		const yOffset = spacing / 2;
 
-			let node = helpers.getItemById(graph.nodes, item.id);
+		// create groups for the different types
+		['locations', // TODO: get this from somewhere else
+		'items',
+		'data',
+		'actors',
+		'roles',
+		'predicates',
+		'processes',
+		'policies'].forEach(function(key, index) {
+			const coll = model.system[key] || [];
+			let group = {
+				name: key,
+				id: helpers.makeId('group'),
+				nodeIds: []
+			};
+			coll.forEach(function(item) {
+				group.nodeIds.push(item.id);
 
-			// basic auto-layout
-			if (rowCounter > maxNodesPerCol || lastGroupIndex !== index) {
-				if (lastGroupIndex !== index) {
-					lastGroupIndex = index;
-					isShifted = true;
-					xOffset += spacing / 2;
-				} else {
-					isShifted = !isShifted;
+				let node = helpers.getItemById(graph.nodes, item.id);
+
+				// basic auto-layout
+				if (rowCounter > maxNodesPerCol || lastGroupIndex !== index) {
+					if (lastGroupIndex !== index) {
+						lastGroupIndex = index;
+						isShifted = true;
+						xOffset += spacing / 2;
+					} else {
+						isShifted = !isShifted;
+					}
+
+					rowCounter = 0;
+					colCounter++;
 				}
-
-				rowCounter = 0;
-				colCounter++;
+				node.label = item.id;
+				node.modelComponentType = modelComponentsSingular[key];
+				node.x = xOffset + colCounter * spacing;
+				node.y = yOffset + rowCounter * spacing + ((isShifted) ? 0 : 20);
+				rowCounter++;
+			});
+			if (group.nodeIds.length) {
+				graph.groups.push(group);
 			}
-			node.label = item.id;
-			node.modelComponentType = modelComponentsSingular[key];
-			node.x = xOffset + colCounter * spacing;
-			node.y = yOffset + rowCounter * spacing + ((isShifted) ? 0 : 20);
-			rowCounter++;
 		});
-		if (group.nodeIds.length) {
-			graph.groups.push(group);
-		}
+
+		// TODO: refine, generalize, ...
+
+		done(null, graph);
 	});
-
-	// TODO: refine, generalize, ...
-
-	return graph;
 };
 
 
