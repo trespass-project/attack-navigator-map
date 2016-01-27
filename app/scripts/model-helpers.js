@@ -206,6 +206,7 @@ function modelFromGraph(graph) {
 		trespass.model.addEdge(model, {
 			source: edge.from,
 			target: edge.to,
+			// TODO: kind
 			directed: edge.directed,
 		});
 	});
@@ -482,7 +483,7 @@ function removeNode(graph, nodeId) {
 };
 
 
-let updateComponentProperties = // TODO: test
+let updateComponentProperties =
 module.exports.updateComponentProperties =
 function updateComponentProperties(graph, graphComponentType, componentId, newProperties) {
 	let list = {
@@ -494,8 +495,8 @@ function updateComponentProperties(graph, graphComponentType, componentId, newPr
 	list = list.map(function(item) {
 		if (item.id === componentId) {
 			if (graphComponentType === 'edge') {
-				newProperties.directed =
-					(R.contains(item.relation, nondirectedRelationTypes))
+				newProperties.directed = // TODO: should this be here, or should Edge know how to draw different relations
+					(R.contains((newProperties.relation || item.relation), nondirectedRelationTypes))
 						? false
 						: true;
 			}
