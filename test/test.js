@@ -24,6 +24,35 @@ var modelHelpers = require('../app/scripts/model-helpers.js');
 
 describe(f1('helpers.js'), function() {
 
+	describe(f2('getItemByKey()'), function() {
+		const coll = [
+			{ id: '1' },
+			{ id: '2' },
+			{ id: '3' },
+			{ id: '4' },
+			{ id: '5' }
+		];
+		const key = 'id';
+		const value = '4';
+		const badKey = 'name';
+		const badValue = '7';
+
+		it(f3('should find the item'), function() {
+			const result = helpers.getItemByKey(key, coll, value);
+			assert(!!result && result.id === value);
+		});
+
+		it(f3('should not find the item #1'), function() {
+			const result = helpers.getItemByKey(key, coll, badValue);
+			assert(!result);
+		});
+
+		it(f3('should not find the item #2'), function() {
+			const result = helpers.getItemByKey(badKey, coll, value);
+			assert(!result);
+		});
+	});
+
 	describe(f2('ellipsize()'), function() {
 		it(f3('should work'), function() {
 			var input = '0123456789';
@@ -41,6 +70,46 @@ describe(f1('helpers.js'), function() {
 			input = '0';
 			shortened = helpers.ellipsize(5, input);
 			assert(shortened === '0');
+		});
+	});
+
+	describe(f2('isBetween()'), function() {
+		it(f3('should work'), function() {
+			assert(helpers.isBetween(5, 0, 10));
+			assert(!helpers.isBetween(11, 0, 10));
+			assert(!helpers.isBetween(-1, 0, 10));
+		});
+		it(f3('should include edge cases'), function() {
+			assert(helpers.isBetween(0, 0, 10));
+			assert(helpers.isBetween(10, 0, 10));
+		});
+	});
+
+	describe(f2('isRectInsideRect()'), function() {
+		const rect = { x: 0, y: 0, width: 100, height: 100 };
+		const rectInside = { x: 10, y: 10, width: 50, height: 50 };
+		const rectOutside = { x: -10, y: -10, width: 5, height: 5 };
+		const rectPartiallyInside = { x: -10, y: -10, width: 50, height: 50 };
+		const rectFullOverlap = { x: -10, y: -10, width: 120, height: 120 };
+		const rectPartialOverlap1 = { x: 40, y: -10, width: 20, height: 120 };
+		const rectPartialOverlap2 = { x: -10, y: 40, width: 120, height: 20 };
+
+		it(f3('should work'), function() {
+			assert( helpers.isRectInsideRect(rectInside, rect) );
+			assert( !helpers.isRectInsideRect(rectOutside, rect) );
+		});
+
+		it(f3('partial overlap should be considered "inside" #1'), function() {
+			assert( helpers.isRectInsideRect(rectPartiallyInside, rect) );
+		});
+
+		it(f3('partial overlap should be considered "inside" #2'), function() {
+			assert( helpers.isRectInsideRect(rectPartialOverlap1, rect) );
+			assert( helpers.isRectInsideRect(rectPartialOverlap2, rect) );
+		});
+
+		it(f3('complete overlap should be considered "inside"'), function() {
+			assert( helpers.isRectInsideRect(rectFullOverlap, rect) );
 		});
 	});
 });
@@ -77,7 +146,7 @@ describe(f1('model-helpers.js'), function() {
 		};
 		const fragment = modelHelpers.modelAsFragment(model);
 
-		it(f3('should work'), function() {
+		it(f3('should ignore metadata'), function() {
 			assert(!fragment.title);
 			assert(!fragment.author);
 			assert(fragment.locations.length === 1);

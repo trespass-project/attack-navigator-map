@@ -1,10 +1,10 @@
 'use strict';
 
-let _ = require('lodash');
-let R = require('ramda');
-let $ = require('jquery');
-let reactDOM = require('react-dom');
-let shortid = require('shortid');
+const _ = require('lodash');
+const R = require('ramda');
+const $ = require('jquery');
+const reactDOM = require('react-dom');
+const shortid = require('shortid');
 
 
 function getElemByRef(component, refName) {
@@ -19,12 +19,8 @@ function getElemByRef(component, refName) {
 function noop() {}
 
 
-// TODO: test
 function getItemByKey(key, coll, value) {
-	return coll
-		.filter(function(item) {
-			return (item[key] === value);
-		})[0] || null;
+	return R.find( R.propEq(key, value) )(coll);
 }
 const getItemById = R.partial(getItemByKey, ['id']);
 
@@ -84,30 +80,50 @@ function getGroupBBox(allNodes, group) {
 }
 
 
-// TODO: test
 function distBetweenPoints(a, b) {
 	const x = b.x - a.x;
 	const y = b.y - a.y;
-	return Math.sqrt(x*x + y*y);
+	return Math.sqrt(x * x + y * y);
 }
 
 
-// TODO: test
 function isBetween(what, low, high) {
 	return (what >= low) && (what <= high);
 }
 
 
-// TODO: test
 function isRectInsideRect(r1, r2) {
 	// expects a rect to have: x, y, width, height
 
+	// takes into account the case
+	// when r1 (width or height) is bigger than r2,
+	// or r1 is completely overlapping r2
+
+	const r1_xPlusWidth = r1.x + r1.width;
+	const r1_yPlusHeight = r1.y + r1.height;
+	const r2_xPlusWidth = r2.x + r2.width;
+	const r2_yPlusHeight = r2.y + r2.height;
+
 	const insideX =
-		isBetween(r1.x, r2.x, r2.x+r2.width) ||
-		isBetween(r1.x+r1.width, r2.x, r2.x+r2.width);
+		isBetween(r1.x, r2.x, r2_xPlusWidth) ||
+		isBetween(r1_xPlusWidth, r2.x, r2_xPlusWidth) ||
+		(
+			(r1.width > r2.width) &&
+			(
+				isBetween(r2.x, r1.x, r1_xPlusWidth) ||
+				isBetween(r2_xPlusWidth, r1.x, r1_xPlusWidth)
+			)
+		);
 	const insideY =
-		isBetween(r1.y, r2.y, r2.y+r2.height) ||
-		isBetween(r1.y+r1.height, r2.y, r2.y+r2.height);
+		isBetween(r1.y, r2.y, r2_yPlusHeight) ||
+		isBetween(r1_yPlusHeight, r2.y, r2_yPlusHeight) ||
+		(
+			(r1.height > r2.height) &&
+			(
+				isBetween(r2.y, r1.y, r1_yPlusHeight) ||
+				isBetween(r2_yPlusHeight, r1.y, r1_yPlusHeight)
+			)
+		);
 
 	const inside = insideX && insideY;
 	return inside;
@@ -170,6 +186,7 @@ module.exports = {
 	getGroupInitialPosition,
 	distBetweenPoints,
 	isRectInsideRect,
+	isBetween,
 	makeId,
 	ellipsize,
 	degToRad,
