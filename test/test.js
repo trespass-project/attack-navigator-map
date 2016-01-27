@@ -117,6 +117,47 @@ describe(f1('helpers.js'), function() {
 
 describe(f1('model-helpers.js'), function() {
 
+	describe(f2('getNodeGroups()'), function() {
+		const nodeId = 'node-id';
+		const groups = [
+			{ id: 'group-1', nodeIds: ['a', 'b', 'c'] },
+			{ id: 'group-2', nodeIds: ['d', 'node-id', 'e'] },
+			{ id: 'group-3', nodeIds: ['f', 'g', 'h'] },
+			{ id: 'group-4', nodeIds: ['node-id', 'i', 'j'] },
+		];
+
+		it(f3('should return the groups'), function() {
+			const nodeGroups = modelHelpers.getNodeGroups(nodeId, groups);
+			assert(nodeGroups.length === 2);
+			assert(nodeGroups[0].id === 'group-2');
+			assert(nodeGroups[1].id === 'group-4');
+		});
+
+		it(f3('should return empty list'), function() {
+			const nodeGroups = modelHelpers.getNodeGroups('non-existing-node', groups);
+			assert(nodeGroups.length === 0);
+		});
+	});
+
+	describe(f2('getEdgeNodes()'), function() {
+		const edge = {
+			from: 'node-1',
+			to: 'node-2',
+		};
+		const nodes = [
+			{ id: 'node-1' },
+			{ id: 'node-2' },
+			{ id: 'node-3' },
+			{ id: 'node-4' },
+		];
+
+		it(f3('should return the groups'), function() {
+			const edgeNodes = modelHelpers.getEdgeNodes(edge, nodes);
+			assert(edgeNodes.fromNode.id === 'node-1');
+			assert(edgeNodes.toNode.id === 'node-2');
+		});
+	});
+
 	describe(f2('createNode()'), function() {
 		const nodeId = 'old-id';
 		const node = { id: nodeId };

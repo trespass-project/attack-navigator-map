@@ -454,7 +454,7 @@ function addNodeToGroup(graph, nodeId, groupId) {
 };
 
 
-let getNodeGroups = // TODO: test
+let getNodeGroups =
 module.exports.getNodeGroups =
 function getNodeGroups(nodeId, groups) {
 	return groups.filter(function(group) {
@@ -463,7 +463,7 @@ function getNodeGroups(nodeId, groups) {
 };
 
 
-let getEdgeNodes = // TODO: test
+let getEdgeNodes =
 module.exports.getEdgeNodes =
 function getEdgeNodes(edge, nodes) {
 	const edgeNodes = {
