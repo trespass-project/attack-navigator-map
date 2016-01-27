@@ -378,9 +378,9 @@ describe(f1('model-helpers.js'), function() {
 	describe(f2('modelFromGraph()'), function() {
 		const graph = {
 			nodes: [
-				{ id: 'node-1', modelComponentType: 'item' },
-				{ id: 'node-2', modelComponentType: 'data' },
-				{ id: 'node-3', modelComponentType: 'predicate' }
+				{ id: 'node-1', modelComponentType: 'item', atLocations: ['location'] },
+				{ id: 'node-2', modelComponentType: 'data', value: 'value', atLocations: ['location'] },
+				{ id: 'node-3', modelComponentType: 'predicate', arity: '2', value: ['value'] }
 			]
 		};
 		const model = modelHelpers.modelFromGraph(graph);

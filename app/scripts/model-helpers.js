@@ -8,32 +8,12 @@ const constants = require('./constants.js');
 
 
 const modelComponents =
-module.exports.modelComponents = [
-	'locations',
-	'edges',
-	// 'assets',
-	'data',
-	'items',
-	'actors',
-	'roles',
-	'predicates',
-	'processes',
-	'policies'
-];
+module.exports.modelComponents =
+trespass.model.collectionNames;
 
 const modelComponentsSingular =
-module.exports.modelComponentsSingular = {
-	'locations': 'location',
-	'edges': 'edge',
-	// 'assets': 'asset',
-	'data': 'data',
-	'items': 'item',
-	'actors': 'actor',
-	'roles': 'role',
-	'predicates': 'predicate',
-	'processes': 'process',
-	'policies': 'policy',
-};
+module.exports.modelComponentsSingular =
+trespass.model.collectionNameSingular;
 
 const nondirectedRelationTypes =
 module.exports.nondirectedRelationTypes =
@@ -122,14 +102,7 @@ function XMLModelToGraph(xmlStr, done) {
 		const yOffset = spacing / 2;
 
 		// create groups for the different types
-		['locations', // TODO: get this from somewhere else
-		'items',
-		'data',
-		'actors',
-		'roles',
-		'predicates',
-		'processes',
-		'policies'].forEach(function(key, index) {
+		modelComponents.forEach(function(key, index) {
 			const coll = model.system[key] || [];
 			let group = {
 				name: key,
@@ -180,7 +153,7 @@ function downloadAsXML(model, filename) {
 		[xml],
 		{ type: 'text/plain;charset=utf-8' }
 	);
-	if (document) {
+	if (document) { // only in browser
 		let saveAs = require('browser-saveas');
 		saveAs(blob, filename || 'model.xml');
 	}
@@ -213,15 +186,8 @@ function graphFromModel(model) {
 		};
 	});
 
-	['locations', // TODO: get this from somewhere else
-	'items',
-	'data',
-	'actors',
-	'roles',
-	'predicates',
-	'processes',
-	'policies'].forEach(function(key) {
-		const coll = model.system[key].map(R.identity);
+	R.without(['edges'], modelComponents).forEach(function(key) {
+		const coll = model.system[key]/*.map(R.identity)*/;
 		graph.nodes = R.concat(graph.nodes, coll);
 	});
 
@@ -245,7 +211,7 @@ function modelFromGraph(graph) {
 
 	(graph.nodes || []).forEach(function(_node) {
 		const type = _node.modelComponentType;
-		let node = R.omit(['name', 'label', 'x', 'y', 'modelComponentType'], _node);
+		let node = R.omit([/*'name', */'label', 'x', 'y', 'modelComponentType'], _node);
 		try {
 			switch (type) {
 				case 'location':

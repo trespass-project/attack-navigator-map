@@ -66,7 +66,7 @@ function importModelFragment(fragment, xy) {
 		});
 
 		// update model afterwards:
-		dispatch({ type: constants.ACTION_updateModel });
+		// dispatch({ type: constants.ACTION_updateModel });
 	};
 };
 
@@ -181,7 +181,7 @@ function setDrag(data) {
 		});
 
 		if (data == null) { // done dragging
-			dispatch({ type: constants.ACTION_updateModel });
+			// dispatch({ type: constants.ACTION_updateModel });
 			// TODO: actually, updating the model is not necessary.
 			// only for live debug view
 		}
