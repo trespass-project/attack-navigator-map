@@ -187,7 +187,7 @@ function graphFromModel(model) {
 	});
 
 	R.without(['edges'], modelComponents).forEach(function(key) {
-		const coll = model.system[key]/*.map(R.identity)*/;
+		const coll = model.system[key]; /*.map(R.identity)*/
 		graph.nodes = R.concat(graph.nodes, coll);
 	});
 
@@ -523,5 +523,6 @@ function updateComponentProperties(graph, graphComponentType, componentId, newPr
 			return item;
 		}
 	});
+
 	return graph;
 };

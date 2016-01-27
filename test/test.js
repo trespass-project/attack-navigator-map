@@ -158,6 +158,54 @@ describe(f1('model-helpers.js'), function() {
 		});
 	});
 
+	describe(f2('updateComponentProperties()'), function() {
+		const graph = {
+			nodes: [
+				{ id: 'node-1' },
+				{ id: 'node-2' }
+			],
+			edges: [
+				{ id: 'edge-1', from: 'node-1', to: 'node-2' },
+				{ id: 'edge-2', from: 'node-2', to: 'node-1' }
+			],
+			groups: [
+				{ id: 'group-1', nodeIds: [] },
+				{ id: 'group-2', nodeIds: ['node-1'] }
+			]
+		};
+
+		it(f3('should work with nodes'), function() {
+			const updatedGraph = modelHelpers.updateComponentProperties(
+				_.merge({}, graph),
+				'node',
+				'node-1',
+				{ id: 'updated-node-1', attribute: 'test' }
+			);
+			assert(updatedGraph.nodes[0].id === 'updated-node-1');
+		});
+
+		it(f3('should work with edges'), function() {
+			const updatedGraph = modelHelpers.updateComponentProperties(
+				_.merge({}, graph),
+				'edge',
+				'edge-1',
+				{ from: 'node-3', to: 'node-4' }
+			);
+			assert(updatedGraph.edges[0].from === 'node-3');
+			assert(updatedGraph.edges[0].to === 'node-4');
+		});
+
+		it(f3('should work with groups'), function() {
+			const updatedGraph = modelHelpers.updateComponentProperties(
+				_.merge({}, graph),
+				'group',
+				'group-2',
+				{ nodeIds: ['node-3', 'node-4'] }
+			);
+			assert(updatedGraph.groups[1].nodeIds.length === 2);
+		});
+	});
+
 	describe(f2('createNode()'), function() {
 		const nodeId = 'old-id';
 		const node = { id: nodeId };
