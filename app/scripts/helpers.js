@@ -165,6 +165,18 @@ function coordsRelativeToElem(elem, xy) {
 	};
 }
 
+
+// https://code.google.com/p/chromium/issues/detail?id=524432#c3
+function getTransformToElement(element, target) {
+	try {
+    	var mTargetInverse = target.getScreenCTM().inverse();
+	} catch (e) {
+		throw "'target' CTM is not invertible.";
+	}
+	return mTargetInverse.multiply(element.getScreenCTM());
+}
+
+
 // http://stackoverflow.com/a/6084322/2839801
 // http://phrogz.net/svg/drag_under_transformation.xhtml
 function unTransform(point, ctm) {
@@ -174,7 +186,8 @@ function unTransformFromTo(fromElem, toElem, xy) {
 	let point = (fromElem.ownerSVGElement || fromElem).createSVGPoint();
 	point.x = xy.x;
 	point.y = xy.y;
-	const ctm = fromElem.getTransformToElement(toElem);
+	// const ctm = fromElem.getTransformToElement(toElem);
+	const ctm = getTransformToElement(fromElem, toElem);
 	return unTransform(point, ctm);
 }
 

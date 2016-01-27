@@ -9,6 +9,7 @@ var DropdownSearchable = require('./DropdownSearchable.js');
 var DropdownSelectize = require('./DropdownSelectize.js');
 
 
+// TODO: store this elsewhere
 var accessOptions = [
 	{ eventKey: 'internal', title: 'internal', className: 'veryhigh' },
 	{ eventKey: 'external', title: 'external', className: 'medium' }
