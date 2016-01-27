@@ -2,6 +2,7 @@
 
 let _ = require('lodash');
 let R = require('ramda');
+let properCase = require('mout/string/properCase');
 let trespass = require('trespass.js');
 let helpers = require('./helpers.js');
 const constants = require('./constants.js');
@@ -209,43 +210,23 @@ function modelFromGraph(graph) {
 		});
 	});
 
-	(graph.nodes || []).forEach(function(_node) {
-		const type = _node.modelComponentType;
-		let node = R.omit([/*'name', */'label', 'x', 'y', 'modelComponentType'], _node);
-		try {
-			switch (type) {
-				case 'location':
-					trespass.model.addLocation(model, node);
-					break;
-				case 'item':
-					trespass.model.addItem(model, node);
-					break;
-				case 'data':
-					trespass.model.addData(model, node);
-					break;
-				// case 'asset':
-				// 	trespass.model.addAsset(model, node);
-				// 	break;
-				case 'actor':
-					trespass.model.addActor(model, node);
-					break;
-				case 'role':
-					trespass.model.addRole(model, node);
-					break;
-				case 'predicate':
-					trespass.model.addPredicate(model, node);
-					break;
-				case 'process':
-					trespass.model.addProcess(model, node);
-					break;
-				case 'policy':
-					trespass.model.addPolicy(model, node);
-					break;
-				default:
-					break;
-			}
-		} catch (e) {
-			// console.error(e.message);
+	(graph.nodes || []).forEach(function(node) {
+		const type = node.modelComponentType;
+		const fnName = 'add' + properCase(type);
+		const addFn = trespass.model[fnName];
+		if (!addFn) {
+			console.warn(fnName+'()', 'not found');
+		} else {
+			addFn(
+				model,
+				R.omit([
+					/*'name', */
+					'label',
+					'x',
+					'y',
+					'modelComponentType'
+				], node)
+			);
 		}
 	});
 
