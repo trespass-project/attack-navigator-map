@@ -150,8 +150,9 @@ function ellipsize(maxLen, s) {
 }
 
 
+const radFactor = Math.PI / 180;
 function degToRad(deg) {
-	return deg * (Math.PI / 180);
+	return deg * radFactor;
 }
 
 
