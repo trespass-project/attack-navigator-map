@@ -19,6 +19,7 @@ function getElemByRef(component, refName) {
 function noop() {}
 
 
+// TODO: test
 function getItemByKey(key, coll, value) {
 	return coll
 		.filter(function(item) {
@@ -28,6 +29,7 @@ function getItemByKey(key, coll, value) {
 const getItemById = R.partial(getItemByKey, ['id']);
 
 
+// TODO: test
 function getNodesBBox(nodes) {
 	let bounds = nodes.reduce(
 		function(_bounds, node) {
@@ -64,6 +66,7 @@ function getGroupInitialPosition(group) {
 }
 
 
+// TODO: test
 // get bounding box for all nodes in group
 function getGroupBBox(allNodes, group) {
 	const nodes = group.nodeIds.map(R.partial(getItemById, [allNodes]));
@@ -81,6 +84,7 @@ function getGroupBBox(allNodes, group) {
 }
 
 
+// TODO: test
 function distBetweenPoints(a, b) {
 	const x = b.x - a.x;
 	const y = b.y - a.y;
@@ -88,11 +92,13 @@ function distBetweenPoints(a, b) {
 }
 
 
+// TODO: test
 function isBetween(what, low, high) {
 	return (what >= low) && (what <= high);
 }
 
 
+// TODO: test
 function isRectInsideRect(r1, r2) {
 	// expects a rect to have: x, y, width, height
 

@@ -65,6 +65,25 @@ describe(f1('model-helpers.js'), function() {
 		});
 	});
 
+	describe(f2('modelAsFragment()'), function() {
+		const model = {
+			system: {
+				title: 'title',
+				author: 'author',
+				locations: [
+					{ id: 'location' }
+				],
+			}
+		};
+		const fragment = modelHelpers.modelAsFragment(model);
+
+		it(f3('should work'), function() {
+			assert(!fragment.title);
+			assert(!fragment.author);
+			assert(fragment.locations.length === 1);
+		});
+	});
+
 	describe(f2('graphFromModel()'), function() {
 		let model = trespass.model.create();
 		model = trespass.model.addEdge(model, {
@@ -74,7 +93,6 @@ describe(f1('model-helpers.js'), function() {
 		model = trespass.model.addLocation(model, {
 			id: 'location'
 		});
-
 		let graph = modelHelpers.graphFromModel(model);
 
 		// TODO: more
@@ -84,9 +102,9 @@ describe(f1('model-helpers.js'), function() {
 			assert(graph.edges[0].from === 'source');
 			assert(graph.edges[0].to === 'target');
 		});
-
 		it(f3('should create locations'), function() {
 			assert(graph.nodes.length === 1);
+			assert(graph.nodes[0].id === 'location');
 		});
 	});
 

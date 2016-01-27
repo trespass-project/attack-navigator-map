@@ -284,7 +284,7 @@ function createNode(node={}, keepId=false) {
 	});
 };
 
-let createEdge =
+let createEdge = // TODO: test
 module.exports.createEdge =
 function createEdge(edge={}, keepId=false) {
 	const id = (keepId === true && edge.id)
@@ -295,7 +295,7 @@ function createEdge(edge={}, keepId=false) {
 	});
 };
 
-let createGroup =
+let createGroup = // TODO: test
 module.exports.createGroup =
 function createGroup(group={}, keepId=false) {
 	const id = (keepId === true && group.id)
@@ -432,7 +432,7 @@ function cloneGroup(graph, groupId) {
 };
 
 
-let addNode =
+let addNode = // TODO: test
 module.exports.addNode =
 function addNode(graph, node) {
 	node = _.defaults(node, { // TODO: createNode
@@ -454,7 +454,7 @@ function addNodeToGroup(graph, nodeId, groupId) {
 };
 
 
-let getNodeGroups =
+let getNodeGroups = // TODO: test
 module.exports.getNodeGroups =
 function getNodeGroups(nodeId, groups) {
 	return groups.filter(function(group) {
@@ -463,7 +463,7 @@ function getNodeGroups(nodeId, groups) {
 };
 
 
-let getEdgeNodes =
+let getEdgeNodes = // TODO: test
 module.exports.getEdgeNodes =
 function getEdgeNodes(edge, nodes) {
 	const edgeNodes = {
@@ -501,7 +501,7 @@ function removeNode(graph, nodeId) {
 };
 
 
-let updateComponentProperties =
+let updateComponentProperties = // TODO: test
 module.exports.updateComponentProperties =
 function updateComponentProperties(graph, graphComponentType, componentId, newProperties) {
 	let list = {
