@@ -91,6 +91,8 @@ function XMLModelToGraph(xmlStr, done) {
 	// TODO: write test
 
 	trespass.model.parse(xmlStr, function(err, model) {
+		if (err) { return done(err); }
+
 		let graph = graphFromModel(model);
 
 		let colCounter = 0;

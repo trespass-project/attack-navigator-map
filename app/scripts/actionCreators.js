@@ -370,6 +370,7 @@ function loadXML(xmlString) {
 		});
 
 		modelHelpers.XMLModelToGraph(xmlString, function(err, graph) {
+			if (err) { return; }
 			dispatch({
 				type: constants.ACTION_loadXML_DONE,
 				graph
