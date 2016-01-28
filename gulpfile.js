@@ -183,8 +183,13 @@ gulp.task('images', function() {
 
 
 gulp.task('fonts', function() {
+	// bootstrap
+	gulp.src('bower_components/bootstrap-stylus/fonts/*.{eot,svg,ttf,woff,woff2}')
+		.pipe(gulp.dest(tempDir(fontsDir())))
+		.pipe(gulp.dest(distDir(fontsDir())));
+
 	// fontawesome
-	gulp.src('bower_components/fontawesome/fonts/*.{eot,svg,ttf,woff,woff2}')
+	gulp.src('bower_components/Font-Awesome-Stylus/fonts/*.{eot,svg,ttf,woff,woff2}')
 		.pipe(gulp.dest(tempDir(fontsDir())))
 		.pipe(gulp.dest(distDir(fontsDir())));
 
@@ -193,11 +198,11 @@ gulp.task('fonts', function() {
 		.pipe(gulp.dest(tempDir(fontsDir())))
 		.pipe(gulp.dest(distDir(fontsDir())));
 
-	return gulp.src(require('main-bower-files')({
-		filter: '**/*.{ eot,svg,ttf,woff,woff2 }'
-	}).concat(appDir(fontsDir('**/*'))))
-		.pipe(gulp.dest(tempDir(fontsDir())))
-		.pipe(gulp.dest(distDir(fontsDir())));
+	// return gulp.src(require('main-bower-files')({
+	// 	filter: '**/*.{ eot,svg,ttf,woff,woff2 }'
+	// }).concat(appDir(fontsDir('**/*'))))
+	// 	.pipe(gulp.dest(tempDir(fontsDir())))
+	// 	.pipe(gulp.dest(distDir(fontsDir())));
 });
 
 
