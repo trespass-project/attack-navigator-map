@@ -1,33 +1,33 @@
 'use strict';
 
-var React = require('react');
-// var _ = require('lodash');
-var R = require('ramda');
-// var mout = require('mout');
+const React = require('react');
+// const _ = require('lodash');
+const R = require('ramda');
+// const mout = require('mout');
 
-var DropdownSearchable = require('./DropdownSearchable.js');
-var DropdownSelectize = require('./DropdownSelectize.js');
+const DropdownSearchable = require('./DropdownSearchable.js');
+const DropdownSelectize = require('./DropdownSelectize.js');
 
 
 // TODO: store this elsewhere
-var accessOptions = [
+const accessOptions = [
 	{ eventKey: 'internal', title: 'internal', className: 'veryhigh' },
 	{ eventKey: 'external', title: 'external', className: 'medium' }
 ];
-var outcomeOptions = [
+const outcomeOptions = [
 	{ eventKey: 'acquisition / theft', title: 'acquisition / theft' },
 	{ eventKey: 'business advantage', title: 'business advantage' },
 	{ eventKey: 'damage', title: 'damage' },
 	{ eventKey: 'embarrassment', title: 'embarrassment' },
 	{ eventKey: 'tech advantage', title: 'tech advantage' }
 ];
-var limitsOptions = [
+const limitsOptions = [
 	{ eventKey: 'code of conduct', title: 'code of conduct', className: 'low' },
 	{ eventKey: 'legal', title: 'legal', className: 'medium' },
 	{ eventKey: 'extra-legal, minor', title: 'extra-legal, minor', className: 'high' },
 	{ eventKey: 'extra-legal, major', title: 'extra-legal, major', className: 'veryhigh' }
 ];
-var resourcesOptions = [
+const resourcesOptions = [
 	{ eventKey: 'individual', title: 'individual', className: 'low' },
 	{ eventKey: 'club', title: 'club', className: 'medium' },
 	{ eventKey: 'contest', title: 'contest', className: 'high' },
@@ -35,20 +35,20 @@ var resourcesOptions = [
 	{ eventKey: 'organization', title: 'organization', className: 'veryhigh' },
 	{ eventKey: 'government', title: 'government', className: 'veryhigh' }
 ];
-var skillOptions = [
+const skillOptions = [
 	{ eventKey: 'none', title: 'none', className: 'low' },
 	{ eventKey: 'minimal', title: 'minimal', className: 'medium' },
 	{ eventKey: 'operational', title: 'operational', className: 'high' },
 	{ eventKey: 'adept', title: 'adept', className: 'veryhigh' }
 ];
-var objectivesOptions = [
+const objectivesOptions = [
 	{ eventKey: 'copy', title: 'copy' },
 	{ eventKey: 'deny', title: 'deny' },
 	{ eventKey: 'destroy', title: 'destroy' },
 	{ eventKey: 'damage', title: 'damage' },
 	{ eventKey: 'take', title: 'take' }
 ];
-var visibilityOptions = [
+const visibilityOptions = [
 	{ eventKey: 'overt', title: 'overt' },
 	{ eventKey: 'covert', title: 'covert' },
 	{ eventKey: 'clandestine', title: 'clandestine' }
@@ -63,31 +63,31 @@ function getClassName(list, value) {
 }
 
 
-var initialState = {};
+const initialState = {};
 
 
 
-var AttackerProfileEditorLanguage = React.createClass({
+let AttackerProfileEditorLanguage = React.createClass({
 	getInitialState: function() {
 		return initialState;
 	},
 
-	update: function(name, val) {
+	updateProfile: function(name, val) {
 		this.state[name] = val;
 		this.setState(this.state);
 	},
 
 	render: function() {
 		const props = this.props;
-		const state = this.state;
+		let state = this.state;
 
-		var objectivesLabel = (state.objectives || []).join(', ');
-		var visibilityLabel = (state.visibility || []).join(', ');
+		const objectivesLabel = (state.objectives || []).join(', ');
+		// const visibilityLabel = (state.visibility || []).join(', ');
 
-		var accessClass = getClassName(accessOptions, state.access);
-		var limitsClass = getClassName(limitsOptions, state.limits);
-		var resourcesClass = getClassName(resourcesOptions, state.resources);
-		var skillClass = getClassName(skillOptions, state.skill);
+		const accessClass = getClassName(accessOptions, state.access);
+		const limitsClass = getClassName(limitsOptions, state.limits);
+		const resourcesClass = getClassName(resourcesOptions, state.resources);
+		const skillClass = getClassName(skillOptions, state.skill);
 
 		return (
 			<div className='attackerProfile-editor-language language'>
@@ -98,13 +98,13 @@ var AttackerProfileEditorLanguage = React.createClass({
 						<span>access is </span>
 						<DropdownSearchable
 							name={'access'}
-							title={state.access || '<access>'}
+							title={state.access || '[access]'}
 							value={state.access}
 							searchable={false}
 							items={accessOptions}
 							displayAttribute='title'
 							valueAttribute='eventKey'
-							handleSelection={this.update}
+							handleSelection={this.updateProfile}
 						/>
 					</li>
 					<li>
@@ -112,13 +112,13 @@ var AttackerProfileEditorLanguage = React.createClass({
 						<span>limits are </span>
 						<DropdownSearchable
 							name={'limits'}
-							title={state.limits || '<limits>'}
+							title={state.limits || '[limits]'}
 							value={state.limits}
 							searchable={false}
 							items={limitsOptions}
 							displayAttribute='title'
 							valueAttribute='eventKey'
-							handleSelection={this.update}
+							handleSelection={this.updateProfile}
 						/>
 					</li>
 					<li>
@@ -126,13 +126,13 @@ var AttackerProfileEditorLanguage = React.createClass({
 						<span>resources are </span>
 						<DropdownSearchable
 							name={'resources'}
-							title={state.resources || '<resources>'}
+							title={state.resources || '[resources]'}
 							value={state.resources}
 							searchable={false}
 							items={resourcesOptions}
 							displayAttribute='title'
 							valueAttribute='eventKey'
-							handleSelection={this.update}
+							handleSelection={this.updateProfile}
 						/>
 					</li>
 					<li>
@@ -140,50 +140,51 @@ var AttackerProfileEditorLanguage = React.createClass({
 						<span>skill is </span>
 						<DropdownSearchable
 							name={'skill'}
-							title={state.skill || '<skill>'}
+							title={state.skill || '[skill]'}
 							value={state.skill}
 							searchable={false}
 							items={skillOptions}
 							displayAttribute='title'
 							valueAttribute='eventKey'
-							handleSelection={this.update}
+							handleSelection={this.updateProfile}
 						/>
 					</li>
 					<li>
 						<span>desired outcome is </span>
 						<DropdownSearchable
 							name={'outcome'}
-							title={state.outcome || '<outcome>'}
+							title={state.outcome || '[outcome]'}
 							value={state.outcome}
 							searchable={false}
 							items={outcomeOptions}
 							displayAttribute='title'
 							valueAttribute='eventKey'
-							handleSelection={this.update}
+							handleSelection={this.updateProfile}
 						/>
 					</li>
 					<li>
 						<span>objectives are </span>
 						<DropdownSelectize
 							name={'objectives'}
-							title={objectivesLabel || '<objectives>'}
+							title={objectivesLabel || '[objectives]'}
 							value={state.objectives}
 							items={objectivesOptions}
 							displayAttribute='title'
 							valueAttribute='eventKey'
-							handleSelection={this.update}
+							handleSelection={this.updateProfile}
 						/>
 					</li>
 					<li>
 						<span>visibility is </span>
-						<DropdownSelectize
+						<DropdownSearchable
 							name={'visibility'}
-							title={visibilityLabel || '<visibility>'}
+							title={/*visibilityLabel*/ state.visibility || '[visibility]'}
 							value={state.visibility}
+							searchable={false}
 							items={visibilityOptions}
 							displayAttribute='title'
 							valueAttribute='eventKey'
-							handleSelection={this.update}
+							handleSelection={this.updateProfile}
 						/>
 					</li>
 				</ul>

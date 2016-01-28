@@ -1,3 +1,6 @@
+$fontSize = 18px
+
+
 .language
 	ul
 		list-style-type: none
@@ -47,6 +50,12 @@
 	.selectize-control
 		min-width: 200px
 
+		.option
+			padding: 3px 10px
+
+	.selectize-dropdown
+		width: 100% !important
+
 	.selectize-dropdown, .selectize-dropdown-content
 		top: 0px
 		left: 0px
@@ -64,20 +73,39 @@
 		box-shadow: none !important
 
 .dropdown-menu .input-group.filter
-	padding-left: 0.5em
-	padding-right: 0.5em
+	// padding-left: 0.5em
+	// padding-right: 0.5em
 
 .dropdown-menu, .dropdown-menu *
 	border-radius: 0
+	font-size: $fontSize
+
+
+.selectize-input
+	margin: 10px
+	margin-bottom: 0px
+
+
+.dropdown-selectize
+	.dropdown-menu
+		padding: 0
+
 
 .dropdown-menu li[role=presentation]
 	background: none
 	padding-left: 0
+	a[role=menuitem]
+		padding: 3px 10px
+
+
+.dropdown > a
+	font-weight: bold
+	white-space: nowrap
 
 
 .language
-	font-size: 18px
+	font-size: $fontSize
 	font-weight: 500
 	a
-		color: grey
+		color: $trespass_grey_light
 		text-decoration: none

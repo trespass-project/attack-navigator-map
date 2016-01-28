@@ -45,7 +45,7 @@ var DropdownSelectize = React.createClass({
 				</a>
 				<ul role='menu' className='dropdown-menu'>
 					<li>
-						<div style={{ marginTop: '7px', marginBottom: '7px' }}>
+						<div>
 							<form className='form'>
 								<div className='input-group filter' role='search'>
 									<Selectize

@@ -47,6 +47,7 @@ var Selectize = React.createClass({
 			// }
 		});
 		this.selectize = $el[0].selectize;
+		this.selectize.open();
 		this.update();
 	},
 
