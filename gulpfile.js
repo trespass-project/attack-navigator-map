@@ -107,7 +107,8 @@ gulp.task('stylus', function() {
 		.pipe($.sourcemaps.init())
 		.pipe($.stylus({
 			paths: ['.'],
-			use: [koutoSwiss()]
+			use: [koutoSwiss()],
+			'include css': true
 		}))
 		.pipe($.autoprefixer({ browsers: ['last 2 versions'] }))
 		.pipe($.sourcemaps.write())
