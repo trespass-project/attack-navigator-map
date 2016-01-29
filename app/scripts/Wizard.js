@@ -15,6 +15,7 @@ let OverlayTrigger = require('react-bootstrap').OverlayTrigger;
 let Tooltip = require('react-bootstrap').Tooltip;
 
 let AttackerProfileEditor = require('./AttackerProfileEditor/AttackerProfileEditorLanguage.js');
+let AttackerProfile = require('./AttackerProfileEditor/AttackerProfile.js');
 
 const analysisTools = require('../data/analysis-tools.js');
 
@@ -206,6 +207,7 @@ let Wizard = React.createClass({
 		return <div>
 			<h2 className='title'>Attacker profile</h2>
 			<AttackerProfileEditor />
+			<AttackerProfile />
 		</div>;
 	},
 
