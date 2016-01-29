@@ -190,6 +190,11 @@ function reducer(state=initialState, action) {
 		case constants.ACTION_selectWizardStep:
 			return mergeWithState({ wizard: { selectedSection: action.name } });
 
+		case constants.ACTION_attackerProfileChanged: {
+			const {profile} = action;
+			return mergeWithState({ attackerProfile: profile });
+		}
+
 		default:
 			return state;
 	}

@@ -205,8 +205,13 @@ let Wizard = React.createClass({
 	renderAttackerProfile: function(props) {
 		return <div>
 			<h2 className='title'>Attacker profile</h2>
-			<AttackerProfileEditor />
+			<AttackerProfileEditor handleUpdate={this.handleAttackerProfileUpdate} />
 		</div>;
+	},
+
+	handleAttackerProfileUpdate: function(profile) {
+		const props = this.props;
+		props.dispatch( actionCreators.attackerProfileChanged(profile) );
 	},
 
 	renderRunAnalysis: function(props) {

@@ -67,13 +67,24 @@ const initialState = {};
 
 
 let AttackerProfileEditorLanguage = React.createClass({
+	propTypes: {
+		handleUpdate: React.PropTypes.func
+	},
+
+	getDefaultProps: function() {
+		return {
+			handleUpdate: () => {}
+		};
+	},
+
 	getInitialState: function() {
 		return initialState;
 	},
 
 	updateProfile: function(name, val) {
-		this.state[name] = val;
-		this.setState(this.state);
+		let state = this.state;
+		state[name] = val;
+		this.setState(state, () => { this.props.handleUpdate(state); });
 	},
 
 	render: function() {

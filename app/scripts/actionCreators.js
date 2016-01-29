@@ -439,6 +439,16 @@ function updateComponentProperties(componentId, graphComponentType, newPropertie
 };
 
 
+const attackerProfileChanged =
+module.exports.attackerProfileChanged =
+function attackerProfileChanged(profile) {
+	return {
+		type: constants.ACTION_attackerProfileChanged,
+		profile
+	};
+};
+
+
 // ——————————
 /*
 module.exports.openDir =

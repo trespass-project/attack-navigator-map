@@ -62,6 +62,7 @@ const constants = {
 	ACTION_addEdge: 'ACTION_addEdge',
 	ACTION_removeEdge: 'ACTION_removeEdge',
 	ACTION_updateComponentProperties: 'ACTION_updateComponentProperties',
+	ACTION_attackerProfileChanged: 'ACTION_attackerProfileChanged',
 
 	CLONE_OFFSET: 100,
 };
