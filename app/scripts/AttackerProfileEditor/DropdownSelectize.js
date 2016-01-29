@@ -1,13 +1,13 @@
 'use strict';
 
-var React = require('react');
-var _ = require('lodash');
-var Selectize = require('./Selectize.js');
+const React = require('react');
+const _ = require('lodash');
+const Selectize = require('./Selectize.js');
 
-var common = require('./common.js');
+const common = require('./dropdown-common.js');
 
 
-var DropdownSelectize = React.createClass({
+const DropdownSelectize = React.createClass({
 	propTypes: {
 		title: React.PropTypes.string.isRequired,
 		name: React.PropTypes.string.isRequired,
@@ -35,8 +35,8 @@ var DropdownSelectize = React.createClass({
 	},
 
 	render: function() {
-		var state = this.state;
-		var props = this.props;
+		let state = this.state;
+		const props = this.props;
 
 		return (
 			<span className='dropdown dropdown-selectize'>
@@ -66,13 +66,16 @@ var DropdownSelectize = React.createClass({
 	},
 
 	updateTags: function(values) {
-		var tags = values.split(',');
+		let state = this.state;
+		const props = this.props;
+
+		let tags = values.split(',');
 		tags = _.compact(tags);
 
-		this.state.tags = tags;
-		this.setState(this.state);
+		state.tags = tags;
+		this.setState(state);
 
-		this.props.handleSelection(this.props.name, tags);
+		props.handleSelection(props.name, tags);
 	},
 });
 

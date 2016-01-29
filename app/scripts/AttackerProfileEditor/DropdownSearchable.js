@@ -1,12 +1,12 @@
 'use strict';
 
-var React = require('react');
-var MenuItem = require('react-bootstrap').MenuItem;
+const React = require('react');
+const MenuItem = require('react-bootstrap').MenuItem;
 
-var common = require('./common.js');
+const common = require('./dropdown-common.js');
 
 
-var DropdownSearchable = React.createClass({
+let DropdownSearchable = React.createClass({
 	propTypes: {
 		title: React.PropTypes.string.isRequired,
 		name: React.PropTypes.string.isRequired,
@@ -70,11 +70,11 @@ var DropdownSearchable = React.createClass({
 	},
 
 	render: function() {
-		var state = this.state;
-		var props = this.props;
+		let state = this.state;
+		const props = this.props;
 
-		var re = new RegExp(state.query, 'ig');
-		var options = props.items
+		const re = new RegExp(state.query, 'ig');
+		const options = props.items
 			.filter(function(item) {
 				if (item.eventKey === null) { return true; } // always show default option
 				if (item.divider) { return true; }

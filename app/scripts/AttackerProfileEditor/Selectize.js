@@ -1,10 +1,10 @@
 'use strict';
 
-var React = require('react');
-var $ = jQuery;
+const React = require('react');
+const $ = jQuery;
 
 
-var Selectize = React.createClass({
+let Selectize = React.createClass({
 	propTypes: {
 		options: React.PropTypes.array.isRequired,
 		valueAttribute: React.PropTypes.string.isRequired,
@@ -21,24 +21,26 @@ var Selectize = React.createClass({
 	},
 
 	update: function() {
-		var that = this;
-		// this.props.options.forEach(function(item) {
+		// let that = this;
+		// const props = this.props;
+		// props.options.forEach(function(item) {
 		// 	that.selectize.addOption(item);
 		// });
 		// this.selectize.refreshOptions(false);
 	},
 
 	componentDidMount: function(select) {
-		var $el = $(this.refs['input']);
+		const props = this.props;
+		let $el = $(this.refs['input']);
 		$el.selectize({
 			delimiter: ',',
 			persist: false,
 			// hideSelected: true,
 			// maxItems: 4, // TODO
-			options: this.props.options,
-			valueField: this.props.valueAttribute,
-			labelField: this.props.displayAttribute,
-			searchField: this.props.displayAttribute,
+			options: props.options,
+			valueField: props.valueAttribute,
+			labelField: props.displayAttribute,
+			searchField: props.displayAttribute,
 			onChange: this.onChange,
 			// render: {
 			// 	option: function(item, escape) {
@@ -52,9 +54,10 @@ var Selectize = React.createClass({
 	},
 
 	render: function() {
+		const props = this.props;
 		return (
 			<div>
-				<input ref='input' className='form-control' {...this.props} />
+				<input ref='input' className='form-control' /> {/*{...props}*/}
 			</div>
 		);
 	}

@@ -1,9 +1,7 @@
 'use strict';
 
 const React = require('react');
-// const _ = require('lodash');
 const R = require('ramda');
-// const mout = require('mout');
 
 const DropdownSearchable = require('./DropdownSearchable.js');
 const DropdownSelectize = require('./DropdownSelectize.js');
@@ -57,9 +55,10 @@ const visibilityOptions = [
 
 function getClassName(list, value) {
 	if (!value) { return ''; }
-	return list.filter(function(item) {
-			return item.eventKey === value;
-		})[0].className || '';
+	const result = R.find(R.propEq('eventKey', value))(list);
+	return (!!result)
+		? result.className
+		: '';
 }
 
 
