@@ -4,14 +4,14 @@ module.exports =
 		"title": "Employee Reckless",
 		"intent": "non-hostile",
 		"access": "internal",
-		"outcome": [
+		"outcomes": [
 			"damage",
 			"embarrassment"
 		],
 		"limits": "legal",
 		"resources": "individual",
 		"skills": "adept",
-		"objective": [
+		"objectives": [
 			"all of the above"
 		],
 		"visibility": "covert"
@@ -20,14 +20,14 @@ module.exports =
 		"title": "Employee Untrained",
 		"intent": "non-hostile",
 		"access": "internal",
-		"outcome": [
+		"outcomes": [
 			"damage",
 			"embarrassment"
 		],
 		"limits": "code of conduct",
 		"resources": "individual",
 		"skills": "minimal",
-		"objective": [
+		"objectives": [
 			"all of the above"
 		],
 		"visibility": "overt"
@@ -36,14 +36,14 @@ module.exports =
 		"title": "Info Partner",
 		"intent": "non-hostile",
 		"access": "internal",
-		"outcome": [
+		"outcomes": [
 			"damage",
 			"embarrassment"
 		],
 		"limits": "code of conduct",
 		"resources": "individual",
 		"skills": "operational",
-		"objective": [
+		"objectives": [
 			"all of the above"
 		],
 		"visibility": "clandestine"
@@ -52,13 +52,13 @@ module.exports =
 		"title": "Anarchist",
 		"intent": "hostile",
 		"access": "external",
-		"outcome": [
+		"outcomes": [
 			"damage"
 		],
 		"limits": "extra-legal, major",
 		"resources": "club",
 		"skills": "none",
-		"objective": [
+		"objectives": [
 			"destroy"
 		],
 		"visibility": "overt"
@@ -67,13 +67,13 @@ module.exports =
 		"title": "Civil Activist",
 		"intent": "hostile",
 		"access": "external",
-		"outcome": [
+		"outcomes": [
 			"embarrassment"
 		],
 		"limits": "extra-legal, minor",
 		"resources": "organization",
 		"skills": "adept",
-		"objective": [
+		"objectives": [
 			"copy"
 		],
 		"visibility": "covert"
@@ -82,14 +82,14 @@ module.exports =
 		"title": "Competitor",
 		"intent": "hostile",
 		"access": "external",
-		"outcome": [
+		"outcomes": [
 			"business advantage",
 			"tech advantage"
 		],
 		"limits": "extra-legal, minor",
 		"resources": "organization",
 		"skills": "adept",
-		"objective": [
+		"objectives": [
 			"copy"
 		],
 		"visibility": "clandestine"
@@ -98,14 +98,14 @@ module.exports =
 		"title": "Corrupt Government Official",
 		"intent": "hostile",
 		"access": "external",
-		"outcome": [
+		"outcomes": [
 			"business advantage",
 			"tech advantage"
 		],
 		"limits": "extra-legal, minor",
 		"resources": "government",
 		"skills": "adept",
-		"objective": [
+		"objectives": [
 			"deny"
 		],
 		"visibility": "overt"
@@ -114,14 +114,14 @@ module.exports =
 		"title": "Data Miner",
 		"intent": "hostile",
 		"access": "external",
-		"outcome": [
+		"outcomes": [
 			"business advantage",
 			"tech advantage"
 		],
 		"limits": "extra-legal, minor",
 		"resources": "team",
 		"skills": "adept",
-		"objective": [
+		"objectives": [
 			"copy"
 		],
 		"visibility": "clandestine"
@@ -130,14 +130,14 @@ module.exports =
 		"title": "Employee Disgruntled",
 		"intent": "hostile",
 		"access": "internal",
-		"outcome": [
+		"outcomes": [
 			"damage",
 			"embarrassment"
 		],
 		"limits": "extra-legal, major",
 		"resources": "individual",
 		"skills": "operational",
-		"objective": [
+		"objectives": [
 			"destroy",
 			"damage"
 		],
@@ -147,14 +147,14 @@ module.exports =
 		"title": "Government Cyberwarrior",
 		"intent": "hostile",
 		"access": "external",
-		"outcome": [
+		"outcomes": [
 			"damage",
 			"embarrassment"
 		],
 		"limits": "extra-legal, major",
 		"resources": "government",
 		"skills": "adept",
-		"objective": [
+		"objectives": [
 			"deny",
 			"destroy",
 			"damage"
@@ -165,14 +165,14 @@ module.exports =
 		"title": "Government Spy",
 		"intent": "hostile",
 		"access": "internal",
-		"outcome": [
+		"outcomes": [
 			"business advantage",
 			"tech advantage"
 		],
 		"limits": "extra-legal, major",
 		"resources": "government",
 		"skills": "adept",
-		"objective": [
+		"objectives": [
 			"copy"
 		],
 		"visibility": "multiple"
@@ -181,14 +181,14 @@ module.exports =
 		"title": "Internal Spy",
 		"intent": "hostile",
 		"access": "internal",
-		"outcome": [
+		"outcomes": [
 			"acquisition / theft",
 			"tech advantage"
 		],
 		"limits": "extra-legal, minor",
 		"resources": "organization",
 		"skills": "adept",
-		"objective": [
+		"objectives": [
 			"copy"
 		],
 		"visibility": "clandestine"
@@ -197,14 +197,14 @@ module.exports =
 		"title": "Irrational Individual",
 		"intent": "hostile",
 		"access": "external",
-		"outcome": [
+		"outcomes": [
 			"damage",
 			"embarrassment"
 		],
 		"limits": "extra-legal, major",
 		"resources": "individual",
 		"skills": "none",
-		"objective": [
+		"objectives": [
 			"all of the above"
 		],
 		"visibility": "multiple"
@@ -213,14 +213,14 @@ module.exports =
 		"title": "Legal Adversary",
 		"intent": "hostile",
 		"access": "external",
-		"outcome": [
+		"outcomes": [
 			"business advantage",
 			"embarrassment"
 		],
 		"limits": "legal",
 		"resources": "organization",
 		"skills": "adept",
-		"objective": [
+		"objectives": [
 			"copy",
 			"take"
 		],
@@ -230,13 +230,13 @@ module.exports =
 		"title": "Mobster",
 		"intent": "hostile",
 		"access": "external",
-		"outcome": [
+		"outcomes": [
 			"acquisition / theft"
 		],
 		"limits": "extra-legal, major",
 		"resources": "organization",
 		"skills": "adept",
-		"objective": [
+		"objectives": [
 			"take"
 		],
 		"visibility": "covert"
@@ -245,14 +245,14 @@ module.exports =
 		"title": "Radical Activist",
 		"intent": "hostile",
 		"access": "external",
-		"outcome": [
+		"outcomes": [
 			"damage",
 			"embarrassment"
 		],
 		"limits": "extra-legal, minor",
 		"resources": "organization",
 		"skills": "adept",
-		"objective": [
+		"objectives": [
 			"all of the above"
 		],
 		"visibility": "overt"
@@ -261,14 +261,14 @@ module.exports =
 		"title": "Sensationalist",
 		"intent": "hostile",
 		"access": "external",
-		"outcome": [
+		"outcomes": [
 			"damage",
 			"embarrassment"
 		],
 		"limits": "extra-legal, minor",
 		"resources": "club",
 		"skills": "minimal",
-		"objective": [
+		"objectives": [
 			"all of the above"
 		],
 		"visibility": "overt"
@@ -277,13 +277,13 @@ module.exports =
 		"title": "Terrorist",
 		"intent": "hostile",
 		"access": "external",
-		"outcome": [
+		"outcomes": [
 			"damage"
 		],
 		"limits": "extra-legal, major",
 		"resources": "organization",
 		"skills": "adept",
-		"objective": [
+		"objectives": [
 			"destroy",
 			"damage",
 			"take"
@@ -294,13 +294,13 @@ module.exports =
 		"title": "Thief",
 		"intent": "hostile",
 		"access": "internal",
-		"outcome": [
+		"outcomes": [
 			"acquisition / theft"
 		],
 		"limits": "extra-legal, minor",
 		"resources": "individual",
 		"skills": "none",
-		"objective": [
+		"objectives": [
 			"take"
 		],
 		"visibility": "clandestine"
@@ -309,13 +309,13 @@ module.exports =
 		"title": "Vandal",
 		"intent": "hostile",
 		"access": "external",
-		"outcome": [
+		"outcomes": [
 			"damage"
 		],
 		"limits": "extra-legal, minor",
 		"resources": "contest",
 		"skills": "operational",
-		"objective": [
+		"objectives": [
 			"all of the above"
 		],
 		"visibility": "covert"
@@ -324,14 +324,14 @@ module.exports =
 		"title": "Vendor",
 		"intent": "hostile",
 		"access": "internal",
-		"outcome": [
+		"outcomes": [
 			"business advantage",
 			"tech advantage"
 		],
 		"limits": "legal",
 		"resources": "team",
 		"skills": "operational",
-		"objective": [
+		"objectives": [
 			"copy"
 		],
 		"visibility": "clandestine"

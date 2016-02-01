@@ -2,10 +2,13 @@
 
 const React = require('react');
 const R = require('ramda');
+const _ = require('lodash');
 const classnames = require('classnames');
 
-const common = require('./dropdown-common.js');
+const helpers = require('../helpers.js');
 
+const attackerProfiles = require('../../data/attacker-profiles.js');
+const common = require('./dropdown-common.js');
 const DropdownSearchable = require('./DropdownSearchable.js');
 const DropdownSelectize = require('./DropdownSelectize.js');
 
@@ -19,7 +22,7 @@ const accessOptions = [
 	{ value: 'internal', title: 'internal', className: 'veryhigh' },
 	{ value: 'external', title: 'external', className: 'medium' }
 ];
-const outcomeOptions = [
+const outcomesOptions = [
 	{ value: 'acquisition / theft', title: 'acquisition / theft' },
 	{ value: 'business advantage', title: 'business advantage' },
 	{ value: 'damage', title: 'damage' },
@@ -61,7 +64,7 @@ const visibilityOptions = [
 
 const options = [
 	{ name: 'access', options: accessOptions },
-	{ name: 'outcome', options: outcomeOptions },
+	{ name: 'outcomes', options: outcomesOptions, multiple: true },
 	{ name: 'limits', options: limitsOptions },
 	{ name: 'resources', options: resourcesOptions },
 	{ name: 'skill', options: skillOptions },
@@ -145,15 +148,38 @@ let AttackerProfileEditorLanguage = React.createClass({
 		</li>
 	},
 
+	renderPresetOption: function(preset, index) {
+		return <option key={preset.title} value={preset.title}>
+			{preset.title}
+		</option>;
+	},
+
 	render: function() {
 		return (
 			<div className='attackerProfile-editor-language language'>
-				<span><b>The attacker's</b></span>
-				<ul>
-					{options.map(this.renderItem)}
-				</ul>
+				<div>
+					Presets:<br />
+					<select name='presets' onChange={this.handleSelectPreset}>
+						<option value=''>— none —</option>
+						{attackerProfiles.map(this.renderPresetOption)}
+					</select>
+				</div>
+				<br />
+				<div>
+					<span><b>The attacker's</b></span>
+					<ul>
+						{options.map(this.renderItem)}
+					</ul>
+				</div>
 			</div>
 		);
+	},
+
+	handleSelectPreset: function(event) {
+		const preset = helpers.getItemByKey('title', attackerProfiles, event.target.value);
+		if (!!preset) {
+			this.setState(preset, () => { this.props.handleUpdate(this.state); });
+		}
 	},
 });
 
