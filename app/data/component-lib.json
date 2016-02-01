@@ -1,7 +1,7 @@
 {
 	"list": [
-		{ "modelComponentType": "role", "label": "Administrator" },
-		{ "modelComponentType": "role", "label": "Employee" },
+		{ "modelComponentType": "role", "label": "Administrator", "kbType": "actor" },
+		{ "modelComponentType": "role", "label": "Employee", "kbType": "actor" },
 
 		{ "modelComponentType": "data", "label": "File X" },
 
@@ -24,8 +24,8 @@
 
 		{ "modelComponentType": "location", "label": "Building" },
 		{ "modelComponentType": "location", "label": "Room" },
-		{ "modelComponentType": "location", "label": "Door" },
-		{ "modelComponentType": "location", "label": "Window" },
+		{ "modelComponentType": "location", "label": "Door", "kbType": "door" },
+		{ "modelComponentType": "location", "label": "Window", "kbType": "window" },
 		{ "modelComponentType": "location", "label": "Outside" }
 	]
 }

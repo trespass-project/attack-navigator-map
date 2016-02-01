@@ -227,7 +227,8 @@ function modelFromGraph(graph) {
 					'label',
 					'x',
 					'y',
-					'modelComponentType'
+					'modelComponentType',
+					'kbType'
 				], node)
 			);
 		}

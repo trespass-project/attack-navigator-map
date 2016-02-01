@@ -64,8 +64,12 @@ const spec = {
 				editorXY
 			);
 
-			let item = monitor.getItem();
-			const fragment = (item.fragment)
+			const item = monitor.getItem();
+
+			// console.log(item.kbType);
+			// TODO: ask user for specifics
+
+			const fragment = (item.fragment) // TODO: rename to isFragment
 				? item.value
 				: { nodes: [item] }; // treat single nodes like fragments
 
