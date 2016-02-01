@@ -2,8 +2,9 @@
 
 const React = require('react');
 const AttackerProfileComponent = require("./AttackerProfileComponent.js");
+const AttackerToolTipComponent = require("./AttackerToolTipComponent.js");
 
-// React module to represent an attacker profile for visualization using d3
+// React module to represent an attacker profile for visualization
 let AttackerProfile = React.createClass({
     propTypes: {
         attacker: React.PropTypes.object.isRequired,
@@ -12,32 +13,41 @@ let AttackerProfile = React.createClass({
     getDefaultProps: function() {
         return {
             attacker: {
-                title: "Employee Reckless",
-                intent: "Non-Hostile",
-                access: "Internal",
-                outcome: [
-                    "Damage",
-                    "Embarrassment"
-                ],
-                limits: "Legal",
-                resources: "Individual",
-                skills: "Adept",
-                objective: [
-                    "All of the Above"
-                ],
-                visibility: "Covert"
+                "title": "Employee Reckless",
+		"intent": "non-hostile",
+		"access": "internal",
+		"outcomes": [
+			"damage",
+			"embarrassment"
+		],
+		"limits": "legal",
+		"resources": "individual",
+		"skills": "adept",
+		"objectives": [
+			"copy", "deny", "destroy", "damage", "take"
+		],
+		"visibility": "covert"
             }
         };
     },
 
+    getInitialState: function() {
+        return {activeHover: null}
+    },
+
     render: function() {
         let attacker = this.props.attacker;
-
+        console.log(this.state.activeHover);
         return (<div id="attacker-profile">
-            <AttackerProfileComponent attacker={attacker} />
-        <p>{attacker.title}</p>
+            {this.state.activeHover ? <AttackerToolTipComponent active={this.state.activeHover} profile={attacker} /> : null}
+            <AttackerProfileComponent attacker={attacker} setActiveHover={this.setActiveHover}/>
+        <h5 className="attacker-desc">{attacker.title}</h5>
         </div>);
-    }
+    },
+
+    setActiveHover: function(type) {
+        this.setState({activeHover: type});
+    },
 
 });
 

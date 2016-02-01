@@ -1,15 +1,13 @@
 'use strict';
 
 const React = require('react');
-const d3 = require('d3');
-const $ = require('jquery');
 const CircleComponent = require('./CircleComponent.js');
 
-let resourcesArray = ["Individual", "Club", "Contest", "Team", "Organization", "Government"];
-let skillsArray = ["None", "Minimal", "Operational", "Adept"];
-let limitsArray = ["Code of Conduct", "Legal", "Extra-legal, minor", "Extra-legal, major"];
-let visibilityArray = ["Overt", "Covert", "Clandestine", "Multiple"];
-let intentAccessArray = ["External Non-Hostile", "Internal Non-Hostile", "External Hostile", "Internal Hostile"];
+let resourcesArray = ["individual", "club", "contest", "team", "organization", "government"];
+let skillsArray = ["none", "minimal", "operational", "adept"];
+let limitsArray = ["code of conduct", "legal", "extra-legal, minor", "extra-legal, major"];
+let visibilityArray = ["overt", "covert", "clandestine", "multiple"];
+let intentAccessArray = ["external non-hostile", "internal non-hostile", "external hostile", "internal hostile"];
 let colorArray = ["#ffee56", "#ffb84d", "#ff5151", "#d60000", "#af0000", "#890000"];
 let brighterArray = ["#fff177", "#ffc670", "#ff7373", "#de3232", "#bf3232", "#a03232"];
 
@@ -17,6 +15,7 @@ let brighterArray = ["#fff177", "#ffc670", "#ff7373", "#de3232", "#bf3232", "#a0
 let AttackerProfileComponent = React.createClass({
     propTypes: {
         attacker: React.PropTypes.object.isRequired,
+        setActiveHover: React.PropTypes.func.isRequired,
     },
 
     render: function() {
@@ -31,11 +30,16 @@ let AttackerProfileComponent = React.createClass({
         return (
         <svg className="attacker-profile-component" width={width} height={height}>
             <g className="profile-dots">
-                <CircleComponent radius={attacker.intentR} colorIdx={attacker.intentIdx} cx={cx} cy={cy} className="intentCircle"/>
-                <CircleComponent radius={attacker.skillR} colorIdx={attacker.skillIdx} cx={cx} cy={cy} className="skillCircle"/>
-                <CircleComponent radius={attacker.visibilityR} colorIdx={attacker.visibilityIdx} cx={cx} cy={cy} className="visibilityCircle"/>
-                <CircleComponent radius={attacker.limitsR} colorIdx={attacker.limitsIdx} cx={cx} cy={cy} className="limitsCircle"/>
-                <CircleComponent radius={attacker.resourcesR} colorIdx={attacker.resourcesIdx} cx={cx} cy={cy} className="resourcesCircle"/>
+                <CircleComponent radius={attacker.intentR} colorIdx={attacker.intentIdx} cx={cx} cy={cy} className="intentCircle"
+                    type="intent" setActiveHover={this.props.setActiveHover}/>
+                <CircleComponent radius={attacker.skillR} colorIdx={attacker.skillIdx} cx={cx} cy={cy} className="skillCircle"
+                    type="skill" setActiveHover={this.props.setActiveHover}/>
+                <CircleComponent radius={attacker.visibilityR} colorIdx={attacker.visibilityIdx} cx={cx} cy={cy} className="visibilityCircle"
+                    type="visibility" setActiveHover={this.props.setActiveHover}/>
+                <CircleComponent radius={attacker.limitsR} colorIdx={attacker.limitsIdx} cx={cx} cy={cy} className="limitsCircle"
+                    type="limits" setActiveHover={this.props.setActiveHover}/>
+                <CircleComponent radius={attacker.resourcesR} colorIdx={attacker.resourcesIdx} cx={cx} cy={cy} className="resourcesCircle"
+                    type="resources" setActiveHover={this.props.setActiveHover}/>
             </g>
         </svg>);
     },

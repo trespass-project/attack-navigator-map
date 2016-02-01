@@ -2,6 +2,7 @@
 
 const React = require('react');
 
+
 // React module to represent an attacker profile for visualization using d3
 let CircleComponent = React.createClass({
     propTypes: {
@@ -9,6 +10,8 @@ let CircleComponent = React.createClass({
         cx: React.PropTypes.number.isRequired,
         cy: React.PropTypes.number.isRequired,
         colorIdx: React.PropTypes.number.isRequired,
+        type: React.PropTypes.string,
+        setActiveHover: React.PropTypes.func,
     },
 
     render: function() {
@@ -19,8 +22,17 @@ let CircleComponent = React.createClass({
 
         let classes = "circleComponent " + classIdx[props.colorIdx];
         return (
-            <circle cx={props.cx} cy={props.cy} r={props.radius} fill={colorArray[props.colorIdx]} stroke="lightgray" strokeWidth="0.5px" className={classes}/>
+            <circle cx={props.cx} cy={props.cy} r={props.radius} fill={colorArray[props.colorIdx]} stroke="lightgray"
+                strokeWidth="0.5px" className={classes} onMouseEnter={this.mouseEnter} onMouseLeave={this.mouseLeave}/>
         );
+    },
+
+    mouseEnter: function() {
+        this.props.setActiveHover(this.props.type);
+    },
+
+    mouseLeave: function() {
+        this.props.setActiveHover(null);
     }
 
 });
