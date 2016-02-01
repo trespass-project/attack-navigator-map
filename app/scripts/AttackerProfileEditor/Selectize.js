@@ -6,6 +6,7 @@ const $ = jQuery;
 
 let Selectize = React.createClass({
 	propTypes: {
+		value: React.PropTypes.string.isRequired,
 		options: React.PropTypes.array.isRequired,
 		valueAttribute: React.PropTypes.string.isRequired,
 		displayAttribute: React.PropTypes.string.isRequired,
@@ -14,19 +15,6 @@ let Selectize = React.createClass({
 
 	onChange: function(values) {
 		this.props.onChange(values);
-	},
-
-	componentDidUpdate: function() {
-		this.update();
-	},
-
-	update: function() {
-		// let that = this;
-		// const props = this.props;
-		// props.options.forEach(function(item) {
-		// 	that.selectize.addOption(item);
-		// });
-		// this.selectize.refreshOptions(false);
 	},
 
 	componentDidMount: function(select) {
@@ -49,8 +37,22 @@ let Selectize = React.createClass({
 			// }
 		});
 		this.selectize = $el[0].selectize;
+		this.selectize.setValue(props.value, true);
 		this.selectize.open();
-		this.update();
+		this.update(props.values)
+	},
+
+	update: function(value) {
+		let that = this;
+		this.selectize.clear(true);
+		(value || '').split(',')
+			.forEach(function(value) {
+				that.selectize.addItem(value, true);
+			});
+	},
+
+	componentWillReceiveProps: function(nextProps) {
+		this.update(nextProps.value);
 	},
 
 	render: function() {

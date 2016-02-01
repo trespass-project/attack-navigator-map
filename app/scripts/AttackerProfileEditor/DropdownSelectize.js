@@ -20,7 +20,6 @@ const DropdownSelectize = React.createClass({
 
 	getDefaultProps: function() {
 		return {
-			name: 'tags',
 			value: [],
 			displayAttribute: 'name',
 			valueAttribute: '_id',
@@ -30,8 +29,14 @@ const DropdownSelectize = React.createClass({
 
 	getInitialState: function() {
 		return {
-			tags: this.props.value || []
+			values: this.props.value || []
 		};
+	},
+
+	componentWillReceiveProps: function(nextProps) {
+		this.setState({
+			values: this.props.value || []
+		});
 	},
 
 	render: function() {
@@ -50,8 +55,8 @@ const DropdownSelectize = React.createClass({
 								<div className='input-group filter' role='search'>
 									<Selectize
 										type='text'
-										value={state.tags.join(',')}
-										onChange={this.updateTags}
+										value={state.values.join(',')}
+										onChange={this.updateValues}
 										displayAttribute={props.displayAttribute}
 										valueAttribute={props.valueAttribute}
 										options={props.items}
@@ -65,17 +70,17 @@ const DropdownSelectize = React.createClass({
 		);
 	},
 
-	updateTags: function(values) {
+	updateValues: function(vals) {
 		let state = this.state;
 		const props = this.props;
 
-		let tags = values.split(',');
-		tags = _.compact(tags);
+		let values = vals.split(',');
+		values = _.compact(values);
 
-		state.tags = tags;
+		state.values = values;
 		this.setState(state);
 
-		props.handleSelection(props.name, tags);
+		props.handleSelection(props.name, values);
 	},
 });
 
