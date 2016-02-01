@@ -1,6 +1,7 @@
 'use strict';
 
 const React = require('react');
+const R = require('ramda');
 const MenuItem = require('react-bootstrap').MenuItem;
 
 const common = require('./dropdown-common.js');
@@ -12,6 +13,8 @@ let DropdownSearchable = React.createClass({
 		name: React.PropTypes.string.isRequired,
 		searchable: React.PropTypes.bool,
 		items: React.PropTypes.array.isRequired,
+		displayAttribute: React.PropTypes.string,
+		valueAttribute: React.PropTypes.string,
 		handleSelection: React.PropTypes.func
 	},
 
@@ -23,19 +26,21 @@ let DropdownSearchable = React.createClass({
 	},
 
 	renderItem: function(item, index) {
+		const props = this.props;
+
 		if (item.divider) {
 			return common.divider;
 		}
 
 		if (item.header) {
-			return <MenuItem header={true} key={index}>{item.title}</MenuItem>;
+			return <MenuItem header={true} key={index}>{item[props.displayAttribute]}</MenuItem>;
 		}
 
 		return (
 			<MenuItem
-				onSelect={this.handleSelection}
-				eventKey={item.eventKey}
-				key={index}>{item.title}
+				onSelect={R.partial(this.handleSelection, [item[props.displayAttribute]])}
+				eventKey={item[props.valueAttribute]}
+				key={index}>{item[props.displayAttribute]}
 			</MenuItem>
 		);
 	},
@@ -76,19 +81,21 @@ let DropdownSearchable = React.createClass({
 		const re = new RegExp(state.query, 'ig');
 		const options = props.items
 			.filter(function(item) {
-				if (item.eventKey === null) { return true; } // always show default option
+				if (item[props.valueAttribute] === null) { return true; } // always show default option
 				if (item.divider) { return true; }
 				if (item.header) { return true; }
-				return item.title.match(re);
+				return item[props.displayAttribute].match(re);
 			});
 
 		return (
 			<span className='dropdown'>
 				<a href='#' data-toggle='dropdown' className='dropdown-toggle'>
-					{props.title}{common.caret}
+					{props[props.displayAttribute]}{common.caret}
 				</a>
 				<ul role='menu' className='dropdown-menu'>
-					{(props.searchable) ? this.renderSearch() : null}
+					{(props.searchable)
+						? this.renderSearch()
+						: null}
 					{options.map(this.renderItem)}
 				</ul>
 			</span>
@@ -107,8 +114,9 @@ let DropdownSearchable = React.createClass({
 		}
 	},
 
-	handleSelection: function(event, eventKey) {
-		this.props.handleSelection(this.props.name, eventKey);
+	handleSelection: function(value, event) {
+		const props = this.props;
+		props.handleSelection(props.name, value);
 	}
 });
 
