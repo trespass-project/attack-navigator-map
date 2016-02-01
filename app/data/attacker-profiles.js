@@ -175,7 +175,7 @@ module.exports =
 		"objectives": [
 			"copy"
 		],
-		"visibility": "multiple"
+		"visibility": "clandestine"
 	},
 	{
 		"title": "Internal Spy",
