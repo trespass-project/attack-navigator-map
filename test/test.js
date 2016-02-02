@@ -112,6 +112,74 @@ describe(f1('helpers.js'), function() {
 			assert( helpers.isRectInsideRect(rectFullOverlap, rect) );
 		});
 	});
+
+	describe(f2('areAttackerProfilesEqual()'), function() {
+		const profile = {
+			"intent": "hostile",
+			"access": "external",
+			"outcomes": [
+				"damage",
+				"embarrassment"
+			],
+			"limits": "extra-legal, minor",
+			"resources": "club",
+			"skills": "minimal",
+			"objectives": [
+				"copy",
+				"deny",
+				"destroy",
+				"damage",
+				"take"
+			],
+			"visibility": "overt"
+		};
+		const profileEqual = {
+			"access": "external",
+			"intent": "hostile",
+			"skills": "minimal",
+			"limits": "extra-legal, minor",
+			"resources": "club",
+			"visibility": "overt",
+			"outcomes": [
+				"embarrassment",
+				"damage"
+			],
+			"objectives": [
+				"take",
+				"damage",
+				"destroy",
+				"deny",
+				"copy"
+			]
+		};
+		const profileNotEqual = {
+			"access": "external",
+			"intent": "hostile",
+			"skills": "minimal",
+			"limits": "extra-legal, minor",
+			"resources": "club",
+			"visibility": "overt",
+			"outcomes": [
+				"embarrassment"
+			],
+			"objectives": [
+				"take",
+				"damage",
+				"deny",
+				"copy"
+			]
+		};
+
+		it(f3('should work with equal profiles'), function() {
+			assert(helpers.areAttackerProfilesEqual(profile, profileEqual));
+			assert(helpers.areAttackerProfilesEqual(profileEqual, profile));
+		});
+
+		it(f3('should work with unequal profiles'), function() {
+			assert(!helpers.areAttackerProfilesEqual(profile, profileNotEqual));
+			assert(!helpers.areAttackerProfilesEqual(profileNotEqual, profile));
+		});
+	});
 });
 
 

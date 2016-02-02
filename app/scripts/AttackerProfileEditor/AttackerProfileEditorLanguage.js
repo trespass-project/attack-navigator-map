@@ -81,10 +81,6 @@ function getClassName(list, value) {
 }
 
 
-const initialState = {};
-
-
-
 let AttackerProfileEditorLanguage = React.createClass({
 	propTypes: {
 		handleUpdate: React.PropTypes.func
@@ -97,13 +93,26 @@ let AttackerProfileEditorLanguage = React.createClass({
 	},
 
 	getInitialState: function() {
-		return initialState;
+		return {
+			title: '' // selected preset title
+		};
 	},
 
 	updateProfile: function(name, val) {
+		const props = this.props;
 		let state = this.state;
 		state[name] = val;
-		this.setState(state, () => { this.props.handleUpdate(state); });
+
+		state.title = '';
+		attackerProfiles.forEach(function(profile) {
+			if (helpers.areAttackerProfilesEqual(profile, state)) {
+				state.title = profile.title;
+			}
+		});
+
+		this.setState(state, () => {
+			props.handleUpdate(state);
+		});
 	},
 
 	renderItem: function(item, index) {
@@ -158,7 +167,7 @@ let AttackerProfileEditorLanguage = React.createClass({
 			<div className='attackerProfile-editor-language language'>
 				<div>
 					Presets:<br />
-					<select name='presets' onChange={this.handleSelectPreset}>
+					<select name='presets' onChange={this.handleSelectPreset} value={this.state.title}>
 						<option value=''>— none —</option>
 						{attackerProfiles.map(this.renderPresetOption)}
 					</select>
