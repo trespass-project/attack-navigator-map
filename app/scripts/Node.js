@@ -1,6 +1,5 @@
 'use strict';
 
-let $ = require('jquery');
 let R = require('ramda');
 let React = require('react');
 let reactDOM = require('react-dom');
@@ -81,6 +80,7 @@ let Node = React.createClass({
 			<g
 				className='node-group'
 				transform={'translate('+props.x+','+props.y+')'}
+				onContextMenu={this._onContextMenu}
 				onClick={this._onClick}
 				onMouseEnter={this._handleHover}
 				onMouseLeave={this._handleHoverOut}>
@@ -114,41 +114,32 @@ let Node = React.createClass({
 		);
 	},
 
+	_onContextMenu: function(event) {
+		const props = this.props;
 
-	componentDidMount: function() {
-		let that = this;
+		const menuItems = [
+			{	label: 'delete',
+				destructive: true,
+				icon: icons['fa-trash'],
+				action: function() {
+					props.dispatch( actionCreators.removeNode(props.node) );
+				}
+			},
+			{	label: 'clone',
+				icon: icons['fa-files-o'],
+				action: function() {
+					props.dispatch( actionCreators.cloneNode(props.node) );
+				}
+			},
+			{	label: 'remove\nfrom group',
+				icon: icons['fa-object-group'],
+				action: function() {
+					props.dispatch( actionCreators.ungroupNode(props.node) );
+				}
+			},
+		];
 
-		const elem = reactDOM.findDOMNode(this);
-		$(elem).on('contextmenu', function(event) {
-			const menuItems = [
-				{	label: 'delete',
-					destructive: true,
-					icon: icons['fa-trash'],
-					action: function() {
-						that.props.dispatch( actionCreators.removeNode(that.props.node) );
-					}
-				},
-				{	label: 'clone',
-					icon: icons['fa-files-o'],
-					action: function() {
-						that.props.dispatch( actionCreators.cloneNode(that.props.node) );
-					}
-				},
-				{	label: 'remove\nfrom group',
-					icon: icons['fa-object-group'],
-					action: function() {
-						that.props.dispatch( actionCreators.ungroupNode(that.props.node) );
-					}
-				},
-			];
-			that.props.dispatch( actionCreators.showContextMenu(event, menuItems) );
-			return false;
-		});
-	},
-
-	componentWillUnmount: function() {
-		const elem = reactDOM.findDOMNode(this);
-		$(elem).off('contextmenu');
+		props.dispatch( actionCreators.showContextMenu(event, menuItems) );
 	},
 
 	// _getLabelWidth: function() {

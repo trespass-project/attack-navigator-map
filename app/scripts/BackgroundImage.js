@@ -1,6 +1,5 @@
 'use strict';
 
-let $ = require('jquery');
 let React = require('react');
 let reactDOM = require('react-dom');
 let SchleppMixin = require('./SchleppMixin.js');
@@ -98,6 +97,7 @@ let Group = React.createClass({
 
 		return (
 			<g transform={'translate('+x+','+y+')'}
+				onContextMenu={this._onContextMenu}
 				onMouseEnter={this._onMouseOver}
 				onMouseLeave={this._onMouseOut}>
 				<g dangerouslySetInnerHTML={{ __html: img }}></g>
@@ -126,28 +126,18 @@ let Group = React.createClass({
 		};
 	},
 
-	componentDidMount: function() {
-		let that = this;
-		const elem = reactDOM.findDOMNode(this);
-
-		$(elem).on('contextmenu', function(event) {
-			const menuItems = [
-				{
-					label: 'convert to nodes',
-					icon: icons['fa-magic'],
-					action: function() {
-						that.props.dispatch( actionCreators.backgroundImageToNodes(that.props.group) );
-					}
+	_onContextMenu: function(event) {
+		const props = this.props;
+		const menuItems = [
+			{
+				label: 'convert to nodes',
+				icon: icons['fa-magic'],
+				action: function() {
+					props.dispatch( actionCreators.backgroundImageToNodes(props.group) );
 				}
-			];
-			that.props.dispatch( actionCreators.showContextMenu(event, menuItems) );
-			return false;
-		});
-	},
-
-	componentWillUnmount: function() {
-		const elem = reactDOM.findDOMNode(this);
-		$(elem).off('contextmenu');
+			}
+		];
+		props.dispatch( actionCreators.showContextMenu(event, menuItems) );
 	},
 
 	_onMouseOver: function(event) {

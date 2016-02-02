@@ -2,8 +2,9 @@
 
 let React = require('react');
 let reactDOM = require('react-dom');
-let $ = require('jquery');
+let _ = require('lodash');
 let mout = require('mout');
+
 let GraphMixin = require('./GraphMixin.js');
 let SchleppManagerMixin = require('./SchleppManagerMixin.js');
 let SchleppMixin = require('./SchleppMixin.js');
@@ -31,48 +32,37 @@ let GraphEditor = React.createClass({
 		};
 	},
 
-	componentDidMount: function() {
-		let that = this;
+	_onContextMenu: function(event) {
+		const props = this.props;
 
-		const elem = reactDOM.findDOMNode(this);
-		let $svg = $(elem).find('svg');
-
-		$svg.on('contextmenu', function(event) {
-			const menuItems = [ // TODO: have these all in one place?
-				{
-					label: 'add group',
-					icon: icons['fa-plus'],
-					action: function(/*event*/) {
-						const group = {
-							x: event.offsetX,
-							y: event.offsetY,
-						};
-						that.props.dispatch( actionCreators.addGroup(group) );
-					}
-				},
-				{
-					label: 'auto-layout',
-					icon: icons['fa-magic'],
-					action: function(/*event*/) {
-						that.props.dispatch( actionCreators.autoLayout() );
-					}
-				},
-				{
-					label: 'reset\nview',
-					icon: icons['fa-sliders'],
-					action: function(/*event*/) {
-						that.props.dispatch( actionCreators.resetTransformation() );
-					}
-				},
-			];
-			that.props.dispatch( actionCreators.showContextMenu(event, menuItems) );
-			return false;
-		});
-	},
-
-	componentWillUnmount: function() {
-		let $svg = $(this.props.editorElem);
-		$svg.off('contextmenu');
+		const menuItems = [
+			{
+				label: 'add group',
+				icon: icons['fa-plus'],
+				action: function(/*event*/) {
+					const group = {
+						x: event.clientX,
+						y: event.clientY,
+					};
+					props.dispatch( actionCreators.addGroup(group) );
+				}
+			},
+			{
+				label: 'auto-layout',
+				icon: icons['fa-magic'],
+				action: function(/*event*/) {
+					props.dispatch( actionCreators.autoLayout() );
+				}
+			},
+			{
+				label: 'reset\nview',
+				icon: icons['fa-sliders'],
+				action: function(/*event*/) {
+					props.dispatch( actionCreators.resetTransformation() );
+				}
+			},
+		];
+		props.dispatch( actionCreators.showContextMenu(event, menuItems) );
 	},
 
 	_onClick: function(event) {

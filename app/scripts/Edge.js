@@ -3,7 +3,6 @@
 let React = require('react');
 let reactDOM = require('react-dom');
 // let d3 = require('d3');
-let $ = require('jquery');
 let mout = require('mout');
 let classnames = require('classnames');
 let icons = require('./icons.js');
@@ -153,7 +152,9 @@ let Edge = React.createClass({
 
 		return (
 			<g className='edge-group'
-				onClick={this._onClick}>
+				onClick={this._onClick}
+				onContextMenu={this._onContextMenu}
+			>
 				<path
 					className={classnames('edge', { 'preview': props.preview, 'selected': props.selected })}
 					d={pathifyBezier(p1, c1, c2, p2)}
@@ -165,29 +166,19 @@ let Edge = React.createClass({
 		);
 	},
 
-	componentDidMount: function() {
-		let that = this;
-
-		const elem = reactDOM.findDOMNode(this);
-		$(elem).on('contextmenu', function(event) {
-			const menuItems = [
-				{
-					label: 'delete',
-					destructive: true,
-					icon: icons['fa-trash'],
-					action: function() {
-						that.props.dispatch( actionCreators.removeEdge(that.props.edge) );
-					}
+	_onContextMenu: function(event) {
+		const props = this.props;
+		const menuItems = [
+			{
+				label: 'delete',
+				destructive: true,
+				icon: icons['fa-trash'],
+				action: function() {
+					props.dispatch( actionCreators.removeEdge(props.edge) );
 				}
-			];
-			that.props.dispatch( actionCreators.showContextMenu(event, menuItems) );
-			return false;
-		});
-	},
-
-	componentWillUnmount: function() {
-		const elem = reactDOM.findDOMNode(this);
-		$(elem).off('contextmenu');
+			}
+		];
+		props.dispatch( actionCreators.showContextMenu(event, menuItems) );
 	},
 });
 

@@ -36,11 +36,13 @@ function setEditorElem(elem) {
 
 module.exports.showContextMenu =
 function showContextMenu(event, menuItems) {
+	event.preventDefault();
+	event.stopPropagation();
 	return {
 		type: constants.ACTION_showContextMenu,
 		contextMenu: {
-			x: event.offsetX,
-			y: event.offsetY,
+			x: event.clientX,
+			y: event.clientY,
 			menuItems
 		}
 	};

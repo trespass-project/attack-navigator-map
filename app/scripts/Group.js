@@ -109,6 +109,7 @@ let Group = React.createClass({
 			<g
 				className='group-group'
 				onClick={this._onClick}
+				onContextMenu={this._onContextMenu}
 				onMouseEnter={this._handleHover}
 				onMouseLeave={this._handleHoverOut}
 				transform={'translate('+props.x+','+props.y+')'}>
@@ -135,54 +136,45 @@ let Group = React.createClass({
 		props.dispatch( actionCreators.setHoverGroup(null) );
 	},
 
-	componentDidMount: function() {
-		let that = this;
+	_onContextMenu: function(event) {
+		const props = this.props;
 
-		const elem = reactDOM.findDOMNode(this);
-		$(elem).on('contextmenu', function(event) {
-			let bgimg = {
-				label: 'background\nimage',
-				icon: icons['fa-plus'],
-				action: that.openFileDialog
+		let bgimg = {
+			label: 'background\nimage',
+			icon: icons['fa-plus'],
+			action: this.openFileDialog
+		};
+		if (!_.isEmpty(props.group._bgImage)) {
+			bgimg.icon = icons['fa-remove'];
+			bgimg.action = function() {
+				props.dispatch( actionCreators.removeGroupBackgroundImage(props.group.id) );
 			};
-			if (!_.isEmpty(that.props.group._bgImage)) {
-				bgimg.icon = icons['fa-remove'];
-				bgimg.action = function() {
-					that.props.dispatch( actionCreators.removeGroupBackgroundImage(that.props.group.id) );
-				};
-			}
+		}
 
-			const menuItems = [
-				{ label: 'delete', destructive: true, icon: icons['fa-trash'], action:
-					function(/*event*/) {
-						that.props.dispatch( actionCreators.removeGroup(that.props.group.id, true) );
-					}
-				},
-				{ label: 'ungroup', destructive: true, icon: icons['fa-remove'], action:
-					function(/*event*/) {
-						that.props.dispatch( actionCreators.removeGroup(that.props.group.id) );
-					}
-				},
-				{ label: 'clone', icon: icons['fa-files-o'], action:
-					function() {
-						that.props.dispatch( actionCreators.cloneGroup(that.props.group.id) );
-					}
-				},
-				{ label: 'save as\npattern', icon: icons['fa-floppy-o'], action:
-					function() {
-						// that.props.dispatch( actionCreators.cloneGroup(that.props.group.id) );
-					}
-				},
-				bgimg
-			];
-			that.props.dispatch( actionCreators.showContextMenu(event, menuItems) );
-			return false;
-		});
-	},
-
-	componentWillUnmount: function() {
-		const elem = reactDOM.findDOMNode(this);
-		$(elem).off('contextmenu');
+		const menuItems = [
+			{ label: 'delete', destructive: true, icon: icons['fa-trash'], action:
+				function(/*event*/) {
+					props.dispatch( actionCreators.removeGroup(props.group.id, true) );
+				}
+			},
+			{ label: 'ungroup', destructive: true, icon: icons['fa-remove'], action:
+				function(/*event*/) {
+					props.dispatch( actionCreators.removeGroup(props.group.id) );
+				}
+			},
+			{ label: 'clone', icon: icons['fa-files-o'], action:
+				function() {
+					props.dispatch( actionCreators.cloneGroup(props.group.id) );
+				}
+			},
+			{ label: 'save as\npattern', icon: icons['fa-floppy-o'], action:
+				function() {
+					// props.dispatch( actionCreators.cloneGroup(props.group.id) );
+				}
+			},
+			bgimg
+		];
+		props.dispatch( actionCreators.showContextMenu(event, menuItems) );
 	},
 
 	openFileDialog: function() {

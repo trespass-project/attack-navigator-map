@@ -177,6 +177,7 @@ let GraphMixin = {
 				<svg
 					ref='dragRoot'
 					className={classNames}
+					onContextMenu={this._onContextMenu || helpers.noop}
 					onWheel={this._onWheel || helpers.noop}
 					onClick={this._onClick || helpers.noop}
 				>
