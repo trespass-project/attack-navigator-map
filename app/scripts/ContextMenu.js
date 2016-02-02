@@ -43,12 +43,12 @@ let ContextMenu = React.createClass({
 				return line.trim();
 			});
 
-		let pathClasses = classnames('menu-item', { 'destructive': item.destructive });
+		let groupClasses = classnames({ 'destructive': item.destructive });
 
 		return (
-			<g key={'piece-' + index}>
+			<g key={'piece-' + index} className={groupClasses}>
 				<path
-					className={pathClasses}
+					className='menu-item'
 					d={d}
 					onClick={item.action}>
 				</path>
