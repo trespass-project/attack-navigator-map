@@ -207,7 +207,7 @@ let Wizard = React.createClass({
 		return <div>
 			<h2 className='title'>Attacker profile</h2>
 			<AttackerProfileEditor />
-			<AttackerProfile />
+			<AttackerProfile />{/* TODO: actually use attacker profile */}
 		</div>;
 	},
 
