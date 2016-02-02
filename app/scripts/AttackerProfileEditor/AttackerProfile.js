@@ -32,14 +32,14 @@ let AttackerProfile = React.createClass({
     },
 
     getInitialState: function() {
-        return {activeHover: null}
+        return {activeHover: null, over: false, mouseX: 0, mouseY: 0};
     },
 
     render: function() {
         let attacker = this.props.attacker;
-        console.log(this.state.activeHover);
-        return (<div id="attacker-profile">
-            {this.state.activeHover ? <AttackerToolTipComponent active={this.state.activeHover} profile={attacker} /> : null}
+        // console.log(this.state.activeHover);
+        return (<div id="attacker-profile" onMouseMove={this.mouseMove} onMouseLeave={this.mouseLeave}>
+            {this.state.over ? <AttackerToolTipComponent active={this.state.activeHover} profile={attacker} mouseX={this.state.mouseX} mouseY={this.state.mouseY} /> : null}
             <AttackerProfileComponent attacker={attacker} setActiveHover={this.setActiveHover}/>
         <h5 className="attacker-desc">{attacker.title}</h5>
         </div>);
@@ -47,6 +47,16 @@ let AttackerProfile = React.createClass({
 
     setActiveHover: function(type) {
         this.setState({activeHover: type});
+    },
+
+    mouseMove: function(event) {
+        this.setState({over: true});
+        // console.log(event.pageX + "," + event.pageY);
+        this.setState({mouseX: event.pageX, mouseY: event.pageY});
+    },
+
+    mouseLeave: function() {
+        this.setState({over: false});
     },
 
 });
