@@ -46,20 +46,23 @@ let AttackerProfile = React.createClass({
 	},
 
 	render: function() {
+		let state = this.state;
 		const attacker = this.props.attacker;
+
 		// console.log(this.state.activeHover);
 		return <div
 			id='attacker-profile'
 			onMouseMove={this.mouseMove}
 			onMouseLeave={this.mouseLeave}
 		>
-			{(this.state.over)
+			{(state.over)
 				? <AttackerToolTipComponent
-					active={this.state.activeHover}
+					active={state.activeHover}
 					profile={attacker}
-					mouseX={this.state.mouseX}
-					mouseY={this.state.mouseY} />
-					: null
+					mouseX={state.mouseX}
+					mouseY={state.mouseY}
+				/>
+				: null
 			}
 			<AttackerProfileComponent
 				attacker={attacker}

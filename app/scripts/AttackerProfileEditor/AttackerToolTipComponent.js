@@ -19,14 +19,16 @@ let AttackerToolTipComponent = React.createClass({
 	},
 
 	render: function() {
-		const attacker = this.props.profile;
+		const props = this.props;
+
+		const attacker = props.profile;
 		const style = {
 			position: 'absolute',
 			backgroundColor: 'white',
 			borderStyle: 'solid',
 			borderColor: 'black',
-			left: this.props.mouseX - 10,
-			top: this.props.mouseY + 10,
+			left: props.mouseX - 10,
+			top: props.mouseY + 10,
 		};
 
 		let styleAttr = {
@@ -36,8 +38,8 @@ let AttackerToolTipComponent = React.createClass({
 			skill: {},
 			intentaccess: {},
 		}
-		if (this.props.active) {
-			switch (this.props.active) {
+		if (props.active) {
+			switch (props.active) {
 				case 'intent':
 					styleAttr.intentaccess = { fontWeight: 'bold' };
 					break;
@@ -59,13 +61,13 @@ let AttackerToolTipComponent = React.createClass({
 		}
 
 		return (
-			<div className="attacker-tooltip" style={style}>
+			<div className='attacker-tooltip' style={style}>
 				<b>{attacker.title}</b>
 				<br />
 				<p id='objective'>
-					Objective: {this.getObjectiveString()}</p>
+					Objective: {(attacker.objectives || []).join(', ')}</p>
 				<p id='outcome'>
-					Outcome: {this.getOutcomeString()}
+					Outcome: {(attacker.outcomes || []).join(', ')}
 				</p>
 				<br />
 				<p id='resources' style={styleAttr.resources}>
@@ -86,26 +88,6 @@ let AttackerToolTipComponent = React.createClass({
 			</div>
 		);
 	},
-
-	getObjectiveString: function() {
-		const attacker = this.props.profile;
-		let output = '';
-
-		for (let i = 0; i < attacker.objectives.length; i++)
-			output += attacker.objectives[i] + ' ';
-
-		return output;
-	},
-
-	getOutcomeString: function() {
-		const attacker = this.props.profile;
-		let output = '';
-
-		for (let i = 0; i < attacker.outcomes.length; i++)
-			output += attacker.outcomes[i] + ' ';
-
-		return output;
-	}
 });
 
 module.exports = AttackerToolTipComponent;

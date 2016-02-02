@@ -21,8 +21,9 @@ let AttackerProfileComponent = React.createClass({
 	},
 
 	render: function() {
-		const attacker = this.props.attacker;
-		this.computeDistances(attacker);
+		const props = this.props;
+
+		const distances = this.computeDistances(props.attacker);
 
 		const width = 150;
 		const height = 150;
@@ -37,46 +38,46 @@ let AttackerProfileComponent = React.createClass({
 			>
 				<g className='profile-dots'>
 					<CircleComponent
-						radius={attacker.intentR}
-						colorIdx={attacker.intentIdx}
+						radius={distances.intentR}
+						colorIdx={distances.intentIdx}
 						cx={cx}
 						cy={cy}
 						className='intentCircle'
 						type='intent'
-						setActiveHover={this.props.setActiveHover}
+						setActiveHover={props.setActiveHover}
 					/>
 					<CircleComponent
-						radius={attacker.skillR}
-						colorIdx={attacker.skillIdx}
+						radius={distances.skillR}
+						colorIdx={distances.skillIdx}
 						cx={cx}
 						cy={cy}
 						className='skillCircle'
 						type='skill'
-						setActiveHover={this.props.setActiveHover}
+						setActiveHover={props.setActiveHover}
 					/>
 					<CircleComponent
-						radius={attacker.visibilityR}
-						colorIdx={attacker.visibilityIdx}
+						radius={distances.visibilityR}
+						colorIdx={distances.visibilityIdx}
 						cx={cx}
 						cy={cy} className='visibilityCircle'
 						type='visibility'
-						setActiveHover={this.props.setActiveHover}
+						setActiveHover={props.setActiveHover}
 					/>
 					<CircleComponent
-						radius={attacker.limitsR}
-						colorIdx={attacker.limitsIdx}
+						radius={distances.limitsR}
+						colorIdx={distances.limitsIdx}
 						cx={cx}
 						cy={cy} className='limitsCircle'
 						type='limits'
-						setActiveHover={this.props.setActiveHover}
+						setActiveHover={props.setActiveHover}
 					/>
 					<CircleComponent
-						radius={attacker.resourcesR}
-						colorIdx={attacker.resourcesIdx}
+						radius={distances.resourcesR}
+						colorIdx={distances.resourcesIdx}
 						cx={cx}
 						cy={cy} className='resourcesCircle'
 						type='resources'
-						setActiveHover={this.props.setActiveHover}
+						setActiveHover={props.setActiveHover}
 					/>
 				</g>
 			</svg>
@@ -84,21 +85,23 @@ let AttackerProfileComponent = React.createClass({
 	},
 
 	computeDistances: function(attacker) {
-		attacker.limitsIdx = limitsArray.indexOf(attacker.limits);
-		attacker.visibilityIdx = visibilityArray.indexOf(attacker.visibility);
-		attacker.skillIdx = skillsArray.indexOf(attacker.skills);
-		attacker.intentIdx = intentAccessArray.indexOf(attacker.access + ' ' + attacker.intent);
-		attacker.resourcesIdx = resourcesArray.indexOf(attacker.resources);
+		let distances = {};
+		distances.limitsIdx = limitsArray.indexOf(attacker.limits);
+		distances.visibilityIdx = visibilityArray.indexOf(attacker.visibility);
+		distances.skillIdx = skillsArray.indexOf(attacker.skills);
+		distances.intentIdx = intentAccessArray.indexOf(attacker.access + ' ' + attacker.intent);
+		distances.resourcesIdx = resourcesArray.indexOf(attacker.resources);
 
 		const multipler = 3;
 
-		attacker.resourcesR = (attacker.resourcesIdx + 1) * multipler;
-		attacker.limitsR = attacker.resourcesR + (attacker.limitsIdx + 1) * multipler;
-		attacker.visibilityR = attacker.limitsR + (attacker.visibilityIdx + 1) * multipler;
-		attacker.skillR = attacker.visibilityR + (attacker.skillIdx + 1) * multipler;
-		attacker.intentR = attacker.skillR + (attacker.intentIdx + 1) * multipler;
-	}
+		distances.resourcesR = (distances.resourcesIdx + 1) * multipler;
+		distances.limitsR = distances.resourcesR + (distances.limitsIdx + 1) * multipler;
+		distances.visibilityR = distances.limitsR + (distances.visibilityIdx + 1) * multipler;
+		distances.skillR = distances.visibilityR + (distances.skillIdx + 1) * multipler;
+		distances.intentR = distances.skillR + (distances.intentIdx + 1) * multipler;
 
+		return distances;
+	},
 });
 
 module.exports = AttackerProfileComponent;
