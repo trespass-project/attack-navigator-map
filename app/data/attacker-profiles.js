@@ -12,7 +12,11 @@ module.exports =
 		"resources": "individual",
 		"skills": "adept",
 		"objectives": [
-			"copy", "deny", "destroy", "damage", "take"
+			"copy",
+			"deny",
+			"destroy",
+			"damage",
+			"take"
 		],
 		"visibility": "covert"
 	},
@@ -28,7 +32,11 @@ module.exports =
 		"resources": "individual",
 		"skills": "minimal",
 		"objectives": [
-			"copy", "deny", "destroy", "damage", "take"
+			"copy",
+			"deny",
+			"destroy",
+			"damage",
+			"take"
 		],
 		"visibility": "overt"
 	},
@@ -44,7 +52,11 @@ module.exports =
 		"resources": "individual",
 		"skills": "operational",
 		"objectives": [
-			"copy", "deny", "destroy", "damage", "take"
+			"copy",
+			"deny",
+			"destroy",
+			"damage",
+			"take"
 		],
 		"visibility": "clandestine"
 	},
@@ -205,7 +217,11 @@ module.exports =
 		"resources": "individual",
 		"skills": "none",
 		"objectives": [
-			"copy", "deny", "destroy", "damage", "take"
+			"copy",
+			"deny",
+			"destroy",
+			"damage",
+			"take"
 		],
 		"visibility": "multiple"
 	},
@@ -253,7 +269,11 @@ module.exports =
 		"resources": "organization",
 		"skills": "adept",
 		"objectives": [
-			"copy", "deny", "destroy", "damage", "take"
+			"copy",
+			"deny",
+			"destroy",
+			"damage",
+			"take"
 		],
 		"visibility": "overt"
 	},
@@ -269,7 +289,11 @@ module.exports =
 		"resources": "club",
 		"skills": "minimal",
 		"objectives": [
-			"copy", "deny", "destroy", "damage", "take"
+			"copy",
+			"deny",
+			"destroy",
+			"damage",
+			"take"
 		],
 		"visibility": "overt"
 	},
@@ -316,7 +340,11 @@ module.exports =
 		"resources": "contest",
 		"skills": "operational",
 		"objectives": [
-			"copy", "deny", "destroy", "damage", "take"
+			"copy",
+			"deny",
+			"destroy",
+			"damage",
+			"take"
 		],
 		"visibility": "covert"
 	},
