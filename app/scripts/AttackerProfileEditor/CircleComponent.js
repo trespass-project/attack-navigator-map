@@ -1,9 +1,15 @@
 'use strict';
 
 const React = require('react');
+const classnames = require('classnames');
 
 
-// React module to represent an attacker profile for visualization using d3
+const colorArray = ['#ffee56', '#ffb84d', '#ff5151', '#d60000', '#af0000', '#890000'];
+const brighterArray = ['#fff177', '#ffc670', '#ff7373', '#de3232', '#bf3232', '#a03232'];
+const classIdx = ['zero', 'one', 'two', 'three', 'four', 'five'];
+
+
+// React module to represent an attacker profile for visualization
 let CircleComponent = React.createClass({
 	propTypes: {
 		radius: React.PropTypes.number.isRequired,
@@ -15,24 +21,35 @@ let CircleComponent = React.createClass({
 	},
 
 	render: function() {
-		let colorArray = ["#ffee56", "#ffb84d", "#ff5151", "#d60000", "#af0000", "#890000"];
-		let brighterArray = ["#fff177", "#ffc670", "#ff7373", "#de3232", "#bf3232", "#a03232"];
-		let classIdx = ["zero","one","two","three","four","five"]
-		let props = this.props;
+		const props = this.props;
 
-		let classes = "circleComponent " + classIdx[props.colorIdx];
+		const classes = classnames(
+			'circleComponent',
+			classIdx[props.colorIdx]
+		);
 		return (
-			<circle cx={props.cx} cy={props.cy} r={props.radius} fill={colorArray[props.colorIdx]} stroke="lightgray"
-				strokeWidth="0.5px" className={classes} onMouseEnter={this.mouseEnter} onMouseLeave={this.mouseLeave}/>
+			<circle
+				cx={props.cx}
+				cy={props.cy}
+				r={props.radius}
+				fill={colorArray[props.colorIdx]}
+				stroke='lightgray'
+				strokeWidth='0.5px'
+				className={classes}
+				onMouseEnter={this.mouseEnter}
+				onMouseLeave={this.mouseLeave}
+			/>
 		);
 	},
 
 	mouseEnter: function() {
-		this.props.setActiveHover(this.props.type);
+		const props = this.props;
+		props.setActiveHover(props.type);
 	},
 
 	mouseLeave: function() {
-		this.props.setActiveHover(null);
+		const props = this.props;
+		props.setActiveHover(null);
 	}
 
 });
