@@ -39,7 +39,7 @@ let Selectize = React.createClass({
 		this.selectize = $el[0].selectize;
 		this.selectize.setValue(props.value, true);
 		this.selectize.open();
-		this.update(props.values)
+		this.update(props.values);
 	},
 
 	update: function(value) {

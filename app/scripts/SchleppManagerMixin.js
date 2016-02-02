@@ -1,7 +1,6 @@
 'use strict';
 
 let $ = require('jquery');
-let _ = require('lodash');
 let React = require('react');
 let helpers = require('./helpers.js');
 let actionCreators = require('./actionCreators.js');

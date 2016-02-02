@@ -2,7 +2,6 @@
 
 let React = require('react');
 let reactDOM = require('react-dom');
-let _ = require('lodash');
 let mout = require('mout');
 
 let GraphMixin = require('./GraphMixin.js');

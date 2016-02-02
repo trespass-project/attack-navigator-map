@@ -2,7 +2,6 @@
 
 const React = require('react');
 const R = require('ramda');
-const _ = require('lodash');
 const classnames = require('classnames');
 
 const helpers = require('../helpers.js');
@@ -145,7 +144,7 @@ let AttackerProfileEditorLanguage = React.createClass({
 					handleSelection={this.updateProfile}
 				/>
 			}
-		</li>
+		</li>;
 	},
 
 	renderPresetOption: function(preset, index) {

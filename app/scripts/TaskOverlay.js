@@ -1,7 +1,6 @@
 'use strict';
 
 let React = require('react');
-let _ = require('lodash');
 let moment = require('moment');
 const constants = require('./constants.js');
 let actionCreators = require('./action-creators.js');
