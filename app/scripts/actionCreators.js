@@ -4,6 +4,7 @@
 // let Q = require('q');
 let R = require('ramda');
 let _ = require('lodash');
+const trespassModel = require('trespass.js/src/model');
 const constants = require('./constants.js');
 const helpers = require('./helpers.js');
 const modelHelpers = require('./model-helpers.js');
@@ -473,10 +474,19 @@ function runAnalysis() {
 			'attackerGoal'
 		], getState().interface);
 
+		// generate scenario xml
+		const modelFileName = 'model-file-name.xml';
+		const attackerId = data.attackerGoal[data.attackerGoalType].attacker;
+		const assetId = data.attackerGoal[data.attackerGoalType].asset;
+		let scenario = trespassModel.createScenario();
+		scenario = trespassModel.scenarioSetModel(scenario, modelFileName);
+		scenario = trespassModel.scenarioSetAssetGoal(scenario, attackerId, assetId);
+		const xmlStr = trespassModel.scenarioToXML(scenario);
+		console.log(xmlStr);
+
 		dispatch({
 			type: constants.ACTION_runAnalysis,
 		});
-
 	};
 };
 
