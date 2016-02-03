@@ -1,7 +1,8 @@
 'use strict';
 
 const React = require('react');
-
+const reactDOM = require('react-dom');
+const $ = require('jquery');
 
 let AttackerToolTipComponent = React.createClass({
 	propTypes: {
@@ -9,27 +10,62 @@ let AttackerToolTipComponent = React.createClass({
 		active: React.PropTypes.string,
 		mouseX: React.PropTypes.number.isRequired,
 		mouseY: React.PropTypes.number.isRequired,
+		width: React.PropTypes.number,
 	},
 
-	getInitialState : function() {
+	getDefaultProps: function() {
+		return ({width: 400});
+	},
+
+	getInitialState: function() {
 		return {
 			mouseX: 0,
-			mouseY: 0
+			mouseY: 0,
+			height: 0,
 		};
+	},
+
+	componentDidMount: function() {
+		const elem = reactDOM.findDOMNode(this);
+		this.setState({height: $(elem).height()});
+	},
+
+	getStyle: function() {
+		const props = this.props;
+		const state = this.state;
+
+		const windowWidth = $(window).width();
+		const windowHeight = $(window).height();
+
+		let style = {
+			position: 'absolute',
+			backgroundColor: 'white',
+			borderStyle: 'solid',
+			borderColor: 'black',
+			padding: '2px 2px 2px 2px',
+			width: props.width,
+			zIndex: 99999,
+		};
+
+		// Check bounds to make sure tooltip will always render in viewport
+		if (windowWidth - props.MouseX > props.width)
+			style.left = props.mouseX - 10;
+		else
+			style.left = props.mouseX - props.width-10;
+
+		if (windowHeight - props.MouseY > state.height)
+			style.top = props.mouseY + 10;
+		else
+			style.top = props.mouseY - state.height-10;
+
+		return style;
 	},
 
 	render: function() {
 		const props = this.props;
 
 		const attacker = props.profile;
-		const style = {
-			position: 'absolute',
-			backgroundColor: 'white',
-			borderStyle: 'solid',
-			borderColor: 'black',
-			left: props.mouseX - 10,
-			top: props.mouseY + 10,
-		};
+		const style = this.getStyle();
 
 		let styleAttr = {
 			resources: {},
