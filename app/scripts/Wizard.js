@@ -116,13 +116,7 @@ let Wizard = React.createClass({
 			<button
 				onClick={this.clickFileButton}
 				className='btn btn-default btn-xs'>
-				load XML file
-			</button>
-			<br/>
-			<button
-				onClick={this.downloadAsXML}
-				className='btn btn-default btn-xs'>
-				save as XML
+				Load model XML file
 			</button>
 		</div>;
 	},
@@ -218,6 +212,14 @@ let Wizard = React.createClass({
 		return <div>
 			<h2 className='title'>Run analysis</h2>
 
+			<button
+				onClick={this.downloadAsXML}
+				className='btn btn-default btn-xs'>
+				Save current model as XML
+			</button>
+
+			<hr/>
+
 			<h3>Tool</h3>
 			<select>
 				{R.values(analysisTools)
@@ -251,7 +253,7 @@ let Wizard = React.createClass({
 				<button
 					onClick={this.runAnalysis}
 					className='btn btn-primary'>
-					<b>Run</b>
+					<b>Run analysis</b>
 				</button>
 			</div>
 		</div>;
@@ -302,7 +304,7 @@ let Wizard = React.createClass({
 						<Tab name='import'
 							selectedSection={selectedSection}
 							icon='images/icons/import-01.svg'
-							tooltip='Import / export model'
+							tooltip='Import model'
 							handleClick={R.partial(this.selectWizardStep, ['import'])}
 						/>
 						<Tab name='locations'
