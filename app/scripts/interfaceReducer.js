@@ -48,8 +48,14 @@ const initialState = {
 		selectedSection: 'import'
 	},
 
+	// ——————————
+
 	attackerProfile: null,
+
+	attackerGoalType: null,
 	attackerGoal: null,
+
+	analysisRunning: false,
 };
 
 
@@ -63,7 +69,7 @@ const blacklist = [
 	constants.ACTION_setHoverGroup,
 	constants.ACTION_setPreviewEdge,
 	constants.ACTION_setTransformation,
-	constants.ACTION_updateComponentProperties
+	constants.ACTION_updateComponentProperties,
 ];
 const whitelist = [
 	constants.ACTION_loadXMLFile,
@@ -72,7 +78,9 @@ const whitelist = [
 	// constants.ACTION_addNode,
 	// constants.ACTION_select,
 	// constants.ACTION_removeGroup,
-	constants.ACTION_addGroupBackgroundImage
+	// constants.ACTION_addGroupBackgroundImage
+	constants.ACTION_setAttackerGoal,
+	constants.ACTION_runAnalysis,
 ];
 
 
@@ -199,8 +207,17 @@ function reducer(state=initialState, action) {
 		}
 
 		case constants.ACTION_setAttackerGoal: {
-			const {assetId} = action;
-			return mergeWithState({ attackerGoal: assetId });
+			const {goalType, goalData} = action;
+			return mergeWithState({
+				attackerGoalType: goalType,
+				attackerGoal: goalData,
+			});
+		}
+
+		case constants.ACTION_runAnalysis: {
+			return mergeWithState({
+				analysisRunning: true
+			});
 		}
 
 		default:

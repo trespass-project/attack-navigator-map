@@ -1,8 +1,8 @@
 'use strict';
 
 // let $ = require('jquery');
-// let R = require('ramda');
 // let Q = require('q');
+let R = require('ramda');
 let _ = require('lodash');
 const constants = require('./constants.js');
 const helpers = require('./helpers.js');
@@ -453,10 +453,30 @@ function attackerProfileChanged(profile) {
 
 const setAttackerGoal =
 module.exports.setAttackerGoal =
-function setAttackerGoal(assetId) {
+function setAttackerGoal(goalType, goalData) {
 	return {
 		type: constants.ACTION_setAttackerGoal,
-		assetId
+		goalType,
+		goalData
+	};
+};
+
+
+const runAnalysis =
+module.exports.runAnalysis =
+function runAnalysis() {
+	return function(dispatch, getState) {
+		// collect relevant data
+		const data = R.pick([
+			'attackerProfile',
+			'attackerGoalType',
+			'attackerGoal'
+		], getState().interface);
+
+		dispatch({
+			type: constants.ACTION_runAnalysis,
+		});
+
 	};
 };
 

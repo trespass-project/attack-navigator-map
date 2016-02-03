@@ -209,6 +209,12 @@ let Wizard = React.createClass({
 	},
 
 	renderRunAnalysis: function(props) {
+		const goalValue = (!!props.attackerGoal && !!props.attackerGoalType)
+			? props.attackerGoal[props.attackerGoalType].asset || ''
+			: '';
+
+		const readyToRun = (!!props.attackerGoal);
+
 		return <div>
 			<h2 className='title'>Run analysis</h2>
 
@@ -231,7 +237,10 @@ let Wizard = React.createClass({
 			<br/>
 
 			<h3>Attacker goal</h3>
-			<select value={props.attackerGoal || ''} onChange={this.setAttackerGoal}>{/*disabled={true}*/}
+			<select
+				value={goalValue}
+				onChange={this.setAttackerGoal}
+			>{/*disabled={true}*/}
 				<option value=''>— select goal —</option>
 				{props.graph.nodes
 					.filter((item) => {
@@ -251,8 +260,10 @@ let Wizard = React.createClass({
 				justifyContent: 'center',
 			}}>
 				<button
+					disabled={!readyToRun}
 					onClick={this.runAnalysis}
-					className='btn btn-primary'>
+					className='btn btn-primary'
+				>
 					<b>Run analysis</b>
 				</button>
 			</div>
@@ -359,29 +370,30 @@ let Wizard = React.createClass({
 		);
 	},
 
-	getInitialState: function() {
-		return {
-			analysisRunning: false
-		};
-	},
-
 	setAttackerGoal: function(event) {
 		const assetId = event.target.value;
-		this.props.dispatch( actionCreators.setAttackerGoal(assetId) );
+		const goalType = 'assetGoal';
+		const goalData = {
+			[goalType]: {
+				attacker: 'X',
+				asset: assetId
+			}
+		};
+		this.props.dispatch( actionCreators.setAttackerGoal(goalType, goalData) );
 	},
 
 	runAnalysis: function() {
-		this.setState({ analysisRunning: true });
+		this.props.dispatch( actionCreators.runAnalysis() );
 	},
 
 	renderOverlay: function() {
-		const state = this.state;
-		if (!state.analysisRunning) {
+		const props = this.props;
+		if (!props.analysisRunning) {
 			return null;
 		}
 
 		return <div id='task-overlay'>
-			<div>
+			<div>{/* TODO: display / link to intermediate results */}
 				<h3>Generating attack tree...</h3>
 				<h3>Attack Pattern Library...</h3>
 				<h3>Tree Evaluator...</h3>

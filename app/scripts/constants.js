@@ -64,6 +64,7 @@ const constants = {
 	ACTION_updateComponentProperties: 'ACTION_updateComponentProperties',
 	ACTION_attackerProfileChanged: 'ACTION_attackerProfileChanged',
 	ACTION_setAttackerGoal: 'ACTION_setAttackerGoal',
+	ACTION_runAnalysis: 'ACTION_runAnalysis',
 
 	CLONE_OFFSET: 100,
 };
