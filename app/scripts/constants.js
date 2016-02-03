@@ -63,6 +63,7 @@ const constants = {
 	ACTION_removeEdge: 'ACTION_removeEdge',
 	ACTION_updateComponentProperties: 'ACTION_updateComponentProperties',
 	ACTION_attackerProfileChanged: 'ACTION_attackerProfileChanged',
+	ACTION_setAttackerGoal: 'ACTION_setAttackerGoal',
 
 	CLONE_OFFSET: 100,
 };

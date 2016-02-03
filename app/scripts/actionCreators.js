@@ -451,6 +451,16 @@ function attackerProfileChanged(profile) {
 };
 
 
+const setAttackerGoal =
+module.exports.setAttackerGoal =
+function setAttackerGoal(assetId) {
+	return {
+		type: constants.ACTION_setAttackerGoal,
+		assetId
+	};
+};
+
+
 // ——————————
 /*
 module.exports.openDir =

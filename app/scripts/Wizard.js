@@ -229,8 +229,15 @@ let Wizard = React.createClass({
 			<br/>
 
 			<h3>Attacker goal</h3>
-			<select value='asdf' disabled={true}>
-				<option value="asdf">default goal</option>
+			<select value={props.attackerGoal || ''} onChange={this.setAttackerGoal}>{/*disabled={true}*/}
+				<option value=''>— select goal —</option>
+				{props.graph.nodes
+					.filter((item) => {
+						return item.modelComponentType === 'item' ||
+							item.modelComponentType === 'data';
+					})
+					.map(this.renderGoalOption)
+				}
 			</select>
 			<br/>
 
@@ -248,6 +255,15 @@ let Wizard = React.createClass({
 				</button>
 			</div>
 		</div>;
+	},
+
+	renderGoalOption: function(item) {
+		return <option
+			key={item.id}
+			value={item.id}
+		>
+			{item.label}
+		</option>;
 	},
 
 	render: function() {
@@ -345,6 +361,11 @@ let Wizard = React.createClass({
 		return {
 			analysisRunning: false
 		};
+	},
+
+	setAttackerGoal: function(event) {
+		const assetId = event.target.value;
+		this.props.dispatch( actionCreators.setAttackerGoal(assetId) );
 	},
 
 	runAnalysis: function() {

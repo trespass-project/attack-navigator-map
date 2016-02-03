@@ -99,14 +99,14 @@
 						"label": "VM2"
 					},
 					{
-						"modelComponentType": "asset",
+						"modelComponentType": "data",
 						"id": "file1",
 						"x": 450,
 						"y": 1,
 						"label": "File 1"
 					},
 					{
-						"modelComponentType": "asset",
+						"modelComponentType": "data",
 						"id": "file2",
 						"x": 450,
 						"y": 100,

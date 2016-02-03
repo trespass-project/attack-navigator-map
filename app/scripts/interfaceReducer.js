@@ -47,6 +47,9 @@ const initialState = {
 	wizard: {
 		selectedSection: 'import'
 	},
+
+	attackerProfile: null,
+	attackerGoal: null,
 };
 
 
@@ -193,6 +196,11 @@ function reducer(state=initialState, action) {
 		case constants.ACTION_attackerProfileChanged: {
 			const {profile} = action;
 			return mergeWithState({ attackerProfile: profile });
+		}
+
+		case constants.ACTION_setAttackerGoal: {
+			const {assetId} = action;
+			return mergeWithState({ attackerGoal: assetId });
 		}
 
 		default:
