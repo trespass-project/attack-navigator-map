@@ -37,7 +37,8 @@ let AttackerToolTipComponent = React.createClass({
 			visibility: {},
 			skill: {},
 			intentaccess: {},
-		}
+		};
+
 		if (props.active) {
 			switch (props.active) {
 				case 'intent':

@@ -18,23 +18,32 @@ let AttackerProfileComponent = React.createClass({
 	propTypes: {
 		attacker: React.PropTypes.object.isRequired,
 		setActiveHover: React.PropTypes.func.isRequired,
+		width: React.PropTypes.number,
+		height: React.PropTypes.number,
+		multiplier: React.PropTypes.number,
+	},
+
+	getDefaultProps: function() {
+		return ({
+			width: 150,
+			height: 150,
+			multiplier: 3.0,
+		});
 	},
 
 	render: function() {
 		const props = this.props;
 
-		const distances = this.computeDistances(props.attacker);
+		const distances = this.computeDistances(props.attacker, props.multiplier);
 
-		const width = 150;
-		const height = 150;
-		const cx = width / 2
-		const cy = height / 2;
+		const cx = props.width / 2
+		const cy = props.height / 2;
 
 		return (
 			<svg
 				className='attacker-profile-component'
-				width={width}
-				height={height}
+				width={props.width}
+				height={props.height}
 			>
 				<g className='profile-dots'>
 					<CircleComponent
@@ -84,21 +93,20 @@ let AttackerProfileComponent = React.createClass({
 		);
 	},
 
-	computeDistances: function(attacker) {
+	computeDistances: function(attacker, multiplier) {
 		let distances = {};
+
 		distances.limitsIdx = limitsArray.indexOf(attacker.limits);
 		distances.visibilityIdx = visibilityArray.indexOf(attacker.visibility);
 		distances.skillIdx = skillsArray.indexOf(attacker.skills);
 		distances.intentIdx = intentAccessArray.indexOf(attacker.access + ' ' + attacker.intent);
 		distances.resourcesIdx = resourcesArray.indexOf(attacker.resources);
 
-		const multipler = 3;
-
-		distances.resourcesR = (distances.resourcesIdx + 1) * multipler;
-		distances.limitsR = distances.resourcesR + (distances.limitsIdx + 1) * multipler;
-		distances.visibilityR = distances.limitsR + (distances.visibilityIdx + 1) * multipler;
-		distances.skillR = distances.visibilityR + (distances.skillIdx + 1) * multipler;
-		distances.intentR = distances.skillR + (distances.intentIdx + 1) * multipler;
+		distances.resourcesR = (distances.resourcesIdx + 1) * multiplier;
+		distances.limitsR = distances.resourcesR + (distances.limitsIdx + 1) * multiplier;
+		distances.visibilityR = distances.limitsR + (distances.visibilityIdx + 1) * multiplier;
+		distances.skillR = distances.visibilityR + (distances.skillIdx + 1) * multiplier;
+		distances.intentR = distances.skillR + (distances.intentIdx + 1) * multiplier;
 
 		return distances;
 	},

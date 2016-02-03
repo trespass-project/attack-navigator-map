@@ -1,6 +1,9 @@
 'use strict';
 
 const React = require('react');
+const reactDOM = require('react-dom');
+const $ = require('jquery');
+
 const AttackerProfileComponent = require('./AttackerProfileComponent.js');
 const AttackerToolTipComponent = require('./AttackerToolTipComponent.js');
 
@@ -9,6 +12,8 @@ const AttackerToolTipComponent = require('./AttackerToolTipComponent.js');
 let AttackerProfile = React.createClass({
 	propTypes: {
 		attacker: React.PropTypes.object.isRequired,
+		showToolTip: React.PropTypes.bool,
+		displayLabel: React.PropTypes.bool,
 	},
 
 	getDefaultProps: function() {
@@ -32,7 +37,9 @@ let AttackerProfile = React.createClass({
 					'take'
 				],
 				'visibility': 'covert'
-			}
+			},
+		showToolTip: true,
+		displayLabel: true,
 		};
 	},
 
@@ -41,21 +48,23 @@ let AttackerProfile = React.createClass({
 			activeHover: null,
 			over: false,
 			mouseX: 0,
-			mouseY: 0
+			mouseY: 0,
+			width: 0,
 		};
 	},
 
 	render: function() {
 		let state = this.state;
-		const attacker = this.props.attacker;
+		const props = this.props;
+		const attacker = props.attacker;
 
 		// console.log(this.state.activeHover);
 		return <div
-			id='attacker-profile'
+			className='attacker-profile'
 			onMouseMove={this.mouseMove}
 			onMouseLeave={this.mouseLeave}
-		>
-			{(state.over)
+			>
+			{(state.over && props.showToolTip)
 				? <AttackerToolTipComponent
 					active={state.activeHover}
 					profile={attacker}
@@ -67,11 +76,22 @@ let AttackerProfile = React.createClass({
 			<AttackerProfileComponent
 				attacker={attacker}
 				setActiveHover={this.setActiveHover}
+				width={state.width}
 			/>
-			<h5 className='attacker-desc'>
-				{attacker.title}
-			</h5>
+			{(props.displayLabel) ?
+				<h5 className='attacker-desc'>
+					{attacker.title}
+				</h5>
+				: null
+			}
 		</div>;
+	},
+
+	componentDidMount: function() {
+		let that = this;
+		const elem = reactDOM.findDOMNode(this);
+
+		this.setState({width: $(elem).width()});
 	},
 
 	setActiveHover: function(type) {
