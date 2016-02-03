@@ -1,9 +1,10 @@
 'use strict';
 
-// let $ = require('jquery');
-// let Q = require('q');
-let R = require('ramda');
-let _ = require('lodash');
+// const $ = require('jquery');
+// const Q = require('q');
+const R = require('ramda');
+const _ = require('lodash');
+const JSZip = require('jszip');
 const trespassModel = require('trespass.js/src/model');
 const constants = require('./constants.js');
 const helpers = require('./helpers.js');
@@ -475,14 +476,28 @@ function runAnalysis() {
 		], getState().interface);
 
 		// generate scenario xml
-		const modelFileName = 'model-file-name.xml';
+		const modelFileName = 'model.xml';
 		const attackerId = data.attackerGoal[data.attackerGoalType].attacker;
 		const assetId = data.attackerGoal[data.attackerGoalType].asset;
 		let scenario = trespassModel.createScenario();
 		scenario = trespassModel.scenarioSetModel(scenario, modelFileName);
 		scenario = trespassModel.scenarioSetAssetGoal(scenario, attackerId, assetId);
-		const xmlStr = trespassModel.scenarioToXML(scenario);
-		console.log(xmlStr);
+		const scenarioXmlStr = trespassModel.scenarioToXML(scenario);
+		// console.log(scenarioXmlStr);
+
+		// generate model xml
+		const model = modelHelpers.modelFromGraph(getState().model.graph);
+		const modelXmlStr = trespassModel.toXML(model);
+		// console.log(modelXmlStr);
+
+		// zip it!
+		let zip = new JSZip();
+		zip.file(modelFileName, modelXmlStr);
+		zip.file('scenario.xml', scenarioXmlStr);
+		const blob = zip.generate({ type: 'blob' });
+		// download it
+		const saveAs = require('browser-saveas');
+		saveAs(blob, 'scenario.zip');
 
 		dispatch({
 			type: constants.ACTION_runAnalysis,
