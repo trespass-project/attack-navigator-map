@@ -1,11 +1,13 @@
 'use strict';
 
-// const $ = require('jquery');
-// const Q = require('q');
+const $ = require('jquery');
+const Q = require('q');
 const R = require('ramda');
 const _ = require('lodash');
 const JSZip = require('jszip');
 const trespassModel = require('trespass.js/src/model');
+const api = require('trespass.js/src/apis');
+const toolsApi = api.apis.tools;
 const constants = require('./constants.js');
 const helpers = require('./helpers.js');
 const modelHelpers = require('./model-helpers.js');
@@ -466,7 +468,7 @@ function setAttackerGoal(goalType, goalData) {
 
 const runAnalysis =
 module.exports.runAnalysis =
-function runAnalysis() {
+function runAnalysis(toolChainId) {
 	return function(dispatch, getState) {
 		// collect relevant data
 		const data = R.pick([
@@ -477,6 +479,8 @@ function runAnalysis() {
 
 		// generate scenario xml
 		const modelFileName = 'model.xml';
+		const scenarioFileName = 'scenario.xml';
+		const zipFileName = 'scenario.zip';
 		const attackerId = data.attackerGoal[data.attackerGoalType].attacker;
 		const assetId = data.attackerGoal[data.attackerGoalType].asset;
 		let scenario = trespassModel.createScenario();
@@ -499,9 +503,59 @@ function runAnalysis() {
 		const saveAs = require('browser-saveas');
 		saveAs(blob, 'scenario.zip');
 
+		// start tool chain
+		let formData = new FormData();
+		formData.append('file', blob, zipFileName);
+		const params = _.merge(
+			{
+				dataType: 'json',
+				url: api.makeUrl(toolsApi, 'secured/tool-chain/'+toolChainId+'/run'),
+				data: formData,
+			},
+			api.requestOptions.crossDomain,
+			api.requestOptions.fileUpload
+		);
+		const req = $.ajax(params);
+		// TODO: wait for it to finish
+
 		dispatch({
 			type: constants.ACTION_runAnalysis,
 		});
+	};
+};
+
+
+const loadToolChains =
+module.exports.loadToolChains =
+function loadToolChains(xmlString) {
+	return function(dispatch, getState) {
+		dispatch({
+			type: constants.ACTION_loadToolChains
+		});
+
+		const params = _.merge(
+			{
+				dataType: 'json',
+				url: api.makeUrl(toolsApi, 'secured/tool-chain'),
+				// data: data,
+			},
+			api.requestOptions.crossDomain
+		);
+		const req = $.ajax(params);
+		Q(req)
+			.then(function(chains) {
+				// only get those chains that begin with treemaker
+				const treemakerName = 'Treemaker'; // TODO: don't hardcode
+				const toolChains = chains
+					.filter((toolChain) => {
+						return toolChain.tools[0].name === treemakerName;
+					});
+				dispatch({
+					type: constants.ACTION_loadToolChains_DONE,
+					toolChains
+				});
+			})
+			.catch(handleError);
 	};
 };
 

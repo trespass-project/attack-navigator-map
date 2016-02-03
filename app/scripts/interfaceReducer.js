@@ -56,6 +56,7 @@ const initialState = {
 	attackerGoal: null,
 
 	analysisRunning: false,
+	toolChains: []
 };
 
 
@@ -218,6 +219,14 @@ function reducer(state=initialState, action) {
 			return mergeWithState({
 				analysisRunning: true
 			});
+		}
+
+		case constants.ACTION_loadToolChains: {
+			return state; // noop
+		}
+		case constants.ACTION_loadToolChains_DONE: {
+			const {toolChains} = action;
+			return _.merge({}, state, { toolChains });
 		}
 
 		default:

@@ -24,8 +24,12 @@ let DragDropContext = require('react-dnd').DragDropContext;
 
 let App = React.createClass({
 	componentDidMount: function() {
+		const props = this.props;
+
 		const editorElem = document.querySelector('#editor > svg');
-		this.props.dispatch( actionCreators.setEditorElem(editorElem) );
+		props.dispatch( actionCreators.setEditorElem(editorElem) );
+
+		props.dispatch( actionCreators.loadToolChains() );
 	},
 
 	render: function() {

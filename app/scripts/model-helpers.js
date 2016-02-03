@@ -157,7 +157,7 @@ function downloadAsXML(model, filename) {
 		{ type: 'text/plain;charset=utf-8' }
 	);
 	if (document) { // only in browser
-		let saveAs = require('browser-saveas');
+		const saveAs = require('browser-saveas');
 		saveAs(blob, filename || 'model.xml');
 	}
 	return blob;

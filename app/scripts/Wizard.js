@@ -16,8 +16,9 @@ let Tooltip = require('react-bootstrap').Tooltip;
 
 let AttackerProfileEditor = require('./AttackerProfileEditor/AttackerProfileEditorLanguage.js');
 
-const analysisTools = require('../data/analysis-tools.js');
+// const analysisTools = require('../data/analysis-tools.js');
 
+// TODO: move API stuff to trespass.js
 const api = require('../../api.js').api;
 const serverPort = require('../../api.js').serverPort;
 const serverDomain = require('../../api.js').serverDomain;
@@ -226,11 +227,23 @@ let Wizard = React.createClass({
 
 			<hr/>
 
-			<h3>Tool</h3>
+			{/*<h3>Tool</h3>
 			<select>
 				{R.values(analysisTools)
 					.map(function(tool) {
 						return <option key={tool.name} value={tool.id}>{tool.name}</option>;
+					})
+				}
+			</select>*/}
+			<h3>Tool chains</h3>
+			<select ref='toolchain'>
+				{props.toolChains
+					.map(function(chain) {
+						return <option
+							key={chain.id}
+							value={chain.id}>
+							{chain.name}
+						</option>;
 					})
 				}
 			</select>
@@ -383,7 +396,8 @@ let Wizard = React.createClass({
 	},
 
 	runAnalysis: function() {
-		this.props.dispatch( actionCreators.runAnalysis() );
+		const select = this.refs.toolchain;
+		this.props.dispatch( actionCreators.runAnalysis(select.value) );
 	},
 
 	renderOverlay: function() {
