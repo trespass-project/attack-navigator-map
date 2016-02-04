@@ -191,6 +191,7 @@ let Wizard = React.createClass({
 	renderConnections: function(props) {
 		return <div>
 			<h2 className='title'>Connections</h2>
+			<PredicateEditor />
 		</div>;
 	},
 
