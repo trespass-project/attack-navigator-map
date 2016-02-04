@@ -2,12 +2,12 @@
 
 // editor options
 const accessOptions = [
+	{ value: 'external', title: 'external', className: 'medium' },
 	{ value: 'internal', title: 'internal', className: 'veryhigh' },
-	{ value: 'external', title: 'external', className: 'medium' }
 ];
 const intentOptions = [
-	{ value: 'hostile', title: 'hostile', className: 'high' },
-	{ value: 'non-hostile', title: 'non-hostile', className: 'low' }
+	{ value: 'non-hostile', title: 'non-hostile', className: 'low' },
+	{ value: 'hostile', title: 'hostile', className: 'veryhigh' },
 ];
 const outcomesOptions = [
 	{ value: 'acquisition / theft', title: 'acquisition / theft' },
@@ -46,7 +46,8 @@ const objectivesOptions = [
 const visibilityOptions = [
 	{ value: 'overt', title: 'overt' },
 	{ value: 'covert', title: 'covert' },
-	{ value: 'clandestine', title: 'clandestine' }
+	{ value: 'clandestine', title: 'clandestine' },
+	{ value: 'multiple', title: 'multiple' },
 ];
 
 const options = module.exports.options = [
