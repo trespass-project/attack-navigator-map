@@ -16,6 +16,7 @@ const Loader = require('react-loader');
 const OverlayTrigger = require('react-bootstrap').OverlayTrigger;
 const Tooltip = require('react-bootstrap').Tooltip;
 
+const PredicateEditor = require('./PredicateEditor.js');
 const AttackerProfileEditor = require('./AttackerProfileEditor/AttackerProfileEditorLanguage.js');
 
 // const analysisTools = require('../data/analysis-tools.js');
@@ -281,7 +282,9 @@ let Wizard = React.createClass({
 			}}>
 				<div>
 					<input type='checkbox' name='checkbox-dl-scenario' ref='checkbox-dl-scenario' />&nbsp;
-					<label style={{ fontWeight: 'normal' }} htmlFor='checkbox-dl-scenario'>Download scenario file(s)</label>
+					<label style={{ fontWeight: 'normal' }} htmlFor='checkbox-dl-scenario'>
+						Download scenario file(s)
+					</label>
 				</div>
 				<button
 					disabled={!readyToRun}
