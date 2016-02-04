@@ -230,14 +230,26 @@ let PropertiesPanel = React.createClass({
 	},
 
 	renderKnowledgebase: function(kb) {
-		// TODO: refine this
-		if (kb && kb.parameters && kb.parameters.burglarresistance) {
-			return <div>
-				Burglar resistance options: {kb.parameters.burglarresistance.join(', ')}
-			</div>;
-		} else {
+		if (!kb || !kb.parameters) {
 			return null;
 		}
+
+		return <div>
+			{R.keys(kb.parameters)
+				.map((key) => {
+					return <div key={key}>
+						{key}:&nbsp;
+						<select>
+							{kb.parameters[key]
+								.map((option) => {
+									return <option value={option}>{option}</option>
+								})
+							}
+						</select>
+					</div>;
+				})
+			}
+		</div>
 	},
 
 	componentDidMount: function() {
