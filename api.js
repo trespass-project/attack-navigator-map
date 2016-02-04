@@ -22,18 +22,4 @@ module.exports.api = {
 		url: urljoin(urlPrefix, 'patterns'),
 		file: path.join(dataPath, constants.MODEL_PATTERNS_LIBRARY),
 	},
-	'knowledgebase': {
-		url: urljoin(urlPrefix, 'knowledgebase'),
-		file: path.join(dataPath, constants.MODEL_KNOWLEDGEBASE),
-	},
-
-	// 'analysis-tools': {
-	// 	url: urljoin(urlPrefix, 'analysis-tools'),
-	// 	file: path.join(dataPath, constants.ANALYSIS_TOOLS),
-	// },
-};
-
-
-module.exports.knowledgebase = {
-	url: 'http://127.0.0.1:8080/tkb/'
 };

@@ -1,14 +1,16 @@
 'use strict';
 
-let $ = require('jquery');
-let React = require('react');
-let R = require('ramda');
+const $ = require('jquery');
+const React = require('react');
+const R = require('ramda');
+const _ = require('lodash');
 
-let helpers = require('./helpers.js');
-let modelHelpers = require('./model-helpers.js');
-let actionCreators = require('./actionCreators.js');
+const helpers = require('./helpers.js');
+const modelHelpers = require('./model-helpers.js');
+const actionCreators = require('./actionCreators.js');
 const constants = require('./constants.js');
-const api = require('../../api.js');
+const api = require('trespass.js/src/apis');
+const knowledgebaseApi = api.apis.knowledgebase;
 
 
 let PropertiesPanel = React.createClass({
@@ -238,7 +240,7 @@ let PropertiesPanel = React.createClass({
 		}
 	},
 
-	componentWillMount: function() {
+	componentDidMount: function() {
 		let that = this;
 		const props = this.props;
 
@@ -257,27 +259,37 @@ let PropertiesPanel = React.createClass({
 			} else {
 				// query knowledgebase
 				const list = {
-					'node': props.graph.nodes,
-					// 'edge': props.graph.edges,
-					'group': props.graph.groups,
+					node: props.graph.nodes,
+					// edge: props.graph.edges,
+					group: props.graph.groups,
 				}[graphComponentType] || [];
 				const selectedItem = helpers.getItemById(list, componentId);
 
 				if (selectedItem) {
 					if (selectedItem.kbType) {
-						$.ajax({
-							url: api.knowledgebase.url + 'getParameters',
-							crossDomain: true,
-							dataType: 'json',
-							data: { type: selectedItem.kbType }
-						}).success(function(data) {
-							// console.log(data);
-							that.setState({
-								knowledgebase: {
-									parameters: data
-								}
+						const params = _.merge(
+							{},
+							// api.requestOptions.crossDomain,
+							{
+								url: api.makeUrl(knowledgebaseApi, 'getParameters'),
+								dataType: 'json',
+								data: { type: selectedItem.kbType },
+								crossDomain: true,
+								// xhrFields: {}
+							}
+						);
+						$.ajax(params)
+							.success(function(data) {
+								// console.log(data);
+								that.setState({
+									knowledgebase: {
+										parameters: data
+									}
+								});
+							})
+							.fail(function(err) {
+								console.error(err);
 							});
-						});
 					}
 				}
 			}
