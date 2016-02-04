@@ -276,6 +276,10 @@ let Wizard = React.createClass({
 				alignItems: 'center',
 				justifyContent: 'center',
 			}}>
+				<div>
+					<input type='checkbox' name='checkbox-dl-scenario' ref='checkbox-dl-scenario' />&nbsp;
+					<label style={{ fontWeight: 'normal' }} htmlFor='checkbox-dl-scenario'>Download scenario file(s)</label>
+				</div>
 				<button
 					disabled={!readyToRun}
 					onClick={this.runAnalysis}
@@ -400,9 +404,15 @@ let Wizard = React.createClass({
 	},
 
 	runAnalysis: function() {
+		const dlScenarioCheckbox = this.refs['checkbox-dl-scenario'];
 		const select = this.refs.toolchain;
 		// watch out: value comes back as string
-		this.props.dispatch( actionCreators.runAnalysis( parseInt(select.value, 10) ) );
+		this.props.dispatch(
+			actionCreators.runAnalysis(
+				parseInt(select.value, 10),
+				dlScenarioCheckbox.checked
+			)
+		);
 	},
 
 	renderToolChainOverlay: function() {

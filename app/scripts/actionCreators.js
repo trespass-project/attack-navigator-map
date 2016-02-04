@@ -468,7 +468,7 @@ function setAttackerGoal(goalType, goalData) {
 
 const runAnalysis =
 module.exports.runAnalysis =
-function runAnalysis(toolChainId) {
+function runAnalysis(toolChainId, downloadScenario=false) {
 	return function(dispatch, getState) {
 		// collect relevant data
 		const data = R.pick([
@@ -499,9 +499,12 @@ function runAnalysis(toolChainId) {
 		zip.file(modelFileName, modelXmlStr);
 		zip.file('scenario.xml', scenarioXmlStr);
 		const blob = zip.generate({ type: 'blob' });
-		// download it
-		const saveAs = require('browser-saveas');
-		saveAs(blob, 'scenario.zip');
+
+		if (downloadScenario) {
+			// download it
+			const saveAs = require('browser-saveas');
+			saveAs(blob, 'scenario.zip');
+		}
 
 		// start tool chain
 		let formData = new FormData();
