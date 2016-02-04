@@ -516,7 +516,42 @@ function runAnalysis(toolChainId) {
 			api.requestOptions.fileUpload
 		);
 		const req = $.ajax(params);
-		// TODO: wait for it to finish
+
+		// wait for it to finish
+		Q(req)
+			.then((runData) => {
+				const taskId = runData.id;
+				console.log(runData);
+
+				// then, wait for result to become available:
+				const url = api.makeUrl(toolsApi, 'secured/task/'+taskId);
+				const params = _.merge(
+					{ dataType: 'json', url: url },
+					api.requestOptions.crossDomain
+				);
+				const retryRate = 1000;
+				const intervalId = setInterval(function() {
+					console.log('waiting ...');
+					Q($.ajax(params))
+						.then(function(taskData) {
+							// if (taskData.error) {
+							// 	clearInterval(intervalId);
+							// 	console.warn(taskData.error);
+							// 	return;
+							// }
+							if (taskData.status) {
+								clearInterval(intervalId);
+								console.log(taskData);
+								// dispatch({
+								// 	type: constants.API_UPDATE_TASK_DATA,
+								// 	taskData: _.merge(taskData, { error: null })
+								// });
+							}
+						});
+				}, retryRate);
+			})
+			.catch(handleError);
+
 
 		dispatch({
 			type: constants.ACTION_runAnalysis,
