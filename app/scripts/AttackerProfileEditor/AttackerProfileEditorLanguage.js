@@ -7,6 +7,8 @@ const classnames = require('classnames');
 const helpers = require('../helpers.js');
 
 const attackerProfiles = require('../../data/attacker-profiles.js');
+const profilePresets = attackerProfiles.profiles;
+const profileOptions = attackerProfiles.options;
 const common = require('./dropdown-common.js');
 const DropdownSearchable = require('./DropdownSearchable.js');
 const DropdownSelectize = require('./DropdownSelectize.js');
@@ -14,62 +16,6 @@ const DropdownSelectize = require('./DropdownSelectize.js');
 
 const displayAttribute = 'title';
 const valueAttribute = 'value';
-
-
-// TODO: store this elsewhere
-const accessOptions = [
-	{ value: 'internal', title: 'internal', className: 'veryhigh' },
-	{ value: 'external', title: 'external', className: 'medium' }
-];
-const outcomesOptions = [
-	{ value: 'acquisition / theft', title: 'acquisition / theft' },
-	{ value: 'business advantage', title: 'business advantage' },
-	{ value: 'damage', title: 'damage' },
-	{ value: 'embarrassment', title: 'embarrassment' },
-	{ value: 'tech advantage', title: 'tech advantage' }
-];
-const limitsOptions = [
-	{ value: 'code of conduct', title: 'code of conduct', className: 'low' },
-	{ value: 'legal', title: 'legal', className: 'medium' },
-	{ value: 'extra-legal, minor', title: 'extra-legal, minor', className: 'high' },
-	{ value: 'extra-legal, major', title: 'extra-legal, major', className: 'veryhigh' }
-];
-const resourcesOptions = [
-	{ value: 'individual', title: 'individual', className: 'low' },
-	{ value: 'club', title: 'club', className: 'medium' },
-	{ value: 'contest', title: 'contest', className: 'high' },
-	{ value: 'team', title: 'team', className: 'high' },
-	{ value: 'organization', title: 'organization', className: 'veryhigh' },
-	{ value: 'government', title: 'government', className: 'veryhigh' }
-];
-const skillOptions = [
-	{ value: 'none', title: 'none', className: 'low' },
-	{ value: 'minimal', title: 'minimal', className: 'medium' },
-	{ value: 'operational', title: 'operational', className: 'high' },
-	{ value: 'adept', title: 'adept', className: 'veryhigh' }
-];
-const objectivesOptions = [
-	{ value: 'copy', title: 'copy' },
-	{ value: 'deny', title: 'deny' },
-	{ value: 'destroy', title: 'destroy' },
-	{ value: 'damage', title: 'damage' },
-	{ value: 'take', title: 'take' }
-];
-const visibilityOptions = [
-	{ value: 'overt', title: 'overt' },
-	{ value: 'covert', title: 'covert' },
-	{ value: 'clandestine', title: 'clandestine' }
-];
-
-const options = [
-	{ name: 'access', options: accessOptions },
-	{ name: 'outcomes', options: outcomesOptions, multiple: true },
-	{ name: 'limits', options: limitsOptions },
-	{ name: 'resources', options: resourcesOptions },
-	{ name: 'skill', options: skillOptions },
-	{ name: 'objectives', options: objectivesOptions, multiple: true },
-	{ name: 'visibility', options: visibilityOptions },
-];
 
 
 function getClassName(list, value) {
@@ -104,8 +50,8 @@ let AttackerProfileEditorLanguage = React.createClass({
 		state[name] = val;
 
 		state.title = '';
-		attackerProfiles.forEach(function(profile) {
-			if (helpers.areAttackerProfilesEqual(profile, state)) {
+		profilePresets.forEach(function(profile) {
+			if (helpers.areprofilePresetsEqual(profile, state)) {
 				state.title = profile.title;
 			}
 		});
@@ -169,14 +115,14 @@ let AttackerProfileEditorLanguage = React.createClass({
 					Presets:<br />
 					<select name='presets' onChange={this.handleSelectPreset} value={this.state.title}>
 						<option value=''>— none —</option>
-						{attackerProfiles.map(this.renderPresetOption)}
+						{profilePresets.map(this.renderPresetOption)}
 					</select>
 				</div>
 				<br />
 				<div>
 					<span><b>The attacker's</b></span>
 					<ul>
-						{options.map(this.renderItem)}
+						{profileOptions.map(this.renderItem)}
 					</ul>
 				</div>
 			</div>
@@ -184,7 +130,7 @@ let AttackerProfileEditorLanguage = React.createClass({
 	},
 
 	handleSelectPreset: function(event) {
-		const preset = helpers.getItemByKey('title', attackerProfiles, event.target.value);
+		const preset = helpers.getItemByKey('title', profilePresets, event.target.value);
 		if (!!preset) {
 			this.setState(preset, () => { this.props.handleUpdate(this.state); });
 		}

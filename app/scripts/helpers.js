@@ -147,7 +147,7 @@ function areAttackerProfilesEqual(p1, p2) {
 		(R.intersection(p1.outcomes, p2.outcomes).length === p1.outcomes.length) &&
 		(p1.outcomes.length === p2.outcomes.length) &&
 
-		(p1.limits === p2.limits) &&
+		(p1.limit === p2.limit) &&
 		(p1.resources === p2.resources) &&
 		(p1.skills === p2.skills) &&
 

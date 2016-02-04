@@ -121,7 +121,7 @@ describe(f1('helpers.js'), function() {
 				"damage",
 				"embarrassment"
 			],
-			"limits": "extra-legal, minor",
+			"limit": "extra-legal, minor",
 			"resources": "club",
 			"skills": "minimal",
 			"objectives": [
@@ -137,7 +137,7 @@ describe(f1('helpers.js'), function() {
 			"access": "external",
 			"intent": "hostile",
 			"skills": "minimal",
-			"limits": "extra-legal, minor",
+			"limit": "extra-legal, minor",
 			"resources": "club",
 			"visibility": "overt",
 			"outcomes": [
@@ -156,7 +156,7 @@ describe(f1('helpers.js'), function() {
 			"access": "external",
 			"intent": "hostile",
 			"skills": "minimal",
-			"limits": "extra-legal, minor",
+			"limit": "extra-legal, minor",
 			"resources": "club",
 			"visibility": "overt",
 			"outcomes": [

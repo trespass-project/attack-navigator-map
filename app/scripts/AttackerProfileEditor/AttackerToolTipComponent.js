@@ -74,7 +74,7 @@ let AttackerToolTipComponent = React.createClass({
 
 		let styleAttr = {
 			resources: {},
-			limits: {},
+			limit: {},
 			visibility: {},
 			skill: {},
 			intentaccess: {},
@@ -91,8 +91,8 @@ let AttackerToolTipComponent = React.createClass({
 				case 'visibility':
 					styleAttr.visibility = { fontWeight: 'bold' };
 					break;
-				case 'limits':
-					styleAttr.limits = { fontWeight: 'bold' };
+				case 'limit':
+					styleAttr.limit = { fontWeight: 'bold' };
 					break;
 				case 'resources':
 					styleAttr.resources = { fontWeight: 'bold' };
@@ -115,8 +115,8 @@ let AttackerToolTipComponent = React.createClass({
 				<p id='resources' style={styleAttr.resources}>
 					Resources: {attacker.resources}
 				</p>
-				<p id='limits' style={styleAttr.limits}>
-					Limits: {attacker.limits}
+				<p id='limit' style={styleAttr.limit}>
+					Limit: {attacker.limit}
 				</p>
 				<p id='visibility' style={styleAttr.visibility}>
 					Visibility: {attacker.visibility}

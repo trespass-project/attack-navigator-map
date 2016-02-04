@@ -1,4 +1,63 @@
-module.exports =
+'use strict';
+
+// editor options
+const accessOptions = [
+	{ value: 'internal', title: 'internal', className: 'veryhigh' },
+	{ value: 'external', title: 'external', className: 'medium' }
+];
+const outcomesOptions = [
+	{ value: 'acquisition / theft', title: 'acquisition / theft' },
+	{ value: 'business advantage', title: 'business advantage' },
+	{ value: 'damage', title: 'damage' },
+	{ value: 'embarrassment', title: 'embarrassment' },
+	{ value: 'tech advantage', title: 'tech advantage' }
+];
+const limitOptions = [
+	{ value: 'code of conduct', title: 'code of conduct', className: 'low' },
+	{ value: 'legal', title: 'legal', className: 'medium' },
+	{ value: 'extra-legal, minor', title: 'extra-legal, minor', className: 'high' },
+	{ value: 'extra-legal, major', title: 'extra-legal, major', className: 'veryhigh' }
+];
+const resourcesOptions = [
+	{ value: 'individual', title: 'individual', className: 'low' },
+	{ value: 'club', title: 'club', className: 'medium' },
+	{ value: 'contest', title: 'contest', className: 'high' },
+	{ value: 'team', title: 'team', className: 'high' },
+	{ value: 'organization', title: 'organization', className: 'veryhigh' },
+	{ value: 'government', title: 'government', className: 'veryhigh' }
+];
+const skillOptions = [
+	{ value: 'none', title: 'none', className: 'low' },
+	{ value: 'minimal', title: 'minimal', className: 'medium' },
+	{ value: 'operational', title: 'operational', className: 'high' },
+	{ value: 'adept', title: 'adept', className: 'veryhigh' }
+];
+const objectivesOptions = [
+	{ value: 'copy', title: 'copy' },
+	{ value: 'deny', title: 'deny' },
+	{ value: 'destroy', title: 'destroy' },
+	{ value: 'damage', title: 'damage' },
+	{ value: 'take', title: 'take' }
+];
+const visibilityOptions = [
+	{ value: 'overt', title: 'overt' },
+	{ value: 'covert', title: 'covert' },
+	{ value: 'clandestine', title: 'clandestine' }
+];
+
+const options = module.exports.options = [
+	{ name: 'access', options: accessOptions },
+	{ name: 'outcomes', options: outcomesOptions, multiple: true },
+	{ name: 'limit', options: limitOptions },
+	{ name: 'resources', options: resourcesOptions },
+	{ name: 'skill', options: skillOptions },
+	{ name: 'objectives', options: objectivesOptions, multiple: true },
+	{ name: 'visibility', options: visibilityOptions },
+];
+
+
+// presets
+module.exports.profiles =
 [
 	{
 		"title": "Employee Reckless",
@@ -8,7 +67,7 @@ module.exports =
 			"damage",
 			"embarrassment"
 		],
-		"limits": "legal",
+		"limit": "legal",
 		"resources": "individual",
 		"skills": "adept",
 		"objectives": [
@@ -28,7 +87,7 @@ module.exports =
 			"damage",
 			"embarrassment"
 		],
-		"limits": "code of conduct",
+		"limit": "code of conduct",
 		"resources": "individual",
 		"skills": "minimal",
 		"objectives": [
@@ -48,7 +107,7 @@ module.exports =
 			"damage",
 			"embarrassment"
 		],
-		"limits": "code of conduct",
+		"limit": "code of conduct",
 		"resources": "individual",
 		"skills": "operational",
 		"objectives": [
@@ -67,7 +126,7 @@ module.exports =
 		"outcomes": [
 			"damage"
 		],
-		"limits": "extra-legal, major",
+		"limit": "extra-legal, major",
 		"resources": "club",
 		"skills": "none",
 		"objectives": [
@@ -82,7 +141,7 @@ module.exports =
 		"outcomes": [
 			"embarrassment"
 		],
-		"limits": "extra-legal, minor",
+		"limit": "extra-legal, minor",
 		"resources": "organization",
 		"skills": "adept",
 		"objectives": [
@@ -98,7 +157,7 @@ module.exports =
 			"business advantage",
 			"tech advantage"
 		],
-		"limits": "extra-legal, minor",
+		"limit": "extra-legal, minor",
 		"resources": "organization",
 		"skills": "adept",
 		"objectives": [
@@ -114,7 +173,7 @@ module.exports =
 			"business advantage",
 			"tech advantage"
 		],
-		"limits": "extra-legal, minor",
+		"limit": "extra-legal, minor",
 		"resources": "government",
 		"skills": "adept",
 		"objectives": [
@@ -130,7 +189,7 @@ module.exports =
 			"business advantage",
 			"tech advantage"
 		],
-		"limits": "extra-legal, minor",
+		"limit": "extra-legal, minor",
 		"resources": "team",
 		"skills": "adept",
 		"objectives": [
@@ -146,7 +205,7 @@ module.exports =
 			"damage",
 			"embarrassment"
 		],
-		"limits": "extra-legal, major",
+		"limit": "extra-legal, major",
 		"resources": "individual",
 		"skills": "operational",
 		"objectives": [
@@ -163,7 +222,7 @@ module.exports =
 			"damage",
 			"embarrassment"
 		],
-		"limits": "extra-legal, major",
+		"limit": "extra-legal, major",
 		"resources": "government",
 		"skills": "adept",
 		"objectives": [
@@ -181,7 +240,7 @@ module.exports =
 			"business advantage",
 			"tech advantage"
 		],
-		"limits": "extra-legal, major",
+		"limit": "extra-legal, major",
 		"resources": "government",
 		"skills": "adept",
 		"objectives": [
@@ -197,7 +256,7 @@ module.exports =
 			"acquisition / theft",
 			"tech advantage"
 		],
-		"limits": "extra-legal, minor",
+		"limit": "extra-legal, minor",
 		"resources": "organization",
 		"skills": "adept",
 		"objectives": [
@@ -213,7 +272,7 @@ module.exports =
 			"damage",
 			"embarrassment"
 		],
-		"limits": "extra-legal, major",
+		"limit": "extra-legal, major",
 		"resources": "individual",
 		"skills": "none",
 		"objectives": [
@@ -233,7 +292,7 @@ module.exports =
 			"business advantage",
 			"embarrassment"
 		],
-		"limits": "legal",
+		"limit": "legal",
 		"resources": "organization",
 		"skills": "adept",
 		"objectives": [
@@ -249,7 +308,7 @@ module.exports =
 		"outcomes": [
 			"acquisition / theft"
 		],
-		"limits": "extra-legal, major",
+		"limit": "extra-legal, major",
 		"resources": "organization",
 		"skills": "adept",
 		"objectives": [
@@ -265,7 +324,7 @@ module.exports =
 			"damage",
 			"embarrassment"
 		],
-		"limits": "extra-legal, minor",
+		"limit": "extra-legal, minor",
 		"resources": "organization",
 		"skills": "adept",
 		"objectives": [
@@ -285,7 +344,7 @@ module.exports =
 			"damage",
 			"embarrassment"
 		],
-		"limits": "extra-legal, minor",
+		"limit": "extra-legal, minor",
 		"resources": "club",
 		"skills": "minimal",
 		"objectives": [
@@ -304,7 +363,7 @@ module.exports =
 		"outcomes": [
 			"damage"
 		],
-		"limits": "extra-legal, major",
+		"limit": "extra-legal, major",
 		"resources": "organization",
 		"skills": "adept",
 		"objectives": [
@@ -321,7 +380,7 @@ module.exports =
 		"outcomes": [
 			"acquisition / theft"
 		],
-		"limits": "extra-legal, minor",
+		"limit": "extra-legal, minor",
 		"resources": "individual",
 		"skills": "none",
 		"objectives": [
@@ -336,7 +395,7 @@ module.exports =
 		"outcomes": [
 			"damage"
 		],
-		"limits": "extra-legal, minor",
+		"limit": "extra-legal, minor",
 		"resources": "contest",
 		"skills": "operational",
 		"objectives": [
@@ -356,7 +415,7 @@ module.exports =
 			"business advantage",
 			"tech advantage"
 		],
-		"limits": "legal",
+		"limit": "legal",
 		"resources": "team",
 		"skills": "operational",
 		"objectives": [
