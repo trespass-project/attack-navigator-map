@@ -13,8 +13,10 @@ const classIdx = ['zero', 'one', 'two', 'three', 'four', 'five'];
 let CircleComponent = React.createClass({
 	propTypes: {
 		radius: React.PropTypes.number.isRequired,
-		cx: React.PropTypes.number.isRequired,
-		cy: React.PropTypes.number.isRequired,
+		cx: React.PropTypes.string.isRequired,
+		cy: React.PropTypes.string.isRequired,
+		// cx: React.PropTypes.number.isRequired,
+		// cy: React.PropTypes.number.isRequired,
 		colorIdx: React.PropTypes.number.isRequired,
 		type: React.PropTypes.string,
 		setActiveHover: React.PropTypes.func,

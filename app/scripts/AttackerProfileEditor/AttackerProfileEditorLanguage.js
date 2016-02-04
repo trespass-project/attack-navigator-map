@@ -6,6 +6,7 @@ const classnames = require('classnames');
 
 const helpers = require('../helpers.js');
 
+const AttackerProfile = require('../AttackerProfileEditor/AttackerProfile.js');
 const attackerProfiles = require('../../data/attacker-profiles.js');
 const profilePresets = attackerProfiles.profiles;
 const profileOptions = attackerProfiles.options;
@@ -29,7 +30,8 @@ function getClassName(list, value) {
 
 let AttackerProfileEditorLanguage = React.createClass({
 	propTypes: {
-		handleUpdate: React.PropTypes.func
+		handleUpdate: React.PropTypes.func,
+		profile: React.PropTypes.object/*.isRequired*/
 	},
 
 	getDefaultProps: function() {
@@ -109,6 +111,8 @@ let AttackerProfileEditorLanguage = React.createClass({
 	},
 
 	render: function() {
+		const props = this.props;
+
 		return (
 			<div className='attackerProfile-editor-language language'>
 				<div>
@@ -118,6 +122,8 @@ let AttackerProfileEditorLanguage = React.createClass({
 						{profilePresets.map(this.renderPresetOption)}
 					</select>
 				</div>
+				<br />
+				<AttackerProfile profile={props.profile} />
 				<br />
 				<div>
 					<span><b>The attacker's</b></span>

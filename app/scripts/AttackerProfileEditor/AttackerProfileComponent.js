@@ -7,7 +7,7 @@ const CircleComponent = require('./CircleComponent.js');
 const attackerProfiles = require('../../data/attacker-profiles.js');
 const profileValues = attackerProfiles.values;
 
-
+// TODO: this shouldn't depend on the order, at all!
 const resourcesArray = profileValues.resources;
 const skillArray = profileValues.skill;
 const limitArray = profileValues.limit;
@@ -21,14 +21,11 @@ const accessIntentArray = R.xprod(accessArray, intentArray)
 		return list.join(' ');
 	});
 
-const colorArray = ['#ffee56', '#ffb84d', '#ff5151', '#d60000', '#af0000', '#890000'];
-const brighterArray = ['#fff177', '#ffc670', '#ff7373', '#de3232', '#bf3232', '#a03232'];
-
 
 // React module to represent an attacker profile for visualization
 let AttackerProfileComponent = React.createClass({
 	propTypes: {
-		profile: React.PropTypes.object.isRequired,
+		profile: React.PropTypes.object/*.isRequired*/,
 		setActiveHover: React.PropTypes.func.isRequired,
 		width: React.PropTypes.number,
 		height: React.PropTypes.number,
@@ -37,8 +34,8 @@ let AttackerProfileComponent = React.createClass({
 
 	getDefaultProps: function() {
 		return ({
-			width: 150,
-			height: 150,
+			width: (66*2),
+			height: (66*2),
 			multiplier: 3.0,
 		});
 	},
@@ -46,10 +43,11 @@ let AttackerProfileComponent = React.createClass({
 	render: function() {
 		const props = this.props;
 
-		const distances = this.computeDistances(props.profile, props.multiplier);
-
-		const cx = props.width / 2
-		const cy = props.height / 2;
+		const cx = '50%';
+		const cy = '50%';
+		const distances = (!!props.profile)
+			? this.computeDistances(props.profile, props.multiplier)
+			: {};
 
 		return (
 			<svg
@@ -58,48 +56,63 @@ let AttackerProfileComponent = React.createClass({
 				height={props.height}
 			>
 				<g className='profile-dots'>
-					<CircleComponent
-						radius={distances.intentR}
-						colorIdx={distances.intentIdx}
+					<circle
 						cx={cx}
 						cy={cy}
-						className='intentCircle'
-						type='intent'
-						setActiveHover={props.setActiveHover}
+						r={(66*2) / 2}
+						fill='none'
+						stroke='lightgray'
+						strokeWidth='0.5px'
 					/>
-					<CircleComponent
-						radius={distances.skillR}
-						colorIdx={distances.skillIdx}
-						cx={cx}
-						cy={cy}
-						className='skillCircle'
-						type='skill'
-						setActiveHover={props.setActiveHover}
-					/>
-					<CircleComponent
-						radius={distances.visibilityR}
-						colorIdx={distances.visibilityIdx}
-						cx={cx}
-						cy={cy} className='visibilityCircle'
-						type='visibility'
-						setActiveHover={props.setActiveHover}
-					/>
-					<CircleComponent
-						radius={distances.limitR}
-						colorIdx={distances.limitIdx}
-						cx={cx}
-						cy={cy} className='limitCircle'
-						type='limit'
-						setActiveHover={props.setActiveHover}
-					/>
-					<CircleComponent
-						radius={distances.resourcesR}
-						colorIdx={distances.resourcesIdx}
-						cx={cx}
-						cy={cy} className='resourcesCircle'
-						type='resources'
-						setActiveHover={props.setActiveHover}
-					/>
+
+					{(!!props.profile)
+						? <g>
+							<CircleComponent
+
+								radius={distances.intentR}
+								colorIdx={distances.intentIdx}
+								cx={cx}
+								cy={cy}
+								className='intentCircle'
+								type='intent'
+								setActiveHover={props.setActiveHover}
+							/>
+							<CircleComponent
+								radius={distances.skillR}
+								colorIdx={distances.skillIdx}
+								cx={cx}
+								cy={cy}
+								className='skillCircle'
+								type='skill'
+								setActiveHover={props.setActiveHover}
+							/>
+							<CircleComponent
+								radius={distances.visibilityR}
+								colorIdx={distances.visibilityIdx}
+								cx={cx}
+								cy={cy} className='visibilityCircle'
+								type='visibility'
+								setActiveHover={props.setActiveHover}
+							/>
+							<CircleComponent
+								radius={distances.limitR}
+								colorIdx={distances.limitIdx}
+								cx={cx}
+								cy={cy} className='limitCircle'
+								type='limit'
+								setActiveHover={props.setActiveHover}
+							/>
+							<CircleComponent
+								radius={distances.resourcesR}
+								colorIdx={distances.resourcesIdx}
+								cx={cx}
+								cy={cy} className='resourcesCircle'
+								type='resources'
+								setActiveHover={props.setActiveHover}
+							/>
+						</g>
+						: null
+					}
 				</g>
 			</svg>
 		);
