@@ -518,34 +518,60 @@ function runAnalysis(toolChainId) {
 		const req = $.ajax(params);
 
 		// wait for it to finish
-		Q(req)
+		Q(req) // TODO: make this reusable, as part of trespass.apis
 			.then((runData) => {
 				const taskId = runData.id;
 				console.log(runData);
 
 				// then, wait for result to become available:
-				const url = api.makeUrl(toolsApi, 'secured/task/'+taskId);
+				const url = api.makeUrl(toolsApi, `secured/task/${taskId}/status`);
+				// const url = api.makeUrl(toolsApi, 'secured/task/'+taskId);
 				const params = _.merge(
-					{ dataType: 'json', url: url },
+					{ url, dataType: 'json' },
 					api.requestOptions.crossDomain
 				);
 				const retryRate = 1000;
 				const intervalId = setInterval(function() {
-					console.log('waiting ...');
 					Q($.ajax(params))
 						.then(function(taskData) {
-							// if (taskData.error) {
-							// 	clearInterval(intervalId);
-							// 	console.warn(taskData.error);
-							// 	return;
-							// }
-							if (taskData.status) {
-								clearInterval(intervalId);
-								console.log(taskData);
-								// dispatch({
-								// 	type: constants.API_UPDATE_TASK_DATA,
-								// 	taskData: _.merge(taskData, { error: null })
-								// });
+							switch (taskData.status) {
+								case 'error':
+								case 'rejected':
+								case 'task_not_found':
+								case 'app_not_found': {
+									clearInterval(intervalId);
+									alert(taskData.status);
+									console.error(taskData);
+									break;
+								}
+
+								case 'abort': {
+									clearInterval(intervalId);
+									break;
+								}
+
+								case 'pending':
+								case 'processing': {
+									// do nothing
+									break;
+								}
+
+								case 'done': {
+									clearInterval(intervalId);
+									console.log(taskData);
+									// TODO:
+									// dispatch({
+									// 	type: constants.API_UPDATE_TASK_DATA,
+									// 	taskData: _.merge(taskData, { error: null })
+									// });
+									break;
+								}
+
+								default: {
+									clearInterval(intervalId);
+									// TODO: what?
+									break;
+								}
 							}
 						});
 				}, retryRate);
