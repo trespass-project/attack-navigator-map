@@ -169,6 +169,21 @@ describe(f1('helpers.js'), function() {
 				"copy"
 			]
 		};
+		const profileIncomplete = {
+			"access": "external",
+			"intent": "hostile",
+			"skills": "minimal",
+			"limit": undefined,
+			"resources": "club",
+			"visibility": "overt",
+			"outcomes": undefined,
+			"objectives": [
+				"take",
+				"damage",
+				"deny",
+				"copy"
+			]
+		};
 
 		it(f3('should work with equal profiles'), function() {
 			assert(helpers.areAttackerProfilesEqual(profile, profileEqual));
@@ -178,6 +193,12 @@ describe(f1('helpers.js'), function() {
 		it(f3('should work with unequal profiles'), function() {
 			assert(!helpers.areAttackerProfilesEqual(profile, profileNotEqual));
 			assert(!helpers.areAttackerProfilesEqual(profileNotEqual, profile));
+		});
+
+		it(f3('should work with incomplete profiles'), function() {
+			assert.doesNotThrow(() => {
+				helpers.areAttackerProfilesEqual(profileIncomplete, profileNotEqual);
+			});
 		});
 	});
 });

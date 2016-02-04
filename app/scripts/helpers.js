@@ -141,18 +141,23 @@ function isRectInsideRect(r1, r2) {
 
 let areAttackerProfilesEqual = module.exports.areAttackerProfilesEqual =
 function areAttackerProfilesEqual(p1, p2) {
+	const outcomes1 = (p1.outcomes || []);
+	const outcomes2 = (p2.outcomes || []);
+	const objectives1 = (p1.objectives || []);
+	const objectives2 = (p2.objectives || []);
+
 	return (p1.intent === p2.intent) &&
 		(p1.access === p2.access) &&
 
-		(R.intersection(p1.outcomes, p2.outcomes).length === p1.outcomes.length) &&
-		(p1.outcomes.length === p2.outcomes.length) &&
+		(R.intersection(outcomes1, outcomes2).length === outcomes1.length) &&
+		(outcomes1.length === outcomes2.length) &&
 
 		(p1.limit === p2.limit) &&
 		(p1.resources === p2.resources) &&
 		(p1.skills === p2.skills) &&
 
-		(R.intersection(p1.objectives, p2.objectives).length === p1.objectives.length) &&
-		(p1.objectives.length === p2.objectives.length) &&
+		(R.intersection(objectives1, objectives2).length === objectives1.length) &&
+		(objectives1.length === objectives2.length) &&
 
 		(p1.visibility === p2.visibility);
 }
