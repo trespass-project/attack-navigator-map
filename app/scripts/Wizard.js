@@ -1,20 +1,21 @@
 'use strict';
 
-let $ = require('jquery');
-let R = require('ramda');
-let React = require('react');
-let classnames = require('classnames');
+const $ = require('jquery');
+const R = require('ramda');
+const React = require('react');
+const classnames = require('classnames');
 const actionCreators = require('./actionCreators.js');
+const helpers = require('./helpers.js');
 
-let GraphMinimap = require('./GraphMinimap.js');
-let PropertiesPanel = require('./PropertiesPanel.js');
-let GraphOutline = require('./GraphOutline.js');
-let Library = require('./components/Library/Library.js');
+const GraphMinimap = require('./GraphMinimap.js');
+const PropertiesPanel = require('./PropertiesPanel.js');
+const GraphOutline = require('./GraphOutline.js');
+const Library = require('./components/Library/Library.js');
 
-let OverlayTrigger = require('react-bootstrap').OverlayTrigger;
-let Tooltip = require('react-bootstrap').Tooltip;
+const OverlayTrigger = require('react-bootstrap').OverlayTrigger;
+const Tooltip = require('react-bootstrap').Tooltip;
 
-let AttackerProfileEditor = require('./AttackerProfileEditor/AttackerProfileEditorLanguage.js');
+const AttackerProfileEditor = require('./AttackerProfileEditor/AttackerProfileEditorLanguage.js');
 
 // const analysisTools = require('../data/analysis-tools.js');
 
@@ -424,11 +425,10 @@ let Wizard = React.createClass({
 							return <h3 key={name}>{name} ...</h3>;
 						})
 				}
-				{/*<h3>Generating attack tree...</h3>
-				<h3>Attack Pattern Library...</h3>
-				<h3>Tree Evaluator...</h3>*/}
 				<h3>
-					<a href='http://lustlab.net/dev/trespass/visualizations/analytics5/' target='_blank'>Visualise results</a>
+					<a href='http://lustlab.net/dev/trespass/visualizations/analytics5/' target='_blank'>
+						Visualise results
+					</a>
 				</h3>
 			</div>
 		</div>;
