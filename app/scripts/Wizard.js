@@ -380,7 +380,7 @@ let Wizard = React.createClass({
 
 					{renderFn(props)}
 
-					{this.renderOverlay()}
+					{this.renderToolChainOverlay()}
 				</div>
 			</div>
 		);
@@ -400,21 +400,36 @@ let Wizard = React.createClass({
 
 	runAnalysis: function() {
 		const select = this.refs.toolchain;
-		this.props.dispatch( actionCreators.runAnalysis(select.value) );
+		// watch out: value comes back as string
+		this.props.dispatch( actionCreators.runAnalysis( parseInt(select.value, 10) ) );
 	},
 
-	renderOverlay: function() {
+	renderToolChainOverlay: function() {
 		const props = this.props;
 		if (!props.analysisRunning) {
 			return null;
 		}
 
+		// console.log(props.toolChainId, props.toolChains);
+		const toolChain = helpers.getItemById(props.toolChains, props.toolChainId);
+		// console.log(toolChain);
+
 		return <div id='task-overlay'>
 			<div>{/* TODO: display / link to intermediate results */}
-				<h3>Generating attack tree...</h3>
+				{(!toolChain)
+					? 'Tool chain not found.'
+					: toolChain.tools
+						.map(R.prop('name'))
+						.map((name, index) => {
+							return <h3 key={name}>{name} ...</h3>;
+						})
+				}
+				{/*<h3>Generating attack tree...</h3>
 				<h3>Attack Pattern Library...</h3>
-				<h3>Tree Evaluator...</h3>
-				<h3><a href='http://lustlab.net/dev/trespass/visualizations/analytics5/' target='_blank'>Visualise results</a></h3>
+				<h3>Tree Evaluator...</h3>*/}
+				<h3>
+					<a href='http://lustlab.net/dev/trespass/visualizations/analytics5/' target='_blank'>Visualise results</a>
+				</h3>
 			</div>
 		</div>;
 	},

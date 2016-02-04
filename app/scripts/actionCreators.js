@@ -520,8 +520,14 @@ function runAnalysis(toolChainId) {
 		// wait for it to finish
 		Q(req) // TODO: make this reusable, as part of trespass.apis
 			.then((runData) => {
-				const taskId = runData.id;
+				if (runData.error) {
+					alert(runData.error);
+					console.error(runData.error);
+					return;
+				}
+
 				console.log(runData);
+				const taskId = runData.id;
 
 				// then, wait for result to become available:
 				const url = api.makeUrl(toolsApi, `secured/task/${taskId}/status`);
@@ -581,6 +587,7 @@ function runAnalysis(toolChainId) {
 
 		dispatch({
 			type: constants.ACTION_runAnalysis,
+			toolChainId
 		});
 	};
 };
