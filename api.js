@@ -32,3 +32,8 @@ module.exports.api = {
 	// 	file: path.join(dataPath, constants.ANALYSIS_TOOLS),
 	// },
 };
+
+
+module.exports.knowledgebase = {
+	url: 'http://127.0.0.1:8080/tkb/'
+};

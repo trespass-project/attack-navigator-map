@@ -3,10 +3,12 @@
 let $ = require('jquery');
 let React = require('react');
 let R = require('ramda');
+
 let helpers = require('./helpers.js');
 let modelHelpers = require('./model-helpers.js');
 let actionCreators = require('./actionCreators.js');
 const constants = require('./constants.js');
+const api = require('../../api.js');
 
 
 let PropertiesPanel = React.createClass({
@@ -59,7 +61,6 @@ let PropertiesPanel = React.createClass({
 			: null;
 
 		switch (props.selected.graphComponentType) {
-
 			case 'node':
 				const node = selectedItem;
 				const groupNames = modelHelpers.getNodeGroups(node.id, props.graph.groups)
@@ -179,6 +180,7 @@ let PropertiesPanel = React.createClass({
 	},
 
 	render: function() {
+		let state = this.state;
 		const props = this.props;
 
 		let selectedItem;
@@ -189,7 +191,7 @@ let PropertiesPanel = React.createClass({
 			graphComponentType = props.selected.graphComponentType;
 			componentId = props.selected.componentId;
 
-			let list = {
+			const list = {
 				'node': props.graph.nodes,
 				'edge': props.graph.edges,
 				'group': props.graph.groups,
@@ -211,30 +213,82 @@ let PropertiesPanel = React.createClass({
 						<span className='disabled'>
 							{(!selectedItem)
 								? 'nothing selected'
-								: this.renderProperties(selectedItem, graphComponentType)
-							}
+								: this.renderProperties(selectedItem, graphComponentType)}
 						</span>
+						{(!selectedItem)
+							? null
+							: <div className='kb'>
+								Knowledge base:<br/>
+								{this.renderKnowledgebase(state.knowledgebase)}
+							</div>}
 					</div>
 				</form>
 			</div>
 		);
 	},
 
+	renderKnowledgebase: function(kb) {
+		// TODO: refine this
+		if (kb && kb.parameters && kb.parameters.burglarresistance) {
+			return <div>
+				Burglar resistance options: {kb.parameters.burglarresistance.join(', ')}
+			</div>;
+		} else {
+			return null;
+		}
+	},
+
 	componentWillMount: function() {
 		let that = this;
+		const props = this.props;
 
-		// TODO: use flux pattern for this?
-		$.ajax({
-			url: this.props.relationsLibUrl,
-			dataType: 'json',
-		}).success(function(data) {
-			that.setState({ relationsLib: data.list });
-		});
+		if (props.selected) {
+			const graphComponentType = props.selected.graphComponentType;
+			const componentId = props.selected.componentId;
+
+			if (graphComponentType === 'edge') {
+				// get relations
+				$.ajax({
+					url: props.relationsLibUrl,
+					dataType: 'json',
+				}).success(function(data) {
+					that.setState({ relationsLib: data.list });
+				});
+			} else {
+				// query knowledgebase
+				const list = {
+					'node': props.graph.nodes,
+					// 'edge': props.graph.edges,
+					'group': props.graph.groups,
+				}[graphComponentType] || [];
+				const selectedItem = helpers.getItemById(list, componentId);
+
+				if (selectedItem) {
+					if (selectedItem.kbType) {
+						$.ajax({
+							url: api.knowledgebase.url + 'getParameters',
+							crossDomain: true,
+							dataType: 'json',
+							data: { type: selectedItem.kbType }
+						}).success(function(data) {
+							// console.log(data);
+							that.setState({
+								knowledgebase: {
+									parameters: data
+								}
+							});
+						});
+					}
+				}
+			}
+
+		}
 	},
 
 	getInitialState: function() {
 		return {
-			relationsLib: []
+			relationsLib: [],
+			knowledgebase: {}
 		};
 	}
 
