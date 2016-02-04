@@ -69,7 +69,7 @@ let AttackerToolTipComponent = React.createClass({
 	render: function() {
 		const props = this.props;
 
-		const attacker = props.profile;
+		const profile = props.profile;
 		const style = this.getStyle();
 
 		let styleAttr = {
@@ -103,29 +103,29 @@ let AttackerToolTipComponent = React.createClass({
 		}
 
 		return (
-			<div className='attacker-tooltip' style={style}>
-				<b>{attacker.title}</b>
+			<div className='profile-tooltip' style={style}>
+				<b>{profile.title}</b>
 				<br />
 				<p id='objective'>
-					Objective: {(attacker.objectives || []).join(', ')}</p>
+					Objective: {(profile.objectives || []).join(', ')}</p>
 				<p id='outcome'>
-					Outcome: {(attacker.outcomes || []).join(', ')}
+					Outcome: {(profile.outcomes || []).join(', ')}
 				</p>
 				<br />
 				<p id='resources' style={styleAttr.resources}>
-					Resources: {attacker.resources}
+					Resources: {profile.resources}
 				</p>
 				<p id='limit' style={styleAttr.limit}>
-					Limit: {attacker.limit}
+					Limit: {profile.limit}
 				</p>
 				<p id='visibility' style={styleAttr.visibility}>
-					Visibility: {attacker.visibility}
+					Visibility: {profile.visibility}
 				</p>
 				<p id='skill' style={styleAttr.skill}>
-					Skill: {attacker.skills}
+					Skill: {profile.skills}
 				</p>
 				<p id='intentaccess' style={styleAttr.intentaccess}>
-					Intent/Access: {attacker.intent} {attacker.access}
+					Intent/Access: {profile.intent} {profile.access}
 				</p>
 			</div>
 		);
