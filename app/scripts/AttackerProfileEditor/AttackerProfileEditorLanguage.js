@@ -51,7 +51,7 @@ let AttackerProfileEditorLanguage = React.createClass({
 
 		state.title = '';
 		profilePresets.forEach(function(profile) {
-			if (helpers.areprofilePresetsEqual(profile, state)) {
+			if (helpers.areAttackerProfilesEqual(profile, state)) {
 				state.title = profile.title;
 			}
 		});

@@ -1,14 +1,26 @@
 'use strict';
 
 const React = require('react');
+const R = require('ramda');
+
 const CircleComponent = require('./CircleComponent.js');
+const attackerProfiles = require('../../data/attacker-profiles.js');
+const profileValues = attackerProfiles.values;
 
 
-const resourcesArray = ['individual', 'club', 'contest', 'team', 'organization', 'government'];
-const skillsArray = ['none', 'minimal', 'operational', 'adept'];
-const limitsArray = ['code of conduct', 'legal', 'extra-legal, minor', 'extra-legal, major'];
-const visibilityArray = ['overt', 'covert', 'clandestine', 'multiple'];
-const intentAccessArray = ['external non-hostile', 'internal non-hostile', 'external hostile', 'internal hostile'];
+const resourcesArray = profileValues.resources;
+const skillArray = profileValues.skill;
+const limitArray = profileValues.limit;
+const visibilityArray = profileValues.visibility;
+const accessArray = profileValues.access;
+const intentArray = profileValues.intent;
+const outcomesArray = profileValues.outcomes;
+const objectivesArray = profileValues.objectives;
+const accessIntentArray = R.xprod(accessArray, intentArray)
+	.map((list) => {
+		return list.join(' ');
+	});
+
 const colorArray = ['#ffee56', '#ffb84d', '#ff5151', '#d60000', '#af0000', '#890000'];
 const brighterArray = ['#fff177', '#ffc670', '#ff7373', '#de3232', '#bf3232', '#a03232'];
 
@@ -96,10 +108,11 @@ let AttackerProfileComponent = React.createClass({
 	computeDistances: function(profile, multiplier) {
 		let distances = {};
 
+		distances.skillIdx = skillArray.indexOf(profile.skill);
 		distances.limitIdx = limitArray.indexOf(profile.limit);
 		distances.visibilityIdx = visibilityArray.indexOf(profile.visibility);
 		distances.visibilityIdx = visibilityArray.indexOf(profile.visibility);
-		distances.intentIdx = intentAccessArray.indexOf(profile.access + ' ' + profile.intent);
+		distances.intentIdx = accessIntentArray.indexOf(profile.access + ' ' + profile.intent);
 		distances.resourcesIdx = resourcesArray.indexOf(profile.resources);
 
 		distances.resourcesR = (distances.resourcesIdx + 1) * multiplier;

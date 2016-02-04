@@ -5,6 +5,10 @@ const accessOptions = [
 	{ value: 'internal', title: 'internal', className: 'veryhigh' },
 	{ value: 'external', title: 'external', className: 'medium' }
 ];
+const intentOptions = [
+	{ value: 'hostile', title: 'hostile', className: 'high' },
+	{ value: 'non-hostile', title: 'non-hostile', className: 'low' }
+];
 const outcomesOptions = [
 	{ value: 'acquisition / theft', title: 'acquisition / theft' },
 	{ value: 'business advantage', title: 'business advantage' },
@@ -47,6 +51,7 @@ const visibilityOptions = [
 
 const options = module.exports.options = [
 	{ name: 'access', options: accessOptions },
+	{ name: 'intent', options: intentOptions },
 	{ name: 'outcomes', options: outcomesOptions, multiple: true },
 	{ name: 'limit', options: limitOptions },
 	{ name: 'resources', options: resourcesOptions },
@@ -54,6 +59,17 @@ const options = module.exports.options = [
 	{ name: 'objectives', options: objectivesOptions, multiple: true },
 	{ name: 'visibility', options: visibilityOptions },
 ];
+
+
+const values = module.exports.values =
+options
+	.reduce(function(result, item) {
+		result[item.name] = item.options
+			.map(function(option) {
+				return option.value;
+			});
+		return result;
+	}, {});
 
 
 // presets

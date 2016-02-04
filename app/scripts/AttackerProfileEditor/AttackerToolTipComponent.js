@@ -105,13 +105,17 @@ let AttackerToolTipComponent = React.createClass({
 		return (
 			<div className='profile-tooltip' style={style}>
 				<b>{profile.title}</b>
+
 				<br />
+
 				<p id='objective'>
 					Objective: {(profile.objectives || []).join(', ')}</p>
 				<p id='outcome'>
 					Outcome: {(profile.outcomes || []).join(', ')}
 				</p>
+
 				<br />
+
 				<p id='resources' style={styleAttr.resources}>
 					Resources: {profile.resources}
 				</p>
