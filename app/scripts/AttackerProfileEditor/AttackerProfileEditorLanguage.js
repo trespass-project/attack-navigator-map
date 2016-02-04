@@ -10,7 +10,6 @@ const AttackerProfile = require('../AttackerProfileEditor/AttackerProfile.js');
 const attackerProfiles = require('../../data/attacker-profiles.js');
 const profilePresets = attackerProfiles.profiles;
 const profileOptions = attackerProfiles.options;
-const common = require('./dropdown-common.js');
 const DropdownSearchable = require('./DropdownSearchable.js');
 const DropdownSelectize = require('./DropdownSelectize.js');
 

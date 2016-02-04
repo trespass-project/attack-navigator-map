@@ -5,7 +5,6 @@ const classnames = require('classnames');
 
 
 const colorArray = ['#ffee56', '#ffb84d', '#ff5151', '#d60000', '#af0000', '#890000'];
-const brighterArray = ['#fff177', '#ffc670', '#ff7373', '#de3232', '#bf3232', '#a03232'];
 const classIdx = ['zero', 'one', 'two', 'three', 'four', 'five'];
 
 

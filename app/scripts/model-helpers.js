@@ -464,7 +464,7 @@ function removeNode(graph, nodeId) {
 	// remove node
 	graph.nodes = graph.nodes
 		.filter(function(node) {
-			return nodeId != node.id;
+			return nodeId !== node.id;
 		});
 
 	// and also all edges connected to it

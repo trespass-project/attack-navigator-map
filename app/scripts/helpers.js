@@ -1,6 +1,5 @@
 'use strict';
 
-const _ = require('lodash');
 const R = require('ramda');
 const $ = require('jquery');
 const reactDOM = require('react-dom');
@@ -14,17 +13,17 @@ function getElemByRef(component, refName) {
 	} else {
 		return reactDOM.findDOMNode(component);
 	}
-}
+};
 
 
 let noop = module.exports.noop =
-function noop() {}
+function noop() {};
 
 
 let getItemByKey = module.exports.getItemByKey =
 function getItemByKey(key, coll, value) {
 	return R.find( R.propEq(key, value) )(coll);
-}
+};
 const getItemById = module.exports.getItemById = R.partial(getItemByKey, ['id']);
 
 
@@ -55,7 +54,7 @@ function getNodesBBox(nodes) {
 	bounds.height = bounds.maxY - bounds.minY;
 
 	return bounds;
-}
+};
 
 
 let getGroupInitialPosition = module.exports.getGroupInitialPosition =
@@ -64,7 +63,7 @@ function getGroupInitialPosition(group) {
 		x: group.x || 0,
 		y: group.y || 0,
 	};
-}
+};
 
 
 // TODO: test
@@ -83,7 +82,7 @@ function getGroupBBox(allNodes, group) {
 		bbox.maxY = initialPos.y + bbox.height;
 	}
 	return bbox;
-}
+};
 
 
 let distBetweenPoints = module.exports.distBetweenPoints =
@@ -91,13 +90,13 @@ function distBetweenPoints(a, b) {
 	const x = b.x - a.x;
 	const y = b.y - a.y;
 	return Math.sqrt(x * x + y * y);
-}
+};
 
 
 let isBetween = module.exports.isBetween =
 function isBetween(what, low, high) {
 	return (what >= low) && (what <= high);
-}
+};
 
 
 let isRectInsideRect = module.exports.isRectInsideRect =
@@ -136,7 +135,7 @@ function isRectInsideRect(r1, r2) {
 
 	const inside = insideX && insideY;
 	return inside;
-}
+};
 
 
 let areAttackerProfilesEqual = module.exports.areAttackerProfilesEqual =
@@ -160,13 +159,13 @@ function areAttackerProfilesEqual(p1, p2) {
 		(objectives1.length === objectives2.length) &&
 
 		(p1.visibility === p2.visibility);
-}
+};
 
 
 let makeId = module.exports.makeId =
 function makeId(type) {
 	return [Date.now(), shortid(), type || ''].join('-');
-}
+};
 
 
 let ellipsize = module.exports.ellipsize =
@@ -182,14 +181,14 @@ function ellipsize(maxLen, s) {
 	} else {
 		return s;
 	}
-}
+};
 
 
 const radFactor = Math.PI / 180;
 let degToRad = module.exports.degToRad =
 function degToRad(deg) {
 	return deg * radFactor;
-}
+};
 
 
 let coordsRelativeToElem = module.exports.coordsRelativeToElem =
@@ -200,7 +199,7 @@ function coordsRelativeToElem(elem, xy) {
 		x: xy.x - elemOffset.left,
 		y: xy.y - elemOffset.top,
 	};
-}
+};
 
 
 // https://code.google.com/p/chromium/issues/detail?id=524432#c3
@@ -212,7 +211,7 @@ function getTransformToElement(element, target) {
 		throw "'target' CTM is not invertible.";
 	}
 	return mTargetInverse.multiply(element.getScreenCTM());
-}
+};
 
 
 // http://stackoverflow.com/a/6084322/2839801
@@ -220,7 +219,9 @@ function getTransformToElement(element, target) {
 let unTransform = module.exports.unTransform =
 function unTransform(point, ctm) {
 	return point.matrixTransform(ctm/*.inverse()*/);
-}
+};
+
+
 let unTransformFromTo = module.exports.unTransformFromTo =
 function unTransformFromTo(fromElem, toElem, xy) {
 	let point = (fromElem.ownerSVGElement || fromElem).createSVGPoint();
@@ -229,5 +230,4 @@ function unTransformFromTo(fromElem, toElem, xy) {
 	// const ctm = fromElem.getTransformToElement(toElem);
 	const ctm = getTransformToElement(fromElem, toElem);
 	return unTransform(point, ctm);
-}
-
+};

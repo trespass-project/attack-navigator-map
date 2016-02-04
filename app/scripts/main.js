@@ -12,7 +12,7 @@ let Provider = require('react-redux').Provider;
 let thunk = require('redux-thunk');
 
 // let ModelDebugView = require('./components/ModelDebugView/ModelDebugView.js');
-let MainMenu = require('./MainMenu.js');
+// let MainMenu = require('./MainMenu.js');
 let Wizard = require('./Wizard.js');
 
 let GraphEditor = require('./GraphEditor.js');

@@ -14,8 +14,8 @@ const limitArray = profileValues.limit;
 const visibilityArray = profileValues.visibility;
 const accessArray = profileValues.access;
 const intentArray = profileValues.intent;
-const outcomesArray = profileValues.outcomes;
-const objectivesArray = profileValues.objectives;
+// const outcomesArray = profileValues.outcomes;
+// const objectivesArray = profileValues.objectives;
 const accessIntentArray = R.xprod(accessArray, intentArray)
 	.map((list) => {
 		return list.join(' ');
