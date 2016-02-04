@@ -4,6 +4,7 @@ const React = require('react');
 const reactDOM = require('react-dom');
 const $ = require('jquery');
 
+
 let AttackerToolTipComponent = React.createClass({
 	propTypes: {
 		profile: React.PropTypes.object.isRequired,
@@ -14,7 +15,9 @@ let AttackerToolTipComponent = React.createClass({
 	},
 
 	getDefaultProps: function() {
-		return ({width: 400});
+		return {
+			width: 400
+		};
 	},
 
 	getInitialState: function() {
@@ -27,7 +30,7 @@ let AttackerToolTipComponent = React.createClass({
 
 	componentDidMount: function() {
 		const elem = reactDOM.findDOMNode(this);
-		this.setState({height: $(elem).height()});
+		this.setState({ height: $(elem).height() });
 	},
 
 	getStyle: function() {
@@ -48,15 +51,17 @@ let AttackerToolTipComponent = React.createClass({
 		};
 
 		// Check bounds to make sure tooltip will always render in viewport
-		if (windowWidth - props.MouseX > props.width)
+		if (windowWidth - props.MouseX > props.width) {
 			style.left = props.mouseX - 10;
-		else
+		} else {
 			style.left = props.mouseX - props.width-10;
+		}
 
-		if (windowHeight - props.MouseY > state.height)
+		if (windowHeight - props.MouseY > state.height) {
 			style.top = props.mouseY + 10;
-		else
+		} else {
 			style.top = props.mouseY - state.height-10;
+		}
 
 		return style;
 	},

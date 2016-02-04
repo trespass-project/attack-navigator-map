@@ -18,28 +18,8 @@ let AttackerProfile = React.createClass({
 
 	getDefaultProps: function() {
 		return {
-			attacker: {
-				'title': 'Employee Reckless',
-				'intent': 'non-hostile',
-				'access': 'internal',
-				'outcomes': [
-					'damage',
-					'embarrassment'
-				],
-				'limits': 'legal',
-				'resources': 'individual',
-				'skills': 'adept',
-				'objectives': [
-					'copy',
-					'deny',
-					'destroy',
-					'damage',
-					'take'
-				],
-				'visibility': 'covert'
-			},
-		showToolTip: true,
-		displayLabel: true,
+			showToolTip: false,
+			displayLabel: false,
 		};
 	},
 
@@ -78,8 +58,8 @@ let AttackerProfile = React.createClass({
 				setActiveHover={this.setActiveHover}
 				width={state.width}
 			/>
-			{(props.displayLabel) ?
-				<h5 className='attacker-desc'>
+			{(props.displayLabel)
+				? <h5 className='attacker-desc'>
 					{attacker.title}
 				</h5>
 				: null
@@ -88,10 +68,8 @@ let AttackerProfile = React.createClass({
 	},
 
 	componentDidMount: function() {
-		let that = this;
 		const elem = reactDOM.findDOMNode(this);
-
-		this.setState({width: $(elem).width()});
+		this.setState({ width: $(elem).width() });
 	},
 
 	setActiveHover: function(type) {
