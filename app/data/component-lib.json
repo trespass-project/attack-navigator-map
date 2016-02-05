@@ -24,8 +24,8 @@
 
 		{ "modelComponentType": "location", "label": "Building" },
 		{ "modelComponentType": "location", "label": "Room" },
-		{ "modelComponentType": "location", "label": "Door", "kbType": "door" },
-		{ "modelComponentType": "location", "label": "Window", "kbType": "window" },
+		{ "modelComponentType": "location", "label": "Door", "kbType": "tkb:door" },
+		{ "modelComponentType": "location", "label": "Window", "kbType": "tkb:window" },
 		{ "modelComponentType": "location", "label": "Outside" }
 	]
 }

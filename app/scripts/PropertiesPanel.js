@@ -230,19 +230,31 @@ let PropertiesPanel = React.createClass({
 	},
 
 	renderKnowledgebase: function(kb) {
-		if (!kb || !kb.parameters) {
+		if (!kb || !kb.attributes) {
 			return null;
 		}
 
+		const labelToAttrData = kb.attributes
+			.reduce((result, attr) => {
+				result[attr['@label']] = attr;
+				return result;
+			}, {});
+
 		return <div>
-			{R.keys(kb.parameters)
-				.map((key) => {
-					return <div key={key}>
-						{key}:&nbsp;
+			{R.keys(labelToAttrData)
+				.map((label) => {
+					const attr = labelToAttrData[label];
+					return <div key={attr['@id']}>
+						{label}:&nbsp;
 						<select>
-							{kb.parameters[key]
-								.map((option) => {
-									return <option value={option}>{option}</option>
+							{attr['tkb:values']
+								.map((value) => {
+									return <option
+										key={value['@id']}
+										value={value['@id']}
+									>
+										{value['@label']}
+									</option>;
 								})
 							}
 						</select>
@@ -295,7 +307,7 @@ let PropertiesPanel = React.createClass({
 								// console.log(data);
 								that.setState({
 									knowledgebase: {
-										parameters: data
+										attributes: data['tkb:has_attribute']
 									}
 								});
 							})
