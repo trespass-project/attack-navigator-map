@@ -46,6 +46,7 @@
     "wiredep": "^2.2.2"
   },
   "dependencies": {
+    "trespass.js": "0.4.2",
     "browser-saveas": "^1.0.0",
     "classnames": "^2.2.0",
     "d3": "^3.5.6",
