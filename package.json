@@ -63,6 +63,7 @@
     "react-dnd": "^2.0.2",
     "react-dnd-html5-backend": "^2.0.2",
     "react-dom": "^0.14.3",
+    "react-loader": "^2.0.0",
     "react-redux": "^4.0.1",
     "redux": "^3.0.5",
     "redux-thunk": "^1.0.2",

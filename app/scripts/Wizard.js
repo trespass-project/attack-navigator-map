@@ -12,6 +12,7 @@ const PropertiesPanel = require('./PropertiesPanel.js');
 const GraphOutline = require('./GraphOutline.js');
 const Library = require('./components/Library/Library.js');
 
+const Loader = require('react-loader');
 const OverlayTrigger = require('react-bootstrap').OverlayTrigger;
 const Tooltip = require('react-bootstrap').Tooltip;
 
@@ -436,6 +437,12 @@ let Wizard = React.createClass({
 							return <h3 key={name}>{name} ...</h3>;
 						})
 				}
+				<Loader
+					loaded={false}
+					length={7}
+					lines={10}
+					radius={15}>
+				</Loader>
 				<h3>
 					<a href='http://lustlab.net/dev/trespass/visualizations/analytics5/' target='_blank'>
 						Visualise results
