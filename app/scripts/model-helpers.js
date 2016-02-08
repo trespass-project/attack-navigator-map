@@ -106,16 +106,23 @@ function XMLModelToGraph(xmlStr, done) {
 
 		// create groups for the different types
 		modelComponents.forEach(function(key, index) {
+			// TODO: don't use `model` here,
+			// use graph.nodes
 			const coll = model.system[key] || [];
 			let group = {
 				name: key,
 				id: helpers.makeId('group'),
 				nodeIds: []
 			};
+
 			coll.forEach(function(item) {
 				group.nodeIds.push(item.id);
 
 				let node = helpers.getItemById(graph.nodes, item.id);
+
+				if (!node) {
+					console.error(`node not found, id: ${item.id}`);
+				}
 
 				// basic auto-layout
 				if (rowCounter > maxNodesPerCol || lastGroupIndex !== index) {
