@@ -92,9 +92,9 @@ let PropertiesPanel = React.createClass({
 								<td>
 									<select
 										onChange={onChange}
-										name='type'
+										name='modelComponentType'
 										className='form-control'
-										value={node.modelgraphComponentType}>
+										value={node.modelComponentType}>
 										{this.renderTypeOptions()}
 									</select>
 								</td>
