@@ -190,7 +190,7 @@ function graphFromModel(model) {
 	});
 
 	R.without(['edges'], modelComponents).forEach(function(key) {
-		const coll = model.system[key]; /*.map(R.identity)*/
+		const coll = model.system[key];
 		graph.nodes = R.concat(graph.nodes, coll);
 	});
 
@@ -211,7 +211,7 @@ function modelFromGraph(graph) {
 		trespass.model.addEdge(model, {
 			source: edge.from,
 			target: edge.to,
-			// TODO: kind
+			// TODO: kind?
 			directed: edge.directed,
 		});
 	});
@@ -278,9 +278,7 @@ function createEdge(edge={}, keepId=false) {
 	const id = (keepId === true && edge.id)
 		? edge.id
 		: helpers.makeId('edge');
-	return _.merge({}, edge, {
-		id
-	});
+	return _.merge({}, edge, { id });
 };
 
 let createGroup = // TODO: test
