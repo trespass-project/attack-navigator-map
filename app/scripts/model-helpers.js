@@ -204,6 +204,9 @@ module.exports.modelFromGraph =
 function modelFromGraph(graph) {
 	let model = trespass.model.create();
 
+	// embed entire graph in model
+	model.system.anm_data = JSON.stringify(graph);
+
 	(graph.edges || []).forEach(function(edge) {
 		trespass.model.addEdge(model, {
 			source: edge.from,
