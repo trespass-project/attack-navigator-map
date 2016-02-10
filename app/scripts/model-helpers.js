@@ -472,6 +472,8 @@ module.exports.inferEdgeType =
 function inferEdgeType(fromType, toType) {
 	if (fromType === 'location' && toType === 'location') {
 		return 'connection';
+		// TODO: or should it return all possible options, like
+		// ['connection', 'isContainedIn']? (directed-ness could play a role)
 	} else if (fromType === 'item' && toType === 'item') {
 		return 'networkConnection';
 	} else if (fromType === 'item' && toType === 'location') { // TODO: is that always the case?
