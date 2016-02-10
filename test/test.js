@@ -247,6 +247,23 @@ describe(f1('model-helpers.js'), function() {
 		});
 	});
 
+	describe(f2('inferEdgeType()'), function() {
+		it(f3('edges between locations should have type "connection"'), function() {
+			const edgeType = modelHelpers.inferEdgeType('location', 'location');
+			assert(edgeType === 'connection');
+		});
+
+		it(f3('edges between items should have type "networkConnection"'), function() {
+			const edgeType = modelHelpers.inferEdgeType('item', 'item');
+			assert(edgeType === 'networkConnection');
+		});
+
+		it(f3('edge types that cannot be inferred should be undefined'), function() {
+			const edgeType = modelHelpers.inferEdgeType('location', 'item');
+			assert(!edgeType);
+		});
+	});
+
 	describe(f2('updateComponentProperties()'), function() {
 		const graph = {
 			nodes: [

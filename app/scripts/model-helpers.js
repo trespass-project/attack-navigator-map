@@ -467,6 +467,19 @@ function getEdgeNodes(edge, nodes) {
 };
 
 
+let inferEdgeType =
+module.exports.inferEdgeType =
+function inferEdgeType(fromType, toType) {
+	if (fromType === 'location' && toType === 'location') {
+		return 'connection';
+	} else if (fromType === 'item' && toType === 'item') {
+		return 'networkConnection';
+	} else {
+		return undefined;
+	}
+};
+
+
 let removeNode =
 module.exports.removeNode =
 function removeNode(graph, nodeId) {
