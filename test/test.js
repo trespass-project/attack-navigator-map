@@ -263,6 +263,15 @@ describe(f1('model-helpers.js'), function() {
 			assert(edgeType === 'atLocation');
 		});
 
+		// it(f3('spread operator test'), function() {
+		// 	const edges = [
+		// 		{ type: 'location' },
+		// 		{ type: 'location' },
+		// 	];
+		// 	const edgeType = modelHelpers.inferEdgeType(...(edges.map(R.prop('type'))));
+		// 	assert(edgeType === 'connection');
+		// });
+
 		it(f3('edge types that cannot be inferred should be undefined'), function() {
 			const edgeType = modelHelpers.inferEdgeType('location', 'item');
 			assert(!edgeType);
