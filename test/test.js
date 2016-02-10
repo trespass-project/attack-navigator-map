@@ -258,6 +258,11 @@ describe(f1('model-helpers.js'), function() {
 			assert(edgeType === 'networkConnection');
 		});
 
+		it(f3('edges between items and locations should have type "atLocation"'), function() {
+			const edgeType = modelHelpers.inferEdgeType('item', 'location');
+			assert(edgeType === 'atLocation');
+		});
+
 		it(f3('edge types that cannot be inferred should be undefined'), function() {
 			const edgeType = modelHelpers.inferEdgeType('location', 'item');
 			assert(!edgeType);

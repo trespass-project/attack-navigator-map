@@ -474,6 +474,8 @@ function inferEdgeType(fromType, toType) {
 		return 'connection';
 	} else if (fromType === 'item' && toType === 'item') {
 		return 'networkConnection';
+	} else if (fromType === 'item' && toType === 'location') { // TODO: is that always the case?
+		return 'atLocation';
 	} else {
 		return undefined;
 	}
