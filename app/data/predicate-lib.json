@@ -1,0 +1,78 @@
+[
+	{
+		"id": "network",
+		"label": "network connection",
+		"arity": 2,
+		"directed": false,
+		"subjectPlaceholder": "item",
+		"objectPlaceholder": "item"
+	},
+	{
+		"id": "connects",
+		"label": "connection",
+		"arity": 2,
+		"directed": false,
+		"subjectPlaceholder": "location",
+		"objectPlaceholder": "location"
+	},
+
+
+	{
+		"id": "atLocation",
+		"label": "is at location",
+		"arity": 2,
+		"directed": false,
+		"subjectPlaceholder": "actor, asset",
+		"objectPlaceholder": "location"
+	},
+
+
+	{
+		"id": "isPasswordOf",
+		"label": "is password of",
+		"arity": 2,
+		"directed": true,
+		"subjectPlaceholder": "password",
+		"objectPlaceholder": "user id"
+	},
+	{
+		"id": "isUserIdAt",
+		"label": "is user id at",
+		"arity": 2,
+		"directed": true,
+		"subjectPlaceholder": "user id",
+		"objectPlaceholder": "item"
+	},
+	{
+		"id": "hasUserID",
+		"label": "has user id",
+		"arity": 2,
+		"directed": true,
+		"subjectPlaceholder": "actor",
+		"objectPlaceholder": "user id"
+	},
+	{
+		"id": "hasRole",
+		"label": "has role",
+		"arity": 2,
+		"directed": true,
+		"subjectPlaceholder": "actor",
+		"objectPlaceholder": "role"
+	},
+	{
+		"id": "trusts",
+		"label": "trusts",
+		"arity": 2,
+		"directed": true,
+		"subjectPlaceholder": "actor",
+		"objectPlaceholder": "actor, role"
+	},
+	{
+		"id": "isDepartmentOf",
+		"label": "is department of",
+		"arity": 2,
+		"directed": true,
+		"subjectPlaceholder": "department",
+		"objectPlaceholder": "actor"
+	}
+]
