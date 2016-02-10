@@ -1,10 +1,10 @@
 'use strict';
 
-let R = require('ramda');
-let _ = require('lodash');
-let trespass = require('trespass.js');
-let helpers = require('./helpers.js');
-let modelHelpers = require('./model-helpers.js');
+const R = require('ramda');
+const _ = require('lodash');
+const trespass = require('trespass.js');
+const helpers = require('./helpers.js');
+const modelHelpers = require('./model-helpers.js');
 const mergeWith = require('./reducer-utils.js').mergeWith;
 const constants = require('./constants.js');
 
