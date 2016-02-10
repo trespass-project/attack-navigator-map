@@ -1,11 +1,11 @@
 'use strict';
 
-var path = require('path');
-var urljoin = require('url-join');
-var constants = require('./app/scripts/constants.js');
+const path = require('path');
+const urljoin = require('url-join');
+const constants = require('./app/scripts/constants.js');
 
-var dataPath = './app/data';
-var urlPrefix = '/api';
+const dataPath = './app/data';
+const urlPrefix = '/api';
 module.exports.serverDomain = 'localhost';
 module.exports.serverPort = 4000;
 

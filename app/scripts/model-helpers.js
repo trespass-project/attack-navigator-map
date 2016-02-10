@@ -1,10 +1,10 @@
 'use strict';
 
-let _ = require('lodash');
-let R = require('ramda');
-let properCase = require('mout/string/properCase');
-let trespass = require('trespass.js');
-let helpers = require('./helpers.js');
+const _ = require('lodash');
+const R = require('ramda');
+const properCase = require('mout/string/properCase');
+const trespass = require('trespass.js');
+const helpers = require('./helpers.js');
 const constants = require('./constants.js');
 
 
@@ -22,7 +22,7 @@ module.exports.nondirectedRelationTypes =
 
 
 
-let importModelFragment =
+const importModelFragment =
 module.exports.importModelFragment =
 function importModelFragment(currentGraph, fragment, xy={ x: 0, y: 0 }) {
 	let graph = _.merge({}, currentGraph);
@@ -49,7 +49,7 @@ function importModelFragment(currentGraph, fragment, xy={ x: 0, y: 0 }) {
 };
 
 
-let prepareFragment =
+const prepareFragment =
 module.exports.prepareFragment =
 function prepareFragment(fragment) {
 	// let fragment = _.merge({}, fragment);
@@ -85,7 +85,7 @@ function prepareFragment(fragment) {
 };
 
 
-let XMLModelToGraph =
+const XMLModelToGraph =
 module.exports.XMLModelToGraph =
 function XMLModelToGraph(xmlStr, done) {
 	// TODO: write test
@@ -155,7 +155,7 @@ function XMLModelToGraph(xmlStr, done) {
 };
 
 
-let downloadAsXML =
+const downloadAsXML =
 module.exports.downloadAsXML =
 function downloadAsXML(model, filename) {
 	const xml = trespass.model.toXML(model);
@@ -171,14 +171,14 @@ function downloadAsXML(model, filename) {
 };
 
 
-let modelAsFragment =
+const modelAsFragment =
 module.exports.modelAsFragment =
 function modelAsFragment(model) {
 	return R.pick(modelComponents, model.system);
 };
 
 
-let graphFromModel =
+const graphFromModel =
 module.exports.graphFromModel =
 function graphFromModel(model) {
 	let graph = {
@@ -206,7 +206,7 @@ function graphFromModel(model) {
 };
 
 
-let modelFromGraph =
+const modelFromGraph =
 module.exports.modelFromGraph =
 function modelFromGraph(graph) {
 	let model = trespass.model.create();
@@ -248,7 +248,7 @@ function modelFromGraph(graph) {
 };
 
 
-let removeGroup =
+const removeGroup =
 module.exports.removeGroup =
 function removeGroup(graph, groupId, removeNodes=false) {
 	graph.groups = graph.groups
@@ -266,7 +266,7 @@ function removeGroup(graph, groupId, removeNodes=false) {
 };
 
 
-let createNode =
+const createNode =
 module.exports.createNode =
 function createNode(node={}, keepId=false) {
 	const id = (keepId === true && node.id)
@@ -279,7 +279,7 @@ function createNode(node={}, keepId=false) {
 	});
 };
 
-let createEdge = // TODO: test
+const createEdge = // TODO: test
 module.exports.createEdge =
 function createEdge(edge={}, keepId=false) {
 	const id = (keepId === true && edge.id)
@@ -288,7 +288,7 @@ function createEdge(edge={}, keepId=false) {
 	return _.merge({}, edge, { id });
 };
 
-let createGroup = // TODO: test
+const createGroup = // TODO: test
 module.exports.createGroup =
 function createGroup(group={}, keepId=false) {
 	const id = (keepId === true && group.id)
@@ -300,7 +300,7 @@ function createGroup(group={}, keepId=false) {
 };
 
 
-let cloneNode =
+const cloneNode =
 module.exports.cloneNode =
 function cloneNode(graph, origNode) {
 	// duplicate node
@@ -347,7 +347,7 @@ function cloneNode(graph, origNode) {
 };
 
 
-let replaceIdInEdge =
+const replaceIdInEdge =
 module.exports.replaceIdInEdge =
 function replaceIdInEdge(_edge, oldId, newId) {
 	let edge = _.merge({}, _edge);
@@ -361,7 +361,7 @@ function replaceIdInEdge(_edge, oldId, newId) {
 };
 
 
-let cloneGroup =
+const cloneGroup =
 module.exports.cloneGroup =
 function cloneGroup(graph, groupId) {
 	let origGroup = helpers.getItemById(graph.groups, groupId);
@@ -425,7 +425,7 @@ function cloneGroup(graph, groupId) {
 };
 
 
-let addNode = // TODO: test
+const addNode = // TODO: test
 module.exports.addNode =
 function addNode(graph, node) {
 	node = _.defaults(node, { // TODO: createNode
@@ -437,7 +437,7 @@ function addNode(graph, node) {
 };
 
 
-let addNodeToGroup =
+const addNodeToGroup =
 module.exports.addNodeToGroup =
 function addNodeToGroup(graph, nodeId, groupId) {
 	let group = helpers.getItemById(graph.groups, groupId);
@@ -447,7 +447,7 @@ function addNodeToGroup(graph, nodeId, groupId) {
 };
 
 
-let getNodeGroups =
+const getNodeGroups =
 module.exports.getNodeGroups =
 function getNodeGroups(nodeId, groups) {
 	return groups.filter(function(group) {
@@ -456,7 +456,7 @@ function getNodeGroups(nodeId, groups) {
 };
 
 
-let getEdgeNodes =
+const getEdgeNodes =
 module.exports.getEdgeNodes =
 function getEdgeNodes(edge, nodes) {
 	const edgeNodes = {
@@ -467,7 +467,7 @@ function getEdgeNodes(edge, nodes) {
 };
 
 
-let inferEdgeType =
+const inferEdgeType =
 module.exports.inferEdgeType =
 function inferEdgeType(fromType, toType) {
 	if (fromType === 'location' && toType === 'location') {
@@ -480,7 +480,7 @@ function inferEdgeType(fromType, toType) {
 };
 
 
-let removeNode =
+const removeNode =
 module.exports.removeNode =
 function removeNode(graph, nodeId) {
 	// remove node
@@ -507,7 +507,7 @@ function removeNode(graph, nodeId) {
 };
 
 
-let updateComponentProperties =
+const updateComponentProperties =
 module.exports.updateComponentProperties =
 function updateComponentProperties(graph, graphComponentType, componentId, newProperties) {
 	let list = {

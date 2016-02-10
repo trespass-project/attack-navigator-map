@@ -13,7 +13,7 @@ const displayAttribute = 'title';
 const valueAttribute = 'value';
 
 
-let PredicateEditor = React.createClass({
+const PredicateEditor = React.createClass({
 	propTypes: {
 		handleUpdate: React.PropTypes.func,
 		predicate: React.PropTypes.object/*.isRequired*/
