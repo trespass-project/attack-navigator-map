@@ -219,11 +219,13 @@ function modelFromGraph(graph) {
 	// embed entire graph in model
 	model.system.anm_data = JSON.stringify(graph);
 
+	// system needs an id
+	model.system.id = model.system.id || helpers.makeId('model');
+
 	(graph.edges || []).forEach(function(edge) {
 		trespass.model.addEdge(model, {
 			source: edge.from,
 			target: edge.to,
-			// TODO: kind?
 			directed: edge.directed,
 		});
 	});
