@@ -104,7 +104,6 @@ let Wizard = React.createClass({
 			selected={props.selected}
 			graph={props.graph}
 			dispatch={props.dispatch}
-			relationsLibUrl={apiUrl(api.relations.url)}
 		/>;
 	},
 
