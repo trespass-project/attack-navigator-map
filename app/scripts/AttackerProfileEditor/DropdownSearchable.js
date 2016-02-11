@@ -90,7 +90,7 @@ let DropdownSearchable = React.createClass({
 		return (
 			<span className='dropdown'>
 				<a href='#' data-toggle='dropdown' className='dropdown-toggle'>
-					{props[props.displayAttribute]}{common.caret}
+					{props.title}{common.caret}
 				</a>
 				<ul role='menu' className='dropdown-menu'>
 					{(props.searchable)
