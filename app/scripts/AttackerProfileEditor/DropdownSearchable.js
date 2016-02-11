@@ -12,6 +12,7 @@ let DropdownSearchable = React.createClass({
 		title: React.PropTypes.string.isRequired,
 		name: React.PropTypes.string.isRequired,
 		searchable: React.PropTypes.bool,
+		searchPlaceholder: React.PropTypes.string.isRequired,
 		items: React.PropTypes.array.isRequired,
 		displayAttribute: React.PropTypes.string,
 		valueAttribute: React.PropTypes.string,
@@ -21,6 +22,7 @@ let DropdownSearchable = React.createClass({
 	getDefaultProps: function() {
 		return {
 			searchable: true,
+			searchPlaceholder: 'search',
 			handleSelection: function() {}
 		};
 	},
@@ -46,6 +48,8 @@ let DropdownSearchable = React.createClass({
 	},
 
 	renderSearch: function() {
+		const props = this.props;
+
 		return (
 			<div>
 				<form className='form'>
@@ -56,7 +60,7 @@ let DropdownSearchable = React.createClass({
 							onKeyDown={this.handleKeyDown}
 							value={this.state.query}
 							type='search'
-							placeholder='search'
+							placeholder={props.searchPlaceholder}
 						/>
 					</div>
 				</form>
