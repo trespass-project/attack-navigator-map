@@ -93,7 +93,7 @@ function XMLModelToGraph(xmlStr, done) {
 	trespass.model.parse(xmlStr, function(err, model) {
 		if (err) { return done(err); }
 
-		let graph = graphFromModel(model);
+		const graph = graphFromModel(model);
 
 		let colCounter = 0;
 		let rowCounter = 0;
@@ -103,31 +103,36 @@ function XMLModelToGraph(xmlStr, done) {
 		const spacing = 100;
 		let xOffset = spacing / 2;
 		const yOffset = spacing / 2;
+		let groupIndex = -1;
 
 		// create groups for the different types
-		modelComponents.forEach(function(key, index) {
+		modelComponents.forEach(function(collectionName) {
 			// TODO: don't use `model` here,
 			// use graph.nodes
-			const coll = model.system[key] || [];
+			const coll = model.system[collectionName] || [];
+			if (!coll.length) {
+				return;
+			}
+
 			let group = {
-				name: key,
+				name: collectionName,
 				id: helpers.makeId('group'),
 				nodeIds: []
 			};
+			groupIndex++;
 
 			coll.forEach(function(item) {
 				group.nodeIds.push(item.id);
 
 				let node = helpers.getItemById(graph.nodes, item.id);
-
 				if (!node) {
 					console.error(`node not found, id: ${item.id}`);
 				}
 
 				// basic auto-layout
-				if (rowCounter > maxNodesPerCol || lastGroupIndex !== index) {
-					if (lastGroupIndex !== index) {
-						lastGroupIndex = index;
+				if (rowCounter > maxNodesPerCol || lastGroupIndex !== groupIndex) {
+					if (lastGroupIndex !== groupIndex) {
+						lastGroupIndex = groupIndex;
 						isShifted = true;
 						xOffset += spacing / 2;
 					} else {
@@ -138,7 +143,7 @@ function XMLModelToGraph(xmlStr, done) {
 					colCounter++;
 				}
 				node.label = item.id;
-				node.modelComponentType = modelComponentsSingular[key];
+				node.modelComponentType = modelComponentsSingular[collectionName];
 				node.x = xOffset + colCounter * spacing;
 				node.y = yOffset + rowCounter * spacing + ((isShifted) ? 0 : 20);
 				rowCounter++;
