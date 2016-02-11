@@ -58,12 +58,8 @@ let DropdownSearchable = React.createClass({
 							type='search'
 							placeholder='search'
 						/>
-						{/*<div className='input-group-addon'>
-							<span className='glyphicon glyphicon-search'></span>
-						</div>*/}
 					</div>
 				</form>
-				{/*common.divider*/ null}
 			</div>
 		);
 	},

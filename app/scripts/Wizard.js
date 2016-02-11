@@ -203,12 +203,7 @@ let Wizard = React.createClass({
 			<PredicateEditor
 				dispatch={props.dispatch}
 				predicatesLib={props.predicatesLib || require('../data/predicate-lib.json')}
-				predicates={/*props.*/predicates || [
-					/*{
-						id: 'isPasswordOf',
-						value: ['subject' 'object']
-					}*/
-				]}
+				predicates={predicates || [/*{ id: 'isPasswordOf', value: ['subject' 'object'] }*/]}
 			/>
 		</div>;
 	},
