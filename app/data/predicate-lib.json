@@ -44,12 +44,12 @@
 		"objectPlaceholder": "item"
 	},
 	{
-		"id": "hasUserID",
-		"label": "has user id",
+		"id": "isUidOf",
+		"label": "is user id of",
 		"arity": 2,
 		"directed": true,
-		"subjectPlaceholder": "actor",
-		"objectPlaceholder": "user id"
+		"subjectPlaceholder": "user id",
+		"objectPlaceholder": "actor"
 	},
 	{
 		"id": "hasRole",

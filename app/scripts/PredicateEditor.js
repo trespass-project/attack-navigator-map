@@ -6,7 +6,7 @@ const classnames = require('classnames');
 
 const helpers = require('./helpers.js');
 
-// const DropdownSearchable = require('./AttackerProfileEditor/DropdownSearchable.js');
+const DropdownSearchable = require('./AttackerProfileEditor/DropdownSearchable.js');
 // const DropdownSelectize = require('./AttackerProfileEditor/DropdownSelectize.js');
 
 const displayAttribute = 'title';
@@ -91,24 +91,38 @@ const PredicateEditor = React.createClass({
 			|| { id: predicate.id, subjectPlaceholder: '?', objectPlaceholder: '?' };
 		const [subj, obj] = predicate.value/*.split(/ +/)*/;
 
-		return <div key={`${subj}-${predicate.id}-${obj}`}>
-			{/*<input type='text' value={subj} placeholder={predicateType.subjectPlaceholder} />
-			<input type='text' value={predicate.id} placeholder={predicateType.label} />
-			<input type='text' value={obj} placeholder={predicateType.objectPlaceholder} />*/}
-			<span>{subj} <b>{predicate.id}</b> {obj}</span>
-			{/*<br />*/}
+		return <li key={`${subj}-${predicate.id}-${obj}`}>
+			<input type='text' defaultValue={subj} placeholder={predicateType.subjectPlaceholder} />
+			<DropdownSearchable
+				name={predicate.id}
+				title={predicateType.label || predicate.id}
+				value={predicate.id}
+				searchable={false}
+				items={props.predicatesLib}
+				displayAttribute={'label'}
+				valueAttribute={'id'}
+				handleSelection={this.updatePredicate}
+			/>
+			<input type='text' defaultValue={obj} placeholder={predicateType.objectPlaceholder} />
 			<br />
-		</div>;
+			<br />
+		</li>;
+	},
+
+	updatePredicate: function() {
+		console.log('here');
 	},
 
 	render: function() {
 		const props = this.props;
 
 		return (
-			<div className='predicate-editor'>
+			<div className='predicate-editor language'>
 				<div className='predicates'>
 					predicates:
-					{props.predicates.map(this.renderPredicate)}
+					<ul>
+						{props.predicates.map(this.renderPredicate)}
+					</ul>
 				</div>
 
 				<div className='add-new-container'>
