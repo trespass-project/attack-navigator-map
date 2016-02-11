@@ -198,10 +198,20 @@ let Wizard = React.createClass({
 				return result;
 			}, []);
 
+		const allNames = props.graph.nodes
+			.filter((item) => {
+				return (R.indexOf(item.modelComponentType, ['policy', 'process', 'predicate']) === -1);
+			})
+			.map((item) => {
+				const name = item.label || item.name || item.id; // TODO: figure this out
+				return { name, label: name };
+			});
+
 		return <div>
 			<h2 className='title'>Connections</h2>
 			<PredicateEditor
 				dispatch={props.dispatch}
+				allNames={allNames}
 				predicatesLib={props.predicatesLib || require('../data/predicate-lib.json')}
 				predicates={predicates || [/*{ id: 'isPasswordOf', value: ['subject' 'object'] }*/]}
 			/>

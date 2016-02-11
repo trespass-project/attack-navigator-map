@@ -17,7 +17,9 @@ const PredicateEditor = React.createClass({
 	propTypes: {
 		dispatch: React.PropTypes.func.isRequired,
 		handleUpdate: React.PropTypes.func,
-		predicate: React.PropTypes.object/*.isRequired*/
+		allNames: React.PropTypes.array.isRequired,
+		predicatesLib: React.PropTypes.array.isRequired,
+		predicates: React.PropTypes.array.isRequired,
 	},
 
 	getDefaultProps: function() {
@@ -92,7 +94,18 @@ const PredicateEditor = React.createClass({
 		const [subj, obj] = predicate.value;
 
 		return <li key={`${subj}-${predicate.id}-${obj}`}>
-			<input type='text' defaultValue={subj} placeholder={predicateType.subjectPlaceholder} />
+			<DropdownSearchable
+				name={'subject'}
+				title={subj}
+				value={subj}
+				searchable={true}
+				searchPlaceholder={predicateType.subjectPlaceholder}
+				items={props.allNames}
+				displayAttribute={'label'}
+				valueAttribute={'name'}
+				handleSelection={this.updatePredicate}
+			/>
+			&nbsp;&nbsp;&nbsp;
 			<DropdownSearchable
 				name={predicate.id}
 				title={predicateType.label || predicate.id}
@@ -103,14 +116,24 @@ const PredicateEditor = React.createClass({
 				valueAttribute={'id'}
 				handleSelection={this.updatePredicate}
 			/>
-			<input type='text' defaultValue={obj} placeholder={predicateType.objectPlaceholder} />
-			<br />
+			&nbsp;&nbsp;&nbsp;
+			<DropdownSearchable
+				name={'object'}
+				title={obj}
+				value={obj}
+				searchable={true}
+				searchPlaceholder={predicateType.objectPlaceholder}
+				items={props.allNames}
+				displayAttribute={'label'}
+				valueAttribute={'name'}
+				handleSelection={this.updatePredicate}
+			/>
 			<br />
 		</li>;
 	},
 
-	updatePredicate: function() {
-		console.log('here');
+	updatePredicate: function(...args) {
+		console.log(args);
 	},
 
 	render: function() {
