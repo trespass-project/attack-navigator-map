@@ -15,6 +15,7 @@ const valueAttribute = 'value';
 
 const PredicateEditor = React.createClass({
 	propTypes: {
+		dispatch: React.PropTypes.func.isRequired,
 		handleUpdate: React.PropTypes.func,
 		predicate: React.PropTypes.object/*.isRequired*/
 	},
@@ -84,12 +85,42 @@ const PredicateEditor = React.createClass({
 	// 	</li>;
 	// },
 
+	renderPredicate: function(predicate, index) {
+		const props = this.props;
+		const predicateType = helpers.getItemById(props.predicatesLib, predicate.id)
+			|| { id: predicate.id, subjectPlaceholder: '?', objectPlaceholder: '?' };
+		const [subj, obj] = predicate.value/*.split(/ +/)*/;
+
+		return <div key={`${subj}-${predicate.id}-${obj}`}>
+			{/*<input type='text' value={subj} placeholder={predicateType.subjectPlaceholder} />
+			<input type='text' value={predicate.id} placeholder={predicateType.label} />
+			<input type='text' value={obj} placeholder={predicateType.objectPlaceholder} />*/}
+			<span>{subj} <b>{predicate.id}</b> {obj}</span>
+			{/*<br />*/}
+			<br />
+		</div>;
+	},
+
 	render: function() {
 		const props = this.props;
 
 		return (
 			<div className='predicate-editor'>
-				predicate editor
+				<div className='predicates'>
+					predicates:
+					{props.predicates.map(this.renderPredicate)}
+				</div>
+
+				<div className='add-new-container'>
+					<hr />
+					add new:
+					<div>
+						<input type='text' placeholder='subject placeholder' />
+						<input type='text' placeholder='predicate label' />
+						<input type='text' placeholder='subject placeholder' />
+					</div>
+					<button>add</button>
+				</div>
 			</div>
 		);
 	},

@@ -189,9 +189,27 @@ let Wizard = React.createClass({
 	},
 
 	renderConnections: function(props) {
+		const predicates = props.graph.nodes
+			.filter(R.propEq('modelComponentType', 'predicate'))
+			.reduce((result, item) => {
+				item.value.forEach((value) => {
+					result.push({ id: item.id, value });
+				});
+				return result;
+			}, []);
+
 		return <div>
 			<h2 className='title'>Connections</h2>
-			<PredicateEditor />
+			<PredicateEditor
+				dispatch={props.dispatch}
+				predicatesLib={props.predicatesLib || require('../data/predicate-lib.json')}
+				predicates={/*props.*/predicates || [
+					/*{
+						id: 'isPasswordOf',
+						value: ['subject' 'object']
+					}*/
+				]}
+			/>
 		</div>;
 	},
 
