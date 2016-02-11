@@ -89,7 +89,7 @@ const PredicateEditor = React.createClass({
 		const props = this.props;
 		const predicateType = helpers.getItemById(props.predicatesLib, predicate.id)
 			|| { id: predicate.id, subjectPlaceholder: '?', objectPlaceholder: '?' };
-		const [subj, obj] = predicate.value/*.split(/ +/)*/;
+		const [subj, obj] = predicate.value;
 
 		return <li key={`${subj}-${predicate.id}-${obj}`}>
 			<input type='text' defaultValue={subj} placeholder={predicateType.subjectPlaceholder} />
@@ -97,7 +97,7 @@ const PredicateEditor = React.createClass({
 				name={predicate.id}
 				title={predicateType.label || predicate.id}
 				value={predicate.id}
-				searchable={false}
+				searchable={true}
 				items={props.predicatesLib}
 				displayAttribute={'label'}
 				valueAttribute={'id'}
