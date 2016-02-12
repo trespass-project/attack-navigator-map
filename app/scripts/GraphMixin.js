@@ -178,6 +178,9 @@ let GraphMixin = {
 					ref='dragRoot'
 					className={classNames}
 					onContextMenu={this._onContextMenu || helpers.noop}
+					onMouseMove={this._onMouseMove || helpers.noop}
+					onMouseLeave={this._onMouseLeave || helpers.noop}
+					onMouseUp={this._onMouseUp || helpers.noop}
 					onWheel={this._onWheel || helpers.noop}
 					onClick={this._onClick || helpers.noop}
 				>

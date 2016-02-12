@@ -1,17 +1,17 @@
 'use strict';
 
-let React = require('react');
-let reactDOM = require('react-dom');
-let mout = require('mout');
+const React = require('react');
+const reactDOM = require('react-dom');
+const mout = require('mout');
 
-let GraphMixin = require('./GraphMixin.js');
-let SchleppManagerMixin = require('./SchleppManagerMixin.js');
-let SchleppMixin = require('./SchleppMixin.js');
-let helpers = require('./helpers.js');
+const GraphMixin = require('./GraphMixin.js');
+const SchleppManagerMixin = require('./SchleppManagerMixin.js');
+const SchleppMixin = require('./SchleppMixin.js');
+const helpers = require('./helpers.js');
 const constants = require('./constants.js');
-let icons = require('./icons.js');
-let actionCreators = require('./actionCreators.js');
-let DropTarget = require('react-dnd').DropTarget;
+const icons = require('./icons.js');
+const actionCreators = require('./actionCreators.js');
+const DropTarget = require('react-dnd').DropTarget;
 
 
 let GraphEditor = React.createClass({
@@ -76,10 +76,12 @@ let GraphEditor = React.createClass({
 		event.preventDefault();
 		const props = this.props;
 
-		let deltaScale = -event.deltaY / 2000.0;
-		let newScale = mout.math.clamp(this.props.scale + deltaScale,
-									   props.minZoom,
-									   props.maxZoom);
+		const deltaScale = -event.deltaY / 2000.0;
+		const newScale = mout.math.clamp(
+			this.props.scale + deltaScale,
+			props.minZoom,
+			props.maxZoom
+		);
 
 		// event position, relative to svg elem
 		const editorXY = helpers.coordsRelativeToElem(
@@ -105,6 +107,36 @@ let GraphEditor = React.createClass({
 		);
 	},
 
+	_onMouseMove: function(event) {
+		event.preventDefault();
+		event.stopPropagation();
+
+		const props = this.props;
+		props.dispatch( actionCreators.setMouseOverEditor(true) );
+
+		if (props.drag) {
+			(props.drag.onMove || helpers.noop)(event);
+		}
+	},
+
+	_onMouseLeave: function(event) {
+		event.preventDefault();
+		event.stopPropagation();
+		this.props.dispatch( actionCreators.setMouseOverEditor(false) );
+	},
+
+	_onMouseUp: function(event) {
+		event.preventDefault();
+		event.stopPropagation();
+
+		const props = this.props;
+		if (props.drag) {
+			(props.drag.onEnd || helpers.noop)(event);
+		}
+		props.dispatch( actionCreators.setDrag(null) );
+		props.dispatch( actionCreators.setPanning(false) );
+	},
+
 	_onDragStart: function(event) {
 		const props = this.props;
 		this._originalPanX = props.panX;
@@ -114,8 +146,8 @@ let GraphEditor = React.createClass({
 	_onDragMove: function(event) {
 		this.props.dispatch(
 			actionCreators.setTransformation({
-				panX: this._originalPanX + event.deltaX,
-				panY: this._originalPanY + event.deltaY,
+				panX: this._originalPanX + event._deltaX,
+				panY: this._originalPanY + event._deltaY,
 			})
 		);
 	},

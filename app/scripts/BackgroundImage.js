@@ -29,8 +29,8 @@ let ResizeElem = React.createClass({
 		const modelXYEvent = helpers.unTransformFromTo(
 			props.editorElem,
 			props.editorTransformElem,
-			{ x: event.offsetX,
-			  y: event.offsetY }
+			{ x: event.clientX,
+			  y: event.clientY }
 		);
 
 		const w = modelXYEvent.x - props.imgX;
@@ -156,8 +156,8 @@ let Group = React.createClass({
 		this.modelXYEventOrigin = helpers.unTransformFromTo(
 			props.editorElem,
 			props.editorTransformElem,
-			{ x: event.offsetX,
-			  y: event.offsetY }
+			{ x: event.clientX,
+			  y: event.clientY }
 		);
 	},
 
@@ -167,8 +167,8 @@ let Group = React.createClass({
 		const modelXYEvent = helpers.unTransformFromTo(
 			props.editorElem,
 			props.editorTransformElem,
-			{ x: event.offsetX,
-			  y: event.offsetY }
+			{ x: event.clientX,
+			  y: event.clientY }
 		);
 
 		const modelXYDelta = {
