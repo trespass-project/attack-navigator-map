@@ -16,9 +16,13 @@ const modelComponentsSingular =
 module.exports.modelComponentsSingular =
 trespass.model.collectionNameSingular;
 
-const nondirectedRelationTypes =
-module.exports.nondirectedRelationTypes =
+const nonDirectedRelationTypes =
+module.exports.nonDirectedRelationTypes =
 ['network', 'connects'];
+
+const nonGraphModelComponents =
+module.exports.nonGraphModelComponents =
+['predicates', 'policies', 'processes'];
 
 
 
@@ -93,7 +97,7 @@ function XMLModelToGraph(xmlStr, done) {
 	trespass.model.parse(xmlStr, function(err, model) {
 		if (err) { return done(err); }
 
-		const graph = graphFromModel(model);
+		const {graph, other} = graphFromModel(model);
 
 		let colCounter = 0;
 		let rowCounter = 0;
@@ -106,56 +110,52 @@ function XMLModelToGraph(xmlStr, done) {
 		let groupIndex = -1;
 
 		// create groups for the different types
-		modelComponents.forEach(function(collectionName) {
-			// TODO: don't use `model` here,
-			// use graph.nodes
-			const coll = model.system[collectionName] || [];
-			if (!coll.length) {
-				return;
-			}
+		modelComponents
+			.forEach((collectionName) => {
+				const selection = graph.nodes
+					.filter((node) => {
+						return (node.modelComponentType === modelComponentsSingular[collectionName]);
+					});
 
-			let group = {
-				name: collectionName,
-				id: helpers.makeId('group'),
-				nodeIds: []
-			};
-			groupIndex++;
-
-			coll.forEach(function(item) {
-				group.nodeIds.push(item.id);
-
-				let node = helpers.getItemById(graph.nodes, item.id);
-				if (!node) {
-					console.error(`node not found, id: ${item.id}`);
+				if (!selection.length) {
+					return;
 				}
 
-				// basic auto-layout
-				if (rowCounter > maxNodesPerCol || lastGroupIndex !== groupIndex) {
-					if (lastGroupIndex !== groupIndex) {
-						lastGroupIndex = groupIndex;
-						isShifted = true;
-						xOffset += spacing / 2;
-					} else {
-						isShifted = !isShifted;
+				let group = {
+					name: collectionName,
+					id: helpers.makeId('group'),
+					nodeIds: []
+				};
+				groupIndex++;
+
+				selection.forEach(function(node) {
+					group.nodeIds.push(node.id);
+
+					// basic auto-layout
+					if (rowCounter > maxNodesPerCol || lastGroupIndex !== groupIndex) {
+						if (lastGroupIndex !== groupIndex) {
+							lastGroupIndex = groupIndex;
+							isShifted = true;
+							xOffset += spacing / 2;
+						} else {
+							isShifted = !isShifted;
+						}
+
+						rowCounter = 0;
+						colCounter++;
 					}
-
-					rowCounter = 0;
-					colCounter++;
+					node.label = node.id;
+					node.modelComponentType = modelComponentsSingular[collectionName];
+					node.x = xOffset + colCounter * spacing;
+					node.y = yOffset + rowCounter * spacing + ((isShifted) ? 0 : 20);
+					rowCounter++;
+				});
+				if (group.nodeIds.length) {
+					graph.groups.push(group);
 				}
-				node.label = item.id;
-				node.modelComponentType = modelComponentsSingular[collectionName];
-				node.x = xOffset + colCounter * spacing;
-				node.y = yOffset + rowCounter * spacing + ((isShifted) ? 0 : 20);
-				rowCounter++;
 			});
-			if (group.nodeIds.length) {
-				graph.groups.push(group);
-			}
-		});
 
-		// TODO: refine, generalize, ...
-
-		done(null, graph);
+		done(null, graph, other);
 	});
 };
 
@@ -193,21 +193,49 @@ function graphFromModel(model) {
 	};
 
 	// for each edge in model, create edge in graph
-	graph.edges = model.system.edges.map(function(edge) {
-		return {
-			from: edge.source,
-			to: edge.target,
-			directed: edge.directed
-		};
-	});
+	graph.edges = model.system.edges
+		.map(function(edge) {
+			return {
+				from: edge.source,
+				to: edge.target,
+				directed: edge.directed
+			};
+		});
 
-	R.without(['edges'], modelComponents).forEach(function(key) {
-		const coll = model.system[key];
-		graph.nodes = R.concat(graph.nodes, coll);
-	});
+	// set model component type
+	R.without(['edges'], modelComponents)
+		.forEach((collectionName) => {
+			model.system[collectionName]
+				.forEach((item) => {
+					item.modelComponentType = modelComponentsSingular[collectionName];
+				});
+		});
 
-	// TODO: anything missing?
-	return graph;
+	R.without(R.concat(['edges'], nonGraphModelComponents), modelComponents)
+		.forEach(function(collectionName) {
+			const coll = model.system[collectionName];
+			graph.nodes = R.concat(graph.nodes, coll);
+		});
+
+	let other = nonGraphModelComponents
+		.reduce((result, collectionName) => {
+			result[collectionName] = model.system[collectionName];
+			return result;
+		}, {});
+
+	// predicates
+	other.predicates = other.predicates
+		.reduce((result, item) => {
+			item.value.forEach((value) => {
+				result.push({
+					id: item.id,
+					value
+				});
+			});
+			return result;
+		}, []);
+
+	return {graph, other};
 };
 
 
@@ -531,7 +559,7 @@ function updateComponentProperties(graph, graphComponentType, componentId, newPr
 		if (item.id === componentId) {
 			if (graphComponentType === 'edge') {
 				newProperties.directed = // TODO: should this be here, or should Edge know how to draw different relations
-					(R.contains((newProperties.relation || item.relation), nondirectedRelationTypes))
+					(R.contains((newProperties.relation || item.relation), nonDirectedRelationTypes))
 						? false
 						: true;
 			}

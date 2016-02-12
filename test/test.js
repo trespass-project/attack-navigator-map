@@ -371,9 +371,9 @@ describe(f1('model-helpers.js'), function() {
 		model = trespass.model.addLocation(model, {
 			id: 'location'
 		});
-		let graph = modelHelpers.graphFromModel(model);
+		const {graph, other} = modelHelpers.graphFromModel(model);
 
-		// TODO: more
+		// TODO: test `other`
 
 		it(f3('should create edges'), function() {
 			assert(graph.edges.length === 1);
