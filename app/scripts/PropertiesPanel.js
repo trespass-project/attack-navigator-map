@@ -261,7 +261,7 @@ let PropertiesPanel = React.createClass({
 					</div>;
 				})
 			}
-		</div>
+		</div>;
 	},
 
 	componentDidMount: function() {

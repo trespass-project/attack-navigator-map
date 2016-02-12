@@ -20,6 +20,7 @@ const PredicateEditor = require('./PredicateEditor.js');
 const AttackerProfileEditor = require('./AttackerProfileEditor/AttackerProfileEditorLanguage.js');
 
 // const analysisTools = require('../data/analysis-tools.js');
+const predicatesLib = require('../data/predicate-lib.json');
 
 // TODO: move API stuff to trespass.js
 const api = require('../../api.js').api;
@@ -194,7 +195,7 @@ let Wizard = React.createClass({
 			<PredicateEditor
 				dispatch={props.dispatch}
 				allNames={props.allNodeNames}
-				predicatesLib={props.predicatesLib || require('../data/predicate-lib.json')}
+				predicatesLib={props.predicatesLib || predicatesLib}
 				predicates={props.predicates}
 			/>
 		</div>;

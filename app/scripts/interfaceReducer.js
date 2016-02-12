@@ -164,7 +164,6 @@ function reducer(state=initialState, action) {
 			}
 
 			const mergeThis = Object.assign(
-				{},
 				{showEdgeLabels, showNodeLabels, showGroupLabels, visibleRect},
 				action.transformation
 			);

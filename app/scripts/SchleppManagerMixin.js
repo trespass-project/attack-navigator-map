@@ -10,6 +10,9 @@ const SchleppManagerMixin = {
 	componentDidMount: function() {
 		let that = this;
 
+		let elem = helpers.getElemByRef(this, 'dragRoot');
+		let $elem = $(elem);
+
 		const $body = $('body'); // TODO: move this elsewhere
 		$body.on('keydown', function(event) {
 			if (event.keyCode === 32) {
@@ -33,6 +36,7 @@ const SchleppManagerMixin = {
 				that.props.dispatch( actionCreators.setPannable(false) );
 			}
 		});
+
 	},
 
 	componentWillUnmount: function() {
