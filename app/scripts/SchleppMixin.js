@@ -1,12 +1,12 @@
 'use strict';
 
-let $ = require('jquery');
-let React = require('react');
-let helpers = require('./helpers.js');
-let actionCreators = require('./actionCreators.js');
+const $ = require('jquery');
+const React = require('react');
+const helpers = require('./helpers.js');
+const actionCreators = require('./actionCreators.js');
 
 
-let SchleppMixin = {
+const SchleppMixin = {
 	componentDidMount: function() {
 		let that = this;
 
