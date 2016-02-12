@@ -3,9 +3,9 @@
 const R = require('ramda');
 const _ = require('lodash');
 const trespass = require('trespass.js');
+const mergeWith = require('./reducer-utils.js').mergeWith;
 const helpers = require('./helpers.js');
 const modelHelpers = require('./model-helpers.js');
-const mergeWith = require('./reducer-utils.js').mergeWith;
 const constants = require('./constants.js');
 
 
@@ -97,8 +97,7 @@ function reducer(state=initialState, action) {
 				modelHelpers.prepareFragment(fragment),
 				xy
 			);
-
-			return _.merge({}, state, { graph: graph });
+			return mergeWithState({ graph });
 		}
 
 		case constants.ACTION_updateModel: {
@@ -106,7 +105,7 @@ function reducer(state=initialState, action) {
 			if (!model) { // debounced
 				return state;
 			}
-			return _.merge({}, state, { model: model });
+			return mergeWithState({ model });
 		}
 
 		case constants.ACTION_loadXML: {
@@ -128,7 +127,6 @@ function reducer(state=initialState, action) {
 
 		case constants.ACTION_addNode: {
 			const {node} = action;
-			// TODO: is this necessary?
 			let newState = _.merge({}, state);
 			newState.graph = modelHelpers.addNode(newState.graph, node);
 			return newState;
@@ -242,7 +240,7 @@ function reducer(state=initialState, action) {
 
 		case constants.ACTION_removeGroup: {
 			const {groupId, removeNodes} = action;
-			return _.merge({}, state, {
+			return mergeWithState({
 				graph: modelHelpers.removeGroup(
 					state.graph,
 					groupId,

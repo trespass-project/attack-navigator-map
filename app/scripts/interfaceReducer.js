@@ -1,12 +1,12 @@
 'use strict';
 
-let $ = require('jquery');
-let R = require('ramda');
-let _ = require('lodash');
+const $ = require('jquery');
+const R = require('ramda');
+const _ = require('lodash');
 const mergeWith = require('./reducer-utils.js').mergeWith;
 const omitType = require('./reducer-utils.js').omitType;
 const constants = require('./constants.js');
-let helpers = require('./helpers.js');
+const helpers = require('./helpers.js');
 const theme = require('./graph-theme-default.js');
 
 
@@ -163,7 +163,7 @@ function reducer(state=initialState, action) {
 				};
 			}
 
-			const mergeThis = _.merge(
+			const mergeThis = Object.assign(
 				{},
 				{showEdgeLabels, showNodeLabels, showGroupLabels, visibleRect},
 				action.transformation
@@ -175,7 +175,7 @@ function reducer(state=initialState, action) {
 			return mergeWithState({ previewEdge: action.previewEdge });
 
 		case constants.ACTION_setDrag: {
-			const newState = _.merge({}, state, { drag: action.data });
+			const newState = mergeWithState({ drag: action.data });
 			return newState;
 		}
 
@@ -228,7 +228,7 @@ function reducer(state=initialState, action) {
 		}
 		case constants.ACTION_loadToolChains_DONE: {
 			const {toolChains} = action;
-			return _.merge({}, state, { toolChains });
+			return mergeWithState({toolChains});
 		}
 
 		default:
