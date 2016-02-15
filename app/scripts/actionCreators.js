@@ -516,6 +516,7 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 				data: formData,
 			},
 			api.requestOptions.crossDomain,
+			api.requestOptions.withCredentials,
 			api.requestOptions.fileUpload
 		);
 		const req = $.ajax(params);
@@ -537,7 +538,8 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 				// const url = api.makeUrl(toolsApi, 'secured/task/'+taskId);
 				const params = _.merge(
 					{ url, dataType: 'json' },
-					api.requestOptions.crossDomain
+					api.requestOptions.crossDomain,
+					api.requestOptions.withCredentials
 				);
 				const retryRate = 1000;
 				const intervalId = setInterval(function() {
@@ -610,7 +612,8 @@ function loadToolChains(xmlString) {
 				url: api.makeUrl(toolsApi, 'secured/tool-chain'),
 				// data: data,
 			},
-			api.requestOptions.crossDomain
+			api.requestOptions.crossDomain,
+			api.requestOptions.withCredentials
 		);
 		const req = $.ajax(params);
 		Q(req)
