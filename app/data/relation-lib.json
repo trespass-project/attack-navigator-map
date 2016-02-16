@@ -86,7 +86,7 @@
 			"value": "logical access",
 			"label": "logical acces",
 			"directed": true,
-			"acceptsSource": ["actor", "role"],
+			"acceptsSource": ["actor"],
 			"acceptsTarget": ["location"]
 		}
 	]

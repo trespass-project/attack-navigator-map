@@ -17,7 +17,7 @@ const typeIcons = {
 	data: 'fa-file-o',
 	item: 'fa-laptop',
 	actor: 'fa-male',
-	role: 'fa-user',
+	// role: 'fa-user',
 	predicate: 'fa-tags',
 	process: 'fa-gears',
 	policy: 'fa-ban',

@@ -1,7 +1,7 @@
 {
 	"list": [
-		{ "modelComponentType": "role", "label": "Administrator", "kbType": "actor" },
-		{ "modelComponentType": "role", "label": "Employee", "kbType": "actor" },
+		{ "modelComponentType": "actor", "label": "Administrator", "kbType": "actor" },
+		{ "modelComponentType": "actor", "label": "Employee", "kbType": "actor" },
 
 		{ "modelComponentType": "data", "label": "File X" },
 

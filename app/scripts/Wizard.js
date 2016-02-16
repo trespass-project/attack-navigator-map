@@ -168,7 +168,7 @@ let Wizard = React.createClass({
 
 	renderActors: function(props) {
 		const filterFn = function(a) {
-			return R.contains(a.modelComponentType, ['actor', 'role']);
+			return R.contains(a.modelComponentType, ['actor']);
 		};
 		return <div>
 			<h2 className='title'>Actors</h2>
