@@ -52,7 +52,7 @@ const DropdownSelectize = React.createClass({
 					<li>
 						<div>
 							<form className='form'>
-								<div className='input-group filter' role='search'>
+								<div className='input-group' role='search'>{/*filter*/}
 									<Selectize
 										type='text'
 										value={state.values.join(',')}

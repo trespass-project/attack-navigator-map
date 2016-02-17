@@ -293,14 +293,12 @@ let PropertiesPanel = React.createClass({
 					if (selectedItem.kbType) {
 						const params = _.merge(
 							{},
-							// api.requestOptions.crossDomain,
 							{
 								url: api.makeUrl(knowledgebaseApi, 'getParameters'),
 								dataType: 'json',
-								data: { type: selectedItem.kbType },
-								crossDomain: true,
-								// xhrFields: {}
-							}
+								data: { type: selectedItem.kbType }
+							},
+							api.requestOptions.crossDomain
 						);
 						$.ajax(params)
 							.success(function(data) {
