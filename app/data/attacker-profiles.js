@@ -52,13 +52,13 @@ const visibilityOptions = [
 
 const options = module.exports.options = [
 	{ name: 'access', options: accessOptions },
-	{ name: 'intent', options: intentOptions },
-	{ name: 'outcomes', options: outcomesOptions, multiple: true },
-	{ name: 'limit', options: limitOptions },
 	{ name: 'resources', options: resourcesOptions },
 	{ name: 'skill', options: skillOptions },
-	{ name: 'objectives', options: objectivesOptions, multiple: true },
 	{ name: 'visibility', options: visibilityOptions },
+	{ name: 'limit', options: limitOptions },
+	{ name: 'intent', options: intentOptions },
+	{ name: 'outcomes', options: outcomesOptions, multiple: true },
+	{ name: 'objectives', options: objectivesOptions, multiple: true },
 ];
 
 
