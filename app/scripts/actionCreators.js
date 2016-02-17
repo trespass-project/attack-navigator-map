@@ -488,6 +488,12 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 			'attackerProfit',
 		], getState().interface);
 
+
+		// generate model xml
+		const model = modelHelpers.modelFromGraph(getState().model.graph);
+		const modelXmlStr = trespassModel.toXML(model);
+		// console.log(modelXmlStr);
+
 		// generate scenario xml
 		const modelFileName = 'model.xml';
 		const scenarioFileName = 'scenario.xml';
@@ -498,13 +504,9 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 		let scenario = trespassModel.createScenario();
 		scenario = trespassModel.scenarioSetModel(scenario, modelFileName);
 		scenario = trespassModel.scenarioSetAssetGoal(scenario, attackerId, assetId, profit);
+		scenario.scenario.id = model.system.id.replace(/-model$/i, '-scenario');
 		const scenarioXmlStr = trespassModel.scenarioToXML(scenario);
 		// console.log(scenarioXmlStr);
-
-		// generate model xml
-		const model = modelHelpers.modelFromGraph(getState().model.graph);
-		const modelXmlStr = trespassModel.toXML(model);
-		// console.log(modelXmlStr);
 
 		// zip it!
 		let zip = new JSZip();
