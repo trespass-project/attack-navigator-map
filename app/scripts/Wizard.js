@@ -259,7 +259,7 @@ let Wizard = React.createClass({
 			<select
 				value={goalValue}
 				onChange={this.setAttackerGoal}
-			>{/*disabled={true}*/}
+			>
 				<option value=''>— select goal —</option>
 				{props.graph.nodes
 					.filter((item) => {
@@ -269,6 +269,18 @@ let Wizard = React.createClass({
 					.map(this.renderGoalOption)
 				}
 			</select>
+			<br/>
+			<input
+				type='number'
+				className='form-control'
+				placeholder='attacker
+				profit'
+				value={props.attackerProfit}
+				onChange={(event) => {
+					const profit = event.target.value;
+					props.dispatch( actionCreators.setAttackerProfit(profit) );
+				}}
+			/>
 			<br/>
 
 			<hr/>
