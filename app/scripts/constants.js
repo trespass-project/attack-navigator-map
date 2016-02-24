@@ -10,8 +10,6 @@ const constants = {
 	MODEL_RELATIONS_LIBRARY: 'relation-lib.json',
 	MODEL_KNOWLEDGEBASE: 'knowledgebase.json',
 
-	// ANALYSIS_TOOLS: 'analysis-tools.json',
-
 	// dnd drop targets
 	DND_TARGET_MAP: 'model-map',
 	DND_TARGET_DEBUG: 'debug-view',

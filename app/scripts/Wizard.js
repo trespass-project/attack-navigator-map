@@ -18,8 +18,6 @@ const Tooltip = require('react-bootstrap').Tooltip;
 
 const AttackerProfileEditor = require('./AttackerProfileEditor/AttackerProfileEditorLanguage.js');
 
-// const analysisTools = require('../data/analysis-tools.js');
-
 // TODO: move API stuff to trespass.js
 const api = require('../../api.js').api;
 const serverPort = require('../../api.js').serverPort;
