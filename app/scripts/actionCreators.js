@@ -515,9 +515,9 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 				url: api.makeUrl(toolsApi, 'secured/tool-chain/'+toolChainId+'/run'),
 				data: formData,
 			},
-			api.requestOptions.crossDomain,
-			api.requestOptions.withCredentials,
-			api.requestOptions.fileUpload
+			api.requestOptions.jquery.crossDomain,
+			api.requestOptions.jquery.withCredentials,
+			api.requestOptions.jquery.fileUpload
 		);
 		const req = $.ajax(params);
 
@@ -538,8 +538,8 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 				// const url = api.makeUrl(toolsApi, 'secured/task/'+taskId);
 				const params = _.merge(
 					{ url, dataType: 'json' },
-					api.requestOptions.crossDomain,
-					api.requestOptions.withCredentials
+					api.requestOptions.jquery.crossDomain,
+					api.requestOptions.jquery.withCredentials
 				);
 				const retryRate = 1000;
 				const intervalId = setInterval(function() {
@@ -612,8 +612,8 @@ function loadToolChains(xmlString) {
 				url: api.makeUrl(toolsApi, 'secured/tool-chain'),
 				// data: data,
 			},
-			api.requestOptions.crossDomain,
-			api.requestOptions.withCredentials
+			api.requestOptions.jquery.crossDomain,
+			api.requestOptions.jquery.withCredentials
 		);
 		const req = $.ajax(params);
 		Q(req)

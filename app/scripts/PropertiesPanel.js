@@ -298,7 +298,7 @@ let PropertiesPanel = React.createClass({
 								dataType: 'json',
 								data: { type: selectedItem.kbType }
 							},
-							api.requestOptions.crossDomain
+							api.requestOptions.jquery.crossDomain
 						);
 						$.ajax(params)
 							.success(function(data) {
