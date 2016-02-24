@@ -466,6 +466,16 @@ function setAttackerGoal(goalType, goalData) {
 };
 
 
+const setAttackerProfit =
+module.exports.setAttackerProfit =
+function setAttackerProfit(profit) {
+	return {
+		type: constants.ACTION_setAttackerProfit,
+		profit
+	};
+};
+
+
 const runAnalysis =
 module.exports.runAnalysis =
 function runAnalysis(toolChainId, downloadScenario=false) {
@@ -474,8 +484,15 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 		const data = R.pick([
 			'attackerProfile',
 			'attackerGoalType',
-			'attackerGoal'
+			'attackerGoal',
+			'attackerProfit',
 		], getState().interface);
+
+
+		// generate model xml
+		const model = modelHelpers.modelFromGraph(getState().model.graph);
+		const modelXmlStr = trespassModel.toXML(model);
+		// console.log(modelXmlStr);
 
 		// generate scenario xml
 		const modelFileName = 'model.xml';
@@ -483,16 +500,13 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 		const zipFileName = 'scenario.zip';
 		const attackerId = data.attackerGoal[data.attackerGoalType].attacker;
 		const assetId = data.attackerGoal[data.attackerGoalType].asset;
+		const profit = data.attackerProfit;
 		let scenario = trespassModel.createScenario();
 		scenario = trespassModel.scenarioSetModel(scenario, modelFileName);
-		scenario = trespassModel.scenarioSetAssetGoal(scenario, attackerId, assetId);
+		scenario = trespassModel.scenarioSetAssetGoal(scenario, attackerId, assetId, profit);
+		scenario.scenario.id = model.system.id.replace(/-model$/i, '-scenario');
 		const scenarioXmlStr = trespassModel.scenarioToXML(scenario);
 		// console.log(scenarioXmlStr);
-
-		// generate model xml
-		const model = modelHelpers.modelFromGraph(getState().model.graph);
-		const modelXmlStr = trespassModel.toXML(model);
-		// console.log(modelXmlStr);
 
 		// zip it!
 		let zip = new JSZip();

@@ -15,8 +15,7 @@ const initialState = {
 		edges: [],
 		groups: [],
 	},
-	model: null,
-	// model: trespass.model.create(),
+	// model: null,
 };
 
 

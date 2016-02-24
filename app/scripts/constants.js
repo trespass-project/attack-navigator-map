@@ -64,6 +64,7 @@ const constants = {
 	ACTION_updateComponentProperties: 'ACTION_updateComponentProperties',
 	ACTION_attackerProfileChanged: 'ACTION_attackerProfileChanged',
 	ACTION_setAttackerGoal: 'ACTION_setAttackerGoal',
+	ACTION_setAttackerProfit: 'ACTION_setAttackerProfit',
 	ACTION_runAnalysis: 'ACTION_runAnalysis',
 	ACTION_loadToolChains: 'ACTION_loadToolChains',
 	ACTION_loadToolChains_DONE: 'ACTION_loadToolChains_DONE',
