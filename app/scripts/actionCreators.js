@@ -8,6 +8,7 @@ const JSZip = require('jszip');
 const trespassModel = require('trespass.js/src/model');
 const api = require('trespass.js/src/apis');
 const toolsApi = api.apis.tools;
+const knowledgebaseApi = api.apis.knowledgebase;
 const constants = require('./constants.js');
 const helpers = require('./helpers.js');
 const modelHelpers = require('./model-helpers.js');
@@ -641,6 +642,31 @@ function loadToolChains(xmlString) {
 				dispatch({
 					type: constants.ACTION_loadToolChains_DONE,
 					toolChains
+				});
+			})
+			.catch(handleError);
+	};
+};
+
+
+const loadAttackerProfiles =
+module.exports.loadAttackerProfiles =
+function loadAttackerProfiles() {
+	return function(dispatch, getState) {
+		dispatch({ type: constants.ACTION_loadAttackerProfiles });
+
+		const url = api.makeUrl(knowledgebaseApi, 'attackerprofile/'); // ← requires trailing '/'
+		const params = _.merge(
+			{ url, dataType: 'json' },
+			api.requestOptions.jquery.crossDomain
+		);
+
+		const req = $.ajax(params);
+		Q(req)
+			.then(function(attackerProfiles) {
+				dispatch({
+					type: constants.ACTION_loadAttackerProfiles_DONE,
+					attackerProfiles
 				});
 			})
 			.catch(handleError);

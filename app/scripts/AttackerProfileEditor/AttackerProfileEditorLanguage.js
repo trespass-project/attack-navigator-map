@@ -6,7 +6,7 @@ const classnames = require('classnames');
 
 const helpers = require('../helpers.js');
 
-const AttackerProfile = require('../AttackerProfileEditor/AttackerProfile.js');
+// const AttackerProfile = require('../AttackerProfileEditor/AttackerProfile.js');
 const attackerProfiles = require('../../data/attacker-profiles.js');
 const profilePresets = attackerProfiles.profiles;
 const profileOptions = attackerProfiles.options;
@@ -122,8 +122,8 @@ let AttackerProfileEditorLanguage = React.createClass({
 					</select>
 				</div>
 				<br />
-				<AttackerProfile profile={props.profile} />
-				<br />
+				{/*<AttackerProfile profile={props.profile} />
+				<br />*/}
 				<div>
 					<span><b>The attacker's</b></span>
 					<ul>
@@ -137,7 +137,9 @@ let AttackerProfileEditorLanguage = React.createClass({
 	handleSelectPreset: function(event) {
 		const preset = helpers.getItemByKey('title', profilePresets, event.target.value);
 		if (!!preset) {
-			this.setState(preset, () => { this.props.handleUpdate(this.state); });
+			this.setState(preset, () => {
+				this.props.handleUpdate(this.state);
+			});
 		}
 	},
 });

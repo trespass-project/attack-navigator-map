@@ -50,6 +50,7 @@ const initialState = {
 
 	// ——————————
 
+	attackerProfiles: [],
 	attackerProfile: null,
 
 	attackerGoalType: null,
@@ -235,6 +236,14 @@ function reducer(state=initialState, action) {
 		case constants.ACTION_loadToolChains_DONE: {
 			const {toolChains} = action;
 			return mergeWithState({toolChains});
+		}
+
+		case constants.ACTION_loadAttackerProfiles: {
+			return state; // noop
+		}
+		case constants.ACTION_loadAttackerProfiles_DONE: {
+			const {attackerProfiles} = action;
+			return mergeWithState({attackerProfiles});
 		}
 
 		default:

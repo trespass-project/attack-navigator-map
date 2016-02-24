@@ -29,6 +29,7 @@ let App = React.createClass({
 		const editorElem = document.querySelector('#editor > svg');
 		props.dispatch( actionCreators.setEditorElem(editorElem) );
 
+		props.dispatch( actionCreators.loadAttackerProfiles() );
 		props.dispatch( actionCreators.loadToolChains() );
 	},
 
