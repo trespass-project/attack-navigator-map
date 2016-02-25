@@ -9,13 +9,13 @@ const helpers = require('./helpers.js');
 const modelHelpers = require('./model-helpers.js');
 const actionCreators = require('./actionCreators.js');
 const constants = require('./constants.js');
+const fakeApi = require('../../api.js');
 const api = require('trespass.js').api;
 const knowledgebaseApi = api.knowledgebase;
 
 
 let PropertiesPanel = React.createClass({
 	propTypes: {
-		relationsLibUrl: React.PropTypes.string.isRequired,
 		id: React.PropTypes.string.isRequired,
 		graph: React.PropTypes.object.isRequired,
 		selected: React.PropTypes.object/*.isRequired*/,
@@ -261,7 +261,7 @@ let PropertiesPanel = React.createClass({
 					</div>;
 				})
 			}
-		</div>
+		</div>;
 	},
 
 	componentDidMount: function() {
@@ -274,8 +274,10 @@ let PropertiesPanel = React.createClass({
 
 			if (graphComponentType === 'edge') {
 				// get relations
+				const {serverDomain, serverPort} = fakeApi;
+				const url = `http://${serverDomain}:${serverPort}${fakeApi.api.relations.url}`;
 				$.ajax({
-					url: props.relationsLibUrl,
+					url,
 					dataType: 'json',
 				}).success(function(data) {
 					that.setState({ relationsLib: data.list });
@@ -315,7 +317,6 @@ let PropertiesPanel = React.createClass({
 					}
 				}
 			}
-
 		}
 	},
 

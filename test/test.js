@@ -259,6 +259,37 @@ describe(f1('model-helpers.js'), function() {
 		});
 	});
 
+	describe(f2('inferEdgeType()'), function() {
+		it(f3('edges between locations should have type "connection"'), function() {
+			const edgeType = modelHelpers.inferEdgeType('location', 'location');
+			assert(edgeType === 'connection');
+		});
+
+		it(f3('edges between items should have type "networkConnection"'), function() {
+			const edgeType = modelHelpers.inferEdgeType('item', 'item');
+			assert(edgeType === 'networkConnection');
+		});
+
+		it(f3('edges between items and locations should have type "atLocation"'), function() {
+			const edgeType = modelHelpers.inferEdgeType('item', 'location');
+			assert(edgeType === 'atLocation');
+		});
+
+		// it(f3('spread operator test'), function() {
+		// 	const edges = [
+		// 		{ type: 'location' },
+		// 		{ type: 'location' },
+		// 	];
+		// 	const edgeType = modelHelpers.inferEdgeType(...(edges.map(R.prop('type'))));
+		// 	assert(edgeType === 'connection');
+		// });
+
+		it(f3('edge types that cannot be inferred should be undefined'), function() {
+			const edgeType = modelHelpers.inferEdgeType('location', 'item');
+			assert(!edgeType);
+		});
+	});
+
 	describe(f2('updateComponentProperties()'), function() {
 		const graph = {
 			nodes: [
@@ -352,9 +383,9 @@ describe(f1('model-helpers.js'), function() {
 		model = trespass.model.addLocation(model, {
 			id: 'location'
 		});
-		let graph = modelHelpers.graphFromModel(model);
+		const {graph, other} = modelHelpers.graphFromModel(model);
 
-		// TODO: more
+		// TODO: test `other`
 
 		it(f3('should create edges'), function() {
 			assert(graph.edges.length === 1);

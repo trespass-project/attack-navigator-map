@@ -1,16 +1,19 @@
 'use strict';
 
-let $ = require('jquery');
-let React = require('react');
-let helpers = require('./helpers.js');
-let actionCreators = require('./actionCreators.js');
+const $ = require('jquery');
+const React = require('react');
+const helpers = require('./helpers.js');
+const actionCreators = require('./actionCreators.js');
 
 
-let SchleppManagerMixin = {
+const SchleppManagerMixin = {
 	componentDidMount: function() {
 		let that = this;
 
-		let $body = $('body');
+		let elem = helpers.getElemByRef(this, 'dragRoot');
+		let $elem = $(elem);
+
+		const $body = $('body'); // TODO: move this elsewhere
 		$body.on('keydown', function(event) {
 			if (event.keyCode === 32) {
 				if (that.props.mouseOverEditor) {
@@ -34,49 +37,13 @@ let SchleppManagerMixin = {
 			}
 		});
 
-		let elem = helpers.getElemByRef(this, 'dragRoot');
-		let $elem = $(elem);
-		$elem.on('mousemove', function(event) {
-			event.preventDefault();
-			event.stopPropagation();
-
-			that.props.dispatch( actionCreators.setMouseOverEditor(true) );
-
-			if (that.props.drag) {
-				(that.props.drag.onMove || helpers.noop)(event);
-			}
-		});
-
-		$elem.on('mouseleave', function(event) {
-			event.preventDefault();
-			event.stopPropagation();
-			that.props.dispatch( actionCreators.setMouseOverEditor(false) );
-		});
-
-		$elem.on('mouseup', function(event) {
-			event.preventDefault();
-			event.stopPropagation();
-			if (that.props.drag) {
-				(that.props.drag.onEnd || helpers.noop)(event);
-			}
-			that.props.dispatch( actionCreators.setDrag(null) );
-			that.props.dispatch( actionCreators.setPanning(false) );
-		});
 	},
 
 	componentWillUnmount: function() {
-		let $body = $('body');
+		const $body = $('body');
 		$body
 			.off('keydown')
 			.off('keyup');
-
-		let elem = helpers.getElemByRef(this, 'dragRoot');
-		let $elem = $(elem);
-		$elem
-			.off('mousedown')
-			.off('mousemove')
-			.off('mouseleave')
-			.off('mouseup');
 	}
 };
 

@@ -1,17 +1,18 @@
 'use strict';
-let React = require('react');
-let _ = require('lodash');
-let classnames = require('classnames');
-let helpers = require('./helpers.js');
 
-let ContextMenu = require('./ContextMenu.js');
-let BackgroundImage = require('./BackgroundImage.js');
-let Group = require('./Group.js');
-let Node = require('./Node.js');
-let Edge = require('./Edge.js');
+const React = require('react');
+const _ = require('lodash');
+const classnames = require('classnames');
+const helpers = require('./helpers.js');
+
+const ContextMenu = require('./ContextMenu.js');
+const BackgroundImage = require('./BackgroundImage.js');
+const Group = require('./Group.js');
+const Node = require('./Node.js');
+const Edge = require('./Edge.js');
 
 
-let GraphMixin = {
+const GraphMixin = {
 	propTypes: {
 		graph: React.PropTypes.object.isRequired,
 		editable: React.PropTypes.bool.isRequired,
@@ -178,6 +179,9 @@ let GraphMixin = {
 					ref='dragRoot'
 					className={classNames}
 					onContextMenu={this._onContextMenu || helpers.noop}
+					onMouseMove={this._onMouseMove || helpers.noop}
+					onMouseLeave={this._onMouseLeave || helpers.noop}
+					onMouseUp={this._onMouseUp || helpers.noop}
 					onWheel={this._onWheel || helpers.noop}
 					onClick={this._onClick || helpers.noop}
 				>

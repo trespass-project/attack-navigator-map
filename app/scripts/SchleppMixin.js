@@ -1,19 +1,20 @@
 'use strict';
 
-let $ = require('jquery');
-let React = require('react');
-let helpers = require('./helpers.js');
-let actionCreators = require('./actionCreators.js');
+const $ = require('jquery');
+const React = require('react');
+const helpers = require('./helpers.js');
+const actionCreators = require('./actionCreators.js');
 
 
-let SchleppMixin = {
+const SchleppMixin = {
 	componentDidMount: function() {
 		let that = this;
 
-		let elem = helpers.getElemByRef(this, 'dragRoot');
-		let $elem = $(elem);
+		const elem = helpers.getElemByRef(this, 'dragRoot');
+		const $elem = $(elem);
 
-		let lastX, lastY;
+		let lastX;
+		let lastY;
 
 		$elem.on('mousedown', function(event) {
 			event.preventDefault();
@@ -30,10 +31,10 @@ let SchleppMixin = {
 			// 	}
 			// }
 
-			lastX = event.offsetX;
-			lastY = event.offsetY;
-			event.deltaX = 0;
-			event.deltaY = 0;
+			lastX = event.clientX;
+			lastY = event.clientY;
+			event._deltaX = 0;
+			event._deltaY = 0;
 
 			(that._onDragStart || helpers.noop)(event);
 
@@ -41,8 +42,8 @@ let SchleppMixin = {
 				actionCreators.setDrag({
 					elem,
 					onMove: function(event) {
-						event.deltaX = event.offsetX - lastX;
-						event.deltaY = event.offsetY - lastY;
+						event._deltaX = event.clientX - lastX;
+						event._deltaY = event.clientY - lastY;
 						(that._onDragMove || helpers.noop)(event);
 					},
 					onEnd: function(event) {
@@ -54,12 +55,10 @@ let SchleppMixin = {
 	},
 
 	componentWillUnmount: function() {
-		let elem = helpers.getElemByRef(this, 'dragRoot');
-		let $elem = $(elem);
+		const elem = helpers.getElemByRef(this, 'dragRoot');
+		const $elem = $(elem);
 		$elem
-			.off('mousedown')
-			.off('mousemove')
-			.off('mouseup');
+			.off('mousedown');
 	}
 };
 

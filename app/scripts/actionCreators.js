@@ -376,11 +376,11 @@ function loadXML(xmlString) {
 			xml: xmlString,
 		});
 
-		modelHelpers.XMLModelToGraph(xmlString, function(err, graph) {
+		modelHelpers.XMLModelToGraph(xmlString, function(err, graph, other) {
 			if (err) { return; }
 			dispatch({
 				type: constants.ACTION_loadXML_DONE,
-				graph
+				graph, other
 			});
 		});
 	};

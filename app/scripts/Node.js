@@ -17,7 +17,7 @@ const typeIcons = {
 	data: 'fa-file-o',
 	item: 'fa-laptop',
 	actor: 'fa-male',
-	role: 'fa-user',
+	// role: 'fa-user',
 	predicate: 'fa-tags',
 	process: 'fa-gears',
 	policy: 'fa-ban',
@@ -188,8 +188,8 @@ let Node = React.createClass({
 		this.modelXYEventOrigin = helpers.unTransformFromTo(
 			props.editorElem,
 			props.editorTransformElem,
-			{ x: event.offsetX,
-			  y: event.offsetY }
+			{ x: event.clientX,
+			  y: event.clientY }
 		);
 	},
 
@@ -200,8 +200,8 @@ let Node = React.createClass({
 		const modelXYEvent = helpers.unTransformFromTo(
 			props.editorElem,
 			props.editorTransformElem,
-			{ x: event.offsetX,
-			  y: event.offsetY }
+			{ x: event.clientX,
+			  y: event.clientY }
 		);
 
 		const modelXYDelta = {

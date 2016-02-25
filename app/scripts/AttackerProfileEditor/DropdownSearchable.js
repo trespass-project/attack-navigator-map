@@ -12,6 +12,7 @@ const DropdownSearchable = React.createClass({
 		title: React.PropTypes.string.isRequired,
 		name: React.PropTypes.string.isRequired,
 		searchable: React.PropTypes.bool,
+		searchPlaceholder: React.PropTypes.string.isRequired,
 		items: React.PropTypes.array.isRequired,
 		displayAttribute: React.PropTypes.string,
 		valueAttribute: React.PropTypes.string,
@@ -21,6 +22,7 @@ const DropdownSearchable = React.createClass({
 	getDefaultProps: function() {
 		return {
 			searchable: true,
+			searchPlaceholder: 'search',
 			handleSelection: function() {}
 		};
 	},
@@ -47,6 +49,8 @@ const DropdownSearchable = React.createClass({
 	},
 
 	renderSearch: function() {
+		const props = this.props;
+
 		return (
 			<div>
 				<form className='form'>
@@ -57,14 +61,10 @@ const DropdownSearchable = React.createClass({
 							onKeyDown={this.handleKeyDown}
 							value={this.state.query}
 							type='search'
-							placeholder='search'
+							placeholder={props.searchPlaceholder}
 						/>
-						{/*<div className='input-group-addon'>
-							<span className='glyphicon glyphicon-search'></span>
-						</div>*/}
 					</div>
 				</form>
-				{/*common.divider*/ null}
 			</div>
 		);
 	},
@@ -91,7 +91,7 @@ const DropdownSearchable = React.createClass({
 		return (
 			<span className='dropdown'>
 				<a href='#' data-toggle='dropdown' className='dropdown-toggle'>
-					{props[props.displayAttribute]}{common.caret}
+					{props.title}{common.caret}
 				</a>
 				<ul role='menu' className='dropdown-menu'>
 					{(props.searchable)

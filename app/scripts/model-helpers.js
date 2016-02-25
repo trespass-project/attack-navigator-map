@@ -1,10 +1,10 @@
 'use strict';
 
-let _ = require('lodash');
-let R = require('ramda');
-let properCase = require('mout/string/properCase');
-let trespass = require('trespass.js');
-let helpers = require('./helpers.js');
+const _ = require('lodash');
+const R = require('ramda');
+const properCase = require('mout/string/properCase');
+const trespass = require('trespass.js');
+const helpers = require('./helpers.js');
 const constants = require('./constants.js');
 
 
@@ -16,13 +16,16 @@ const modelComponentsSingular =
 module.exports.modelComponentsSingular =
 trespass.model.collectionNameSingular;
 
-const nondirectedRelationTypes =
-module.exports.nondirectedRelationTypes =
+const nonDirectedRelationTypes =
+module.exports.nonDirectedRelationTypes =
 ['network', 'connects'];
 
+const nonGraphModelComponents =
+module.exports.nonGraphModelComponents =
+['predicates', 'policies', 'processes'];
 
 
-let importModelFragment =
+const importModelFragment =
 module.exports.importModelFragment =
 function importModelFragment(currentGraph, fragment, xy={ x: 0, y: 0 }) {
 	let graph = _.merge({}, currentGraph);
@@ -49,7 +52,7 @@ function importModelFragment(currentGraph, fragment, xy={ x: 0, y: 0 }) {
 };
 
 
-let prepareFragment =
+const prepareFragment =
 module.exports.prepareFragment =
 function prepareFragment(fragment) {
 	// let fragment = _.merge({}, fragment);
@@ -85,7 +88,7 @@ function prepareFragment(fragment) {
 };
 
 
-let XMLModelToGraph =
+const XMLModelToGraph =
 module.exports.XMLModelToGraph =
 function XMLModelToGraph(xmlStr, done) {
 	// TODO: write test
@@ -93,7 +96,7 @@ function XMLModelToGraph(xmlStr, done) {
 	trespass.model.parse(xmlStr, function(err, model) {
 		if (err) { return done(err); }
 
-		const graph = graphFromModel(model);
+		const {graph, other} = graphFromModel(model);
 
 		let colCounter = 0;
 		let rowCounter = 0;
@@ -106,61 +109,57 @@ function XMLModelToGraph(xmlStr, done) {
 		let groupIndex = -1;
 
 		// create groups for the different types
-		modelComponents.forEach(function(collectionName) {
-			// TODO: don't use `model` here,
-			// use graph.nodes
-			const coll = model.system[collectionName] || [];
-			if (!coll.length) {
-				return;
-			}
+		modelComponents
+			.forEach((collectionName) => {
+				const selection = graph.nodes
+					.filter((node) => {
+						return (node.modelComponentType === modelComponentsSingular[collectionName]);
+					});
 
-			let group = {
-				name: collectionName,
-				id: helpers.makeId('group'),
-				nodeIds: []
-			};
-			groupIndex++;
-
-			coll.forEach(function(item) {
-				group.nodeIds.push(item.id);
-
-				let node = helpers.getItemById(graph.nodes, item.id);
-				if (!node) {
-					console.error(`node not found, id: ${item.id}`);
+				if (!selection.length) {
+					return;
 				}
 
-				// basic auto-layout
-				if (rowCounter > maxNodesPerCol || lastGroupIndex !== groupIndex) {
-					if (lastGroupIndex !== groupIndex) {
-						lastGroupIndex = groupIndex;
-						isShifted = true;
-						xOffset += spacing / 2;
-					} else {
-						isShifted = !isShifted;
+				let group = {
+					name: collectionName,
+					id: helpers.makeId('group'),
+					nodeIds: []
+				};
+				groupIndex++;
+
+				selection.forEach(function(node) {
+					group.nodeIds.push(node.id);
+
+					// basic auto-layout
+					if (rowCounter > maxNodesPerCol || lastGroupIndex !== groupIndex) {
+						if (lastGroupIndex !== groupIndex) {
+							lastGroupIndex = groupIndex;
+							isShifted = true;
+							xOffset += spacing / 2;
+						} else {
+							isShifted = !isShifted;
+						}
+
+						rowCounter = 0;
+						colCounter++;
 					}
-
-					rowCounter = 0;
-					colCounter++;
+					node.label = node.id;
+					node.modelComponentType = modelComponentsSingular[collectionName];
+					node.x = xOffset + colCounter * spacing;
+					node.y = yOffset + rowCounter * spacing + ((isShifted) ? 0 : 20);
+					rowCounter++;
+				});
+				if (group.nodeIds.length) {
+					graph.groups.push(group);
 				}
-				node.label = item.id;
-				node.modelComponentType = modelComponentsSingular[collectionName];
-				node.x = xOffset + colCounter * spacing;
-				node.y = yOffset + rowCounter * spacing + ((isShifted) ? 0 : 20);
-				rowCounter++;
 			});
-			if (group.nodeIds.length) {
-				graph.groups.push(group);
-			}
-		});
 
-		// TODO: refine, generalize, ...
-
-		done(null, graph);
+		done(null, graph, other);
 	});
 };
 
 
-let downloadAsXML =
+const downloadAsXML =
 module.exports.downloadAsXML =
 function downloadAsXML(model, filename) {
 	const xml = trespass.model.toXML(model);
@@ -176,14 +175,14 @@ function downloadAsXML(model, filename) {
 };
 
 
-let modelAsFragment =
+const modelAsFragment =
 module.exports.modelAsFragment =
 function modelAsFragment(model) {
 	return R.pick(modelComponents, model.system);
 };
 
 
-let graphFromModel =
+const graphFromModel =
 module.exports.graphFromModel =
 function graphFromModel(model) {
 	let graph = {
@@ -193,25 +192,53 @@ function graphFromModel(model) {
 	};
 
 	// for each edge in model, create edge in graph
-	graph.edges = model.system.edges.map(function(edge) {
-		return {
-			from: edge.source,
-			to: edge.target,
-			directed: edge.directed
-		};
-	});
+	graph.edges = model.system.edges
+		.map(function(edge) {
+			return {
+				from: edge.source,
+				to: edge.target,
+				directed: edge.directed
+			};
+		});
 
-	R.without(['edges'], modelComponents).forEach(function(key) {
-		const coll = model.system[key];
-		graph.nodes = R.concat(graph.nodes, coll);
-	});
+	// set model component type
+	R.without(['edges'], modelComponents)
+		.forEach((collectionName) => {
+			model.system[collectionName]
+				.forEach((item) => {
+					item.modelComponentType = modelComponentsSingular[collectionName];
+				});
+		});
 
-	// TODO: anything missing?
-	return graph;
+	R.without(R.concat(['edges'], nonGraphModelComponents), modelComponents)
+		.forEach(function(collectionName) {
+			const coll = model.system[collectionName];
+			graph.nodes = R.concat(graph.nodes, coll);
+		});
+
+	let other = nonGraphModelComponents
+		.reduce((result, collectionName) => {
+			result[collectionName] = model.system[collectionName];
+			return result;
+		}, {});
+
+	// predicates
+	other.predicates = other.predicates
+		.reduce((result, item) => {
+			item.value.forEach((value) => {
+				result.push({
+					id: item.id,
+					value
+				});
+			});
+			return result;
+		}, []);
+
+	return {graph, other};
 };
 
 
-let modelFromGraph =
+const modelFromGraph =
 module.exports.modelFromGraph =
 function modelFromGraph(graph) {
 	let model = trespass.model.create();
@@ -255,7 +282,7 @@ function modelFromGraph(graph) {
 };
 
 
-let removeGroup =
+const removeGroup =
 module.exports.removeGroup =
 function removeGroup(graph, groupId, removeNodes=false) {
 	graph.groups = graph.groups
@@ -273,7 +300,7 @@ function removeGroup(graph, groupId, removeNodes=false) {
 };
 
 
-let createNode =
+const createNode =
 module.exports.createNode =
 function createNode(node={}, keepId=false) {
 	const id = (keepId === true && node.id)
@@ -286,7 +313,7 @@ function createNode(node={}, keepId=false) {
 	});
 };
 
-let createEdge = // TODO: test
+const createEdge = // TODO: test
 module.exports.createEdge =
 function createEdge(edge={}, keepId=false) {
 	const id = (keepId === true && edge.id)
@@ -295,7 +322,7 @@ function createEdge(edge={}, keepId=false) {
 	return _.merge({}, edge, { id });
 };
 
-let createGroup = // TODO: test
+const createGroup = // TODO: test
 module.exports.createGroup =
 function createGroup(group={}, keepId=false) {
 	const id = (keepId === true && group.id)
@@ -307,7 +334,7 @@ function createGroup(group={}, keepId=false) {
 };
 
 
-let cloneNode =
+const cloneNode =
 module.exports.cloneNode =
 function cloneNode(graph, origNode) {
 	// duplicate node
@@ -354,7 +381,7 @@ function cloneNode(graph, origNode) {
 };
 
 
-let replaceIdInEdge =
+const replaceIdInEdge =
 module.exports.replaceIdInEdge =
 function replaceIdInEdge(_edge, oldId, newId) {
 	let edge = _.merge({}, _edge);
@@ -368,7 +395,7 @@ function replaceIdInEdge(_edge, oldId, newId) {
 };
 
 
-let cloneGroup =
+const cloneGroup =
 module.exports.cloneGroup =
 function cloneGroup(graph, groupId) {
 	let origGroup = helpers.getItemById(graph.groups, groupId);
@@ -432,7 +459,7 @@ function cloneGroup(graph, groupId) {
 };
 
 
-let addNode = // TODO: test
+const addNode = // TODO: test
 module.exports.addNode =
 function addNode(graph, node) {
 	node = _.defaults(node, { // TODO: createNode
@@ -444,7 +471,7 @@ function addNode(graph, node) {
 };
 
 
-let addNodeToGroup =
+const addNodeToGroup =
 module.exports.addNodeToGroup =
 function addNodeToGroup(graph, nodeId, groupId) {
 	let group = helpers.getItemById(graph.groups, groupId);
@@ -454,7 +481,7 @@ function addNodeToGroup(graph, nodeId, groupId) {
 };
 
 
-let getNodeGroups =
+const getNodeGroups =
 module.exports.getNodeGroups =
 function getNodeGroups(nodeId, groups) {
 	return groups.filter(function(group) {
@@ -463,7 +490,7 @@ function getNodeGroups(nodeId, groups) {
 };
 
 
-let getEdgeNodes =
+const getEdgeNodes =
 module.exports.getEdgeNodes =
 function getEdgeNodes(edge, nodes) {
 	const edgeNodes = {
@@ -474,7 +501,24 @@ function getEdgeNodes(edge, nodes) {
 };
 
 
-let removeNode =
+const inferEdgeType =
+module.exports.inferEdgeType =
+function inferEdgeType(fromType, toType) {
+	if (fromType === 'location' && toType === 'location') {
+		return 'connection';
+		// TODO: or should it return all possible options, like
+		// ['connection', 'isContainedIn']? (directed-ness could play a role)
+	} else if (fromType === 'item' && toType === 'item') {
+		return 'networkConnection';
+	} else if (fromType === 'item' && toType === 'location') { // TODO: is that always the case?
+		return 'atLocation';
+	} else {
+		return undefined;
+	}
+};
+
+
+const removeNode =
 module.exports.removeNode =
 function removeNode(graph, nodeId) {
 	// remove node
@@ -501,7 +545,7 @@ function removeNode(graph, nodeId) {
 };
 
 
-let updateComponentProperties =
+const updateComponentProperties =
 module.exports.updateComponentProperties =
 function updateComponentProperties(graph, graphComponentType, componentId, newProperties) {
 	let list = {
@@ -514,7 +558,7 @@ function updateComponentProperties(graph, graphComponentType, componentId, newPr
 		if (item.id === componentId) {
 			if (graphComponentType === 'edge') {
 				newProperties.directed = // TODO: should this be here, or should Edge know how to draw different relations
-					(R.contains((newProperties.relation || item.relation), nondirectedRelationTypes))
+					(R.contains((newProperties.relation || item.relation), nonDirectedRelationTypes))
 						? false
 						: true;
 			}

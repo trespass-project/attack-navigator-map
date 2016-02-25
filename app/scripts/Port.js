@@ -64,8 +64,8 @@ let Port = React.createClass({
 		const modelXYEvent = helpers.unTransformFromTo(
 			props.editorElem,
 			props.editorTransformElem,
-			{ x: event.offsetX,
-			  y: event.offsetY }
+			{ x: event.clientX,
+			  y: event.clientY }
 		);
 
 		props.dispatch(

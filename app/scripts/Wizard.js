@@ -16,7 +16,10 @@ const Loader = require('react-loader');
 const OverlayTrigger = require('react-bootstrap').OverlayTrigger;
 const Tooltip = require('react-bootstrap').Tooltip;
 
+const PredicateEditor = require('./PredicateEditor.js');
 const AttackerProfileEditor = require('./AttackerProfileEditor/AttackerProfileEditorLanguage.js');
+
+const predicatesLib = require('../data/predicate-lib.json');
 
 // TODO: move API stuff to trespass.js
 const api = require('../../api.js').api;
@@ -101,7 +104,6 @@ let Wizard = React.createClass({
 			selected={props.selected}
 			graph={props.graph}
 			dispatch={props.dispatch}
-			relationsLibUrl={apiUrl(api.relations.url)}
 		/>;
 	},
 
@@ -165,7 +167,7 @@ let Wizard = React.createClass({
 
 	renderActors: function(props) {
 		const filterFn = function(a) {
-			return R.contains(a.modelComponentType, ['actor', 'role']);
+			return R.contains(a.modelComponentType, ['actor']);
 		};
 		return <div>
 			<h2 className='title'>Actors</h2>
@@ -189,6 +191,12 @@ let Wizard = React.createClass({
 	renderConnections: function(props) {
 		return <div>
 			<h2 className='title'>Connections</h2>
+			<PredicateEditor
+				dispatch={props.dispatch}
+				allNames={props.allNodeNames}
+				predicatesLib={props.predicatesLib || predicatesLib}
+				predicates={props.predicates}
+			/>
 		</div>;
 	},
 
@@ -283,7 +291,9 @@ let Wizard = React.createClass({
 			}}>
 				<div>
 					<input type='checkbox' name='checkbox-dl-scenario' ref='checkbox-dl-scenario' />&nbsp;
-					<label style={{ fontWeight: 'normal' }} htmlFor='checkbox-dl-scenario'>Download scenario file(s)</label>
+					<label style={{ fontWeight: 'normal' }} htmlFor='checkbox-dl-scenario'>
+						Download scenario file(s)
+					</label>
 				</div>
 				<button
 					disabled={!readyToRun}
