@@ -140,25 +140,29 @@ function isRectInsideRect(r1, r2) {
 
 let areAttackerProfilesEqual = module.exports.areAttackerProfilesEqual =
 function areAttackerProfilesEqual(p1, p2) {
-	const outcomes1 = (p1.outcomes || []);
-	const outcomes2 = (p2.outcomes || []);
-	const objectives1 = (p1.objectives || []);
-	const objectives2 = (p2.objectives || []);
+	// const outcomes1 = (p1.outcomes || []);
+	// const outcomes2 = (p2.outcomes || []);
+	// const objectives1 = (p1.objectives || []);
+	// const objectives2 = (p2.objectives || []);
 
-	return (p1.intent === p2.intent) &&
-		(p1.access === p2.access) &&
+	// return (p1.intent === p2.intent) &&
+	// 	(p1.access === p2.access) &&
 
-		(R.intersection(outcomes1, outcomes2).length === outcomes1.length) &&
-		(outcomes1.length === outcomes2.length) &&
+	// 	(R.intersection(outcomes1, outcomes2).length === outcomes1.length) &&
+	// 	(outcomes1.length === outcomes2.length) &&
 
-		(p1.limit === p2.limit) &&
-		(p1.resources === p2.resources) &&
-		(p1.skills === p2.skills) &&
+	// 	(p1.limit === p2.limit) &&
+	// 	(p1.resources === p2.resources) &&
+	// 	(p1.skills === p2.skills) &&
 
-		(R.intersection(objectives1, objectives2).length === objectives1.length) &&
-		(objectives1.length === objectives2.length) &&
+	// 	(R.intersection(objectives1, objectives2).length === objectives1.length) &&
+	// 	(objectives1.length === objectives2.length) &&
 
-		(p1.visibility === p2.visibility);
+	// 	(p1.visibility === p2.visibility);
+
+	return (p1.budget === p2.budget) &&
+		(p1.time === p2.time) &&
+		(p1.skill === p2.skill);
 };
 
 
