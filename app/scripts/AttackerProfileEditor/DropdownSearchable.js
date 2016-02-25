@@ -7,7 +7,7 @@ const MenuItem = require('react-bootstrap').MenuItem;
 const common = require('./dropdown-common.js');
 
 
-let DropdownSearchable = React.createClass({
+const DropdownSearchable = React.createClass({
 	propTypes: {
 		title: React.PropTypes.string.isRequired,
 		name: React.PropTypes.string.isRequired,
@@ -38,9 +38,10 @@ let DropdownSearchable = React.createClass({
 
 		return (
 			<MenuItem
-				onSelect={R.partial(this.handleSelection, [item[props.displayAttribute]])}
+				onSelect={R.partial(this.handleSelection, [item[props.valueAttribute]])}
 				eventKey={item[props.valueAttribute]}
-				key={index}>{item[props.displayAttribute]}
+				key={index}>
+				{item[props.displayAttribute]}
 			</MenuItem>
 		);
 	},
@@ -75,7 +76,7 @@ let DropdownSearchable = React.createClass({
 	},
 
 	render: function() {
-		let state = this.state;
+		const state = this.state;
 		const props = this.props;
 
 		const re = new RegExp(state.query, 'ig');

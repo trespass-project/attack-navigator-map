@@ -18,11 +18,10 @@ const displayAttribute = 'title';
 const valueAttribute = 'value';
 
 
-function getClassName(list, value) {
+function getClassName(option, value) {
 	if (!value) { return ''; }
-	const result = R.find(R.propEq(valueAttribute, value))(list);
-	return (!!result)
-		? result.className
+	return (!!option)
+		? option.className
 		: '';
 }
 
@@ -63,17 +62,25 @@ let AttackerProfileEditorLanguage = React.createClass({
 	},
 
 	renderItem: function(item, index) {
-		let state = this.state;
+		const state = this.state;
 
-		const label = (!state[item.name])
-			? state[item.name] || `[${item.name}]`
+		const valueEquals = R.propEq(valueAttribute);
+		const value = state[item.name];
+		const option = R.find(valueEquals(value))(item.options);
+
+		// set default label, if there is no value
+		const label = (!value)
+			? `[${item.name}]`
 			: (item.multiple)
-				? (state[item.name] || []).join(', ')
-				: state[item.name];
+				// multiple values
+				? (value || []).join(', ') // TODO: show displayAttribute here, too
+				// single value
+				: option[displayAttribute];
+
 
 		const barClasses = classnames(
 			'bar',
-			getClassName(item.options, state[item.name])
+			getClassName(option, value)
 		);
 
 		return <li key={'li-'+item.name}>
@@ -83,7 +90,7 @@ let AttackerProfileEditorLanguage = React.createClass({
 				? <DropdownSelectize
 					name={item.name}
 					title={label}
-					value={state[item.name]}
+					value={value}
 					items={item.options}
 					displayAttribute={displayAttribute}
 					valueAttribute={valueAttribute}
@@ -92,7 +99,7 @@ let AttackerProfileEditorLanguage = React.createClass({
 				: <DropdownSearchable
 					name={item.name}
 					title={label}
-					value={state[item.name]}
+					value={value}
 					searchable={false}
 					items={item.options}
 					displayAttribute={displayAttribute}
