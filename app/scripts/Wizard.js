@@ -232,18 +232,10 @@ let Wizard = React.createClass({
 
 			<hr/>
 
-			{/*<h3>Tool</h3>
-			<select>
-				{R.values(analysisTools)
-					.map(function(tool) {
-						return <option key={tool.name} value={tool.id}>{tool.name}</option>;
-					})
-				}
-			</select>*/}
 			<h3>Tool chains</h3>
 			<select ref='toolchain'>
 				{props.toolChains
-					.map(function(chain) {
+					.map((chain) => {
 						return <option
 							key={chain.id}
 							value={chain.id}>
