@@ -655,7 +655,7 @@ function loadAttackerProfiles() {
 	return function(dispatch, getState) {
 		dispatch({ type: constants.ACTION_loadAttackerProfiles });
 
-		const url = api.makeUrl(knowledgebaseApi, 'attackerprofile/'); // ← requires trailing '/'
+		const url = api.makeUrl(knowledgebaseApi, 'attackerprofile');
 		const params = _.merge(
 			{ url, dataType: 'json' },
 			api.requestOptions.jquery.crossDomain
