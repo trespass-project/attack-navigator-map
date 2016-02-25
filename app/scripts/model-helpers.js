@@ -31,7 +31,7 @@ function importModelFragment(currentGraph, fragment, xy={ x: 0, y: 0 }) {
 	let graph = _.merge({}, currentGraph);
 
 	const nodes = (fragment.nodes || [])
-		.map(function(node, index) {
+		.map((node, index) => {
 			return createNode(
 				_.merge({}, node, {
 					x: xy.x + (node.x || index * 60),
@@ -57,7 +57,7 @@ module.exports.prepareFragment =
 function prepareFragment(fragment) {
 	// let fragment = _.merge({}, fragment);
 
-	(fragment.nodes || []).forEach(function(node, index) {
+	(fragment.nodes || []).forEach((node, index) => {
 		// TODO: id should be optional
 		const oldId = node.id;
 
@@ -66,15 +66,15 @@ function prepareFragment(fragment) {
 
 		// rename existing ids in edges and groups
 		if (oldId) {
-			fragment.edges = (fragment.edges || []).map(function(_edge) {
+			fragment.edges = (fragment.edges || []).map((_edge) => {
 				let edge = createEdge(_edge); // new id
 				edge = replaceIdInEdge(edge, oldId, node.id);
 				return edge;
 			});
 
-			fragment.groups = (fragment.groups || []).map(function(_group) {
+			fragment.groups = (fragment.groups || []).map((_group) => {
 				let group = createGroup(_group); // new id
-				group.nodeIds = (group.nodeIds || []).map(function(nodeId) {
+				group.nodeIds = (group.nodeIds || []).map((nodeId) => {
 					return (nodeId === oldId)
 						? node.id
 						: nodeId;
@@ -93,7 +93,7 @@ module.exports.XMLModelToGraph =
 function XMLModelToGraph(xmlStr, done) {
 	// TODO: write test
 
-	trespass.model.parse(xmlStr, function(err, model) {
+	trespass.model.parse(xmlStr, (err, model) => {
 		if (err) { return done(err); }
 
 		const {graph, other} = graphFromModel(model);
@@ -249,7 +249,7 @@ function modelFromGraph(graph) {
 	// system needs an id
 	model.system.id = model.system.id || helpers.makeId('model');
 
-	(graph.edges || []).forEach(function(edge) {
+	(graph.edges || []).forEach((edge) => {
 		trespass.model.addEdge(model, {
 			source: edge.from,
 			target: edge.to,
@@ -257,7 +257,7 @@ function modelFromGraph(graph) {
 		});
 	});
 
-	(graph.nodes || []).forEach(function(node) {
+	(graph.nodes || []).forEach((node) => {
 		const type = node.modelComponentType;
 		const fnName = 'add' + properCase(type);
 		const addFn = trespass.model[fnName];
@@ -286,11 +286,11 @@ const removeGroup =
 module.exports.removeGroup =
 function removeGroup(graph, groupId, removeNodes=false) {
 	graph.groups = graph.groups
-		.filter(function(group) {
+		.filter((group) => {
 			const keep = (groupId != group.id);
 			if (!keep && removeNodes) {
 				// remove nodes
-				group.nodeIds.forEach(function(nodeId) {
+				group.nodeIds.forEach((nodeId) => {
 					removeNode(graph, nodeId);
 				});
 			}
@@ -339,10 +339,10 @@ module.exports.cloneNode =
 function cloneNode(graph, origNode) {
 	// duplicate node
 	const nodes = [origNode] // new id + offset
-		.map(function(node) {
+		.map((node) => {
 			return createNode(node);
 		})
-		.map(function(node) {
+		.map((node) => {
 			return _.merge({}, node, {
 				x: node.x + constants.CLONE_OFFSET,
 				y: node.y + constants.CLONE_OFFSET,
@@ -353,11 +353,11 @@ function cloneNode(graph, origNode) {
 	// also duplicate any existing edges
 	const edges = graph.edges
 		// find edges to / from original node
-		.filter(function(edge) {
+		.filter((edge) => {
 			return R.contains(edge.from, [origNode.id]) || R.contains(edge.to, [origNode.id]);
 		})
 		// change reference to new node
-		.map(function(_edge) {
+		.map((_edge) => {
 			let edge = createEdge(_edge);
 			if (edge.from === origNode.id) { edge.from = newNode.id; }
 			if (edge.to === origNode.id) { edge.to = newNode.id; }
@@ -366,7 +366,7 @@ function cloneNode(graph, origNode) {
 
 	// if node is in a group, so is the clone
 	let groups = getNodeGroups(origNode.id, graph.groups);
-	groups.forEach(function(group) {
+	groups.forEach((group) => {
 		group.nodeIds.push(newNode.id);
 	});
 
@@ -409,14 +409,14 @@ function cloneGroup(graph, groupId) {
 
 	const origGroupIds = group.nodeIds;
 	const origGroupNodes = group.nodeIds
-		.map(function(nodeId) {
+		.map((nodeId) => {
 			// all nodes referenced in group
 			return helpers.getItemById(graph.nodes, nodeId);
 		});
 
 	let mapOldToNewNodeId = {};
 	const nodes = origGroupNodes
-		.map(function(node) {
+		.map((node) => {
 			const newNode = createNode(node);
 			mapOldToNewNodeId[node.id] = newNode.id;
 			return newNode;
@@ -425,12 +425,12 @@ function cloneGroup(graph, groupId) {
 	group.nodeIds = nodeIds;
 
 	const edges = graph.edges
-		.filter(function(edge) {
+		.filter((edge) => {
 			// of all edges return only those, where `from` and `to` are in original group
 			return R.contains(edge.from, origGroupIds) ||
 				R.contains(edge.to, origGroupIds);
 		})
-		.map(function(edge) {
+		.map((edge) => {
 			if (mapOldToNewNodeId[edge.from]) {
 				edge = replaceIdInEdge(edge, edge.from, mapOldToNewNodeId[edge.from]);
 			}
@@ -484,7 +484,7 @@ function addNodeToGroup(graph, nodeId, groupId) {
 const getNodeGroups =
 module.exports.getNodeGroups =
 function getNodeGroups(nodeId, groups) {
-	return groups.filter(function(group) {
+	return groups.filter((group) => {
 		return R.contains(nodeId, group.nodeIds);
 	});
 };
@@ -523,21 +523,21 @@ module.exports.removeNode =
 function removeNode(graph, nodeId) {
 	// remove node
 	graph.nodes = graph.nodes
-		.filter(function(node) {
+		.filter((node) => {
 			return nodeId !== node.id;
 		});
 
 	// and also all edges connected to it
 	graph.edges = graph.edges
-		.filter(function(edge) {
+		.filter((edge) => {
 			return (edge.from !== nodeId) && (edge.to !== nodeId);
 		});
 
 	// remove from groups
 	graph.groups
-		.forEach(function(group) {
+		.forEach((group) => {
 			group.nodeIds = group.nodeIds
-				.filter(function(groupNodeId) {
+				.filter((groupNodeId) => {
 					return groupNodeId !== nodeId;
 				});
 		});
@@ -554,7 +554,7 @@ function updateComponentProperties(graph, graphComponentType, componentId, newPr
 		'group': graph.groups,
 	}[graphComponentType] || [];
 
-	list = list.map(function(item) {
+	list = list.map((item) => {
 		if (item.id === componentId) {
 			if (graphComponentType === 'edge') {
 				newProperties.directed = // TODO: should this be here, or should Edge know how to draw different relations
