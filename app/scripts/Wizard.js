@@ -203,6 +203,7 @@ let Wizard = React.createClass({
 			<h2 className='title'>Attacker profile</h2>
 			<AttackerProfileEditor
 				profile={props.attackerProfile}
+				profilePresets={props.attackerProfiles}
 				handleUpdate={this.handleAttackerProfileUpdate}
 			/>
 		</div>;
