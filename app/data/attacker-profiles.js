@@ -1,64 +1,86 @@
 'use strict';
 
 // editor options
-const accessOptions = [
-	{ value: 'external', title: 'external', className: 'medium' },
-	{ value: 'internal', title: 'internal', className: 'veryhigh' },
-];
-const intentOptions = [
-	{ value: 'non-hostile', title: 'non-hostile', className: 'low' },
-	{ value: 'hostile', title: 'hostile', className: 'veryhigh' },
-];
-const outcomesOptions = [
-	{ value: 'acquisition / theft', title: 'acquisition / theft' },
-	{ value: 'business advantage', title: 'business advantage' },
-	{ value: 'damage', title: 'damage' },
-	{ value: 'embarrassment', title: 'embarrassment' },
-	{ value: 'tech advantage', title: 'tech advantage' }
-];
-const limitOptions = [
-	{ value: 'code of conduct', title: 'code of conduct', className: 'low' },
-	{ value: 'legal', title: 'legal', className: 'medium' },
-	{ value: 'extra-legal, minor', title: 'extra-legal, minor', className: 'high' },
-	{ value: 'extra-legal, major', title: 'extra-legal, major', className: 'veryhigh' }
-];
-const resourcesOptions = [
-	{ value: 'individual', title: 'individual', className: 'low' },
-	{ value: 'club', title: 'club', className: 'medium' },
-	{ value: 'contest', title: 'contest', className: 'high' },
-	{ value: 'team', title: 'team', className: 'high' },
-	{ value: 'organization', title: 'organization', className: 'veryhigh' },
-	{ value: 'government', title: 'government', className: 'veryhigh' }
-];
+// const accessOptions = [
+// 	{ value: 'external', title: 'external', className: 'medium' },
+// 	{ value: 'internal', title: 'internal', className: 'veryhigh' },
+// ];
+// const intentOptions = [
+// 	{ value: 'non-hostile', title: 'non-hostile', className: 'low' },
+// 	{ value: 'hostile', title: 'hostile', className: 'veryhigh' },
+// ];
+// const outcomesOptions = [
+// 	{ value: 'acquisition / theft', title: 'acquisition / theft' },
+// 	{ value: 'business advantage', title: 'business advantage' },
+// 	{ value: 'damage', title: 'damage' },
+// 	{ value: 'embarrassment', title: 'embarrassment' },
+// 	{ value: 'tech advantage', title: 'tech advantage' }
+// ];
+// const limitOptions = [
+// 	{ value: 'code of conduct', title: 'code of conduct', className: 'low' },
+// 	{ value: 'legal', title: 'legal', className: 'medium' },
+// 	{ value: 'extra-legal, minor', title: 'extra-legal, minor', className: 'high' },
+// 	{ value: 'extra-legal, major', title: 'extra-legal, major', className: 'veryhigh' }
+// ];
+// const resourcesOptions = [
+// 	{ value: 'individual', title: 'individual', className: 'low' },
+// 	{ value: 'club', title: 'club', className: 'medium' },
+// 	{ value: 'contest', title: 'contest', className: 'high' },
+// 	{ value: 'team', title: 'team', className: 'high' },
+// 	{ value: 'organization', title: 'organization', className: 'veryhigh' },
+// 	{ value: 'government', title: 'government', className: 'veryhigh' }
+// ];
+// const skillOptions = [
+// 	{ value: 'none', title: 'none', className: 'low' },
+// 	{ value: 'minimal', title: 'minimal', className: 'medium' },
+// 	{ value: 'operational', title: 'operational', className: 'high' },
+// 	{ value: 'adept', title: 'adept', className: 'veryhigh' }
+// ];
+// const objectivesOptions = [
+// 	{ value: 'copy', title: 'copy' },
+// 	{ value: 'deny', title: 'deny' },
+// 	{ value: 'destroy', title: 'destroy' },
+// 	{ value: 'damage', title: 'damage' },
+// 	{ value: 'take', title: 'take' }
+// ];
+// const visibilityOptions = [
+// 	{ value: 'overt', title: 'overt' },
+// 	{ value: 'covert', title: 'covert' },
+// 	{ value: 'clandestine', title: 'clandestine' },
+// 	{ value: 'multiple', title: 'multiple' },
+// ];
 const skillOptions = [
-	{ value: 'none', title: 'none', className: 'low' },
-	{ value: 'minimal', title: 'minimal', className: 'medium' },
-	{ value: 'operational', title: 'operational', className: 'high' },
-	{ value: 'adept', title: 'adept', className: 'veryhigh' }
+	{ value: 'L', title: 'low', className: 'low' },
+	{ value: 'M', title: 'medium', className: 'medium' },
+	{ value: 'H', title: 'high', className: 'high' },
+	{ value: 'V', title: 'very high', className: 'veryhigh' }
 ];
-const objectivesOptions = [
-	{ value: 'copy', title: 'copy' },
-	{ value: 'deny', title: 'deny' },
-	{ value: 'destroy', title: 'destroy' },
-	{ value: 'damage', title: 'damage' },
-	{ value: 'take', title: 'take' }
+const budgetOptions = [
+	{ value: Number, title: 'budget'/*, className: 'low'*/ }
 ];
-const visibilityOptions = [
-	{ value: 'overt', title: 'overt' },
-	{ value: 'covert', title: 'covert' },
-	{ value: 'clandestine', title: 'clandestine' },
-	{ value: 'multiple', title: 'multiple' },
+const timeOptions = [
+	{ value: 'S', title: 'seconds', className: 'low' },
+	{ value: 'MT', title: 'minutes', className: 'medium' },
+	{ value: 'HR', title: 'hours', className: 'medium' },
+	{ value: 'D', title: 'days', className: 'high' },
+	{ value: 'M', title: 'months', className: 'high' },
+	{ value: 'Y', title: 'years', className: 'veryhigh' }
 ];
 
+// const options = module.exports.options = [
+// 	{ name: 'access', options: accessOptions },
+// 	{ name: 'resources', options: resourcesOptions },
+// 	{ name: 'skill', options: skillOptions },
+// 	{ name: 'visibility', options: visibilityOptions },
+// 	{ name: 'limit', options: limitOptions },
+// 	{ name: 'intent', options: intentOptions },
+// 	{ name: 'outcomes', options: outcomesOptions, multiple: true },
+// 	{ name: 'objectives', options: objectivesOptions, multiple: true },
+// ];
 const options = module.exports.options = [
-	{ name: 'access', options: accessOptions },
-	{ name: 'resources', options: resourcesOptions },
+	{ name: 'budget', options: budgetOptions },
 	{ name: 'skill', options: skillOptions },
-	{ name: 'visibility', options: visibilityOptions },
-	{ name: 'limit', options: limitOptions },
-	{ name: 'intent', options: intentOptions },
-	{ name: 'outcomes', options: outcomesOptions, multiple: true },
-	{ name: 'objectives', options: objectivesOptions, multiple: true },
+	{ name: 'time', options: timeOptions }
 ];
 
 

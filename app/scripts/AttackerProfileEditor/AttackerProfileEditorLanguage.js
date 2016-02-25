@@ -57,6 +57,7 @@ let AttackerProfileEditorLanguage = React.createClass({
 		});
 
 		this.setState(state, () => {
+			// report to parent
 			props.handleUpdate(state);
 		});
 	},
@@ -75,13 +76,29 @@ let AttackerProfileEditorLanguage = React.createClass({
 				// multiple values
 				? (value || []).join(', ') // TODO: show displayAttribute here, too
 				// single value
-				: option[displayAttribute];
-
+				: (!!option)
+					? option[displayAttribute]
+					: '';
 
 		const barClasses = classnames(
 			'bar',
 			getClassName(option, value)
 		);
+
+		// kind of hacky for now
+		if (item.options.length === 1 && item.options[0].value === Number) {
+			return <li key={'li-'+item.name}>
+				<div className={barClasses}></div>
+				<span>{item.name} {(item.multiple) ? 'are' : 'is'} </span>
+				<input
+					type='number'
+					placeholder={item.name}
+					value={value || undefined}
+					onChange={(event) => {
+						this.updateProfile(item.name, event.target.value);
+					}}/>
+			</li>;
+		}
 
 		return <li key={'li-'+item.name}>
 			<div className={barClasses}></div>

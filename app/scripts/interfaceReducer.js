@@ -83,6 +83,7 @@ const whitelist = [
 	// constants.ACTION_select,
 	// constants.ACTION_removeGroup,
 	// constants.ACTION_addGroupBackgroundImage
+	constants.ACTION_attackerProfileChanged,
 	constants.ACTION_setAttackerGoal,
 	constants.ACTION_runAnalysis,
 ];
