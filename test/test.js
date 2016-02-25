@@ -115,74 +115,86 @@ describe(f1('helpers.js'), function() {
 
 	describe(f2('areAttackerProfilesEqual()'), function() {
 		const profile = {
-			"intent": "hostile",
-			"access": "external",
-			"outcomes": [
-				"damage",
-				"embarrassment"
-			],
-			"limit": "extra-legal, minor",
-			"resources": "club",
-			"skills": "minimal",
-			"objectives": [
-				"copy",
-				"deny",
-				"destroy",
-				"damage",
-				"take"
-			],
-			"visibility": "overt"
+			// "intent": "hostile",
+			// "access": "external",
+			// "outcomes": [
+			// 	"damage",
+			// 	"embarrassment"
+			// ],
+			// "limit": "extra-legal, minor",
+			// "resources": "club",
+			// "skills": "minimal",
+			// "objectives": [
+			// 	"copy",
+			// 	"deny",
+			// 	"destroy",
+			// 	"damage",
+			// 	"take"
+			// ],
+			// "visibility": "overt"
+			budget: 5000,
+			skill: 'H',
+			time: 'S',
 		};
 		const profileEqual = {
-			"access": "external",
-			"intent": "hostile",
-			"skills": "minimal",
-			"limit": "extra-legal, minor",
-			"resources": "club",
-			"visibility": "overt",
-			"outcomes": [
-				"embarrassment",
-				"damage"
-			],
-			"objectives": [
-				"take",
-				"damage",
-				"destroy",
-				"deny",
-				"copy"
-			]
+			// "access": "external",
+			// "intent": "hostile",
+			// "skills": "minimal",
+			// "limit": "extra-legal, minor",
+			// "resources": "club",
+			// "visibility": "overt",
+			// "outcomes": [
+			// 	"embarrassment",
+			// 	"damage"
+			// ],
+			// "objectives": [
+			// 	"take",
+			// 	"damage",
+			// 	"destroy",
+			// 	"deny",
+			// 	"copy"
+			// ]
+			time: 'S',
+			skill: 'H',
+			budget: 5000,
 		};
 		const profileNotEqual = {
-			"access": "external",
-			"intent": "hostile",
-			"skills": "minimal",
-			"limit": "extra-legal, minor",
-			"resources": "club",
-			"visibility": "overt",
-			"outcomes": [
-				"embarrassment"
-			],
-			"objectives": [
-				"take",
-				"damage",
-				"deny",
-				"copy"
-			]
+			// "access": "external",
+			// "intent": "hostile",
+			// "skills": "minimal",
+			// "limit": "extra-legal, minor",
+			// "resources": "club",
+			// "visibility": "overt",
+			// "outcomes": [
+			// 	"embarrassment"
+			// ],
+			// "objectives": [
+			// 	"take",
+			// 	"damage",
+			// 	"deny",
+			// 	"copy"
+			// ]
+			budget: 10000,
+			skill: 'M',
+			time: 'HR',
 		};
 		const profileIncomplete = {
-			"access": "external",
-			"intent": "hostile",
-			"skills": "minimal",
-			"limit": undefined,
-			"resources": "club",
-			"visibility": "overt",
-			"outcomes": undefined,
-			"objectives": [
-				"take",
-				"damage",
-				"deny",
-				"copy"
-			]
+			// "access": "external",
+			// "intent": "hostile",
+			// "skills": "minimal",
+			// "limit": undefined,
+			// "resources": "club",
+			// "visibility": "overt",
+			// "outcomes": undefined,
+			// "objectives": [
+			// 	"take",
+			// 	"damage",
+			// 	"deny",
+			// 	"copy"
+			// ]
+			budget: undefined,
+			skill: 'M',
+			time: 'HR',
 		};
 
 		it(f3('should work with equal profiles'), function() {
