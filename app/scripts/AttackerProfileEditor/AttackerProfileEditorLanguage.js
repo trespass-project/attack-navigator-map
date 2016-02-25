@@ -8,7 +8,6 @@ const helpers = require('../helpers.js');
 
 // const AttackerProfile = require('../AttackerProfileEditor/AttackerProfile.js');
 const attackerProfiles = require('../../data/attacker-profiles.js');
-// const profilePresets = attackerProfiles.profiles;
 const profileOptions = attackerProfiles.options;
 const DropdownSearchable = require('./DropdownSearchable.js');
 const DropdownSelectize = require('./DropdownSelectize.js');
@@ -16,6 +15,8 @@ const DropdownSelectize = require('./DropdownSelectize.js');
 
 const displayAttribute = 'title';
 const valueAttribute = 'value';
+
+const profileNameAttribute = 'codename';
 
 
 function getClassName(option, value) {
@@ -42,7 +43,7 @@ let AttackerProfileEditorLanguage = React.createClass({
 
 	getInitialState: function() {
 		return { // TODO: change to id
-			codename: '' // selected preset title
+			[profileNameAttribute]: '' // selected preset title
 		};
 	},
 
@@ -51,10 +52,10 @@ let AttackerProfileEditorLanguage = React.createClass({
 		let state = this.state;
 		state[name] = val;
 
-		state.codename = '';
+		state[profileNameAttribute] = '';
 		props.profilePresets.forEach(function(profile) {
 			if (helpers.areAttackerProfilesEqual(profile, state)) {
-				state.codename = profile.codename;
+				state[profileNameAttribute] = profile[profileNameAttribute];
 			}
 		});
 
@@ -130,8 +131,8 @@ let AttackerProfileEditorLanguage = React.createClass({
 	},
 
 	renderPresetOption: function(preset, index) {
-		return <option key={preset.codename} value={preset.codename}>
-			{preset.codename}
+		return <option key={preset[profileNameAttribute]} value={preset[profileNameAttribute]}>
+			{preset[profileNameAttribute]}
 		</option>;
 	},
 
@@ -142,7 +143,7 @@ let AttackerProfileEditorLanguage = React.createClass({
 			<div className='attackerProfile-editor-language language'>
 				<div>
 					Presets:<br />
-					<select name='presets' onChange={this.handleSelectPreset} value={this.state.codename}>
+					<select name='presets' onChange={this.handleSelectPreset} value={this.state[profileNameAttribute]}>
 						<option value=''>— none —</option>
 						{props.profilePresets.map(this.renderPresetOption)}
 					</select>
@@ -168,7 +169,7 @@ let AttackerProfileEditorLanguage = React.createClass({
 
 	handleSelectPreset: function(event) {
 		const props = this.props;
-		const preset = helpers.getItemByKey('codename', props.profilePresets, event.target.value);
+		const preset = helpers.getItemByKey(profileNameAttribute, props.profilePresets, event.target.value);
 		if (!!preset) {
 			this.setState(preset, () => {
 				this.props.handleUpdate(this.state);
