@@ -112,15 +112,10 @@ function reducer(state=initialState, action) {
 		}
 		case constants.ACTION_loadXML_DONE: {
 			const {graph, other} = action;
-			const allNodeNames = graph.nodes
-				.map((item) => {
-					const name = item.label || item.name || item.id; // TODO: figure this out
-					return { name, label: name };
-				});
 			return Object.assign(
 				{},
 				initialState,
-				{ graph, allNodeNames },
+				{ graph },
 				other
 			);
 		}
