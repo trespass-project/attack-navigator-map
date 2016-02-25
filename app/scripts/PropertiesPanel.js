@@ -9,8 +9,8 @@ const helpers = require('./helpers.js');
 const modelHelpers = require('./model-helpers.js');
 const actionCreators = require('./actionCreators.js');
 const constants = require('./constants.js');
-const api = require('trespass.js/src/apis');
-const knowledgebaseApi = api.apis.knowledgebase;
+const api = require('trespass.js').api;
+const knowledgebaseApi = api.knowledgebase;
 
 
 let PropertiesPanel = React.createClass({

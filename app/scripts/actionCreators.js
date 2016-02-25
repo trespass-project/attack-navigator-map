@@ -6,9 +6,9 @@ const R = require('ramda');
 const _ = require('lodash');
 const JSZip = require('jszip');
 const trespassModel = require('trespass.js/src/model');
-const api = require('trespass.js/src/apis');
-const toolsApi = api.apis.tools;
-const knowledgebaseApi = api.apis.knowledgebase;
+const api = require('trespass.js').api;
+const toolsApi = api.tools;
+const knowledgebaseApi = api.knowledgebase;
 const constants = require('./constants.js');
 const helpers = require('./helpers.js');
 const modelHelpers = require('./model-helpers.js');
@@ -537,7 +537,7 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 		const req = $.ajax(params);
 
 		// wait for it to finish
-		Q(req) // TODO: make this reusable, as part of trespass.apis
+		Q(req) // TODO: make this reusable, as part of trespass.api
 			.then((runData) => {
 				if (runData.error) {
 					alert(runData.error);
