@@ -2,7 +2,6 @@
 
 const $ = require('jquery');
 const R = require('ramda');
-const _ = require('lodash');
 const mergeWith = require('./reducer-utils.js').mergeWith;
 const omitType = require('./reducer-utils.js').omitType;
 const constants = require('./constants.js');
@@ -44,13 +43,12 @@ const initialState = {
 
 	interfaceMode: 'light', // 'pro'
 
-	wizard: {
-		selectedSection: 'import'
-	},
+	wizardSelectedSection: 'import',
 
 	// ——————————
 
-	attackerProfiles: [],
+	attackerProfileIds: [],
+	attackerProfiles: {},
 	attackerProfile: null,
 
 	attackerGoalType: null,
@@ -210,7 +208,7 @@ function reducer(state=initialState, action) {
 			return mergeWithState({ pannable: action.yesno });
 
 		case constants.ACTION_selectWizardStep:
-			return mergeWithState({ wizard: { selectedSection: action.name } });
+			return mergeWithState({ wizardSelectedSection: action.name });
 
 		case constants.ACTION_attackerProfileChanged: {
 			const {profile} = action;
@@ -249,8 +247,11 @@ function reducer(state=initialState, action) {
 			return state; // noop
 		}
 		case constants.ACTION_loadAttackerProfiles_DONE: {
-			const {attackerProfiles} = action;
-			return mergeWithState({attackerProfiles});
+			const { ids, items } = action.normalizedAttackerProfiles;
+			return mergeWithState({
+				attackerProfileIds: ids,
+				attackerProfiles: items,
+			});
 		}
 
 		// case constants.ACTION_loadComponentTypes: {

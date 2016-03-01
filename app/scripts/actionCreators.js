@@ -4,6 +4,7 @@ const $ = require('jquery');
 const Q = require('q');
 const R = require('ramda');
 const _ = require('lodash');
+const normalizr = require('normalizr');
 const JSZip = require('jszip');
 require('whatwg-fetch');
 const queryString = require('query-string');
@@ -22,6 +23,19 @@ const serverDomain = require('../../api.js').serverDomain;
 function fakeApiUrl(url) {
 	return 'http://' + serverDomain + ':' + serverPort + url;
 }
+
+
+const normalize = module.exports.normalize =
+function normalize(data, name='profiles', idAttribute='id') {
+	const schema = new normalizr.Schema(name, { idAttribute });
+	const normalized = normalizr.normalize(
+		data,
+		normalizr.arrayOf(schema)
+	);
+	const items = normalized.entities[name];
+	const ids = normalized.result;
+	return { ids, items };
+};
 
 
 // let requests = {};
@@ -887,7 +901,7 @@ function loadAttackerProfiles() {
 			.then(function(attackerProfiles) {
 				dispatch({
 					type: constants.ACTION_loadAttackerProfiles_DONE,
-					attackerProfiles
+					normalizedAttackerProfiles: normalize(attackerProfiles)
 				});
 			})
 			.catch(handleError);

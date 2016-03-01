@@ -35,7 +35,7 @@ function componentTypesFilter(types) {
 }
 
 
-let Tab = React.createClass({
+const Tab = React.createClass({
 	propTypes: {
 		name: React.PropTypes.string.isRequired,
 		selectedSection: React.PropTypes.string.isRequired,
@@ -71,7 +71,7 @@ let Tab = React.createClass({
 });
 
 
-let Wizard = React.createClass({
+const Wizard = React.createClass({
 	contextTypes: {
 		dispatch: React.PropTypes.func,
 	},
@@ -314,8 +314,7 @@ let Wizard = React.createClass({
 
 	render: function() {
 		const props = this.props;
-		const wizard = props.wizard;
-		const selectedSection = wizard.selectedSection;
+		const wizardSelectedSection = props.wizardSelectedSection;
 
 		const wizardSteps = {
 			'import': { renderFn: this.renderImport },
@@ -331,8 +330,8 @@ let Wizard = React.createClass({
 		let defaultRenderFn = function() {
 			return <div>error</div>;
 		};
-		let renderFn = (!!wizardSteps[wizard.selectedSection])
-			? wizardSteps[wizard.selectedSection].renderFn
+		let renderFn = (!!wizardSteps[wizardSelectedSection])
+			? wizardSteps[wizardSelectedSection].renderFn
 				|| defaultRenderFn
 			: defaultRenderFn;
 
@@ -346,49 +345,49 @@ let Wizard = React.createClass({
 				<div id='wizard-container'>
 					<div id='steps-container'>
 						<Tab name='import'
-							selectedSection={selectedSection}
+							selectedSection={wizardSelectedSection}
 							icon='images/icons/import-01.svg'
 							tooltip='Import model'
 							handleClick={R.partial(this.selectWizardStep, ['import'])}
 						/>
 						<Tab name='locations'
-							selectedSection={selectedSection}
+							selectedSection={wizardSelectedSection}
 							icon='images/icons/location-01.svg'
 							tooltip='Locations'
 							handleClick={R.partial(this.selectWizardStep, ['locations'])}
 						/>
 						<Tab name='assets'
-							selectedSection={selectedSection}
+							selectedSection={wizardSelectedSection}
 							icon='images/icons/assets-01.svg'
 							tooltip='Assets'
 							handleClick={R.partial(this.selectWizardStep, ['assets'])}
 						/>
 						<Tab name='actors'
-							selectedSection={selectedSection}
+							selectedSection={wizardSelectedSection}
 							icon='images/icons/actors-01.svg'
 							tooltip='Actors'
 							handleClick={R.partial(this.selectWizardStep, ['actors'])}
 						/>
 						<Tab name='connections'
-							selectedSection={selectedSection}
+							selectedSection={wizardSelectedSection}
 							icon='images/icons/connections-01.svg'
 							tooltip='Connections'
 							handleClick={R.partial(this.selectWizardStep, ['connections'])}
 						/>
 						<Tab name='policies'
-							selectedSection={selectedSection}
+							selectedSection={wizardSelectedSection}
 							icon='images/icons/policies-01.svg'
 							tooltip='Policies'
 							handleClick={R.partial(this.selectWizardStep, ['policies'])}
 						/>
 						<Tab name='attackerprofile'
-							selectedSection={selectedSection}
+							selectedSection={wizardSelectedSection}
 							icon='images/icons/attacker_profile-01.svg'
 							tooltip='Attacker profile'
 							handleClick={R.partial(this.selectWizardStep, ['attackerprofile'])}
 						/>
 						<Tab name='runanalysis'
-							selectedSection={selectedSection}
+							selectedSection={wizardSelectedSection}
 							icon='images/icons/run-01.svg'
 							tooltip='Run analysis'
 							handleClick={R.partial(this.selectWizardStep, ['runanalysis'])}

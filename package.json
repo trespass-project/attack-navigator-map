@@ -55,6 +55,7 @@
     "kouto-swiss": "^0.11.14",
     "lodash": "^3.10.1",
     "mout": "^0.11.0",
+    "normalizr": "^2.0.0",
     "q": "^1.4.1",
     "query-string": "^3.0.1",
     "ramda": "^0.19.1",
