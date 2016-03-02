@@ -4,6 +4,7 @@ const R = require('ramda');
 const $ = require('jquery');
 const reactDOM = require('react-dom');
 const shortid = require('shortid');
+const normalizr = require('normalizr');
 
 
 let getElemByRef = module.exports.getElemByRef =
@@ -18,6 +19,20 @@ function getElemByRef(component, refName) {
 
 let noop = module.exports.noop =
 function noop() {};
+
+
+const normalize = module.exports.normalize =
+function normalize(data, idAttribute='id') {
+	const name = 'collection';
+	const schema = new normalizr.Schema(name, { idAttribute });
+	const normalized = normalizr.normalize(
+		data,
+		normalizr.arrayOf(schema)
+	);
+	const items = normalized.entities[name];
+	const ids = normalized.result;
+	return { ids, items };
+};
 
 
 let getItemByKey = module.exports.getItemByKey =
