@@ -16,7 +16,7 @@ const valueAttribute = 'value';
 const PredicateEditor = React.createClass({
 	propTypes: {
 		handleUpdate: React.PropTypes.func,
-		allNames: React.PropTypes.array.isRequired,
+		nodeNames: React.PropTypes.array.isRequired,
 		predicatesLib: React.PropTypes.object.isRequired,
 		predicates: React.PropTypes.object.isRequired,
 	},
@@ -99,7 +99,7 @@ const PredicateEditor = React.createClass({
 				value={subj}
 				searchable={true}
 				searchPlaceholder={predicateType.subjectPlaceholder}
-				items={props.allNames}
+				items={props.nodeNames}
 				displayAttribute={'label'}
 				valueAttribute={'name'}
 				handleSelection={this.updatePredicate}
@@ -122,7 +122,7 @@ const PredicateEditor = React.createClass({
 				value={obj}
 				searchable={true}
 				searchPlaceholder={predicateType.objectPlaceholder}
-				items={props.allNames}
+				items={props.nodeNames}
 				displayAttribute={'label'}
 				valueAttribute={'name'}
 				handleSelection={this.updatePredicate}

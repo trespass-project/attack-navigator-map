@@ -180,16 +180,10 @@ const Wizard = React.createClass({
 	},
 
 	renderConnections: function(props) {
-		const allNodeNames = props.graph.nodes
-			.map((item) => {
-				const name = item.label || item.name || item.id; // TODO: figure this out
-				return { name, label: name };
-			});
-
 		return <div>
 			<h2 className='title'>Connections</h2>
 			<PredicateEditor
-				allNames={allNodeNames}
+				nodeNames={props.nodeNames}
 				predicatesLib={props.predicatesLib || predicatesLib}
 				predicates={props.predicates || {}}
 			/>

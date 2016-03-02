@@ -236,6 +236,12 @@ function graphFromModel(model) {
 
 	other.modelId = model.system.id;
 
+	other.nodeNames = graph.nodes
+		.map((item) => {
+			const name = item.label || item.name || item.id; // TODO: figure this out
+			return { name, label: name };
+		});
+
 	return {graph, other};
 };
 
