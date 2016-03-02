@@ -2,7 +2,6 @@
 
 const $ = require('jquery');
 const R = require('ramda');
-const _ = require('lodash');
 const mergeWith = require('./reducer-utils.js').mergeWith;
 const omitType = require('./reducer-utils.js').omitType;
 const constants = require('./constants.js');
@@ -98,7 +97,7 @@ const blacklist = [
 
 module.exports =
 function reducer(state=initialState, action) {
-	// const mergeWithState = R.partial(mergeWith, [state]);
+	const mergeWithState = R.partial(mergeWith, [state]);
 
 	if (!R.contains(action.type, blacklist)) {
 		console.log(action.type, omitType(action));
@@ -122,11 +121,11 @@ function reducer(state=initialState, action) {
 				};
 			}
 
-			return _.extend({}, state, {editorElem, editorTransformElem, editorElemSize});
+			return mergeWithState({editorElem, editorTransformElem, editorElemSize});
 		}
 
 		case constants.ACTION_select:
-			return _.extend({}, state, {
+			return mergeWithState({
 				selected: {
 					componentId: action.componentId,
 					graphComponentType: action.graphComponentType,
@@ -135,16 +134,16 @@ function reducer(state=initialState, action) {
 
 		case constants.ACTION_showContextMenu:
 		case constants.ACTION_hideContextMenu:
-			return _.extend({}, state, { contextMenu: action.contextMenu });
+			return mergeWithState({ contextMenu: action.contextMenu });
 
 		case constants.ACTION_setShowImages:
-			return _.extend({}, state, { showImages: action.yesno });
+			return mergeWithState({ showImages: action.yesno });
 
 		case constants.ACTION_setShowGroups:
-			return _.extend({}, state, { showGroups: action.yesno });
+			return mergeWithState({ showGroups: action.yesno });
 
 		case constants.ACTION_setShowEdges:
-			return _.extend({}, state, { showEdges: action.yesno });
+			return mergeWithState({ showEdges: action.yesno });
 
 		case constants.ACTION_setTransformation: {
 			let {scale/*, panX, panY*/} = action.transformation;
@@ -173,54 +172,53 @@ function reducer(state=initialState, action) {
 				};
 			}
 
-			const mergeThis = _.extend(
+			const mergeThis = Object.assign(
 				{showEdgeLabels, showNodeLabels, showGroupLabels, visibleRect},
 				action.transformation
 			);
-			return _.extend({}, state, mergeThis);
+			return mergeWithState(mergeThis);
 		}
 
 		case constants.ACTION_setPreviewEdge:
-			return _.extend({}, state, { previewEdge: action.previewEdge });
+			return mergeWithState({ previewEdge: action.previewEdge });
 
 		case constants.ACTION_setDrag: {
-			const newState = _.extend({}, state, { drag: action.data });
+			const newState = mergeWithState({ drag: action.data });
 			return newState;
 		}
 
 		case constants.ACTION_setDragNode:
-			return _.extend({}, state, { dragNode: action.node });
+			return mergeWithState({ dragNode: action.node });
 
 		case constants.ACTION_setHoverNode:
-			return _.extend({}, state, { hoverNode: action.node });
+			return mergeWithState({ hoverNode: action.node });
 
 		case constants.ACTION_setHoverGroup:
-			return _.extend({}, state, { hoverGroup: action.group });
+			return mergeWithState({ hoverGroup: action.group });
 
 		case constants.ACTION_setSpacePressed:
-			return _.extend({}, state, { spacePressed: action.yesno });
+			return mergeWithState({ spacePressed: action.yesno });
 
 		case constants.ACTION_setMouseOverEditor:
-			state.mouseOverEditor = action.yesno;
-			return state;
+			return mergeWithState({ mouseOverEditor: action.yesno });
 
 		case constants.ACTION_setPanning:
-			return _.extend({}, state, { panning: action.yesno });
+			return mergeWithState({ panning: action.yesno });
 
 		case constants.ACTION_setPannable:
-			return _.extend({}, state, { pannable: action.yesno });
+			return mergeWithState({ pannable: action.yesno });
 
 		case constants.ACTION_selectWizardStep:
-			return _.extend({}, state, { wizardSelectedSection: action.name });
+			return mergeWithState({ wizardSelectedSection: action.name });
 
 		case constants.ACTION_attackerProfileChanged: {
 			const {profile} = action;
-			return _.extend({}, state, { attackerProfile: profile });
+			return mergeWithState({ attackerProfile: profile });
 		}
 
 		case constants.ACTION_setAttackerGoal: {
 			const {goalType, goalData} = action;
-			return _.extend({}, state, {
+			return mergeWithState({
 				attackerGoalType: goalType,
 				attackerGoal: goalData,
 			});
@@ -228,11 +226,11 @@ function reducer(state=initialState, action) {
 
 		case constants.ACTION_setAttackerProfit: {
 			const {profit} = action;
-			return _.extend({}, state, { attackerProfit: profit });
+			return mergeWithState({ attackerProfit: profit });
 		}
 
 		case constants.ACTION_runAnalysis: {
-			return _.extend({}, state, {
+			return mergeWithState({
 				analysisRunning: true,
 				toolChainId: action.toolChainId,
 			});
@@ -243,7 +241,7 @@ function reducer(state=initialState, action) {
 		}
 		case constants.ACTION_loadToolChains_DONE: {
 			const { ids, items } = action.normalizedToolChains;
-			return _.extend({}, state, {
+			return mergeWithState({
 				toolChainIds: ids,
 				toolChains: items,
 			});
@@ -254,7 +252,7 @@ function reducer(state=initialState, action) {
 		}
 		case constants.ACTION_loadAttackerProfiles_DONE: {
 			const { ids, items } = action.normalizedAttackerProfiles;
-			return _.extend({}, state, {
+			return mergeWithState({
 				attackerProfileIds: ids,
 				attackerProfiles: items,
 			});

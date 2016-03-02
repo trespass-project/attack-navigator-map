@@ -10,5 +10,5 @@ module.exports.omitType = R.omit(['type']);
 const mergeWith =
 module.exports.mergeWith =
 function(state, obj) {
-	return _.extend({}, state, omitType(obj));
+	return Object.assign({}, state, omitType(obj));
 };
