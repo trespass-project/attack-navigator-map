@@ -19,7 +19,7 @@ const Tooltip = require('react-bootstrap').Tooltip;
 const PredicateEditor = require('./PredicateEditor.js');
 const AttackerProfileEditor = require('./AttackerProfileEditor/AttackerProfileEditorLanguage.js');
 
-const predicatesLib = require('../data/predicate-lib.json');
+const predicatesLib = helpers.normalize(require('../data/predicate-lib.json')).items;
 
 
 
