@@ -191,7 +191,7 @@ const Wizard = React.createClass({
 			<PredicateEditor
 				allNames={allNodeNames}
 				predicatesLib={props.predicatesLib || predicatesLib}
-				predicates={props.predicates || []}
+				predicates={props.predicates || {}}
 			/>
 		</div>;
 	},

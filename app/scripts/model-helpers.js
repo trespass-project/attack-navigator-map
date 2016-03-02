@@ -226,14 +226,13 @@ function graphFromModel(model) {
 	// predicates
 	other.predicates = other.predicates
 		.reduce((result, item) => {
-			item.value.forEach((value) => {
-				result.push({
-					id: item.id,
-					value
-				});
+			item.value
+				.forEach((value) => {
+					const id = helpers.makeId(`${item.modelComponentType}-${item.id}`);
+					result[id] = { id, value, label: item.id };
 			});
 			return result;
-		}, []);
+		}, {});
 
 	other.modelId = model.system.id;
 

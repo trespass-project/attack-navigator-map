@@ -183,7 +183,7 @@ function areAttackerProfilesEqual(p1, p2) {
 
 let makeId = module.exports.makeId =
 function makeId(type) {
-	return ['id', Date.now(), shortid(), type || ''].join('-');
+	return ['id', /*Date.now(),*/ shortid(), type || ''].join('-');
 };
 
 

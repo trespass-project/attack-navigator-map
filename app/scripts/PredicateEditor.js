@@ -18,7 +18,7 @@ const PredicateEditor = React.createClass({
 		handleUpdate: React.PropTypes.func,
 		allNames: React.PropTypes.array.isRequired,
 		predicatesLib: React.PropTypes.object.isRequired,
-		predicates: React.PropTypes.array.isRequired,
+		predicates: React.PropTypes.object.isRequired,
 	},
 
 	getDefaultProps: function() {
@@ -106,9 +106,9 @@ const PredicateEditor = React.createClass({
 			/>
 			&nbsp;&nbsp;&nbsp;
 			<DropdownSearchable
-				name={predicate.id}
-				title={predicateType.label || predicate.id}
-				value={predicate.id}
+				name={predicate.label}
+				title={predicateType.label || predicate.label}
+				value={predicate.label}
 				searchable={true}
 				items={R.values(props.predicatesLib)}
 				displayAttribute={'label'}
@@ -143,7 +143,7 @@ const PredicateEditor = React.createClass({
 				<div className='predicates'>
 					predicates:
 					<ul>
-						{props.predicates.map(this.renderPredicate)}
+						{R.values(props.predicates).map(this.renderPredicate)}
 					</ul>
 				</div>
 
