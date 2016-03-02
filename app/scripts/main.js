@@ -108,8 +108,7 @@ const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
 const store = createStoreWithMiddleware(reducer);
 
 function mapStateToProps(state) {
-	const newState = _.merge({}, state.model, state.interface);
-	return newState;
+	return _.assign({}, state.model, state.interface);
 }
 
 App = DragDropContext(HTML5Backend)(App);
