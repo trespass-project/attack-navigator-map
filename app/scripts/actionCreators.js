@@ -876,7 +876,7 @@ function loadToolChains(xmlString) {
 					});
 				dispatch({
 					type: constants.ACTION_loadToolChains_DONE,
-					toolChains
+					normalizedToolChains: normalize(toolChains)
 				});
 			})
 			.catch(handleError);

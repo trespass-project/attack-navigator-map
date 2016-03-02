@@ -242,7 +242,7 @@ const Wizard = React.createClass({
 
 			<h3>Tool chains</h3>
 			<select ref='toolchain'>
-				{props.toolChains
+				{R.values(props.toolChains)
 					.map((chain) => {
 						return <option
 							key={chain.id}
@@ -432,8 +432,7 @@ const Wizard = React.createClass({
 			return null;
 		}
 
-		// console.log(props.toolChainId, props.toolChains);
-		const toolChain = helpers.getItemById(props.toolChains, props.toolChainId);
+		const toolChain = props.toolChains[props.toolChainId];
 		// console.log(toolChain);
 
 		return <div id='task-overlay'>

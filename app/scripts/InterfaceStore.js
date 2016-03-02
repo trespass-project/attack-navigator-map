@@ -13,6 +13,8 @@ var theme = require('./graph-theme-default.js');
 var klay = require('klayjs');
 
 
+// TODO: remove this
+
 module.exports =
 class InterfaceStore extends Store {
 

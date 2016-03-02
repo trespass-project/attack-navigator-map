@@ -55,7 +55,8 @@ const initialState = {
 	attackerGoal: null,
 	attackerProfit: undefined,
 
-	toolChains: [],
+	toolChainIds: [],
+	toolChains: {},
 	toolChainId: null,
 	analysisRunning: false,
 
@@ -239,8 +240,11 @@ function reducer(state=initialState, action) {
 			return state; // noop
 		}
 		case constants.ACTION_loadToolChains_DONE: {
-			const {toolChains} = action;
-			return mergeWithState({toolChains});
+			const { ids, items } = action.normalizedToolChains;
+			return mergeWithState({
+				toolChainIds: ids,
+				toolChains: items,
+			});
 		}
 
 		case constants.ACTION_loadAttackerProfiles: {
