@@ -79,10 +79,6 @@ const whitelist = [
 	constants.ACTION_loadXMLFile,
 	constants.ACTION_loadXML,
 	constants.ACTION_loadXML_DONE,
-	// constants.ACTION_addNode,
-	// constants.ACTION_select,
-	// constants.ACTION_removeGroup,
-	// constants.ACTION_addGroupBackgroundImage
 	constants.ACTION_attackerProfileChanged,
 	constants.ACTION_setAttackerGoal,
 	constants.ACTION_runAnalysis,
@@ -94,12 +90,12 @@ module.exports =
 function reducer(state=initialState, action) {
 	const mergeWithState = R.partial(mergeWith, [state]);
 
-	// if (!R.contains(action.type, blacklist)) {
-	// 	console.log(action.type, omitType(action));
-	// }
-	if (R.contains(action.type, whitelist)) {
+	if (!R.contains(action.type, blacklist)) {
 		console.log(action.type, omitType(action));
 	}
+	// if (R.contains(action.type, whitelist)) {
+	// 	console.log(action.type, omitType(action));
+	// }
 
 	switch (action.type) {
 		case constants.ACTION_setEditorElem: {

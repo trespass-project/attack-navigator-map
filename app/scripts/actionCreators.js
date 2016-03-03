@@ -12,6 +12,7 @@ const knowledgebaseApi = api.knowledgebase;
 const constants = require('./constants.js');
 const modelHelpers = require('./model-helpers.js');
 const helpers = require('./helpers.js');
+require('whatwg-fetch');
 
 
 // let requests = {};
@@ -33,9 +34,114 @@ function handleError(err) {
 const initMap =
 module.exports.initMap =
 function initMap(modelId=undefined) {
-	return {
-		type: constants.ACTION_initMap,
-		modelId: modelId || helpers.makeId('model'),
+	return function(dispatch, getState) {
+		const id = modelId || helpers.makeId('model');
+		dispatch({
+			type: constants.ACTION_initMap,
+			modelId: id,
+		});
+
+		// check if model with that id already exists ...
+		dispatch(
+			kbGetModel(
+				id,
+
+				// handleExists
+				(res, modelId) => {
+					// TODO: do s.th. with the data
+				},
+
+				// handleMissing
+				(modelId) => {
+					// ... otherwise create it
+					dispatch( kbCreateModel(modelId) );
+				}
+			)
+		);
+	};
+};
+
+
+const kbGetModel =
+module.exports.kbGetModel =
+function kbGetModel(modelId, handleExists, handleMissing) {
+	if (!modelId) {
+		console.error('no model id provided');
+		return;
+	}
+
+	return function(dispatch, getState) {
+		dispatch({
+			type: constants.ACTION_kbGetModel,
+			modelId
+		});
+
+		const url = api.makeUrl(knowledgebaseApi, `model/${modelId}`);
+		const params = _.merge(
+			{},
+			api.requestOptions.fetch.crossDomain
+		);
+		fetch(url, params)
+			.catch((err) => {
+				console.error(err);
+			})
+			.then((res) => {
+				if (res.status === 404) {
+					if (handleMissing) {
+						handleMissing(modelId);
+					}
+				} else if (res.status === 200) {
+					if (handleExists) {
+						handleExists(res, modelId);
+					}
+				} else {
+					console.error(`something went wrong: ${res.status}`);
+				}
+			});
+	};
+};
+
+
+const kbCreateModel =
+module.exports.kbCreateModel =
+function kbCreateModel(modelId) {
+	// TODO: only create model, once model/graph is not empty anymore.
+	// otherwise we might be creatings tons of empty ones ...
+
+	if (!modelId) {
+		console.error('no model id provided');
+		return;
+	}
+
+	return function(dispatch, getState) {
+		dispatch({
+			type: constants.ACTION_kbCreateModel,
+			modelId
+		});
+
+		const url = api.makeUrl(knowledgebaseApi, `model/${modelId}`);
+		const params = _.merge(
+			{ method: 'put', },
+			api.requestOptions.fetch.crossDomain
+		);
+		fetch(url, params)
+			.catch((err) => {
+				console.error(err);
+			})
+			.then((res) => {
+				if (res.status === 200) {
+					dispatch(
+						kbGetModel(
+							modelId,
+							(res, modelId) => {
+								// TODO: do s.th. with the data
+							}
+						)
+					);
+				} else {
+					console.error(`something went wrong: ${res.status}`);
+				};
+			});
 	};
 };
 
