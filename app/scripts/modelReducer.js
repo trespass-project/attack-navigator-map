@@ -37,11 +37,12 @@ function reducer(state=initialState, action) {
 	switch (action.type) {
 		case constants.ACTION_initMap: {
 			const {modelId} = action;
-			return _.merge(
+			const newState = _.merge(
 				{},
 				initialState,
-				modelId
+				{modelId}
 			);
+			return newState;
 		}
 
 		case constants.ACTION_addGroupBackgroundImage: {

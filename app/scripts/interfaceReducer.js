@@ -67,6 +67,12 @@ const blacklist = [
 	constants.ACTION_setEditorElem,
 	constants.ACTION_setMouseOverEditor,
 	constants.ACTION_hideContextMenu,
+	constants.ACTION_select,
+	constants.ACTION_setPanning,
+	constants.ACTION_setDrag,
+	constants.ACTION_setDragNode,
+	constants.ACTION_selectWizardStep,
+	constants.ACTION_setAttackerProfit,
 	constants.ACTION_moveNode,
 	constants.ACTION_moveGroup,
 	constants.ACTION_setHoverNode,
@@ -75,15 +81,15 @@ const blacklist = [
 	constants.ACTION_setTransformation,
 	constants.ACTION_updateComponentProperties,
 ];
-const whitelist = [
-	constants.ACTION_loadXMLFile,
-	constants.ACTION_loadXML,
-	constants.ACTION_loadXML_DONE,
-	constants.ACTION_attackerProfileChanged,
-	constants.ACTION_setAttackerGoal,
-	constants.ACTION_runAnalysis,
-	constants.ACTION_initMap,
-];
+// const whitelist = [
+// 	constants.ACTION_loadXMLFile,
+// 	constants.ACTION_loadXML,
+// 	constants.ACTION_loadXML_DONE,
+// 	constants.ACTION_attackerProfileChanged,
+// 	constants.ACTION_setAttackerGoal,
+// 	constants.ACTION_runAnalysis,
+// 	constants.ACTION_initMap,
+// ];
 
 
 module.exports =

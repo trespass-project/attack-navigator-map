@@ -5,14 +5,15 @@ const Q = require('q');
 const R = require('ramda');
 const _ = require('lodash');
 const JSZip = require('jszip');
-const trespassModel = require('trespass.js/src/model');
+require('whatwg-fetch');
+const queryString = require('query-string');
+const trespassModel = require('trespass.js').model;
 const api = require('trespass.js').api;
 const toolsApi = api.tools;
 const knowledgebaseApi = api.knowledgebase;
 const constants = require('./constants.js');
 const modelHelpers = require('./model-helpers.js');
 const helpers = require('./helpers.js');
-require('whatwg-fetch');
 
 
 // let requests = {};
@@ -594,6 +595,58 @@ function setAttackerProfit(profit) {
 };
 
 
+const putModelAndScenarioIntoKnowledgebase =
+module.exports.putModelAndScenarioIntoKnowledgebase =
+function putModelAndScenarioIntoKnowledgebase(modelId, modelData, scenarioData) {
+	// TODO: remove delay
+	const delay = 250;
+
+	[
+		{
+			data: modelData.fileContent,
+			query: queryString.stringify({
+				model_id: modelId,
+				filename: modelData.fileName,
+				filetype: modelData.fileType,
+			})
+		},
+		{
+			data: scenarioData.fileContent,
+			query: queryString.stringify({
+				model_id: modelId,
+				filename: scenarioData.fileName,
+				filetype: scenarioData.fileType,
+			})
+		}
+	]
+		.forEach((item, index) => {
+			const url = `${api.makeUrl(knowledgebaseApi, 'files')}?${item.query}`;
+			const params = _.merge(
+				{
+					method: 'put',
+					body: item.data
+				},
+				api.requestOptions.fetch.crossDomain
+			);
+
+			setTimeout(() => {
+				// console.log(url);
+				fetch(url, params)
+					.catch((err) => {
+						console.error(err);
+					})
+					.then((res) => {
+						if (res.status === 200) {
+							console.log('success (200)', url);
+						} else {
+							console.error(`something went wrong (${res.status})`, url);
+						}
+					});
+			}, index * delay);
+		});
+};
+
+
 const runAnalysis =
 module.exports.runAnalysis =
 function runAnalysis(toolChainId, downloadScenario=false) {
@@ -609,11 +662,12 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 
 		const modelId = state.model.modelId;
 		if (!modelId) {
-			throw new Error('model needs an id');
+			throw new Error('missing model id');
 		}
 
 		// generate model xml
-		const model = modelHelpers.modelFromGraph(getState().model.graph);
+		let model = modelHelpers.modelFromGraph(state.model.graph);
+		model.system.id = modelId;
 		const modelXmlStr = trespassModel.toXML(model);
 		// console.log(modelXmlStr);
 
@@ -630,6 +684,21 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 		scenario.scenario.id = modelId.replace(/-model$/i, '-scenario');
 		const scenarioXmlStr = trespassModel.scenarioToXML(scenario);
 		// console.log(scenarioXmlStr);
+
+		// upload to knowledgebase
+		putModelAndScenarioIntoKnowledgebase(
+			modelId,
+			{
+				fileType: 'model_file',
+				fileName: modelFileName,
+				fileContent: modelXmlStr
+			},
+			{
+				fileType: 'scenario_file',
+				fileName: scenarioFileName,
+				fileContent: scenarioXmlStr
+			}
+		);
 
 		// zip it!
 		let zip = new JSZip();
