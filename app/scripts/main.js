@@ -1,25 +1,25 @@
 'use strict';
 
-let React = require('react');
-let reactDOM = require('react-dom');
-let _ = require('lodash');
+const React = require('react');
+const reactDOM = require('react-dom');
+const _ = require('lodash');
 
-let createStore = require('redux').createStore;
-let combineReducers = require('redux').combineReducers;
-let applyMiddleware = require('redux').applyMiddleware;
-let connect = require('react-redux').connect;
-let Provider = require('react-redux').Provider;
-let thunk = require('redux-thunk');
+const createStore = require('redux').createStore;
+const combineReducers = require('redux').combineReducers;
+const applyMiddleware = require('redux').applyMiddleware;
+const connect = require('react-redux').connect;
+const Provider = require('react-redux').Provider;
+const thunk = require('redux-thunk');
 
-// let ModelDebugView = require('./components/ModelDebugView/ModelDebugView.js');
-// let MainMenu = require('./MainMenu.js');
-let Wizard = require('./Wizard.js');
+// const ModelDebugView = require('./components/ModelDebugView/ModelDebugView.js');
+// const MainMenu = require('./MainMenu.js');
+const Wizard = require('./Wizard.js');
 
-let GraphEditor = require('./GraphEditor.js');
-let actionCreators = require('./actionCreators.js');
+const GraphEditor = require('./GraphEditor.js');
+const actionCreators = require('./actionCreators.js');
 
-let HTML5Backend = require('react-dnd-html5-backend');
-let DragDropContext = require('react-dnd').DragDropContext;
+const HTML5Backend = require('react-dnd-html5-backend');
+const DragDropContext = require('react-dnd').DragDropContext;
 
 
 let App = React.createClass({
@@ -70,7 +70,7 @@ const reducer = combineReducers({
 	interface: require('./interfaceReducer.js'),
 });
 const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
-let store = createStoreWithMiddleware(reducer);
+const store = createStoreWithMiddleware(reducer);
 
 function mapStateToProps(state) {
 	const newState = _.merge({}, state.model, state.interface);
