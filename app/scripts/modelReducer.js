@@ -16,6 +16,7 @@ const initialState = {
 		groups: [],
 	},
 	// model: null,
+	modelId: undefined,
 };
 
 
@@ -34,6 +35,15 @@ function reducer(state=initialState, action) {
 	// console.log(action);
 
 	switch (action.type) {
+		case constants.ACTION_initMap: {
+			const {modelId} = action;
+			return _.merge(
+				{},
+				initialState,
+				modelId
+			);
+		}
+
 		case constants.ACTION_addGroupBackgroundImage: {
 			let {groupId, dataURI, aspectRatio/*, width*/} = action;
 

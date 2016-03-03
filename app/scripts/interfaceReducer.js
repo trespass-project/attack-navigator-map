@@ -86,6 +86,7 @@ const whitelist = [
 	constants.ACTION_attackerProfileChanged,
 	constants.ACTION_setAttackerGoal,
 	constants.ACTION_runAnalysis,
+	constants.ACTION_initMap,
 ];
 
 

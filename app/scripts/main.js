@@ -26,6 +26,8 @@ let App = React.createClass({
 	componentDidMount: function() {
 		const props = this.props;
 
+		props.dispatch( actionCreators.initMap() );
+
 		const editorElem = document.querySelector('#editor > svg');
 		props.dispatch( actionCreators.setEditorElem(editorElem) );
 

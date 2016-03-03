@@ -234,6 +234,8 @@ function graphFromModel(model) {
 			return result;
 		}, []);
 
+	other.modelId = model.system.id;
+
 	return {graph, other};
 };
 
@@ -245,9 +247,6 @@ function modelFromGraph(graph) {
 
 	// embed entire graph in model
 	model.system.anm_data = JSON.stringify(graph);
-
-	// system needs an id
-	model.system.id = model.system.id || helpers.makeId('model');
 
 	(graph.edges || []).forEach((edge) => {
 		trespass.model.addEdge(model, {

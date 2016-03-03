@@ -11,6 +11,7 @@ const toolsApi = api.tools;
 const knowledgebaseApi = api.knowledgebase;
 const constants = require('./constants.js');
 const modelHelpers = require('./model-helpers.js');
+const helpers = require('./helpers.js');
 
 
 // let requests = {};
@@ -27,6 +28,16 @@ function handleError(err) {
 }
 
 // ——————————
+
+
+const initMap =
+module.exports.initMap =
+function initMap(modelId=undefined) {
+	return {
+		type: constants.ACTION_initMap,
+		modelId: modelId || helpers.makeId('model'),
+	};
+};
 
 
 module.exports.setEditorElem =
@@ -377,6 +388,7 @@ function loadXML(xmlString) {
 
 		modelHelpers.XMLModelToGraph(xmlString, function(err, graph, other) {
 			if (err) { return; }
+			dispatch( initMap(other.modelId) );
 			dispatch({
 				type: constants.ACTION_loadXML_DONE,
 				graph, other
@@ -480,14 +492,19 @@ const runAnalysis =
 module.exports.runAnalysis =
 function runAnalysis(toolChainId, downloadScenario=false) {
 	return function(dispatch, getState) {
+		const state = getState();
 		// collect relevant data
 		const data = R.pick([
 			'attackerProfile',
 			'attackerGoalType',
 			'attackerGoal',
 			'attackerProfit',
-		], getState().interface);
+		], state.interface);
 
+		const modelId = state.model.modelId;
+		if (!modelId) {
+			throw new Error('model needs an id');
+		}
 
 		// generate model xml
 		const model = modelHelpers.modelFromGraph(getState().model.graph);
@@ -504,7 +521,7 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 		let scenario = trespassModel.createScenario();
 		scenario = trespassModel.scenarioSetModel(scenario, modelFileName);
 		scenario = trespassModel.scenarioSetAssetGoal(scenario, attackerId, assetId, profit);
-		scenario.scenario.id = model.system.id.replace(/-model$/i, '-scenario');
+		scenario.scenario.id = modelId.replace(/-model$/i, '-scenario');
 		const scenarioXmlStr = trespassModel.scenarioToXML(scenario);
 		// console.log(scenarioXmlStr);
 
