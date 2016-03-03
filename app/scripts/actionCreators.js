@@ -10,7 +10,6 @@ const api = require('trespass.js').api;
 const toolsApi = api.tools;
 const knowledgebaseApi = api.knowledgebase;
 const constants = require('./constants.js');
-const helpers = require('./helpers.js');
 const modelHelpers = require('./model-helpers.js');
 
 
