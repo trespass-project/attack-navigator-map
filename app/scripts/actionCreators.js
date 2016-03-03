@@ -511,7 +511,7 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 		// zip it!
 		let zip = new JSZip();
 		zip.file(modelFileName, modelXmlStr);
-		zip.file('scenario.xml', scenarioXmlStr);
+		zip.file(scenarioFileName, scenarioXmlStr);
 		const blob = zip.generate({ type: 'blob' });
 
 		if (downloadScenario) {
