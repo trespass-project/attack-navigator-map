@@ -692,7 +692,7 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 			'attackerGoalType',
 			'attackerGoal',
 			'attackerProfit',
-		], state.interface); // TODO: this should probably not be in `interface`
+		], state.interface);
 
 		const modelId = state.model.metadata.id;
 		if (!modelId) {

@@ -42,7 +42,7 @@ let AttackerProfileEditorLanguage = React.createClass({
 	},
 
 	getInitialState: function() {
-		return { // TODO: change to id
+		return {
 			[profileIdAttribute]: '' // selected preset title
 		};
 	},

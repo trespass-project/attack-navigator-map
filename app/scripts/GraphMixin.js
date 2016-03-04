@@ -200,22 +200,6 @@ const GraphMixin = {
 		const connectDropTarget = props.connectDropTarget || _.identity;
 		return connectDropTarget(this._render());
 	},
-
-
-	// updateDimensions: function() {
-	// 	var $window = $(window);
-	// 	this.setState({ // TODO: unused
-	// 		width: $window.width(),
-	// 		height: $window.height()
-	// 	});
-	// },
-	// componentDidMount: function() {
-	// 	this.updateDimensions();
-	// 	window.addEventListener('resize', this.updateDimensions);
-	// },
-	// componentWillUnmount: function() {
-	// 	window.removeEventListener('resize', this.updateDimensions);
-	// }
 };
 
 
