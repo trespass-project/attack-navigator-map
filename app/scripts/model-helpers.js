@@ -128,7 +128,7 @@ function XMLModelToGraph(xmlStr, done) {
 				groupIndex++;
 
 				selection.forEach(function(node) {
-					group.nodeIds.push(node.id);
+					group.nodeIds = [...group.nodeIds, node.id];
 
 					// basic auto-layout
 					if (rowCounter > maxNodesPerCol || lastGroupIndex !== groupIndex) {
@@ -150,7 +150,7 @@ function XMLModelToGraph(xmlStr, done) {
 					rowCounter++;
 				});
 				if (group.nodeIds.length) {
-					graph.groups.push(group);
+					graph.groups = [...graph.groups, group];
 				}
 			});
 
@@ -381,7 +381,7 @@ function cloneNode(graph, origNodeId) {
 	// if node is in a group, so is the clone
 	const groups = getNodeGroups(origNodeId, graph.groups);
 	groups.forEach((group) => {
-		group.nodeIds.push(newNode.id);
+		group.nodeIds = [...group.nodeIds, newNode.id];
 	});
 
 	const fragment = {
