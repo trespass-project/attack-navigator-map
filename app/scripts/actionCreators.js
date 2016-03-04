@@ -598,10 +598,7 @@ function setAttackerProfit(profit) {
 const putModelAndScenarioIntoKnowledgebase =
 module.exports.putModelAndScenarioIntoKnowledgebase =
 function putModelAndScenarioIntoKnowledgebase(modelId, modelData, scenarioData) {
-	// TODO: remove delay
-	const delay = 250;
-
-	[
+	const tasksData = [
 		{
 			data: modelData.fileContent,
 			query: queryString.stringify({
@@ -618,8 +615,10 @@ function putModelAndScenarioIntoKnowledgebase(modelId, modelData, scenarioData) 
 				filetype: scenarioData.fileType,
 			})
 		}
-	]
-		.forEach((item, index) => {
+	];
+
+	const taskFuncs = tasksData
+		.map((item, index) => {
 			const url = `${api.makeUrl(knowledgebaseApi, 'files')}?${item.query}`;
 			const params = _.merge(
 				{
@@ -629,9 +628,8 @@ function putModelAndScenarioIntoKnowledgebase(modelId, modelData, scenarioData) 
 				api.requestOptions.fetch.crossDomain
 			);
 
-			setTimeout(() => {
-				// console.log(url);
-				fetch(url, params)
+			return () => {
+				return fetch(url, params)
 					.catch((err) => {
 						console.error(err);
 					})
@@ -642,8 +640,16 @@ function putModelAndScenarioIntoKnowledgebase(modelId, modelData, scenarioData) 
 							console.error(`something went wrong (${res.status})`, url);
 						}
 					});
-			}, index * delay);
+			};
 		});
+
+	const resolved = Promise.resolve();
+	const promise = taskFuncs
+		.reduce((acc, taskFunc) => {
+			return acc.then(taskFunc);
+		}, resolved);
+
+	return promise;
 };
 
 
