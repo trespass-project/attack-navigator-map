@@ -15,9 +15,10 @@ const initialState = {
 		edges: [],
 		groups: [],
 	},
-	// model: null,
-	modelId: undefined,
 	predicates: {},
+	metadata: {
+		id: undefined,
+	},
 };
 
 
@@ -41,7 +42,11 @@ function reducer(state=initialState, action) {
 			const newState = _.merge(
 				{},
 				initialState,
-				{modelId}
+				{
+					metadata: {
+						id: modelId
+					}
+				}
 			);
 			return newState;
 		}
@@ -123,11 +128,11 @@ function reducer(state=initialState, action) {
 			return state; // noop
 		}
 		case constants.ACTION_loadXML_DONE: {
-			const {graph, other} = action;
-			return Object.assign(
+			const {graph, other, metadata} = action.result;
+			return _.assign(
 				{},
 				initialState,
-				{ graph },
+				{ graph, metadata },
 				other
 			);
 		}

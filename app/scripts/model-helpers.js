@@ -96,7 +96,7 @@ function XMLModelToGraph(xmlStr, done) {
 	trespass.model.parse(xmlStr, (err, model) => {
 		if (err) { return done(err); }
 
-		const {graph, other} = graphFromModel(model);
+		const {graph, other, metadata} = graphFromModel(model);
 
 		let colCounter = 0;
 		let rowCounter = 0;
@@ -154,7 +154,7 @@ function XMLModelToGraph(xmlStr, done) {
 				}
 			});
 
-		done(null, graph, other);
+		done(null, {graph, other, metadata});
 	});
 };
 
@@ -234,7 +234,7 @@ function graphFromModel(model) {
 			return result;
 		}, {});
 
-	other.modelId = model.system.id;
+	const metadata = R.pick(trespass.model.knownAttributes.system, model.system);
 
 	other.nodeNames = graph.nodes
 		.map((item) => {
@@ -242,17 +242,24 @@ function graphFromModel(model) {
 			return { name, label: name };
 		});
 
-	return {graph, other};
+	return {graph, other, metadata};
 };
 
 
 const modelFromGraph =
 module.exports.modelFromGraph =
-function modelFromGraph(graph) {
+function modelFromGraph(graph, metadata={}) {
 	const model = trespass.model.create();
 
 	// embed entire graph in model
 	model.system.anm_data = JSON.stringify(graph);
+
+	// include metadata
+	model.system = _.merge(
+		{},
+		model.system,
+		metadata
+	);
 
 	(graph.edges || []).forEach((edge) => {
 		trespass.model.addEdge(model, {

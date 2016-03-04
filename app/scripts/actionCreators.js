@@ -519,12 +519,13 @@ function loadXML(xmlString) {
 			xml: xmlString,
 		});
 
-		modelHelpers.XMLModelToGraph(xmlString, function(err, graph, other) {
+		modelHelpers.XMLModelToGraph(xmlString, function(err, result) {
+			const {graph, other, metadata} = result;
 			if (err) { return; }
 			dispatch( initMap(other.modelId) );
 			dispatch({
 				type: constants.ACTION_loadXML_DONE,
-				graph, other
+				result
 			});
 		});
 	};
@@ -684,22 +685,22 @@ module.exports.runAnalysis =
 function runAnalysis(toolChainId, downloadScenario=false) {
 	return function(dispatch, getState) {
 		const state = getState();
+
 		// collect relevant data
 		const data = R.pick([
 			'attackerProfile',
 			'attackerGoalType',
 			'attackerGoal',
 			'attackerProfit',
-		], state.interface);
+		], state.interface); // TODO: this should probably not be in `interface`
 
-		const modelId = state.model.modelId;
+		const modelId = state.model.metadata.id;
 		if (!modelId) {
 			throw new Error('missing model id');
 		}
 
 		// generate model xml
-		let model = modelHelpers.modelFromGraph(state.model.graph);
-		model.system.id = modelId;
+		let model = modelHelpers.modelFromGraph(state.model.graph, state.model.metadata);
 		const modelXmlStr = trespassModel.toXML(model);
 		// console.log(modelXmlStr);
 
