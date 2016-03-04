@@ -127,7 +127,7 @@ let Node = React.createClass({
 				destructive: true,
 				icon: icons['fa-trash'],
 				action: function() {
-					context.dispatch( actionCreators.removeNode(props.node) );
+					context.dispatch( actionCreators.removeNode(props.node.id) );
 				}
 			},
 			{	label: 'clone',

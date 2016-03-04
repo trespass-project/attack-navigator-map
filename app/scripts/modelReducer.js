@@ -159,8 +159,8 @@ function reducer(state=initialState, action) {
 		}
 
 		case constants.ACTION_removeNode: {
-			const {node} = action;
-			const newGraph = modelHelpers.removeNode(state.graph, node.id);
+			const {nodeId} = action;
+			const newGraph = modelHelpers.removeNode(state.graph, nodeId);
 			return mergeWithState({ graph: newGraph });
 		}
 

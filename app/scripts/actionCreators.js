@@ -404,10 +404,10 @@ function addNodeToGroup(nodeId, groupId) {
 
 
 module.exports.removeNode =
-function removeNode(node) {
+function removeNode(nodeId) {
 	return {
 		type: constants.ACTION_removeNode,
-		node
+		nodeId
 	};
 };
 
