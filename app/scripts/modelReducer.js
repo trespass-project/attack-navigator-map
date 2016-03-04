@@ -54,7 +54,7 @@ function reducer(state=initialState, action) {
 		case constants.ACTION_addGroupBackgroundImage: {
 			let {groupId, dataURI, aspectRatio/*, width*/} = action;
 
-			let newState = _.merge({}, state);
+			const newState = mergeWithState(state);
 			let group = helpers.getItemById(newState.graph.groups, groupId);
 
 			group._bgImage = group._bgImage || {};
@@ -68,7 +68,7 @@ function reducer(state=initialState, action) {
 		case constants.ACTION_resizeGroupBackgroundImage: {
 			let {groupId, width, height} = action;
 
-			let newState = _.merge({}, state);
+			const newState = mergeWithState(state);
 			let group = helpers.getItemById(newState.graph.groups, groupId);
 
 			if (!group._bgImage) {
@@ -85,7 +85,7 @@ function reducer(state=initialState, action) {
 		case constants.ACTION_moveGroupBackgroundImage: {
 			let {groupId, groupCenterOffsetXY} = action;
 
-			let newState = _.merge({}, state);
+			const newState = mergeWithState(state);
 			let group = helpers.getItemById(newState.graph.groups, groupId);
 
 			if (!group._bgImage) {
@@ -100,7 +100,7 @@ function reducer(state=initialState, action) {
 
 		case constants.ACTION_removeGroupBackgroundImage: {
 			let {groupId} = action;
-			let newState = _.merge({}, state);
+			const newState = mergeWithState(state);
 			let group = helpers.getItemById(newState.graph.groups, groupId);
 			delete group._bgImage;
 			return newState;
