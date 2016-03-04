@@ -12,7 +12,7 @@ const theme = require('./graph-theme-default.js');
 const initialState = {
 	drag: null,
 	dragNodeId: null,
-	hoverNode: null,
+	hoverNodeId: null,
 	hoverGroup: null,
 	previewEdge: null,
 
@@ -189,7 +189,7 @@ function reducer(state=initialState, action) {
 			return mergeWithState({ dragNodeId: action.nodeId });
 
 		case constants.ACTION_setHoverNode:
-			return mergeWithState({ hoverNode: action.node });
+			return mergeWithState({ hoverNodeId: action.nodeId });
 
 		case constants.ACTION_setHoverGroup:
 			return mergeWithState({ hoverGroup: action.group });

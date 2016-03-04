@@ -84,7 +84,7 @@ const GraphMixin = {
 		return <Node
 			{...this.props}
 			key={index}
-			hovered={props.hoverNode && (node.id === props.hoverNode.id)}
+			hovered={props.hoverNodeId && (node.id === props.hoverNodeId)}
 			selected={props.selected && (node.id === props.selected.componentId)}
 			x={node.x}
 			y={node.y}

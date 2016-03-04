@@ -350,10 +350,10 @@ function setDragNode(nodeId) {
 
 
 module.exports.setHoverNode =
-function setHoverNode(node) {
+function setHoverNode(nodeId) {
 	return {
 		type: constants.ACTION_setHoverNode,
-		node
+		nodeId
 	};
 };
 

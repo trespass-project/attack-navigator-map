@@ -109,7 +109,7 @@ let Node = React.createClass({
 						node={props.node}
 						editorElem={props.editorElem}
 						editorTransformElem={props.editorTransformElem}
-						hoverNode={props.hoverNode}
+						hoverNodeId={props.hoverNodeId}
 						dragNodeId={props.dragNodeId}
 					/>
 					: null
@@ -268,7 +268,7 @@ let Node = React.createClass({
 	},
 
 	_handleHover: function(event) {
-		this.context.dispatch( actionCreators.setHoverNode(this.props.node) );
+		this.context.dispatch( actionCreators.setHoverNode(this.props.node.id) );
 	},
 
 	_handleHoverOut: function(event) {
