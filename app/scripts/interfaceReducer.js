@@ -182,10 +182,8 @@ function reducer(state=initialState, action) {
 		case constants.ACTION_setPreviewEdge:
 			return mergeWithState({ previewEdge: action.previewEdge });
 
-		case constants.ACTION_setDrag: {
-			const newState = mergeWithState({ drag: action.data });
-			return newState;
-		}
+		case constants.ACTION_setDrag:
+			return mergeWithState({ drag: action.data });
 
 		case constants.ACTION_setDragNode:
 			return mergeWithState({ dragNode: action.node });
@@ -211,34 +209,27 @@ function reducer(state=initialState, action) {
 		case constants.ACTION_selectWizardStep:
 			return mergeWithState({ wizardSelectedSection: action.name });
 
-		case constants.ACTION_attackerProfileChanged: {
-			const {profile} = action;
-			return mergeWithState({ attackerProfile: profile });
-		}
+		case constants.ACTION_attackerProfileChanged:
+			return mergeWithState({ attackerProfile: action.profile });
 
-		case constants.ACTION_setAttackerGoal: {
-			const {goalType, goalData} = action;
+		case constants.ACTION_setAttackerGoal:
 			return mergeWithState({
-				attackerGoalType: goalType,
-				attackerGoal: goalData,
+				attackerGoalType: action.goalType,
+				attackerGoal: action.goalData,
 			});
-		}
 
-		case constants.ACTION_setAttackerProfit: {
-			const {profit} = action;
-			return mergeWithState({ attackerProfit: profit });
-		}
+		case constants.ACTION_setAttackerProfit:
+			return mergeWithState({ attackerProfit: action.profit });
 
-		case constants.ACTION_runAnalysis: {
+		case constants.ACTION_runAnalysis:
 			return mergeWithState({
 				analysisRunning: true,
 				toolChainId: action.toolChainId,
 			});
-		}
 
-		case constants.ACTION_loadToolChains: {
-			return state; // noop
-		}
+		// case constants.ACTION_loadToolChains:
+		// 	return state; // noop
+
 		case constants.ACTION_loadToolChains_DONE: {
 			const { ids, items } = action.normalizedToolChains;
 			return mergeWithState({
@@ -247,9 +238,9 @@ function reducer(state=initialState, action) {
 			});
 		}
 
-		case constants.ACTION_loadAttackerProfiles: {
-			return state; // noop
-		}
+		// case constants.ACTION_loadAttackerProfiles:
+		// 	return state; // noop
+
 		case constants.ACTION_loadAttackerProfiles_DONE: {
 			const { ids, items } = action.normalizedAttackerProfiles;
 			return mergeWithState({
