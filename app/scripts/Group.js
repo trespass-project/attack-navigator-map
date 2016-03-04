@@ -1,18 +1,18 @@
 'use strict';
 
-let $ = require('jquery');
-let _ = require('lodash');
-let R = require('ramda');
-let classnames = require('classnames');
-let React = require('react');
-let reactDOM = require('react-dom');
-let SchleppMixin = require('./SchleppMixin.js');
-let icons = require('./icons.js');
-let helpers = require('./helpers.js');
-let actionCreators = require('./actionCreators.js');
+const $ = require('jquery');
+const _ = require('lodash');
+const R = require('ramda');
+const classnames = require('classnames');
+const React = require('react');
+const reactDOM = require('react-dom');
+const SchleppMixin = require('./SchleppMixin.js');
+const icons = require('./icons.js');
+const helpers = require('./helpers.js');
+const actionCreators = require('./actionCreators.js');
 
 
-let Dropzone = React.createClass({
+const Dropzone = React.createClass({
 	propTypes: {
 		x: React.PropTypes.number.isRequired,
 		y: React.PropTypes.number.isRequired,
@@ -36,7 +36,7 @@ let Dropzone = React.createClass({
 });
 
 
-let Group = React.createClass({
+const Group = React.createClass({
 	mixins: [SchleppMixin],
 
 	contextTypes: {

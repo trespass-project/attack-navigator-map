@@ -1,9 +1,9 @@
 'use strict';
 
-let React = require('react');
+const React = require('react');
 
 
-let GraphOutline = React.createClass({
+const GraphOutline = React.createClass({
 	propTypes: {
 		graph: React.PropTypes.object.isRequired,
 	},

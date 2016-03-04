@@ -1,14 +1,14 @@
 'use strict';
 
-let R = require('ramda');
-let React = require('react');
-let reactDOM = require('react-dom');
-let classnames = require('classnames');
-let SchleppMixin = require('./SchleppMixin.js');
-let Port = require('./Port.js');
-let icons = require('./icons.js');
-let helpers = require('./helpers.js');
-let actionCreators = require('./actionCreators.js');
+const R = require('ramda');
+const React = require('react');
+const reactDOM = require('react-dom');
+const classnames = require('classnames');
+const SchleppMixin = require('./SchleppMixin.js');
+const Port = require('./Port.js');
+const icons = require('./icons.js');
+const helpers = require('./helpers.js');
+const actionCreators = require('./actionCreators.js');
 
 
 const typeIcons = {
@@ -24,7 +24,7 @@ const typeIcons = {
 };
 
 
-let Node = React.createClass({
+const Node = React.createClass({
 	mixins: [SchleppMixin],
 
 	contextTypes: {

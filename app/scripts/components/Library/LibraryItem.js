@@ -1,11 +1,11 @@
 'use strict';
 
-let _ = require('lodash');
+const _ = require('lodash');
 const constants = require('../../constants.js');
-let helpers = require('../../helpers.js');
-let React = require('react');
-let DragSource = require('react-dnd').DragSource;
-let actionCreators = require('../../actionCreators.js');
+const helpers = require('../../helpers.js');
+const React = require('react');
+const DragSource = require('react-dnd').DragSource;
+const actionCreators = require('../../actionCreators.js');
 
 
 let LibraryItem = React.createClass({

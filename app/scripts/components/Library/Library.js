@@ -1,16 +1,16 @@
 'use strict';
 
-let $ = require('jquery');
-let _ = require('lodash');
-let R = require('ramda');
-let Q = require('q');
-let utils = require('../../utils.js');
-let React = require('react');
+const $ = require('jquery');
+const _ = require('lodash');
+const R = require('ramda');
+const Q = require('q');
+const utils = require('../../utils.js');
+const React = require('react');
 
-let LibraryItem = require('./LibraryItem.js');
+const LibraryItem = require('./LibraryItem.js');
 
 
-let Library = React.createClass({
+const Library = React.createClass({
 	propTypes: {
 		items: React.PropTypes.array.isRequired,
 		title: React.PropTypes.string.isRequired,
@@ -37,20 +37,6 @@ let Library = React.createClass({
 			itemsFiltered: this.props.items || [],
 		};
 	},
-
-	// renderLoading: function() {
-	// 	// TODO: react-loader
-	// 	return (this.props.loading)
-	// 		? <div>loading...</div>
-	// 		: null;
-	// },
-
-	// renderError: function() {
-	// 	const state = this.state;
-	// 	return (state.error)
-	// 		? <div>{state.error.statusText}: {state.error.responseText}</div>
-	// 		: null;
-	// },
 
 	renderFilterItem: function(item) {
 		const props = this.props;

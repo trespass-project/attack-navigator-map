@@ -1,17 +1,17 @@
 'use strict';
 
-let React = require('react');
-let reactDOM = require('react-dom');
-// let d3 = require('d3');
-let mout = require('mout');
-let classnames = require('classnames');
-let icons = require('./icons.js');
-let helpers = require('./helpers.js');
-let modelHelpers = require('./model-helpers.js');
-let actionCreators = require('./actionCreators.js');
+const React = require('react');
+const reactDOM = require('react-dom');
+// const d3 = require('d3');
+const mout = require('mout');
+const classnames = require('classnames');
+const icons = require('./icons.js');
+const helpers = require('./helpers.js');
+const modelHelpers = require('./model-helpers.js');
+const actionCreators = require('./actionCreators.js');
 
 
-// let diagonal = d3.svg.diagonal()
+// const diagonal = d3.svg.diagonal()
 // 	.source(function(d) { return d.fromNode; })
 // 	.target(function(d) { return d.toNode; });
 

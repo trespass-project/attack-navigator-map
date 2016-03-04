@@ -1,13 +1,12 @@
 'use strict';
 
-let R = require('ramda');
-let React = require('react');
-let actionCreators = require('../../actionCreators.js');
-let Library = require('../Library/Library.js');
+const R = require('ramda');
+const React = require('react');
+const actionCreators = require('../../actionCreators.js');
+const Library = require('../Library/Library.js');
 
 
-
-let ModelLibrary = React.createClass({
+const ModelLibrary = React.createClass({
 	contextTypes: {
 		dispatch: React.PropTypes.func,
 	},
@@ -24,7 +23,7 @@ let ModelLibrary = React.createClass({
 	},
 
 	renderItem: function(item, index) {
-		let onClick = R.partial(this.loadModel, [item]);
+		const onClick = R.partial(this.loadModel, [item]);
 		return (
 			<li onClick={onClick} key={item.id || index}>
 				<b>{item.name}</b>

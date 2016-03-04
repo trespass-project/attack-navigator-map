@@ -1,10 +1,10 @@
 'use strict';
 
-let React = require('react');
-let GraphMixin = require('./GraphMixin.js');
+const React = require('react');
+const GraphMixin = require('./GraphMixin.js');
 
 
-var Graph = React.createClass({
+const Graph = React.createClass({
 	mixins: [GraphMixin],
 
 	getDefaultProps: function() {

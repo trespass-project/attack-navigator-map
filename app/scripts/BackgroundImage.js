@@ -1,14 +1,14 @@
 'use strict';
 
-let React = require('react');
-let reactDOM = require('react-dom');
-let SchleppMixin = require('./SchleppMixin.js');
-let helpers = require('./helpers.js');
-let icons = require('./icons.js');
-let actionCreators = require('./actionCreators.js');
+const React = require('react');
+const reactDOM = require('react-dom');
+const SchleppMixin = require('./SchleppMixin.js');
+const helpers = require('./helpers.js');
+const icons = require('./icons.js');
+const actionCreators = require('./actionCreators.js');
 
 
-let ResizeElem = React.createClass({
+const ResizeElem = React.createClass({
 	mixins: [SchleppMixin],
 
 	contextTypes: {

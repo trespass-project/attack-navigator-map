@@ -1,10 +1,10 @@
 'use strict';
 
-let React = require('react');
-let actionCreators = require('./actionCreators.js');
+const React = require('react');
+const actionCreators = require('./actionCreators.js');
 
 
-let MainMenu = React.createClass({
+const MainMenu = React.createClass({
 	contextTypes: {
 		dispatch: React.PropTypes.func,
 	},
