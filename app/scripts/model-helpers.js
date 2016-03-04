@@ -518,8 +518,7 @@ const addNodeToGroup =
 module.exports.addNodeToGroup =
 function addNodeToGroup(graph, nodeId, groupId) {
 	const group = helpers.getItemById(graph.groups, groupId);
-	group.nodeIds.push(nodeId);
-	group.nodeIds = R.uniq(group.nodeIds);
+	group.nodeIds = R.uniq([...group.nodeIds, nodeId]);
 	return graph;
 };
 

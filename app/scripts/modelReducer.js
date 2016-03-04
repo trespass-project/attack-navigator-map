@@ -148,23 +148,20 @@ function reducer(state=initialState, action) {
 
 		case constants.ACTION_addNodeToGroup: {
 			const {nodeId, groupId} = action;
-			let newState = _.merge({}, state);
-			newState.graph = modelHelpers.addNodeToGroup(newState.graph, nodeId, groupId);
-			return newState;
+			const newGraph = modelHelpers.addNodeToGroup(state.graph, nodeId, groupId);
+			return mergeWithState({ graph: newGraph });
 		}
 
 		case constants.ACTION_cloneNode: {
 			const {node} = action;
-			let newState = _.merge({}, state);
-			newState.graph = modelHelpers.cloneNode(newState.graph, node);
-			return newState;
+			const newGraph = modelHelpers.cloneNode(state.graph, node);
+			return mergeWithState({ graph: newGraph });
 		}
 
 		case constants.ACTION_removeNode: {
 			const {node} = action;
-			let newState = _.merge({}, state);
-			newState.graph = modelHelpers.removeNode(newState.graph, node.id);
-			return newState;
+			const newGraph = modelHelpers.removeNode(state.graph, node.id);
+			return mergeWithState({ graph: newGraph });
 		}
 
 		case constants.ACTION_moveNode: {
@@ -178,17 +175,16 @@ function reducer(state=initialState, action) {
 
 		case constants.ACTION_ungroupNode: {
 			const {node} = action;
-			let newState = _.merge({}, state);
+			const newState = mergeWithState(state);
+
+			function isIdEqual(id) {
+				return R.equals(id, node.id);
+			}
 
 			// remove node from all groups it is in
 			newState.graph.groups = newState.graph.groups
-				.map(function(group) {
-					group.nodeIds = R.reject(
-						function(nodeId) {
-							return R.equals(nodeId, node.id);
-						}, group.nodeIds
-					);
-					group.nodeIds = R.uniq(group.nodeIds);
+				.map((group) => {
+					group.nodeIds = R.uniq( R.reject(isIdEqual, group.nodeIds) );
 					return group;
 				});
 
@@ -215,39 +211,40 @@ function reducer(state=initialState, action) {
 				return state;
 			}
 
-			let newState = _.merge({}, state);
-			newState.graph.edges.push(
+			const newState = mergeWithState(state);
+			newState.graph.edges = [
+				...newState.graph.edges,
 				_.merge(edge, { id: helpers.makeId('edge') })
-			);
+				// TODO: use modelHelpers.createEdge()
+			]
 			return newState;
 		}
 
 		case constants.ACTION_removeEdge: {
 			const {edge} = action;
-			let newState = _.merge({}, state);
+			const newState = mergeWithState(state);
 			newState.graph.edges = state.graph.edges
-				.filter(function(e) {
-					return edge.id !== e.id;
-				});
+				.filter(e => edge.id !== e.id);
 			return newState;
 		}
 
 		case constants.ACTION_addGroup: {
 			const {group} = action;
-			let newState = _.merge({}, state);
-			newState.graph.groups.push(
-				_.merge(group, {
+			const newState = mergeWithState(state);
+			newState.graph.groups = [
+				...newState.graph.groups,
+				_.merge(group, { // TODO: use modelHelpers.createGroup()
 					id: helpers.makeId('group'),
 					name: 'new group', // TODO: should be label
 					nodeIds: []
 				})
-			);
+			];
 			return newState;
 		}
 
 		case constants.ACTION_cloneGroup: {
 			const {groupId} = action;
-			let newState = _.merge({}, state);
+			const newState = mergeWithState(state);
 			newState.graph = modelHelpers.cloneGroup(newState.graph, groupId);
 			return newState;
 		}
