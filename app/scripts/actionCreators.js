@@ -432,10 +432,10 @@ function ungroupNode(nodeId) {
 
 
 module.exports.moveGroup =
-function moveGroup(group, posDelta) {
+function moveGroup(groupId, posDelta) {
 	return {
 		type: constants.ACTION_moveGroup,
-		group,
+		groupId,
 		posDelta
 	};
 };

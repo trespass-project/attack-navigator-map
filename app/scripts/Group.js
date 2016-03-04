@@ -260,7 +260,7 @@ let Group = React.createClass({
 
 		this.context.dispatch(
 			actionCreators.moveGroup(
-				props.group,
+				props.group.id,
 				{ // delta of the delta
 					x: newPositionX - this.currentPositionX,
 					y: newPositionY - this.currentPositionY
