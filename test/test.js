@@ -671,7 +671,7 @@ describe(f1('model-helpers.js'), function() {
 			groups: [group],
 		};
 
-		const newGraph = modelHelpers.cloneNode(graph, graph.nodes[0]);
+		const newGraph = modelHelpers.cloneNode(graph, graph.nodes[0].id);
 
 		const origNode = newGraph.nodes[0];
 		const clonedNode = newGraph.nodes[2];

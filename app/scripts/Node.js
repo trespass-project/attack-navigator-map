@@ -133,7 +133,7 @@ let Node = React.createClass({
 			{	label: 'clone',
 				icon: icons['fa-files-o'],
 				action: function() {
-					context.dispatch( actionCreators.cloneNode(props.node) );
+					context.dispatch( actionCreators.cloneNode(props.node.id) );
 				}
 			},
 			{	label: 'remove\nfrom group',

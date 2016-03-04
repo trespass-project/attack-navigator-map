@@ -348,7 +348,9 @@ function createGroup(group={}, keepId=false) {
 
 const cloneNode =
 module.exports.cloneNode =
-function cloneNode(graph, origNode) {
+function cloneNode(graph, origNodeId) {
+	const origNode = helpers.getItemById(graph.nodes, origNodeId);
+
 	// duplicate node
 	const nodes = [origNode] // new id + offset
 		.map((node) => {
@@ -366,18 +368,18 @@ function cloneNode(graph, origNode) {
 	const edges = graph.edges
 		// find edges to / from original node
 		.filter((edge) => {
-			return R.contains(edge.from, [origNode.id]) || R.contains(edge.to, [origNode.id]);
+			return R.contains(edge.from, [origNodeId]) || R.contains(edge.to, [origNodeId]);
 		})
 		// change reference to new node
 		.map((_edge) => {
 			let edge = createEdge(_edge);
-			if (edge.from === origNode.id) { edge.from = newNode.id; }
-			if (edge.to === origNode.id) { edge.to = newNode.id; }
+			if (edge.from === origNodeId) { edge.from = newNode.id; }
+			if (edge.to === origNodeId) { edge.to = newNode.id; }
 			return edge;
 		});
 
 	// if node is in a group, so is the clone
-	const groups = getNodeGroups(origNode.id, graph.groups);
+	const groups = getNodeGroups(origNodeId, graph.groups);
 	groups.forEach((group) => {
 		group.nodeIds.push(newNode.id);
 	});

@@ -386,10 +386,10 @@ function setMouseOverEditor(yesno) {
 
 
 module.exports.cloneNode =
-function cloneNode(node) {
+function cloneNode(nodeId) {
 	return {
 		type: constants.ACTION_cloneNode,
-		node
+		nodeId
 	};
 };
 
