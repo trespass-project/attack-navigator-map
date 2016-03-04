@@ -341,10 +341,10 @@ function setDrag(data) {
 
 
 module.exports.setDragNode =
-function setDragNode(node) {
+function setDragNode(nodeId) {
 	return {
 		type: constants.ACTION_setDragNode,
-		node
+		nodeId
 	};
 };
 

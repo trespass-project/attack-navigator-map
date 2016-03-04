@@ -22,7 +22,7 @@ let Port = React.createClass({
 		editorElem: React.PropTypes.object.isRequired,
 		editorTransformElem: React.PropTypes.object.isRequired,
 		hoverNode: React.PropTypes.object/*.isRequired*/,
-		dragNode: React.PropTypes.object/*.isRequired*/,
+		dragNodeId: React.PropTypes.string/*.isRequired*/,
 	},
 
 	getDefaultProps: function() {
@@ -53,8 +53,7 @@ let Port = React.createClass({
 	},
 
 	_onDragStart: function(event) {
-		const node = this.props.node;
-		this.context.dispatch( actionCreators.setDragNode(node) );
+		this.context.dispatch( actionCreators.setDragNode(this.props.node.id) );
 		// this._onDragMove(event);
 	},
 
@@ -85,9 +84,9 @@ let Port = React.createClass({
 		const context = this.context;
 		const props = this.props;
 
-		if (props.hoverNode != null && props.dragNode != null) {
+		if (props.hoverNode != null && props.dragNodeId != null) {
 			const newEdge = {
-				from: props.dragNode.id,
+				from: props.dragNodeId,
 				to: props.hoverNode.id
 			};
 			context.dispatch( actionCreators.addEdge(newEdge) );

@@ -73,7 +73,8 @@ let Group = React.createClass({
 	renderDropzone: function() {
 		const props = this.props;
 
-		if (props.dragNode && !R.contains(props.dragNode.id, props.group.nodeIds)) {
+		if (props.dragNode && !R.contains(props.dragNodeId, props.group.nodeIds)) {
+			const dragNode = helpers.getItemById(props.graph.nodes, props.dragNodeId);
 			const groupRect = {
 				x: props.x,
 				y: props.y,
@@ -82,8 +83,8 @@ let Group = React.createClass({
 			};
 			const halfSize = 0.5 * props.theme.node.size;
 			const nodeRect = {
-				x: props.dragNode.x - halfSize,
-				y: props.dragNode.y - halfSize,
+				x: dragNode.x - halfSize,
+				y: dragNode.y - halfSize,
 				width: props.theme.node.size,
 				height: props.theme.node.size,
 			};

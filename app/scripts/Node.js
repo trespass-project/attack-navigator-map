@@ -110,7 +110,8 @@ let Node = React.createClass({
 						editorElem={props.editorElem}
 						editorTransformElem={props.editorTransformElem}
 						hoverNode={props.hoverNode}
-						dragNode={props.dragNode} />
+						dragNodeId={props.dragNodeId}
+					/>
 					: null
 				}
 			</g>
@@ -183,7 +184,7 @@ let Node = React.createClass({
 		const props = this.props;
 		const node = props.node;
 
-		this.context.dispatch( actionCreators.setDragNode(node) );
+		this.context.dispatch( actionCreators.setDragNode(node.id) );
 
 		this.originalPositionX = node.x;
 		this.originalPositionY = node.y;
