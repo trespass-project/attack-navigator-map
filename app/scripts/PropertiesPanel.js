@@ -49,9 +49,9 @@ let PropertiesPanel = React.createClass({
 	},
 
 	renderTypeOptions: function() {
-		return R.without(['edges'], modelHelpers.modelComponents)
+		return R.without(['edges'], modelHelpers.collectionNames)
 			.map(function(typePlural) {
-				const type = modelHelpers.modelComponentsSingular[typePlural];
+				const type = modelHelpers.collectionNamesSingular[typePlural];
 				return <option key={type} value={type}>{type}</option>;
 			});
 	},

@@ -8,20 +8,20 @@ const helpers = require('./helpers.js');
 const constants = require('./constants.js');
 
 
-const modelComponents =
-module.exports.modelComponents =
+const collectionNames =
+module.exports.collectionNames =
 trespass.model.collectionNames;
 
-const modelComponentsSingular =
-module.exports.modelComponentsSingular =
+const collectionNamesSingular =
+module.exports.collectionNamesSingular =
 trespass.model.collectionNamesSingular;
 
 const nonDirectedRelationTypes =
 module.exports.nonDirectedRelationTypes =
 ['network', 'connects'];
 
-const nonGraphModelComponents =
-module.exports.nonGraphModelComponents =
+const nonGraphCollectionNames =
+module.exports.nonGraphCollectionNames =
 ['predicates', 'policies', 'processes'];
 
 
@@ -109,11 +109,11 @@ function XMLModelToGraph(xmlStr, done) {
 		let groupIndex = -1;
 
 		// create groups for the different types
-		modelComponents
+		collectionNames
 			.forEach((collectionName) => {
 				const selection = graph.nodes
 					.filter((node) => {
-						return (node.modelComponentType === modelComponentsSingular[collectionName]);
+						return (node.modelComponentType === collectionNamesSingular[collectionName]);
 					});
 
 				if (!selection.length) {
@@ -144,7 +144,7 @@ function XMLModelToGraph(xmlStr, done) {
 						colCounter++;
 					}
 					node.label = node.id;
-					node.modelComponentType = modelComponentsSingular[collectionName];
+					node.modelComponentType = collectionNamesSingular[collectionName];
 					node.x = xOffset + colCounter * spacing;
 					node.y = yOffset + rowCounter * spacing + ((isShifted) ? 0 : 20);
 					rowCounter++;
@@ -175,11 +175,11 @@ function downloadAsXML(model, fileName='model.xml') {
 };
 
 
+// TODO: this is not used
 const modelAsFragment =
 module.exports.modelAsFragment =
 function modelAsFragment(model) {
-// TODO: this is not used
-	return R.pick(modelComponents, model.system);
+	return R.pick(collectionNames, model.system);
 };
 
 
@@ -203,21 +203,21 @@ function graphFromModel(model) {
 		});
 
 	// set model component type
-	R.without(['edges'], modelComponents)
+	R.without(['edges'], collectionNames)
 		.forEach((collectionName) => {
 			model.system[collectionName]
 				.forEach((item) => {
-					item.modelComponentType = modelComponentsSingular[collectionName];
+					item.modelComponentType = collectionNamesSingular[collectionName];
 				});
 		});
 
-	R.without(R.concat(['edges'], nonGraphModelComponents), modelComponents)
+	R.without(R.concat(['edges'], nonGraphCollectionNames), collectionNames)
 		.forEach(function(collectionName) {
 			const coll = model.system[collectionName];
 			graph.nodes = R.concat(graph.nodes, coll);
 		});
 
-	const other = nonGraphModelComponents
+	const other = nonGraphCollectionNames
 		.reduce((result, collectionName) => {
 			result[collectionName] = model.system[collectionName];
 			return result;
