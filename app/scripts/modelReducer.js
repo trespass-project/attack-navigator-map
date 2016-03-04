@@ -164,6 +164,7 @@ function reducer(state=initialState, action) {
 			return mergeWithState({ graph: newGraph });
 		}
 
+		// TODO: fix this
 		case constants.ACTION_moveNode: {
 			const {nodeId, xy} = action;
 			let newState = _.merge({}, state);
@@ -191,6 +192,7 @@ function reducer(state=initialState, action) {
 			return newState;
 		}
 
+		// TODO: fix this
 		case constants.ACTION_moveGroup: {
 			const {group, posDelta} = action;
 			let newState = _.merge({}, state);
@@ -260,6 +262,7 @@ function reducer(state=initialState, action) {
 			});
 		}
 
+		// TODO: fix this
 		case constants.ACTION_updateComponentProperties: {
 			const {componentId, graphComponentType, newProperties} = action;
 			let newState = _.merge({}, state);
