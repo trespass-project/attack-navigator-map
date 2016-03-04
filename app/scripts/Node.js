@@ -139,7 +139,7 @@ let Node = React.createClass({
 			{	label: 'remove\nfrom group',
 				icon: icons['fa-object-group'],
 				action: function() {
-					context.dispatch( actionCreators.ungroupNode(props.node) );
+					context.dispatch( actionCreators.ungroupNode(props.node.id) );
 				}
 			},
 		];

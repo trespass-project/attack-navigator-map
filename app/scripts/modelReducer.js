@@ -175,11 +175,11 @@ function reducer(state=initialState, action) {
 		}
 
 		case constants.ACTION_ungroupNode: {
-			const {node} = action;
+			const {nodeId} = action;
 			const newState = mergeWithState(state);
 
 			function isIdEqual(id) {
-				return R.equals(id, node.id);
+				return R.equals(id, nodeId);
 			}
 
 			// remove node from all groups it is in

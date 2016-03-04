@@ -423,10 +423,10 @@ function moveNode(nodeId, xy) {
 
 
 module.exports.ungroupNode =
-function ungroupNode(node) {
+function ungroupNode(nodeId) {
 	return {
 		type: constants.ACTION_ungroupNode,
-		node
+		nodeId
 	};
 };
 
