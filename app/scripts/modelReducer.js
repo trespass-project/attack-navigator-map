@@ -146,13 +146,6 @@ function reducer(state=initialState, action) {
 			return state;
 		}
 
-		case constants.ACTION_addNode: {
-			const {node} = action;
-			let newState = _.merge({}, state);
-			newState.graph = modelHelpers.addNode(newState.graph, node);
-			return newState;
-		}
-
 		case constants.ACTION_addNodeToGroup: {
 			const {nodeId, groupId} = action;
 			let newState = _.merge({}, state);

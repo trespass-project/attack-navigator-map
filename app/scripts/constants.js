@@ -39,7 +39,6 @@ const constants = {
 	ACTION_setDragNode: 'ACTION_setDragNode',
 	ACTION_setHoverNode: 'ACTION_setHoverNode',
 	ACTION_setHoverGroup: 'ACTION_setHoverGroup',
-	ACTION_addNode: 'ACTION_addNode',
 	ACTION_addNodeToGroup: 'ACTION_addNodeToGroup',
 	ACTION_cloneNode: 'ACTION_cloneNode',
 	ACTION_removeNode: 'ACTION_removeNode',

@@ -514,18 +514,6 @@ function cloneGroup(graph, groupId) {
 };
 
 
-const addNode = // TODO: test
-module.exports.addNode =
-function addNode(graph, node) {
-	node = _.defaults(node, { // TODO: createNode
-		id: helpers.makeId('node'),
-		label: 'new node'
-	});
-	graph.nodes.push(node);
-	return graph;
-};
-
-
 const addNodeToGroup =
 module.exports.addNodeToGroup =
 function addNodeToGroup(graph, nodeId, groupId) {
