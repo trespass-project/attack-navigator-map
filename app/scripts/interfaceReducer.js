@@ -13,7 +13,7 @@ const initialState = {
 	drag: null,
 	dragNodeId: null,
 	hoverNodeId: null,
-	hoverGroup: null,
+	hoverGroupId: null,
 	previewEdge: null,
 
 	spacePressed: false,
@@ -192,7 +192,7 @@ function reducer(state=initialState, action) {
 			return mergeWithState({ hoverNodeId: action.nodeId });
 
 		case constants.ACTION_setHoverGroup:
-			return mergeWithState({ hoverGroup: action.group });
+			return mergeWithState({ hoverGroupId: action.groupId });
 
 		case constants.ACTION_setSpacePressed:
 			return mergeWithState({ spacePressed: action.yesno });

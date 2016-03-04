@@ -132,7 +132,7 @@ let Group = React.createClass({
 	},
 
 	_handleHover: function(event) {
-		this.context.dispatch( actionCreators.setHoverGroup(this.props.group) );
+		this.context.dispatch( actionCreators.setHoverGroup(this.props.group.id) );
 	},
 
 	_handleHoverOut: function(event) {
@@ -216,8 +216,9 @@ let Group = React.createClass({
 	},
 
 	_onMouseOver: function(event) {
-		this.context.dispatch( actionCreators.setHoverGroup(this.props.group) );
+		this.context.dispatch( actionCreators.setHoverGroup(this.props.group.id) );
 	},
+
 	_onMouseOut: function(event) {
 		this.context.dispatch( actionCreators.setHoverGroup(null) );
 	},

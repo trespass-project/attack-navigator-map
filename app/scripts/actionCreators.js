@@ -359,10 +359,10 @@ function setHoverNode(nodeId) {
 
 
 module.exports.setHoverGroup =
-function setHoverGroup(group) {
+function setHoverGroup(groupId) {
 	return {
 		type: constants.ACTION_setHoverGroup,
-		group
+		groupId
 	};
 };
 
