@@ -124,12 +124,12 @@ function reducer(state=initialState, action) {
 			return mergeWithState({ model });
 		}
 
-		case constants.ACTION_loadXML: {
-			return state; // noop
-		}
+		// case constants.ACTION_loadXML:
+		// 	return state; // noop
+
 		case constants.ACTION_loadXML_DONE: {
 			const {graph, other, metadata} = action.result;
-			return _.assign(
+			return _.merge(
 				{},
 				initialState,
 				{ graph, metadata },
@@ -141,7 +141,7 @@ function reducer(state=initialState, action) {
 			const model = modelHelpers.modelFromGraph(state.graph);
 			modelHelpers.downloadAsXML(
 				model,
-				model.system.title.replace(/\s/g, '-') + '.xml'
+				`${model.system.title.replace(/\s/g, '-')}.xml`
 			);
 			return state;
 		}
