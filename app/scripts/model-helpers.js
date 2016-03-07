@@ -28,7 +28,7 @@ module.exports.nonGraphModelComponents =
 const importModelFragment =
 module.exports.importModelFragment =
 function importModelFragment(currentGraph, fragment, xy={ x: 0, y: 0 }) {
-	let graph = _.merge({}, currentGraph);
+	const graph = _.merge({}, currentGraph);
 
 	const nodes = (fragment.nodes || [])
 		.map((node, index) => {
@@ -120,7 +120,7 @@ function XMLModelToGraph(xmlStr, done) {
 					return;
 				}
 
-				let group = {
+				const group = {
 					name: collectionName,
 					id: helpers.makeId('group'),
 					nodeIds: []
@@ -161,7 +161,7 @@ function XMLModelToGraph(xmlStr, done) {
 
 const downloadAsXML =
 module.exports.downloadAsXML =
-function downloadAsXML(model, filename) {
+function downloadAsXML(model, fileName='model.xml') {
 	const xml = trespass.model.toXML(model);
 	const blob = new Blob(
 		[xml],
@@ -169,7 +169,7 @@ function downloadAsXML(model, filename) {
 	);
 	if (document) { // only in browser
 		const saveAs = require('browser-saveas');
-		saveAs(blob, filename || 'model.xml');
+		saveAs(blob, fileName);
 	}
 	return blob;
 };
@@ -178,6 +178,7 @@ function downloadAsXML(model, filename) {
 const modelAsFragment =
 module.exports.modelAsFragment =
 function modelAsFragment(model) {
+// TODO: this is not used
 	return R.pick(modelComponents, model.system);
 };
 
@@ -216,7 +217,7 @@ function graphFromModel(model) {
 			graph.nodes = R.concat(graph.nodes, coll);
 		});
 
-	let other = nonGraphModelComponents
+	const other = nonGraphModelComponents
 		.reduce((result, collectionName) => {
 			result[collectionName] = model.system[collectionName];
 			return result;
@@ -243,7 +244,7 @@ function graphFromModel(model) {
 const modelFromGraph =
 module.exports.modelFromGraph =
 function modelFromGraph(graph) {
-	let model = trespass.model.create();
+	const model = trespass.model.create();
 
 	// embed entire graph in model
 	model.system.anm_data = JSON.stringify(graph);
@@ -364,7 +365,7 @@ function cloneNode(graph, origNode) {
 		});
 
 	// if node is in a group, so is the clone
-	let groups = getNodeGroups(origNode.id, graph.groups);
+	const groups = getNodeGroups(origNode.id, graph.groups);
 	groups.forEach((group) => {
 		group.nodeIds.push(newNode.id);
 	});
@@ -383,7 +384,7 @@ function cloneNode(graph, origNode) {
 const replaceIdInEdge =
 module.exports.replaceIdInEdge =
 function replaceIdInEdge(_edge, oldId, newId) {
-	let edge = _.merge({}, _edge);
+	const edge = _.merge({}, _edge);
 	if (edge.from === oldId) {
 		edge.from = newId;
 	}
@@ -516,7 +517,7 @@ function addNode(graph, node) {
 const addNodeToGroup =
 module.exports.addNodeToGroup =
 function addNodeToGroup(graph, nodeId, groupId) {
-	let group = helpers.getItemById(graph.groups, groupId);
+	const group = helpers.getItemById(graph.groups, groupId);
 	group.nodeIds.push(nodeId);
 	group.nodeIds = R.uniq(group.nodeIds);
 	return graph;
@@ -526,9 +527,10 @@ function addNodeToGroup(graph, nodeId, groupId) {
 const getNodeGroups =
 module.exports.getNodeGroups =
 function getNodeGroups(nodeId, groups) {
-	return groups.filter((group) => {
-		return R.contains(nodeId, group.nodeIds);
-	});
+	return groups
+		.filter((group) => {
+			return R.contains(nodeId, group.nodeIds);
+		});
 };
 
 
