@@ -49,6 +49,23 @@ let App = React.createClass({
 
 		// tools api
 		props.dispatch( actionCreators.loadToolChains() );
+
+		window.addEventListener('beforeunload', this.handleBeforeUnload);
+	},
+
+	componentWillUnmount: function() {
+		window.removeEventListener('beforeunload', this.handleBeforeUnload);
+	},
+
+	handleBeforeUnload: function(event) {
+		event.preventDefault();
+
+		// TODO: check if model is empty
+		// if so, delete from knowledgebase
+
+		const msg = 'Are you sure? — All changes will be lost ...';
+		event.returnValue = msg;
+		return msg;
 	},
 
 	render: function() {
