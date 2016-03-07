@@ -8,7 +8,6 @@ const constants = require('../../constants.js');
 
 let ModelDebugView = React.createClass({
 	propTypes: {
-		dispatch: React.PropTypes.func.isRequired,
 		model: React.PropTypes.object,
 
 		isOver: React.PropTypes.bool.isRequired,

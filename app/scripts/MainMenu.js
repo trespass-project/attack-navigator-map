@@ -5,8 +5,11 @@ let actionCreators = require('./actionCreators.js');
 
 
 let MainMenu = React.createClass({
+	contextTypes: {
+		dispatch: React.PropTypes.func,
+	},
+
 	propTypes: {
-		dispatch: React.PropTypes.func.isRequired,
 	},
 
 	// getDefaultProps: function() {
@@ -50,23 +53,23 @@ let MainMenu = React.createClass({
 	},
 
 	toggleImages: function(event) {
-		this.props.dispatch( actionCreators.setShowImages(!this.props.showImages) );
+		this.context.dispatch( actionCreators.setShowImages(!this.props.showImages) );
 	},
 
 	toggleGroups: function(event) {
-		this.props.dispatch( actionCreators.setShowGroups(!this.props.showGroups) );
+		this.context.dispatch( actionCreators.setShowGroups(!this.props.showGroups) );
 	},
 
 	toggleEdges: function(event) {
-		this.props.dispatch( actionCreators.setShowEdges(!this.props.showEdges) );
+		this.context.dispatch( actionCreators.setShowEdges(!this.props.showEdges) );
 	},
 
 	resetTransformation: function(event) {
-		this.props.dispatch( actionCreators.resetTransformation() );
+		this.context.dispatch( actionCreators.resetTransformation() );
 	},
 
 	autoLayout: function() {
-		this.props.dispatch( actionCreators.autoLayout() );
+		this.context.dispatch( actionCreators.autoLayout() );
 	}
 
 });

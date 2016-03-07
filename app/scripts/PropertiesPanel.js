@@ -15,11 +15,14 @@ const knowledgebaseApi = api.knowledgebase;
 
 
 let PropertiesPanel = React.createClass({
+	contextTypes: {
+		dispatch: React.PropTypes.func,
+	},
+
 	propTypes: {
 		id: React.PropTypes.string.isRequired,
 		graph: React.PropTypes.object.isRequired,
 		selected: React.PropTypes.object/*.isRequired*/,
-		dispatch: React.PropTypes.func.isRequired,
 	},
 
 	// getDefaultProps: function() {
@@ -28,9 +31,7 @@ let PropertiesPanel = React.createClass({
 
 	onChange: function(selected, event) {
 		let newProperties = { [event.target.name]: event.target.value };
-
-		const props = this.props;
-		props.dispatch(
+		this.context.dispatch(
 			actionCreators.updateComponentProperties(
 				selected.componentId,
 				selected.graphComponentType,

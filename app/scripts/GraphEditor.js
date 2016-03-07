@@ -21,8 +21,11 @@ let GraphEditor = React.createClass({
 		GraphMixin
 	],
 
+	contextTypes: {
+		dispatch: React.PropTypes.func,
+	},
+
 	propTypes: {
-		dispatch: React.PropTypes.func.isRequired,
 	},
 
 	getDefaultProps: function() {
@@ -32,6 +35,7 @@ let GraphEditor = React.createClass({
 	},
 
 	_onContextMenu: function(event) {
+		const context = this.context;
 		const props = this.props;
 
 		const menuItems = [
@@ -43,33 +47,33 @@ let GraphEditor = React.createClass({
 						x: event.clientX,
 						y: event.clientY,
 					};
-					props.dispatch( actionCreators.addGroup(group) );
+					context.dispatch( actionCreators.addGroup(group) );
 				}
 			},
 			{
 				label: 'auto-layout',
 				icon: icons['fa-magic'],
 				action: function(/*event*/) {
-					props.dispatch( actionCreators.autoLayout() );
+					context.dispatch( actionCreators.autoLayout() );
 				}
 			},
 			{
 				label: 'reset\nview',
 				icon: icons['fa-sliders'],
 				action: function(/*event*/) {
-					props.dispatch( actionCreators.resetTransformation() );
+					context.dispatch( actionCreators.resetTransformation() );
 				}
 			},
 		];
-		props.dispatch( actionCreators.showContextMenu(event, menuItems) );
+		context.dispatch( actionCreators.showContextMenu(event, menuItems) );
 	},
 
 	_onClick: function(event) {
 		event.preventDefault();
 		event.stopPropagation();
-		const props = this.props;
-		props.dispatch( actionCreators.hideContextMenu() );
-		props.dispatch( actionCreators.select(null) );
+		const context = this.context;
+		context.dispatch( actionCreators.hideContextMenu() );
+		context.dispatch( actionCreators.select(null) );
 	},
 
 	_onWheel: function(event) {
@@ -98,7 +102,7 @@ let GraphEditor = React.createClass({
 		const x = scaleD * (currentX - editorXY.x) + editorXY.x;
 		const y = scaleD * (currentY - editorXY.y) + editorXY.y;
 
-		props.dispatch(
+		this.context.dispatch(
 			actionCreators.setTransformation({
 				scale: newScale,
 				panX: x,
@@ -112,7 +116,7 @@ let GraphEditor = React.createClass({
 		event.stopPropagation();
 
 		const props = this.props;
-		props.dispatch( actionCreators.setMouseOverEditor(true) );
+		this.context.dispatch( actionCreators.setMouseOverEditor(true) );
 
 		if (props.drag) {
 			(props.drag.onMove || helpers.noop)(event);
@@ -122,19 +126,21 @@ let GraphEditor = React.createClass({
 	_onMouseLeave: function(event) {
 		event.preventDefault();
 		event.stopPropagation();
-		this.props.dispatch( actionCreators.setMouseOverEditor(false) );
+		this.context.dispatch( actionCreators.setMouseOverEditor(false) );
 	},
 
 	_onMouseUp: function(event) {
 		event.preventDefault();
 		event.stopPropagation();
 
+		const context = this.context;
 		const props = this.props;
+
 		if (props.drag) {
 			(props.drag.onEnd || helpers.noop)(event);
 		}
-		props.dispatch( actionCreators.setDrag(null) );
-		props.dispatch( actionCreators.setPanning(false) );
+		context.dispatch( actionCreators.setDrag(null) );
+		context.dispatch( actionCreators.setPanning(false) );
 	},
 
 	_onDragStart: function(event) {
@@ -144,7 +150,7 @@ let GraphEditor = React.createClass({
 	},
 
 	_onDragMove: function(event) {
-		this.props.dispatch(
+		this.context.dispatch(
 			actionCreators.setTransformation({
 				panX: this._originalPanX + event._deltaX,
 				panY: this._originalPanY + event._deltaY,

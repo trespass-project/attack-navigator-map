@@ -9,8 +9,11 @@ let actionCreators = require('../../actionCreators.js');
 
 
 let LibraryItem = React.createClass({
+	contextTypes: {
+		dispatch: React.PropTypes.func,
+	},
+
 	propTypes: {
-		dispatch: React.PropTypes.func.isRequired,
 		data: React.PropTypes.object.isRequired,
 		// injected by react dnd:
 		isDragging: React.PropTypes.bool.isRequired,
@@ -46,16 +49,21 @@ const spec = {
 	},
 
 	endDrag: function(props, monitor, component) {
-		if (!monitor.didDrop()) { return; }
-
-		const result = monitor.getDropResult();
-		if (result.target === constants.DND_TARGET_MAP /*||
-			result.target === constants.DND_TARGET_DEBUG*/) {
-			const item = monitor.getItem();
-			const fragment = (item.fragment)
-				? item.value
-				: { nodes: [item] }; // treat single nodes like fragments
-			props.dispatch( actionCreators.importModelFragment(fragment, result.clientOffset) );
+		if (monitor.didDrop()) {
+			const result = monitor.getDropResult();
+			if (result.target === constants.DND_TARGET_MAP /*||
+				result.target === constants.DND_TARGET_DEBUG*/) {
+				const item = monitor.getItem();
+				const fragment = (item.fragment)
+					? item.value
+					: { nodes: [item] }; // treat single nodes like fragments
+				component.context.dispatch(
+					actionCreators.importModelFragment(
+						fragment,
+						result.clientOffset
+					)
+				);
+			}
 		}
 	}
 };

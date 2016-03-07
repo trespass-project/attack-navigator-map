@@ -72,8 +72,11 @@ let Tab = React.createClass({
 
 
 let Wizard = React.createClass({
+	contextTypes: {
+		dispatch: React.PropTypes.func,
+	},
+
 	propTypes: {
-		dispatch: React.PropTypes.func.isRequired,
 	},
 
 	// getDefaultProps: function() {
@@ -93,7 +96,7 @@ let Wizard = React.createClass({
 		return null; // TODO: implement some sort of debug view
 		// return <div>
 		// 	<h3 className='title'>outline</h3>
-		// 	<GraphOutline graph={props.graph} dispatch={props.dispatch} />
+		// 	<GraphOutline graph={props.graph} />
 		// </div>;
 	},
 
@@ -103,7 +106,6 @@ let Wizard = React.createClass({
 			key={'propspanel' + ((props.selected) ? props.selected.componentId : '')}
 			selected={props.selected}
 			graph={props.graph}
-			dispatch={props.dispatch}
 		/>;
 	},
 
@@ -131,14 +133,12 @@ let Wizard = React.createClass({
 			<h2 className='title'>Locations</h2>
 			<div id='pattern-lib'>
 				<Library
-					dispatch={props.dispatch}
 					items={props.modelPatterns}
 					key={'locations-patterns'}
 					title='patterns' />
 			</div>
 			<div id='component-lib'>
 				<Library
-					dispatch={props.dispatch}
 					key={'locations-components'}
 					items={items}
 					title='components' />
@@ -152,7 +152,6 @@ let Wizard = React.createClass({
 			<h2 className='title'>Assets</h2>
 			<div id='component-lib'>
 				<Library
-					dispatch={props.dispatch}
 					key={'assets-components'}
 					items={items}
 					title='components' />
@@ -166,13 +165,11 @@ let Wizard = React.createClass({
 			<h2 className='title'>Actors</h2>
 			{/*<div id='pattern-lib'>
 				<Library
-					dispatch={props.dispatch}
 					key={'actors-patterns'}
 					title='patterns' />
 			</div>*/}
 			<div id='component-lib'>
 				<Library
-					dispatch={props.dispatch}
 					key={'actors-components'}
 					items={items}
 					title='components' />
@@ -190,7 +187,6 @@ let Wizard = React.createClass({
 		return <div>
 			<h2 className='title'>Connections</h2>
 			<PredicateEditor
-				dispatch={props.dispatch}
 				allNames={allNodeNames}
 				predicatesLib={props.predicatesLib || predicatesLib}
 				predicates={props.predicates || []}
@@ -216,8 +212,12 @@ let Wizard = React.createClass({
 	},
 
 	handleAttackerProfileUpdate: function(profile) {
-		const props = this.props;
-		props.dispatch( actionCreators.attackerProfileChanged(profile) );
+		this.context.dispatch( actionCreators.attackerProfileChanged(profile) );
+	},
+
+	handleAttackerProfitUpdate: function(event) {
+		const profit = event.target.value;
+		this.context.dispatch( actionCreators.setAttackerProfit(profit) );
 	},
 
 	renderRunAnalysis: function(props) {
@@ -273,10 +273,7 @@ let Wizard = React.createClass({
 				placeholder='attacker
 				profit'
 				value={props.attackerProfit}
-				onChange={(event) => {
-					const profit = event.target.value;
-					props.dispatch( actionCreators.setAttackerProfit(profit) );
-				}}
+				onChange={handleAttackerProfitUpdate}
 			/>
 			<br/>
 
@@ -413,14 +410,14 @@ let Wizard = React.createClass({
 				asset: assetId
 			}
 		};
-		this.props.dispatch( actionCreators.setAttackerGoal(goalType, goalData) );
+		this.context.dispatch( actionCreators.setAttackerGoal(goalType, goalData) );
 	},
 
 	runAnalysis: function() {
 		const dlScenarioCheckbox = this.refs['checkbox-dl-scenario'];
 		const select = this.refs.toolchain;
 		// watch out: value comes back as string
-		this.props.dispatch(
+		this.context.dispatch(
 			actionCreators.runAnalysis(
 				parseInt(select.value, 10),
 				dlScenarioCheckbox.checked
@@ -472,17 +469,17 @@ let Wizard = React.createClass({
 		event.preventDefault();
 		let $fileInput = $(this.refs['load-model']);
 		let file = $fileInput[0].files[0];
-		this.props.dispatch( actionCreators.loadXMLFile(file) );
+		this.context.dispatch( actionCreators.loadXMLFile(file) );
 	},
 
 	downloadAsXML: function(event) {
 		event.preventDefault();
-		this.props.dispatch( actionCreators.downloadAsXML() );
+		this.context.dispatch( actionCreators.downloadAsXML() );
 	},
 
 	selectWizardStep(name, event) {
 		event.preventDefault();
-		this.props.dispatch( actionCreators.selectWizardStep(name) );
+		this.context.dispatch( actionCreators.selectWizardStep(name) );
 	}
 
 });

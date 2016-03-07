@@ -27,7 +27,7 @@ const SchleppMixin = {
 			// 	if (!panning) {
 			// 		return;
 			// 	} else {
-			// 		that.props.dispatch( actionCreators.setPanning(true) );
+			// 		that.context.dispatch( actionCreators.setPanning(true) );
 			// 	}
 			// }
 
@@ -38,7 +38,7 @@ const SchleppMixin = {
 
 			(that._onDragStart || helpers.noop)(event);
 
-			that.props.dispatch(
+			that.context.dispatch(
 				actionCreators.setDrag({
 					elem,
 					onMove: function(event) {

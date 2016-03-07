@@ -68,6 +68,10 @@ function bezierPoint(p1, c1, c2, p2, t) {
 
 
 let Edge = React.createClass({
+	contextTypes: {
+		dispatch: React.PropTypes.func,
+	},
+
 	propTypes: {
 		edge: React.PropTypes.object.isRequired,
 		theme: React.PropTypes.object.isRequired,
@@ -107,8 +111,7 @@ let Edge = React.createClass({
 	_onClick: function(event) {
 		event.preventDefault();
 		event.stopPropagation();
-		const props = this.props;
-		props.dispatch( actionCreators.select(props.edge.id, 'edge') );
+		this.context.dispatch( actionCreators.select(this.props.edge.id, 'edge') );
 	},
 
 	render: function() {
@@ -167,6 +170,7 @@ let Edge = React.createClass({
 	},
 
 	_onContextMenu: function(event) {
+		const context = this.context;
 		const props = this.props;
 		const menuItems = [
 			{
@@ -174,11 +178,11 @@ let Edge = React.createClass({
 				destructive: true,
 				icon: icons['fa-trash'],
 				action: function() {
-					props.dispatch( actionCreators.removeEdge(props.edge) );
+					context.dispatch( actionCreators.removeEdge(props.edge) );
 				}
 			}
 		];
-		props.dispatch( actionCreators.showContextMenu(event, menuItems) );
+		context.dispatch( actionCreators.showContextMenu(event, menuItems) );
 	},
 });
 

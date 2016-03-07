@@ -8,8 +8,11 @@ let Library = require('../Library/Library.js');
 
 
 let ModelLibrary = React.createClass({
+	contextTypes: {
+		dispatch: React.PropTypes.func,
+	},
+
 	propTypes: {
-		dispatch: React.PropTypes.func.isRequired,
 	},
 
 	// getDefaultProps: function() {
@@ -17,7 +20,7 @@ let ModelLibrary = React.createClass({
 	// },
 
 	loadModel: function(item) {
-		this.props.dispatch( actionCreators.loadModel(item.filename) );
+		this.context.dispatch( actionCreators.loadModel(item.filename) );
 	},
 
 	renderItem: function(item, index) {

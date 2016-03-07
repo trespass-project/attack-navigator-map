@@ -9,13 +9,16 @@ let actionCreators = require('./actionCreators.js');
 let Port = React.createClass({
 	mixins: [SchleppMixin],
 
+	contextTypes: {
+		dispatch: React.PropTypes.func,
+	},
+
 	propTypes: {
 		x: React.PropTypes.number.isRequired,
 		y: React.PropTypes.number.isRequired,
 		size: React.PropTypes.number.isRequired,
 		node: React.PropTypes.object.isRequired,
 		style: React.PropTypes.object.isRequired,
-		dispatch: React.PropTypes.func.isRequired,
 		editorElem: React.PropTypes.object.isRequired,
 		editorTransformElem: React.PropTypes.object.isRequired,
 		hoverNode: React.PropTypes.object/*.isRequired*/,
@@ -50,14 +53,13 @@ let Port = React.createClass({
 	},
 
 	_onDragStart: function(event) {
-		const props = this.props;
-		const node = props.node;
-
-		props.dispatch( actionCreators.setDragNode(node) );
+		const node = this.props.node;
+		this.context.dispatch( actionCreators.setDragNode(node) );
 		// this._onDragMove(event);
 	},
 
 	_onDragMove: function(event) {
+		const context = this.context;
 		const props = this.props;
 		const node = props.node;
 
@@ -68,7 +70,7 @@ let Port = React.createClass({
 			  y: event.clientY }
 		);
 
-		props.dispatch(
+		context.dispatch(
 			actionCreators.setPreviewEdge({
 				from: node.id,
 				to: { // this is an exception
@@ -80,6 +82,7 @@ let Port = React.createClass({
 	},
 
 	_onDragEnd: function(event) {
+		const context = this.context;
 		const props = this.props;
 
 		if (props.hoverNode != null && props.dragNode != null) {
@@ -87,11 +90,11 @@ let Port = React.createClass({
 				from: props.dragNode.id,
 				to: props.hoverNode.id
 			};
-			props.dispatch( actionCreators.addEdge(newEdge) );
-			props.dispatch( actionCreators.select(newEdge.id, 'edge') );
+			context.dispatch( actionCreators.addEdge(newEdge) );
+			context.dispatch( actionCreators.select(newEdge.id, 'edge') );
 		}
-		props.dispatch( actionCreators.setPreviewEdge(null) );
-		props.dispatch( actionCreators.setDragNode(null) );
+		context.dispatch( actionCreators.setPreviewEdge(null) );
+		context.dispatch( actionCreators.setDragNode(null) );
 	}
 });
 

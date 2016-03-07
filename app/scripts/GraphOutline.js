@@ -6,7 +6,6 @@ let React = require('react');
 let GraphOutline = React.createClass({
 	propTypes: {
 		graph: React.PropTypes.object.isRequired,
-		dispatch: React.PropTypes.func.isRequired,
 	},
 
 	// getDefaultProps: function() {

@@ -15,7 +15,6 @@ const valueAttribute = 'value';
 
 const PredicateEditor = React.createClass({
 	propTypes: {
-		dispatch: React.PropTypes.func.isRequired,
 		handleUpdate: React.PropTypes.func,
 		allNames: React.PropTypes.array.isRequired,
 		predicatesLib: React.PropTypes.array.isRequired,

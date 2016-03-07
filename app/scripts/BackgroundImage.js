@@ -11,6 +11,10 @@ let actionCreators = require('./actionCreators.js');
 let ResizeElem = React.createClass({
 	mixins: [SchleppMixin],
 
+	contextTypes: {
+		dispatch: React.PropTypes.func,
+	},
+
 	render: function() {
 		const props = this.props;
 		const halfSize = 0.5 * props.size;
@@ -41,7 +45,7 @@ let ResizeElem = React.createClass({
 		const h2 = h;
 		const w2 = h * props.aspectRatio;
 
-		props.dispatch(
+		this.context.dispatch(
 			actionCreators.resizeGroupBackgroundImage(
 				props.group.id,
 				Math.max(w1, w2),
@@ -127,17 +131,18 @@ let Group = React.createClass({
 	},
 
 	_onContextMenu: function(event) {
+		const context = this.context;
 		const props = this.props;
 		const menuItems = [
 			{
 				label: 'convert to nodes',
 				icon: icons['fa-magic'],
 				action: function() {
-					props.dispatch( actionCreators.backgroundImageToNodes(props.group) );
+					context.dispatch( actionCreators.backgroundImageToNodes(props.group) );
 				}
 			}
 		];
-		props.dispatch( actionCreators.showContextMenu(event, menuItems) );
+		context.dispatch( actionCreators.showContextMenu(event, menuItems) );
 	},
 
 	_onMouseOver: function(event) {
@@ -176,7 +181,7 @@ let Group = React.createClass({
 			y: (modelXYEvent.y - this.modelXYEventOrigin.y),
 		};
 
-		props.dispatch(
+		this.context.dispatch(
 			actionCreators.moveGroupBackgroundImage(
 				props.group.id,
 				{

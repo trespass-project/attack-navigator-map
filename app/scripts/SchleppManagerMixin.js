@@ -21,19 +21,19 @@ const SchleppManagerMixin = {
 					event.stopPropagation();
 				}
 
-				that.props.dispatch( actionCreators.setSpacePressed(true) );
+				that.context.dispatch( actionCreators.setSpacePressed(true) );
 
 				// pannable:
 				if ($elem[0].tagName === 'svg') {
-					that.props.dispatch( actionCreators.setPannable(true) );
+					that.context.dispatch( actionCreators.setPannable(true) );
 				}
 			}
 		});
 
 		$body.on('keyup', function(event) {
 			if (event.keyCode === 32) {
-				that.props.dispatch( actionCreators.setSpacePressed(false) );
-				that.props.dispatch( actionCreators.setPannable(false) );
+				that.context.dispatch( actionCreators.setSpacePressed(false) );
+				that.context.dispatch( actionCreators.setPannable(false) );
 			}
 		});
 

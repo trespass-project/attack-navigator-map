@@ -39,6 +39,10 @@ let Dropzone = React.createClass({
 let Group = React.createClass({
 	mixins: [SchleppMixin],
 
+	contextTypes: {
+		dispatch: React.PropTypes.func,
+	},
+
 	propTypes: {
 		x: React.PropTypes.number.isRequired,
 		y: React.PropTypes.number.isRequired,
@@ -127,16 +131,15 @@ let Group = React.createClass({
 	},
 
 	_handleHover: function(event) {
-		const props = this.props;
-		props.dispatch( actionCreators.setHoverGroup(props.group) );
+		this.context.dispatch( actionCreators.setHoverGroup(this.props.group) );
 	},
 
 	_handleHoverOut: function(event) {
-		const props = this.props;
-		props.dispatch( actionCreators.setHoverGroup(null) );
+		this.context.dispatch( actionCreators.setHoverGroup(null) );
 	},
 
 	_onContextMenu: function(event) {
+		const context = this.context;
 		const props = this.props;
 
 		let bgimg = {
@@ -147,34 +150,34 @@ let Group = React.createClass({
 		if (!_.isEmpty(props.group._bgImage)) {
 			bgimg.icon = icons['fa-remove'];
 			bgimg.action = function() {
-				props.dispatch( actionCreators.removeGroupBackgroundImage(props.group.id) );
+				context.dispatch( actionCreators.removeGroupBackgroundImage(props.group.id) );
 			};
 		}
 
 		const menuItems = [
 			{ label: 'delete', destructive: true, icon: icons['fa-trash'], action:
 				function(/*event*/) {
-					props.dispatch( actionCreators.removeGroup(props.group.id, true) );
+					context.dispatch( actionCreators.removeGroup(props.group.id, true) );
 				}
 			},
 			{ label: 'ungroup', destructive: true, icon: icons['fa-remove'], action:
 				function(/*event*/) {
-					props.dispatch( actionCreators.removeGroup(props.group.id) );
+					context.dispatch( actionCreators.removeGroup(props.group.id) );
 				}
 			},
 			{ label: 'clone', icon: icons['fa-files-o'], action:
 				function() {
-					props.dispatch( actionCreators.cloneGroup(props.group.id) );
+					context.dispatch( actionCreators.cloneGroup(props.group.id) );
 				}
 			},
 			{ label: 'save as\npattern', icon: icons['fa-floppy-o'], action:
 				function() {
-					// props.dispatch( actionCreators.cloneGroup(props.group.id) );
+					// context.dispatch( actionCreators.cloneGroup(props.group.id) );
 				}
 			},
 			bgimg
 		];
-		props.dispatch( actionCreators.showContextMenu(event, menuItems) );
+		context.dispatch( actionCreators.showContextMenu(event, menuItems) );
 	},
 
 	openFileDialog: function() {
@@ -197,7 +200,7 @@ let Group = React.createClass({
 			const aspectRatio = w / h;
 			// const dataURI = 'data:image/svg+xml;utf8,'+svg;
 			const dataURI = 'data:image/svg+xml;base64,'+btoa(svg);
-			props.dispatch( actionCreators.addGroupBackgroundImage(props.group.id, dataURI, aspectRatio, w) );
+			this.context.dispatch( actionCreators.addGroupBackgroundImage(props.group.id, dataURI, aspectRatio, w) );
 		};
 		// reader.readAsDataURL(file);
 		reader.readAsText(file);
@@ -208,17 +211,14 @@ let Group = React.createClass({
 	_onClick: function(event) {
 		event.preventDefault();
 		event.stopPropagation();
-		const props = this.props;
-		props.dispatch( actionCreators.select(props.group.id, 'group') );
+		this.context.dispatch( actionCreators.select(this.props.group.id, 'group') );
 	},
 
 	_onMouseOver: function(event) {
-		const props = this.props;
-		props.dispatch( actionCreators.setHoverGroup(props.group) );
+		this.context.dispatch( actionCreators.setHoverGroup(this.props.group) );
 	},
 	_onMouseOut: function(event) {
-		const props = this.props;
-		props.dispatch( actionCreators.setHoverGroup(null) );
+		this.context.dispatch( actionCreators.setHoverGroup(null) );
 	},
 
 	_onDragStart: function(event) {
@@ -256,7 +256,7 @@ let Group = React.createClass({
 		const newPositionX = this.originalPositionX + modelXYDelta.x;
 		const newPositionY = this.originalPositionY + modelXYDelta.y;
 
-		props.dispatch(
+		this.context.dispatch(
 			actionCreators.moveGroup(
 				props.group,
 				{ // delta of the delta

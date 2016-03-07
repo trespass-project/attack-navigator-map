@@ -23,6 +23,16 @@ const DragDropContext = require('react-dnd').DragDropContext;
 
 
 let App = React.createClass({
+	childContextTypes: {
+		dispatch: React.PropTypes.func,
+	},
+
+	getChildContext: function() {
+		return {
+			dispatch: this.props.dispatch,
+		};
+	},
+
 	componentDidMount: function() {
 		const props = this.props;
 

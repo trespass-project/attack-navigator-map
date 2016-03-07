@@ -27,6 +27,10 @@ const typeIcons = {
 let Node = React.createClass({
 	mixins: [SchleppMixin],
 
+	contextTypes: {
+		dispatch: React.PropTypes.func,
+	},
+
 	propTypes: {
 		x: React.PropTypes.number.isRequired,
 		y: React.PropTypes.number.isRequired,
@@ -106,8 +110,7 @@ let Node = React.createClass({
 						editorElem={props.editorElem}
 						editorTransformElem={props.editorTransformElem}
 						hoverNode={props.hoverNode}
-						dragNode={props.dragNode}
-						dispatch={props.dispatch} />
+						dragNode={props.dragNode} />
 					: null
 				}
 			</g>
@@ -115,6 +118,7 @@ let Node = React.createClass({
 	},
 
 	_onContextMenu: function(event) {
+		const context = this.context;
 		const props = this.props;
 
 		const menuItems = [
@@ -122,24 +126,24 @@ let Node = React.createClass({
 				destructive: true,
 				icon: icons['fa-trash'],
 				action: function() {
-					props.dispatch( actionCreators.removeNode(props.node) );
+					context.dispatch( actionCreators.removeNode(props.node) );
 				}
 			},
 			{	label: 'clone',
 				icon: icons['fa-files-o'],
 				action: function() {
-					props.dispatch( actionCreators.cloneNode(props.node) );
+					context.dispatch( actionCreators.cloneNode(props.node) );
 				}
 			},
 			{	label: 'remove\nfrom group',
 				icon: icons['fa-object-group'],
 				action: function() {
-					props.dispatch( actionCreators.ungroupNode(props.node) );
+					context.dispatch( actionCreators.ungroupNode(props.node) );
 				}
 			},
 		];
 
-		props.dispatch( actionCreators.showContextMenu(event, menuItems) );
+		context.dispatch( actionCreators.showContextMenu(event, menuItems) );
 	},
 
 	// _getLabelWidth: function() {
@@ -170,17 +174,16 @@ let Node = React.createClass({
 	// },
 
 	_onClick: function(event) {
-		const props = this.props;
 		event.preventDefault();
 		event.stopPropagation();
-		props.dispatch( actionCreators.select(props.node.id, 'node') );
+		this.context.dispatch( actionCreators.select(this.props.node.id, 'node') );
 	},
 
 	_onDragStart: function(event) {
 		const props = this.props;
 		const node = props.node;
 
-		props.dispatch( actionCreators.setDragNode(node) );
+		this.context.dispatch( actionCreators.setDragNode(node) );
 
 		this.originalPositionX = node.x;
 		this.originalPositionY = node.y;
@@ -209,7 +212,7 @@ let Node = React.createClass({
 			y: (modelXYEvent.y - this.modelXYEventOrigin.y),
 		};
 
-		props.dispatch(
+		this.context.dispatch(
 			actionCreators.moveNode(
 				props.node.id, {
 					x: this.originalPositionX + modelXYDelta.x,
@@ -225,6 +228,7 @@ let Node = React.createClass({
 		// for every group
 			// check if node is inside the bounds of group
 				// if yes, add node to group
+		const context = this.context;
 		const props = this.props;
 		const graph = props.graph;
 		const groups = graph.groups;
@@ -254,22 +258,20 @@ let Node = React.createClass({
 			return false;
 		});
 		if (dropGroups.length) {
-			props.dispatch(
+			context.dispatch(
 				actionCreators.addNodeToGroup(node.id, R.last(dropGroups).id)
 			);
 		}
 
-		props.dispatch( actionCreators.setDragNode(null) );
+		context.dispatch( actionCreators.setDragNode(null) );
 	},
 
 	_handleHover: function(event) {
-		const props = this.props;
-		props.dispatch( actionCreators.setHoverNode(props.node) );
+		this.context.dispatch( actionCreators.setHoverNode(this.props.node) );
 	},
 
 	_handleHoverOut: function(event) {
-		const props = this.props;
-		props.dispatch( actionCreators.setHoverNode(null) );
+		this.context.dispatch( actionCreators.setHoverNode(null) );
 	}
 });
 
