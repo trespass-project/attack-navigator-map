@@ -493,6 +493,89 @@ describe(f1('model-helpers.js'), function() {
 		});
 	});
 
+	describe(f2('getNodeEdges()'), () => {
+		const node = { id: 'node-id' };
+		const edges = [
+			{ from: node.id, to: 'other-node' },
+			{ from: 'other-other-node', to: node.id },
+			{ from: 'other-other-node', to: 'other-node' },
+		];
+		const nodeEdges = modelHelpers.getNodeEdges(edges, node.id);
+
+		it(f3('should return the right edges'), () => {
+			assert(nodeEdges.length === 2);
+			assert(nodeEdges[0].from === node.id);
+			assert(nodeEdges[1].to === node.id);
+		});
+	});
+
+	describe(f2('groupToFragment()'), () => {
+		const nodes = [
+			{ id: 'node-id-1' },
+			{ id: 'node-id-2' },
+			{ id: 'node-id-3' },
+			{ id: 'node-id-4' },
+			{ id: 'node-id-5' },
+		];
+		const edges = [
+			{ id: '1', from: 'node-id-1', to: 'node-id-4' },
+			{ id: '2', from: 'node-id-4', to: 'node-id-2' },
+			{ id: '3', from: 'other-other-node', to: 'other-node' }
+		];
+		const group = {
+			id: 'group-id',
+			nodeIds: ['node-id-1', 'node-id-4'],
+		}
+		const graph = {
+			nodes,
+			edges,
+			groups: [group]
+		};
+		const fragment = modelHelpers.groupToFragment(graph, group.id);
+
+		it(f3('should create the right fragment'), () => {
+			assert(fragment.groups.length === 1);
+			assert(fragment.groups[0].nodeIds.length === 2);
+			assert(fragment.nodes.length === 2);
+			assert(fragment.edges.length === 2);
+		});
+
+		it(f3('should return clones, not copies'), () => {
+			assert(fragment.groups[0].id !== group.id);
+			assert(fragment.nodes[0].id !== nodes[0].id);
+			assert(fragment.nodes[1].id !== nodes[3].id);
+			assert(fragment.edges[0].id !== edges[0].id);
+			assert(fragment.edges[1].id !== edges[1].id);
+		});
+	});
+
+	describe(f2('nodeToFragment()'), () => {
+		const node = { id: 'original-node' };
+		const edges = [
+			{ from: node.id, to: 'other-node' },
+			{ from: 'other-other-node', to: node.id }
+		];
+		const graph = {
+			nodes: [node],
+			edges,
+			groups: []
+		};
+		const fragment = modelHelpers.nodeToFragment(graph, node.id);
+		console.log(fragment);
+
+		it(f3('should create the right fragment'), () => {
+			assert(fragment.nodes.length === 1);
+			assert(fragment.edges.length === 2);
+			assert(!fragment.groups);
+		});
+
+		it(f3('should return clones, not copies'), () => {
+			assert(fragment.nodes[0].id !== node.id);
+			assert(fragment.edges[0].id !== edges[0].id);
+			assert(fragment.edges[1].id !== edges[1].id);
+		});
+	});
+
 	describe(f2('cloneGroup()'), function() {
 		const groupId = 'group-id';
 		const group = { id: groupId, nodeIds: ['node-id-1', 'node-id-2', 'node-id-3'] };

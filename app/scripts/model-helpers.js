@@ -394,18 +394,61 @@ function replaceIdInEdge(_edge, oldId, newId) {
 };
 
 
+// clone node, including edges
+const nodeToFragment =
+module.exports.nodeToFragment =
+function nodeToFragment(graph, nodeId) {
+	const node = helpers.getItemById(graph.nodes, nodeId);
+	const edges = getNodeEdges(graph.edges, nodeId)
+		.map((edge) => {
+			return createEdge(edge);
+		});
+	return {
+		edges,
+		nodes: [createNode(node)]
+	};
+}
+
+
+// clone group, including nodes and edges
+const groupToFragment =
+module.exports.groupToFragment =
+function groupToFragment(graph, groupId) {
+	const group = helpers.getItemById(graph.groups, groupId);
+	const nodes = group.nodeIds
+		.map((nodeId) => {
+			const node = helpers.getItemById(graph.nodes, nodeId);
+			return createNode(node);
+		});
+	const edges = group.nodeIds
+		.reduce((acc, nodeId) => {
+			const nodeEdges = getNodeEdges(graph.edges, nodeId);
+			return acc.concat(nodeEdges);
+		}, []);
+	const uniqueEdges = R.uniqBy(R.prop('id'), edges)
+		.map((edge) => {
+			return createEdge(edge);
+		});
+	const newGroup = {
+		id: helpers.makeId('group'),
+		nodeIds: nodes.map(R.prop('id'))
+	};
+	return {
+		nodes,
+		edges: uniqueEdges,
+		groups: [newGroup],
+	};
+}
+
+
 const cloneGroup =
 module.exports.cloneGroup =
 function cloneGroup(graph, groupId) {
 	let origGroup = helpers.getItemById(graph.groups, groupId);
 	let group = _.merge({}, origGroup);
 
-	// TODO: write the following functions:
-	// - nodeToFragment (includes node + edges)
-	// - groupToFragment (includes group + nodes + edges)
-
 	// create fragment from group
-
+	// TODO: use `groupToFragment()`
 	const origGroupIds = group.nodeIds;
 	const origGroupNodes = group.nodeIds
 		.map((nodeId) => {
@@ -486,6 +529,16 @@ function getNodeGroups(nodeId, groups) {
 	return groups.filter((group) => {
 		return R.contains(nodeId, group.nodeIds);
 	});
+};
+
+
+const getNodeEdges =
+module.exports.getNodeEdges =
+function getNodeEdges(edges, nodeId) {
+	return edges
+		.filter((edge) => {
+			return (edge.from === nodeId || edge.to === nodeId);
+		});
 };
 
 
