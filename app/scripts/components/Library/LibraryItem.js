@@ -11,8 +11,6 @@ let actionCreators = require('../../actionCreators.js');
 let LibraryItem = React.createClass({
 	propTypes: {
 		dispatch: React.PropTypes.func.isRequired,
-		editorElem: React.PropTypes.object.isRequired,
-		editorTransformElem: React.PropTypes.object.isRequired,
 		data: React.PropTypes.object.isRequired,
 		// injected by react dnd:
 		isDragging: React.PropTypes.bool.isRequired,
@@ -53,27 +51,11 @@ const spec = {
 		const result = monitor.getDropResult();
 		if (result.target === constants.DND_TARGET_MAP /*||
 			result.target === constants.DND_TARGET_DEBUG*/) {
-
-			const editorXY = helpers.coordsRelativeToElem(
-				props.editorElem,
-				result.clientOffset
-			);
-			const modelXY = helpers.unTransformFromTo(
-				props.editorElem,
-				props.editorTransformElem,
-				editorXY
-			);
-
 			const item = monitor.getItem();
-
-			// console.log(item.kbType);
-			// TODO: ask user for specifics
-
-			const fragment = (item.fragment) // TODO: rename to isFragment
+			const fragment = (item.fragment)
 				? item.value
 				: { nodes: [item] }; // treat single nodes like fragments
-
-			props.dispatch( actionCreators.importModelFragment(fragment, modelXY) );
+			props.dispatch( actionCreators.importModelFragment(fragment, result.clientOffset) );
 		}
 	}
 };

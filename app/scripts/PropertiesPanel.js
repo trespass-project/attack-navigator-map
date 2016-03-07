@@ -295,7 +295,7 @@ let PropertiesPanel = React.createClass({
 					if (selectedItem.kbType) {
 						const params = _.merge(
 							{},
-							{
+							{ // TODO: remove this
 								url: api.makeUrl(knowledgebaseApi, 'getParameters'),
 								dataType: 'json',
 								data: { type: selectedItem.kbType }

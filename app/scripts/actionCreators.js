@@ -188,6 +188,24 @@ function hideContextMenu(event, context, menuItems) {
 };
 
 
+module.exports.dropModelFragment =
+function dropModelFragment(fragment, clientOffset) {
+	return function(dispatch, getState) {
+		const state = getState();
+		const editorXY = helpers.coordsRelativeToElem(
+			state.interface.editorElem,
+			clientOffset
+		);
+		const modelXY = helpers.unTransformFromTo(
+			state.interface.editorElem,
+			state.interface.editorTransformElem,
+			editorXY
+		);
+		dispatch( importModelFragment(fragment, modelXY) );
+	};
+};
+
+
 module.exports.importModelFragment =
 function importModelFragment(fragment, xy) {
 	return function(dispatch, getState) {
