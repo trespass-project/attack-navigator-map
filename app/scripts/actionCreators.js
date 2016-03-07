@@ -840,9 +840,7 @@ const loadToolChains =
 module.exports.loadToolChains =
 function loadToolChains(xmlString) {
 	return function(dispatch, getState) {
-		dispatch({
-			type: constants.ACTION_loadToolChains
-		});
+		// dispatch({ type: constants.ACTION_loadToolChains });
 
 		const params = _.merge(
 			{
@@ -876,7 +874,7 @@ const loadAttackerProfiles =
 module.exports.loadAttackerProfiles =
 function loadAttackerProfiles() {
 	return function(dispatch, getState) {
-		dispatch({ type: constants.ACTION_loadAttackerProfiles });
+		// dispatch({ type: constants.ACTION_loadAttackerProfiles });
 
 		const url = api.makeUrl(knowledgebaseApi, 'attackerprofile');
 		const params = _.merge(
@@ -901,7 +899,7 @@ const loadModelPatterns =
 module.exports.loadModelPatterns =
 function loadModelPatterns() {
 	return (dispatch, getState) => {
-		dispatch({ type: constants.ACTION_loadModelPatterns });
+		// dispatch({ type: constants.ACTION_loadModelPatterns });
 
 		const url = fakeApiUrl(fakeApi.api.patterns.url);
 		const params = _.merge(
@@ -926,7 +924,7 @@ const loadRelationTypes =
 module.exports.loadRelationTypes =
 function loadRelationTypes() {
 	return (dispatch, getState) => {
-		dispatch({ type: constants.ACTION_loadRelationTypes });
+		// dispatch({ type: constants.ACTION_loadRelationTypes });
 
 		const {serverDomain, serverPort} = fakeApi;
 		const url = `http://${serverDomain}:${serverPort}${fakeApi.api.relations.url}`;
@@ -951,7 +949,7 @@ const loadComponentTypes =
 module.exports.loadComponentTypes =
 function loadComponentTypes() {
 	return (dispatch, getState) => {
-		dispatch({ type: constants.ACTION_loadComponentTypes });
+		// dispatch({ type: constants.ACTION_loadComponentTypes });
 
 		const url = api.makeUrl(knowledgebaseApi, 'type');
 		const params = _.merge(
