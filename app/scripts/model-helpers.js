@@ -14,7 +14,7 @@ trespass.model.collectionNames;
 
 const modelComponentsSingular =
 module.exports.modelComponentsSingular =
-trespass.model.collectionNameSingular;
+trespass.model.collectionNamesSingular;
 
 const nonDirectedRelationTypes =
 module.exports.nonDirectedRelationTypes =
