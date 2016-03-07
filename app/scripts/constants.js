@@ -5,11 +5,9 @@ const constants = {
 	INTERFACE: 'interface',
 
 	MODEL_LIBRARY: 'model-library',
-	MODEL_COMPONENTS_LIBRARY: 'component-lib.json',
 	MODEL_PATTERNS_LIBRARY: 'pattern-lib.json',
 	MODEL_RELATIONS_LIBRARY: 'relation-lib.json',
 	MODEL_PREDICATES_LIBRARY: 'predicate-lib.json',
-	MODEL_KNOWLEDGEBASE: 'knowledgebase.json',
 
 	// dnd drop targets
 	DND_TARGET_MAP: 'model-map',

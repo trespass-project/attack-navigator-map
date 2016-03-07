@@ -10,10 +10,6 @@ module.exports.serverDomain = 'localhost';
 module.exports.serverPort = 4000;
 
 module.exports.api = {
-	'components': {
-		url: urljoin(urlPrefix, 'components'),
-		file: path.join(dataPath, constants.MODEL_COMPONENTS_LIBRARY),
-	},
 	'relations': {
 		url: urljoin(urlPrefix, 'relations'),
 		file: path.join(dataPath, constants.MODEL_RELATIONS_LIBRARY),
