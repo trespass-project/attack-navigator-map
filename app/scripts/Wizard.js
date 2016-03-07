@@ -35,6 +35,13 @@ function handleAdd() {
 }
 
 
+function componentTypesFilter(types) {
+	return (item) => {
+		return R.contains(item.modelComponentType, types);
+	};
+}
+
+
 let Tab = React.createClass({
 	propTypes: {
 		name: React.PropTypes.string.isRequired,
@@ -126,64 +133,55 @@ let Wizard = React.createClass({
 	},
 
 	renderLocations: function(props) {
-		const filterFn = function(a) {
-			return R.contains(a.modelComponentType, ['location']);
-		};
+		const items = props.componentTypes.filter(componentTypesFilter(['location']));
 		return <div>
 			<h2 className='title'>Locations</h2>
-			<div id='pattern-lib'>
-				<Library {...props}
+			{/*<div id='pattern-lib'>
+				<Library
+					dispatch={props.dispatch}
 					key={'locations-patterns'}
-					url={apiUrl(api.patterns.url)}
 					title='patterns' />
-			</div>
+			</div>*/}
 			<div id='component-lib'>
-				<Library {...props}
+				<Library
+					dispatch={props.dispatch}
 					key={'locations-components'}
-					url={apiUrl(api.components.url)}
-					title='components'
-					filter={filterFn}
-					onAdd={handleAdd} />
+					items={items}
+					title='components' />
 			</div>
 		</div>;
 	},
 
 	renderAssets: function(props) {
-		const filterFn = function(a) {
-			return R.contains(a.modelComponentType, ['item', 'data']);
-		};
+		const items = props.componentTypes.filter(componentTypesFilter(['item', 'data']));
 		return <div>
 			<h2 className='title'>Assets</h2>
 			<div id='component-lib'>
-				<Library {...props}
+				<Library
+					dispatch={props.dispatch}
 					key={'assets-components'}
-					url={apiUrl(api.components.url)}
-					title='components'
-					filter={filterFn}
-					onAdd={handleAdd} />
+					items={items}
+					title='components' />
 			</div>
 		</div>;
 	},
 
 	renderActors: function(props) {
-		const filterFn = function(a) {
-			return R.contains(a.modelComponentType, ['actor']);
-		};
+		const items = props.componentTypes.filter(componentTypesFilter(['actor']));
 		return <div>
 			<h2 className='title'>Actors</h2>
-			<div id='pattern-lib'>
-				<Library {...props}
+			{/*<div id='pattern-lib'>
+				<Library
+					dispatch={props.dispatch}
 					key={'actors-patterns'}
-					url={apiUrl(api.patterns.url)}
 					title='patterns' />
-			</div>
+			</div>*/}
 			<div id='component-lib'>
-				<Library {...props}
+				<Library
+					dispatch={props.dispatch}
 					key={'actors-components'}
-					url={apiUrl(api.components.url)}
-					title='components'
-					filter={filterFn}
-					onAdd={handleAdd} />
+					items={items}
+					title='components' />
 			</div>
 		</div>;
 	},

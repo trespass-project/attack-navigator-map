@@ -31,7 +31,11 @@ let App = React.createClass({
 		const editorElem = document.querySelector('#editor > svg');
 		props.dispatch( actionCreators.setEditorElem(editorElem) );
 
+		// kb api
+		props.dispatch( actionCreators.loadComponentTypes() );
 		props.dispatch( actionCreators.loadAttackerProfiles() );
+
+		// tools api
 		props.dispatch( actionCreators.loadToolChains() );
 	},
 

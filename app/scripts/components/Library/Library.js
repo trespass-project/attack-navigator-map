@@ -12,78 +12,45 @@ let LibraryItem = require('./LibraryItem.js');
 
 let Library = React.createClass({
 	propTypes: {
+		items: React.PropTypes.array.isRequired,
 		title: React.PropTypes.string.isRequired,
-		url: React.PropTypes.string.isRequired,
-		filter: React.PropTypes.func,
 		renderItem: React.PropTypes.func,
 
 		showFilter: React.PropTypes.bool,
-		modelComponentTypes: React.PropTypes.array.isRequired,
-		modelComponentTypesFilter: React.PropTypes.array.isRequired,
+		// modelComponentTypes: React.PropTypes.array.isRequired,
+		// modelComponentTypesFilter: React.PropTypes.array.isRequired,
 	},
 
 	getDefaultProps: function() {
 		return {
-			filter: function() { return true; },
 			renderItem: this.renderListItem,
 
 			showFilter: false,
-			modelComponentTypes: [],
-			modelComponentTypesFilter: [],
+			// modelComponentTypes: [],
+			// modelComponentTypesFilter: [],
 		};
 	},
 
 	getInitialState: function() {
 		return {
-			loading: true,
-			error: null,
 			searchQuery: '',
-			listFiltered: [],
-			list: [],
+			itemsFiltered: this.props.items || [],
 		};
 	},
 
-	componentWillMount: function() {
-		let that = this;
-		let req = $.getJSON(this.props.url, {});
+	// renderLoading: function() {
+	// 	// TODO: react-loader
+	// 	return (this.props.loading)
+	// 		? <div>loading...</div>
+	// 		: null;
+	// },
 
-		that.setState({
-			loading: true
-		});
-
-		Q(req)
-			.then(function(data) {
-				that.setState({
-					list: data.list,
-					listFiltered: data.list,
-					error: null,
-					loading: false
-				});
-			},
-			function(err) {
-				console.error(err);
-				that.setState({
-					list: [],
-					listFiltered: [],
-					error: err,
-					loading: false
-				});
-			});
-	},
-
-	renderLoading: function() {
-		// TODO: react-loader
-		return (this.props.loading)
-			? <div>loading...</div>
-			: null;
-	},
-
-	renderError: function() {
-		const state = this.state;
-		return (state.error)
-			? <div>{state.error.statusText}: {state.error.responseText}</div>
-			: null;
-	},
+	// renderError: function() {
+	// 	const state = this.state;
+	// 	return (state.error)
+	// 		? <div>{state.error.statusText}: {state.error.responseText}</div>
+	// 		: null;
+	// },
 
 	renderFilterItem: function(item) {
 		const props = this.props;
@@ -124,10 +91,9 @@ let Library = React.createClass({
 	},
 
 	render: function() {
-		let that = this;
 		const props = this.props;
 		const state = this.state;
-		const listFiltered = state.listFiltered;
+		const itemsFiltered = state.itemsFiltered;
 
 		return (
 			<div className='panel-section library-component'>
@@ -141,13 +107,9 @@ let Library = React.createClass({
 					</div>
 				</div>
 				{this.renderFilter()}
-				{this.renderLoading()}
-				{this.renderError()}
 				<div className='results'>
 					<ul className='list-group'>
-						{listFiltered
-							.filter(props.filter)
-							.map(this.renderListItem)}
+						{itemsFiltered.map(this.renderListItem)}
 					</ul>
 				</div>
 			</div>
@@ -168,14 +130,18 @@ let Library = React.createClass({
 	},
 
 	search: function(event) {
-		this._search($(this.refs['searchInput']).val());
+		const val = $(this.refs['searchInput']).val();
+		this._search(val);
 	},
 
 	_search: function(query) {
-		const state = this.state;
-		query = query.trim();
+		const list = this.props.items;
 		this.setState({
-			listFiltered: utils.filterList(state.list, query, { fields: ['label'] })
+			itemsFiltered: utils.filterList(
+				list,
+				query.trim(),
+				{ fields: ['label'] }
+			)
 		});
 	}
 });

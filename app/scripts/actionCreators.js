@@ -871,6 +871,51 @@ function loadAttackerProfiles() {
 };
 
 
+const loadComponentTypes =
+module.exports.loadComponentTypes =
+function loadComponentTypes() {
+	return function(dispatch, getState) {
+		dispatch({ type: constants.ACTION_loadComponentTypes });
+
+		const url = api.makeUrl(knowledgebaseApi, 'type');
+		const params = _.merge(
+			{ url, dataType: 'json' },
+			api.requestOptions.jquery.crossDomain
+		);
+
+		const req = $.ajax(params);
+		Q(req)
+			.then(function(types) {
+				const componentTypes = types
+					.map((type) => {
+						return {
+							id: type['@id'],
+							kbType: type['@id'],
+							label: type['@label'],
+							modelComponentType: type['tkb:tml_class'],
+
+							attributes: type['tkb:has_attribute']
+								.reduce((acc, attr) => {
+									return [...acc, {
+										id: attr['@id'],
+										label: attr['@label'],
+										values: attr['tkb:values'],
+									}];
+								}),
+
+							// TODO: rest
+						};
+					});
+				dispatch({
+					type: constants.ACTION_loadComponentTypes_DONE,
+					componentTypes
+				});
+			})
+			.catch(handleError);
+	};
+};
+
+
 // ——————————
 /*
 module.exports.openDir =

@@ -60,6 +60,8 @@ const initialState = {
 	toolChains: [],
 	toolChainId: null,
 	analysisRunning: false,
+
+	componentTypes: [],
 };
 
 
@@ -247,6 +249,14 @@ function reducer(state=initialState, action) {
 		case constants.ACTION_loadAttackerProfiles_DONE: {
 			const {attackerProfiles} = action;
 			return mergeWithState({attackerProfiles});
+		}
+
+		// case constants.ACTION_loadComponentTypes: {
+		// 	return state; // noop
+		// }
+		case constants.ACTION_loadComponentTypes_DONE: {
+			const {componentTypes} = action;
+			return mergeWithState({componentTypes});
 		}
 
 		default:
