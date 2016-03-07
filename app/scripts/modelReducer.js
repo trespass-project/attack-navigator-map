@@ -11,9 +11,10 @@ const constants = require('./constants.js');
 
 const initialState = {
 	graph: {
-		nodes: [],
-		edges: [],
-		groups: [],
+		components: {}, // map id → component
+		nodeIds: [],
+		edgeIds: [],
+		groupIds: [],
 	},
 	predicates: {},
 	metadata: {
@@ -39,6 +40,9 @@ function reducer(state=initialState, action) {
 	switch (action.type) {
 		case constants.ACTION_initMap: {
 			const {modelId} = action;
+
+			// - clone initial state
+			// - set model id
 			const newState = _.merge(
 				{},
 				initialState,
@@ -108,12 +112,12 @@ function reducer(state=initialState, action) {
 
 		case constants.ACTION_importModelFragment: {
 			const {fragment, xy} = action;
-			const graph = modelHelpers.importModelFragment(
+			const newGraph = modelHelpers.importModelFragment(
 				state.graph,
 				modelHelpers.prepareFragment(fragment),
 				xy
 			);
-			return mergeWithState({ graph });
+			return mergeWithState({ graph: newGraph });
 		}
 
 		case constants.ACTION_updateModel: {
@@ -139,7 +143,7 @@ function reducer(state=initialState, action) {
 
 		case constants.ACTION_downloadAsXML: {
 			const model = modelHelpers.modelFromGraph(state.graph);
-			modelHelpers.downloadAsXML(
+			modelHelpers.downloadAsXML( // TODO: do this elsewhere
 				model,
 				`${model.system.title.replace(/\s/g, '-')}.xml`
 			);
