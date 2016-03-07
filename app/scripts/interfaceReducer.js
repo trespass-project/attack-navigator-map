@@ -260,6 +260,14 @@ function reducer(state=initialState, action) {
 			return mergeWithState({componentTypes});
 		}
 
+		// case constants.ACTION_loadComponentTypes: {
+		// 	return state; // noop
+		// }
+		case constants.ACTION_loadModelPatterns_DONE: {
+			const {modelPatterns} = action;
+			return mergeWithState({modelPatterns});
+		}
+
 		default:
 			return state;
 	}
