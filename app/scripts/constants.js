@@ -73,6 +73,8 @@ const constants = {
 	ACTION_loadAttackerProfiles_DONE: 'ACTION_loadAttackerProfiles_DONE',
 	ACTION_loadComponentTypes: 'ACTION_loadComponentTypes',
 	ACTION_loadComponentTypes_DONE: 'ACTION_loadComponentTypes_DONE',
+	ACTION_loadModelPatterns: 'ACTION_loadModelPatterns',
+	ACTION_loadModelPatterns_DONE: 'ACTION_loadModelPatterns_DONE',
 
 	CLONE_OFFSET: 100,
 };

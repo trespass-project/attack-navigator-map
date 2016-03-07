@@ -62,6 +62,7 @@ const initialState = {
 	analysisRunning: false,
 
 	componentTypes: [],
+	modelPatterns: [],
 };
 
 

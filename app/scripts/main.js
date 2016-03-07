@@ -34,6 +34,7 @@ let App = React.createClass({
 		// kb api
 		props.dispatch( actionCreators.loadComponentTypes() );
 		props.dispatch( actionCreators.loadAttackerProfiles() );
+		props.dispatch( actionCreators.loadModelPatterns() );
 
 		// tools api
 		props.dispatch( actionCreators.loadToolChains() );

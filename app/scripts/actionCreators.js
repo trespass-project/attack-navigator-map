@@ -15,6 +15,14 @@ const constants = require('./constants.js');
 const modelHelpers = require('./model-helpers.js');
 const helpers = require('./helpers.js');
 
+// TODO: move API stuff to trespass.js
+const fakeApi = require('../../api.js').api;
+const serverPort = require('../../api.js').serverPort;
+const serverDomain = require('../../api.js').serverDomain;
+function fakeApiUrl(url) {
+	return 'http://' + serverDomain + ':' + serverPort + url;
+}
+
 
 // let requests = {};
 // function abortRequests(requests, key) {
@@ -871,10 +879,35 @@ function loadAttackerProfiles() {
 };
 
 
+const loadModelPatterns =
+module.exports.loadModelPatterns =
+function loadModelPatterns() {
+	return (dispatch, getState) => {
+		dispatch({ type: constants.ACTION_loadModelPatterns });
+
+		const url = fakeApiUrl(fakeApi.patterns.url);
+		const params = _.merge(
+			{ url, dataType: 'json' },
+			api.requestOptions.jquery.crossDomain
+		);
+
+		const req = $.ajax(params);
+		Q(req)
+			.then((modelPatterns) => {
+				dispatch({
+					type: constants.ACTION_loadModelPatterns_DONE,
+					modelPatterns: modelPatterns.list
+				});
+			})
+			.catch(handleError);
+	};
+};
+
+
 const loadComponentTypes =
 module.exports.loadComponentTypes =
 function loadComponentTypes() {
-	return function(dispatch, getState) {
+	return (dispatch, getState) => {
 		dispatch({ type: constants.ACTION_loadComponentTypes });
 
 		const url = api.makeUrl(knowledgebaseApi, 'type');
@@ -885,7 +918,7 @@ function loadComponentTypes() {
 
 		const req = $.ajax(params);
 		Q(req)
-			.then(function(types) {
+			.then((types) => {
 				const componentTypes = types
 					.map((type) => {
 						return {

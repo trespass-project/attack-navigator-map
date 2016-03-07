@@ -21,13 +21,6 @@ const AttackerProfileEditor = require('./AttackerProfileEditor/AttackerProfileEd
 
 const predicatesLib = require('../data/predicate-lib.json');
 
-// TODO: move API stuff to trespass.js
-const api = require('../../api.js').api;
-const serverPort = require('../../api.js').serverPort;
-const serverDomain = require('../../api.js').serverDomain;
-function apiUrl(url) {
-	return 'http://' + serverDomain + ':' + serverPort + url;
-}
 
 
 function handleAdd() {
@@ -136,12 +129,13 @@ let Wizard = React.createClass({
 		const items = props.componentTypes.filter(componentTypesFilter(['location']));
 		return <div>
 			<h2 className='title'>Locations</h2>
-			{/*<div id='pattern-lib'>
+			<div id='pattern-lib'>
 				<Library
 					dispatch={props.dispatch}
+					items={props.modelPatterns}
 					key={'locations-patterns'}
 					title='patterns' />
-			</div>*/}
+			</div>
 			<div id='component-lib'>
 				<Library
 					dispatch={props.dispatch}
