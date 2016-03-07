@@ -106,6 +106,8 @@ let Wizard = React.createClass({
 			key={'propspanel' + ((props.selected) ? props.selected.componentId : '')}
 			selected={props.selected}
 			graph={props.graph}
+			relationTypes={props.relationTypes}
+			componentTypes={props.componentTypes}
 		/>;
 	},
 

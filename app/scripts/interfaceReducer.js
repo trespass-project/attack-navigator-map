@@ -62,6 +62,7 @@ const initialState = {
 	analysisRunning: false,
 
 	componentTypes: [],
+	relationTypes: [],
 	modelPatterns: [],
 };
 
@@ -260,12 +261,14 @@ function reducer(state=initialState, action) {
 			return mergeWithState({componentTypes});
 		}
 
-		// case constants.ACTION_loadComponentTypes: {
-		// 	return state; // noop
-		// }
 		case constants.ACTION_loadModelPatterns_DONE: {
 			const {modelPatterns} = action;
 			return mergeWithState({modelPatterns});
+		}
+
+		case constants.ACTION_loadRelationTypes_DONE: {
+			const {relationTypes} = action;
+			return mergeWithState({relationTypes});
 		}
 
 		default:

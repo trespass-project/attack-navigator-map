@@ -16,7 +16,7 @@ const modelHelpers = require('./model-helpers.js');
 const helpers = require('./helpers.js');
 
 // TODO: move API stuff to trespass.js
-const fakeApi = require('../../api.js').api;
+const fakeApi = require('../../api.js');
 const serverPort = require('../../api.js').serverPort;
 const serverDomain = require('../../api.js').serverDomain;
 function fakeApiUrl(url) {
@@ -903,7 +903,7 @@ function loadModelPatterns() {
 	return (dispatch, getState) => {
 		dispatch({ type: constants.ACTION_loadModelPatterns });
 
-		const url = fakeApiUrl(fakeApi.patterns.url);
+		const url = fakeApiUrl(fakeApi.api.patterns.url);
 		const params = _.merge(
 			{ url, dataType: 'json' },
 			api.requestOptions.jquery.crossDomain
@@ -915,6 +915,31 @@ function loadModelPatterns() {
 				dispatch({
 					type: constants.ACTION_loadModelPatterns_DONE,
 					modelPatterns: modelPatterns.list
+				});
+			})
+			.catch(handleError);
+	};
+};
+
+
+const loadRelationTypes =
+module.exports.loadRelationTypes =
+function loadRelationTypes() {
+	return (dispatch, getState) => {
+		dispatch({ type: constants.ACTION_loadRelationTypes });
+
+		const {serverDomain, serverPort} = fakeApi;
+		const url = `http://${serverDomain}:${serverPort}${fakeApi.api.relations.url}`;
+		const req = $.ajax({
+			url,
+			dataType: 'json',
+		})
+
+		Q(req)
+			.then(function(data) {
+				dispatch({
+					type: constants.ACTION_loadRelationTypes_DONE,
+					relationTypes: data.list
 				});
 			})
 			.catch(handleError);

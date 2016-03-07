@@ -45,6 +45,7 @@ let App = React.createClass({
 		props.dispatch( actionCreators.loadComponentTypes() );
 		props.dispatch( actionCreators.loadAttackerProfiles() );
 		props.dispatch( actionCreators.loadModelPatterns() );
+		props.dispatch( actionCreators.loadRelationTypes() );
 
 		// tools api
 		props.dispatch( actionCreators.loadToolChains() );

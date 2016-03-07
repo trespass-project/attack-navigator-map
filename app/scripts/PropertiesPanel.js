@@ -23,11 +23,15 @@ let PropertiesPanel = React.createClass({
 		id: React.PropTypes.string.isRequired,
 		graph: React.PropTypes.object.isRequired,
 		selected: React.PropTypes.object/*.isRequired*/,
+
+		relationTypes: React.PropTypes.array.isRequired,
 	},
 
-	// getDefaultProps: function() {
-	// 	return {};
-	// },
+	getDefaultProps: function() {
+		return {
+			// relationTypes: []
+		};
+	},
 
 	onChange: function(selected, event) {
 		let newProperties = { [event.target.name]: event.target.value };
@@ -159,7 +163,7 @@ let PropertiesPanel = React.createClass({
 										onChange={onChange}
 										name='relation'
 										value={edge.relation || null}>
-										{this.state.relationsLib.map(function(relation) {
+										{props.relationTypes.map(function(relation) {
 											return <option
 												key={relation.value}
 												value={relation.value}>
@@ -222,7 +226,7 @@ let PropertiesPanel = React.createClass({
 							? null
 							: <div className='kb'>
 								Knowledge base:<br/>
-								{this.renderKnowledgebase(state.knowledgebase)}
+								{this.renderKnowledgebase(selectedItem)}
 							</div>}
 					</div>
 				</form>
@@ -230,25 +234,26 @@ let PropertiesPanel = React.createClass({
 		);
 	},
 
-	renderKnowledgebase: function(kb) {
-		if (!kb || !kb.attributes) {
+	renderKnowledgebase: function(selectedItem) {
+		const props = this.props;
+
+		if (props.selected.graphComponentType !== 'node') {
 			return null;
 		}
 
-		const labelToAttrData = kb.attributes
-			.reduce((result, attr) => {
-				result[attr['@label']] = attr;
-				return result;
-			}, {});
+		const kb = helpers.getItemByKey(
+			'modelComponentType',
+			props.componentTypes,
+			selectedItem.modelComponentType
+		);
 
 		return <div>
-			{R.keys(labelToAttrData)
-				.map((label) => {
-					const attr = labelToAttrData[label];
-					return <div key={attr['@id']}>
-						{label}:&nbsp;
+			{kb.attributes
+				.map((attr) => {
+					return <div key={attr.id}>
+						{attr.label}:&nbsp;
 						<select>
-							{attr['tkb:values']
+							{attr.values
 								.map((value) => {
 									return <option
 										key={value['@id']}
@@ -264,70 +269,6 @@ let PropertiesPanel = React.createClass({
 			}
 		</div>;
 	},
-
-	componentDidMount: function() {
-		let that = this;
-		const props = this.props;
-
-		if (props.selected) {
-			const graphComponentType = props.selected.graphComponentType;
-			const componentId = props.selected.componentId;
-
-			if (graphComponentType === 'edge') {
-				// get relations
-				const {serverDomain, serverPort} = fakeApi;
-				const url = `http://${serverDomain}:${serverPort}${fakeApi.api.relations.url}`;
-				$.ajax({
-					url,
-					dataType: 'json',
-				}).success(function(data) {
-					that.setState({ relationsLib: data.list });
-				});
-			} else {
-				// query knowledgebase
-				const list = {
-					node: props.graph.nodes,
-					// edge: props.graph.edges,
-					group: props.graph.groups,
-				}[graphComponentType] || [];
-				const selectedItem = helpers.getItemById(list, componentId);
-
-				if (selectedItem) {
-					if (selectedItem.kbType) {
-						const params = _.merge(
-							{},
-							{ // TODO: remove this
-								url: api.makeUrl(knowledgebaseApi, 'getParameters'),
-								dataType: 'json',
-								data: { type: selectedItem.kbType }
-							},
-							api.requestOptions.jquery.crossDomain
-						);
-						$.ajax(params)
-							.success(function(data) {
-								// console.log(data);
-								that.setState({
-									knowledgebase: {
-										attributes: data['tkb:has_attribute']
-									}
-								});
-							})
-							.fail(function(err) {
-								console.error(err);
-							});
-					}
-				}
-			}
-		}
-	},
-
-	getInitialState: function() {
-		return {
-			relationsLib: [],
-			knowledgebase: {}
-		};
-	}
-
 });
 
 
