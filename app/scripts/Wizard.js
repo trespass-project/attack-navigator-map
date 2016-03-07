@@ -275,7 +275,7 @@ let Wizard = React.createClass({
 				placeholder='attacker
 				profit'
 				value={props.attackerProfit}
-				onChange={handleAttackerProfitUpdate}
+				onChange={this.handleAttackerProfitUpdate}
 			/>
 			<br/>
 
