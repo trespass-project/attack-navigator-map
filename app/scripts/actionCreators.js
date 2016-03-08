@@ -201,13 +201,13 @@ function dropModelFragment(fragment, clientOffset) {
 			state.interface.editorTransformElem,
 			editorXY
 		);
-		dispatch( importModelFragment(fragment, modelXY) );
+		dispatch( importFragment(fragment, modelXY) );
 	};
 };
 
 
-module.exports.importModelFragment =
-function importModelFragment(fragment, xy) {
+module.exports.importFragment =
+function importFragment(fragment, xy) {
 	return function(dispatch, getState) {
 		dispatch({
 			type: constants.ACTION_importModelFragment,

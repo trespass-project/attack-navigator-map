@@ -338,40 +338,268 @@ describe(f1('model-helpers.js'), function() {
 		});
 	});
 
-	describe(f2('createNode()'), function() {
+	describe(f2('duplicateNode()'), () => {
 		const nodeId = 'old-id';
 		const node = { id: nodeId };
 
-		it(f3('should keep id'), function() {
-			let keepId = true;
-			let newNode = modelHelpers.createNode(node, keepId);
+		it(f3('should keep id'), () => {
+			const keepId = true;
+			const newNode = modelHelpers.duplicateNode(node, keepId);
 			assert(newNode.id === nodeId);
 		});
 
-		it(f3('should create new id'), function() {
-			let keepId = false;
-			let newNode = modelHelpers.createNode(node, keepId);
+		it(f3('should create new id'), () => {
+			const keepId = false;
+			const newNode = modelHelpers.duplicateNode(node, keepId);
 			assert(newNode.id !== nodeId);
 		});
 	});
 
-	describe(f2('modelAsFragment()'), function() {
-		const model = {
-			system: {
-				title: 'title',
-				author: 'author',
-				locations: [
-					{ id: 'location' }
-				],
-			}
-		};
-		const fragment = modelHelpers.modelAsFragment(model);
+	describe(f2('duplicateEdge()'), () => {
+		const edgeId = 'old-id';
+		const edge = { id: edgeId, from: 'x', to: 'y' };
 
-		it(f3('should ignore metadata'), function() {
-			assert(!fragment.title);
-			assert(!fragment.author);
-			assert(fragment.locations.length === 1);
+		it(f3('should keep id'), () => {
+			const keepId = true;
+			const newEdge = modelHelpers.duplicateEdge(edge, keepId);
+			assert(newEdge.id === edgeId);
 		});
+
+		it(f3('should create new id'), () => {
+			const keepId = false;
+			const newEdge = modelHelpers.duplicateEdge(edge, keepId);
+			assert(newEdge.id !== edgeId);
+		});
+	});
+
+	describe(f2('duplicateGroup()'), () => {
+		const groupId = 'old-id';
+		const group = { id: groupId, nodeIds: ['x', 'y'] };
+
+		it(f3('should keep id'), () => {
+			const keepId = true;
+			const newGroup = modelHelpers.duplicateGroup(group, keepId);
+			assert(newGroup.id === groupId);
+		});
+
+		it(f3('should create new id'), () => {
+			const keepId = false;
+			const newGroup = modelHelpers.duplicateGroup(group, keepId);
+			assert(newGroup.id !== groupId);
+		});
+	});
+
+	describe(f2('nodeAsFragment()'), () => {
+		const node = { id: 'node-id' };
+
+		it(f3('should create a proper fragment'), () => {
+			const fragment = modelHelpers.nodeAsFragment(node);
+			assert(fragment.nodes.length === 1);
+			assert(fragment.nodes[0].id === node.id);
+		});
+	});
+
+	describe(f2('nodeAsFragmentInclEdges()'), () => {
+		const node = { id: 'node-id' };
+		const edges = [
+			{ from: 'node-id', to: 'asdf' },
+			{ from: 'qwer', to: 'node-id' },
+			{ from: 'qwer', to: 'asdf' },
+		];
+
+		it(f3('should create a proper fragment'), () => {
+			const fragment = modelHelpers.nodeAsFragmentInclEdges(node, edges);
+			assert(fragment.nodes.length === 1);
+			assert(fragment.nodes[0].id === node.id);
+			assert(fragment.edges.length === 2);
+		});
+	});
+
+	describe(f2('edgeAsFragment()'), () => {
+		const edge = { id: 'edge-id' };
+
+		it(f3('should create a proper fragment'), () => {
+			const fragment = modelHelpers.edgeAsFragment(edge);
+			assert(fragment.edges.length === 1);
+		});
+	});
+
+	describe(f2('edgeAsFragmentInclNodes()'), () => {
+		const edge = { id: 'edge-id' };
+		const nodes = [
+			{ node: 'node-1' },
+			{ node: 'node-2' },
+		];
+
+		it(f3('should create a proper fragment'), () => {
+			const fragment = modelHelpers.edgeAsFragmentInclNodes(edge, nodes);
+			assert(fragment.edges.length === 1);
+			assert(fragment.nodes.length === 2);
+		});
+	});
+
+	describe(f2('groupAsFragment()'), () => {
+		const nodes = [
+			{ id: 'node-0' },
+			{ id: 'node-1' },
+			{ id: 'node-2' },
+			{ id: 'node-3' },
+			{ id: 'node-4' },
+		];
+		const group = {
+			id: 'group-id',
+			nodeIds: ['node-1', 'node-2', 'node-3']
+		};
+		const graph = { nodes, edges: [], groups: [group] };
+
+		it(f3('should create a proper fragment'), () => {
+			const fragment = modelHelpers.groupAsFragment(graph, group);
+			assert(fragment.groups.length === 1);
+			assert(fragment.groups[0].nodeIds.length === 3);
+			assert(fragment.nodes.length === 3);
+			assert(fragment.nodes[0].id === 'node-1');
+		});
+	});
+
+	describe(f2('replaceIdInGroup()'), () => {
+		const group = {
+			id: 'group-id',
+			nodeIds: ['node-1', 'node-2', 'node-3']
+		};
+		const mapping = {
+			'node-2': 'a',
+			'node-3': 'b',
+			'bla': 'c',
+		};
+
+		it(f3('should change the ids'), () => {
+			const changedGroup = modelHelpers.replaceIdInGroup(mapping, group);
+			assert(changedGroup.nodeIds[0] === 'node-1');
+			assert(changedGroup.nodeIds[1] === 'a');
+			assert(changedGroup.nodeIds[2] === 'b');
+		});
+	});
+
+	describe(f2('replaceIdInEdge()'), function() {
+		it(f3('should stay the same'), function() {
+			const mapping = {};
+			const edge = { from: 'a', to: 'b' }
+			const newEdge = modelHelpers.replaceIdInEdge(mapping, edge);
+			assert(newEdge.from === edge.from);
+		});
+
+		it(f3('should work with `from`'), function() {
+			const mapping = { 'a': 'something' };
+			const edge = { from: 'a', to: 'b' }
+			const newEdge = modelHelpers.replaceIdInEdge(mapping, edge);
+			assert(newEdge.from === 'something');
+		});
+
+		it(f3('should work with `to`'), function() {
+			const mapping = { 'b': 'something' };
+			const edge = { from: 'a', to: 'b' }
+			const newEdge = modelHelpers.replaceIdInEdge(mapping, edge);
+			assert(newEdge.to === 'something');
+		});
+	});
+
+	describe(f2('duplicateFragment()'), () => {
+		const nodes = [
+			{ id: 'node-1' },
+			{ id: 'node-2' },
+			{ id: 'node-3' },
+		];
+		const groups = [
+			{ id: 'group-1', nodeIds: ['node-1', 'node-2'] },
+		];
+		const edges = [
+			{ id: 'edge-1', from: 'node-1', to: 'node-2' },
+			{ id: 'edge-2', from: 'node-3', to: 'node-2' },
+			{ id: 'edge-3', from: 'node-x', to: 'node-1' },
+		];
+		const fragment = { nodes, edges, groups };
+		const dupFragment = modelHelpers.duplicateFragment(fragment);
+
+		it(f3('should contain all the right things'), () => {
+			assert(dupFragment.nodes.length === fragment.nodes.length);
+			assert(dupFragment.edges.length === fragment.edges.length);
+			assert(dupFragment.groups.length === fragment.groups.length);
+		});
+
+		it(f3('should create new ids for everything inside'), () => {
+			fragment.nodes.forEach((node, index) => {
+				assert(node.id !== dupFragment.nodes[index].id);
+			});
+			fragment.edges.forEach((edge, index) => {
+				assert(edge.id !== dupFragment.edges[index].id);
+			});
+			fragment.groups.forEach((group, index) => {
+				assert(group.id !== dupFragment.groups[index].id);
+			});
+		});
+
+		it(f3('should use new node ids in edges'), () => {
+			const dupEdges = dupFragment.edges;
+			assert(dupEdges[0].from === dupFragment.nodes[0].id);
+			assert(dupEdges[0].to === dupFragment.nodes[1].id);
+			assert(dupEdges[1].from === dupFragment.nodes[2].id);
+			assert(dupEdges[1].to === dupFragment.nodes[1].id);
+			assert(dupEdges[2].from === 'node-x');
+			assert(dupEdges[2].to === dupFragment.nodes[0].id);
+		});
+
+		it(f3('should use new node ids in groups'), () => {
+			const dupGroup = dupFragment.groups[0];
+			assert(dupGroup.nodeIds[0] === dupFragment.nodes[0].id);
+			assert(dupGroup.nodeIds[1] === dupFragment.nodes[1].id);
+		});
+	});
+
+	describe(f2('combineFragments()'), () => {
+		const fragment1 = {
+			nodes: [{ id: 'node-1' }],
+			edges: [{ id: 'edge-1' }],
+			groups: [],
+		};
+		const fragment2 = {
+			nodes: [{ id: 'node-2' }, { id: 'node-3' }],
+			edges: [{ id: 'edge-2' }],
+			groups: [{ id: 'group-1' }, { id: 'group-2' }],
+		};
+		const combinedFragement = modelHelpers.combineFragments([fragment1, fragment2]);
+
+		it(f3('should create edges'), () => {
+			assert(combinedFragement.nodes.length === 3);
+			assert(combinedFragement.edges.length === 2);
+			assert(combinedFragement.groups.length === 2);
+		});
+	});
+
+	describe(f2('importFragment()'), () => {
+		const fragment = {
+			nodes: [
+				{ id: 'node-id-1' },
+				{ id: 'node-id-2' },
+			],
+			edges: [
+				{ id: 'edge-id-1' },
+				{ id: 'edge-id-2' },
+			],
+			groups: [
+				{ id: 'group-id-1' },
+				{ id: 'group-id-2' },
+			]
+		};
+		const graph = {};
+		const newGraph = modelHelpers.importFragment(graph, fragment);
+
+		it(f3('should import everything'), () => {
+			assert(newGraph.nodes.length === fragment.nodes.length);
+			assert(newGraph.edges.length === fragment.edges.length);
+			assert(newGraph.groups.length === fragment.groups.length);
+		});
+
+		// TODO: what else?
 	});
 
 	describe(f2('graphFromModel()'), function() {
@@ -473,26 +701,6 @@ describe(f1('model-helpers.js'), function() {
 		});
 	});
 
-	describe(f2('replaceIdInEdge()'), function() {
-		it(f3('should stay the same'), function() {
-			const edge = { from: 'a', to: 'b' }
-			const newEdge = modelHelpers.replaceIdInEdge(edge, 'unknown', 'something');
-			assert(newEdge.from === edge.from);
-		});
-
-		it(f3('should work with `from`'), function() {
-			const edge = { from: 'a', to: 'b' }
-			const newEdge = modelHelpers.replaceIdInEdge(edge, 'a', 'something');
-			assert(newEdge.from === 'something');
-		});
-
-		it(f3('should work with `to`'), function() {
-			const edge = { from: 'a', to: 'b' }
-			const newEdge = modelHelpers.replaceIdInEdge(edge, 'b', 'something');
-			assert(newEdge.to === 'something');
-		});
-	});
-
 	describe(f2('getNodeEdges()'), () => {
 		const node = { id: 'node-id' };
 		const edges = [
@@ -509,70 +717,58 @@ describe(f1('model-helpers.js'), function() {
 		});
 	});
 
-	describe(f2('groupToFragment()'), () => {
-		const nodes = [
-			{ id: 'node-id-1' },
-			{ id: 'node-id-2' },
-			{ id: 'node-id-3' },
-			{ id: 'node-id-4' },
-			{ id: 'node-id-5' },
-		];
-		const edges = [
-			{ id: '1', from: 'node-id-1', to: 'node-id-4' },
-			{ id: '2', from: 'node-id-4', to: 'node-id-2' },
-			{ id: '3', from: 'other-other-node', to: 'other-node' }
-		];
-		const group = {
-			id: 'group-id',
-			nodeIds: ['node-id-1', 'node-id-4'],
-		}
+	describe(f2('modelFromGraph()'), function() {
 		const graph = {
-			nodes,
-			edges,
-			groups: [group]
+			nodes: [
+				{ id: 'node-1', modelComponentType: 'item', atLocations: ['location'] },
+				{ id: 'node-2', modelComponentType: 'data', value: 'value', atLocations: ['location'] },
+				{ id: 'node-3', modelComponentType: 'predicate', arity: '2', value: ['value'] }
+			]
 		};
-		const fragment = modelHelpers.groupToFragment(graph, group.id);
+		const model = modelHelpers.modelFromGraph(graph);
 
-		it(f3('should create the right fragment'), () => {
-			assert(fragment.groups.length === 1);
-			assert(fragment.groups[0].nodeIds.length === 2);
-			assert(fragment.nodes.length === 2);
-			assert(fragment.edges.length === 2);
+		it(f3('should create elements'), function() {
+			assert(model.system.items.length === 1);
+			assert(model.system.data.length === 1);
+			assert(model.system.predicates.length === 1);
 		});
 
-		it(f3('should return clones, not copies'), () => {
-			assert(fragment.groups[0].id !== group.id);
-			assert(fragment.nodes[0].id !== nodes[0].id);
-			assert(fragment.nodes[1].id !== nodes[3].id);
-			assert(fragment.edges[0].id !== edges[0].id);
-			assert(fragment.edges[1].id !== edges[1].id);
-		});
+		// TODO: more
 	});
 
-	describe(f2('nodeToFragment()'), () => {
-		const node = { id: 'original-node' };
-		const edges = [
-			{ from: node.id, to: 'other-node' },
-			{ from: 'other-other-node', to: node.id }
-		];
+	describe(f2('cloneNode()'), function() {
+		const nodeId1 = 'node-id-1';
+		const nodeId2 = 'node-id-2';
+		const groupId = 'group-id';
+		const group = { id: groupId, nodeIds: [nodeId1] };
 		const graph = {
-			nodes: [node],
-			edges,
-			groups: []
+			nodes: [ { id: nodeId1 }, { id: nodeId2 } ],
+			edges: [ { from: nodeId1, to: nodeId2 } ],
+			groups: [group],
 		};
-		const fragment = modelHelpers.nodeToFragment(graph, node.id);
-		console.log(fragment);
 
-		it(f3('should create the right fragment'), () => {
-			assert(fragment.nodes.length === 1);
-			assert(fragment.edges.length === 2);
-			assert(!fragment.groups);
+		const newGraph = modelHelpers.cloneNode(graph, graph.nodes[0].id);
+
+		const origNode = newGraph.nodes[0];
+		const clonedNode = newGraph.nodes[2];
+		const clonedEdge = newGraph.edges[1];
+
+		it(f3('should create a new node'), function() {
+			assert(newGraph.nodes.length === (graph.nodes.length + 1));
 		});
 
-		it(f3('should return clones, not copies'), () => {
-			assert(fragment.nodes[0].id !== node.id);
-			assert(fragment.edges[0].id !== edges[0].id);
-			assert(fragment.edges[1].id !== edges[1].id);
+		it(f3('should give cloned node a new id'), function() {
+			assert(clonedNode.id !== origNode.id);
+		});
+
+		it(f3('cloned node should have original edges'), function() {
+			assert(newGraph.edges.length === 2);
+			assert(clonedEdge.to === nodeId2);
+			assert(clonedEdge.from === clonedNode.id);
+		});
+
+		it(f3('cloned node should be in original group'), function() {
+			assert( R.contains(clonedNode.id, newGraph.groups[0].nodeIds) );
 		});
 	});
 
@@ -658,131 +854,6 @@ describe(f1('model-helpers.js'), function() {
 			const newNewGraph = modelHelpers.cloneGroup(newGraph, newGraph.groups[1].id);
 			assert(newNewGraph.groups.length === 3);
 		});
-	});
-
-	describe(f2('cloneNode()'), function() {
-		const nodeId1 = 'node-id-1';
-		const nodeId2 = 'node-id-2';
-		const groupId = 'group-id';
-		const group = { id: groupId, nodeIds: [nodeId1] };
-		const graph = {
-			nodes: [ { id: nodeId1 }, { id: nodeId2 } ],
-			edges: [ { from: nodeId1, to: nodeId2 } ],
-			groups: [group],
-		};
-
-		const newGraph = modelHelpers.cloneNode(graph, graph.nodes[0]);
-
-		const origNode = newGraph.nodes[0];
-		const clonedNode = newGraph.nodes[2];
-		const clonedEdge = newGraph.edges[1];
-
-		it(f3('should create a new node'), function() {
-			assert(newGraph.nodes.length === graph.nodes.length+1);
-		});
-
-		it(f3('should give cloned node a new id'), function() {
-			assert(clonedNode.id !== origNode.id);
-		});
-
-		it(f3('cloned node should be in original group'), function() {
-			assert( R.contains(clonedNode.id, newGraph.groups[0].nodeIds) );
-		});
-
-		it(f3('cloned node should have original edges'), function() {
-			assert(newGraph.edges.length === 2);
-			assert(clonedEdge.to === nodeId2);
-			assert(clonedEdge.from === clonedNode.id);
-		});
-	});
-
-	describe(f2('importModelFragment()'), function() {
-		const fragment = {
-			nodes: [
-				{ id: 'node-id-1' },
-				{ id: 'node-id-2' },
-			],
-			edges: [
-				{ id: 'edge-id-1' },
-				{ id: 'edge-id-2' },
-			],
-			groups: [
-				{ id: 'group-id-1' },
-				{ id: 'group-id-2' },
-			]
-		};
-		const graph = {};
-		const newGraph = modelHelpers.importModelFragment(graph, fragment);
-
-		it(f3('should import everything'), function() {
-			assert(newGraph.nodes.length === fragment.nodes.length);
-			assert(newGraph.edges.length === fragment.edges.length);
-			assert(newGraph.groups.length === fragment.groups.length);
-		});
-
-		// TODO: what else?
-	});
-
-	describe(f2('prepareFragment()'), function() {
-		const fragment = {
-			nodes: [
-				{ id: 'node-id-1' },
-				{ id: 'node-id-2' },
-			],
-			edges: [
-				{ id: 'edge-id-1', from: 'node-id-1', to: 'node-id-2' },
-				{ id: 'edge-id-2' },
-			],
-			groups: [
-				{ id: 'group-id-1', nodeIds: ['node-id-1', 'node-id-2'] },
-				{ id: 'group-id-2' },
-			]
-		};
-		const preparedFragment = modelHelpers.prepareFragment( _.merge({}, fragment) );
-
-		it(f3('everything should get a new id'), function() {
-			assert(preparedFragment.nodes.length === fragment.nodes.length);
-			assert(preparedFragment.nodes[0].id !== fragment.nodes[0].id);
-			assert(preparedFragment.nodes[1].id !== fragment.nodes[1].id);
-
-			assert(preparedFragment.edges.length === fragment.edges.length);
-			assert(preparedFragment.edges[0].id !== fragment.edges[0].id);
-			assert(preparedFragment.edges[1].id !== fragment.edges[1].id);
-
-			assert(preparedFragment.groups.length === fragment.groups.length);
-			assert(preparedFragment.groups[0].id !== fragment.groups[0].id);
-			assert(preparedFragment.groups[1].id !== fragment.groups[1].id);
-		});
-
-		it(f3('edges should stay intact'), function() {
-			// console.log(preparedFragment.edges[0]);
-			assert(preparedFragment.edges[0].from === preparedFragment.nodes[0].id);
-			assert(preparedFragment.edges[0].to === preparedFragment.nodes[1].id);
-		});
-
-		it(f3('groups should stay intact'), function() {
-			assert(preparedFragment.groups[0].nodeIds[0] === preparedFragment.nodes[0].id);
-			assert(preparedFragment.groups[0].nodeIds[1] === preparedFragment.nodes[1].id);
-		});
-	});
-
-	describe(f2('modelFromGraph()'), function() {
-		const graph = {
-			nodes: [
-				{ id: 'node-1', modelComponentType: 'item', atLocations: ['location'] },
-				{ id: 'node-2', modelComponentType: 'data', value: 'value', atLocations: ['location'] },
-				{ id: 'node-3', modelComponentType: 'predicate', arity: '2', value: ['value'] }
-			]
-		};
-		const model = modelHelpers.modelFromGraph(graph);
-
-		it(f3('should create elements'), function() {
-			assert(model.system.items.length === 1);
-			assert(model.system.data.length === 1);
-			assert(model.system.predicates.length === 1);
-		});
-
-		// TODO: more
 	});
 
 });

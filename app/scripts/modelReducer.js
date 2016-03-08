@@ -100,9 +100,9 @@ function reducer(state=initialState, action) {
 			return newState;
 		}
 
-		case constants.ACTION_importModelFragment: {
+		case constants.ACTION_importFragment: {
 			const {fragment, xy} = action;
-			const graph = modelHelpers.importModelFragment(
+			const graph = modelHelpers.importFragment(
 				state.graph,
 				modelHelpers.prepareFragment(fragment),
 				xy
