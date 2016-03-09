@@ -186,6 +186,8 @@ function reducer(state=initialState, action) {
 		}
 
 		case constants.ACTION_ungroupNode: {
+			// TODO: do this in modelHelpers
+
 			const {nodeId} = action;
 			const newState = mergeWithState(state);
 
@@ -218,6 +220,8 @@ function reducer(state=initialState, action) {
 		}
 
 		case constants.ACTION_addEdge: {
+			// TODO: do this in modelHelpers
+
 			const {edge} = action;
 
 			if (edge.from === edge.to) {
@@ -235,6 +239,8 @@ function reducer(state=initialState, action) {
 		}
 
 		case constants.ACTION_removeEdge: {
+			// TODO: do this in modelHelpers
+
 			const {edge} = action;
 			const newState = mergeWithState(state);
 			newState.graph.edges = state.graph.edges
@@ -243,6 +249,8 @@ function reducer(state=initialState, action) {
 		}
 
 		case constants.ACTION_addGroup: {
+			// TODO: do this in modelHelpers
+
 			const {group} = action;
 			const newState = mergeWithState(state);
 			newState.graph.groups = [

@@ -54,6 +54,7 @@ const spec = {
 			if (result.target === constants.DND_TARGET_MAP /*||
 				result.target === constants.DND_TARGET_DEBUG*/) {
 				const item = monitor.getItem();
+				// TODO: use modelHelpers.nodeAsFragment()
 				const fragment = (item.fragment)
 					? item.value
 					: { nodes: [item] }; // treat single nodes like fragments
