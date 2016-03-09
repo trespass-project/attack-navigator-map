@@ -150,29 +150,29 @@ const Group = React.createClass({
 		};
 		if (!_.isEmpty(props.group._bgImage)) {
 			bgimg.icon = icons['fa-remove'];
-			bgimg.action = function() {
+			bgimg.action = () => {
 				context.dispatch( actionCreators.removeGroupBackgroundImage(props.group.id) );
 			};
 		}
 
 		const menuItems = [
 			{ label: 'delete', destructive: true, icon: icons['fa-trash'], action:
-				function(/*event*/) {
+				(/*event*/) => {
 					context.dispatch( actionCreators.removeGroup(props.group.id, true) );
 				}
 			},
 			{ label: 'ungroup', destructive: true, icon: icons['fa-remove'], action:
-				function(/*event*/) {
+				(/*event*/) => {
 					context.dispatch( actionCreators.removeGroup(props.group.id) );
 				}
 			},
 			{ label: 'clone', icon: icons['fa-files-o'], action:
-				function() {
+				() => {
 					context.dispatch( actionCreators.cloneGroup(props.group.id) );
 				}
 			},
 			{ label: 'save as\npattern', icon: icons['fa-floppy-o'], action:
-				function() {
+				() => {
 					// context.dispatch( actionCreators.cloneGroup(props.group.id) );
 				}
 			},
@@ -182,20 +182,20 @@ const Group = React.createClass({
 	},
 
 	openFileDialog: function() {
-		let $addfile = $('#add-file');
+		const $addfile = $('#add-file');
 		$addfile.on('change', this.loadBackgroundFile);
 		$addfile.click();
 	},
 
 	loadBackgroundFile: function(event) { // TODO: do this elsewhere
-		let that = this;
+		const that = this;
 		const props = this.props;
 
-		let file = $('#add-file')[0].files[0];
-		let reader = new FileReader();
-		reader.onload = function(event) {
-			let svg = event.target.result;
-			let $svg = $($.parseXML(svg)).find('svg').first();
+		const file = $('#add-file')[0].files[0];
+		const reader = new FileReader();
+		reader.onload = (event) => {
+			const svg = event.target.result;
+			const $svg = $($.parseXML(svg)).find('svg').first();
 			const w = parseFloat($svg.attr('width'));
 			const h = parseFloat($svg.attr('height'));
 			const aspectRatio = w / h;

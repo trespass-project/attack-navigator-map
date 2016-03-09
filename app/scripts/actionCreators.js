@@ -27,7 +27,7 @@ function fakeApiUrl(url) {
 // let requests = {};
 // function abortRequests(requests, key) {
 // 	requests[key] = requests[key] || [];
-// 	requests[key].forEach(function(req) { req.abort(); });
+// 	requests[key].forEach((req) => { req.abort(); });
 // 	requests[key].length = 0;
 // }
 
@@ -43,7 +43,7 @@ function handleError(err) {
 const initMap =
 module.exports.initMap =
 function initMap(modelId=undefined) {
-	return function(dispatch, getState) {
+	return (dispatch, getState) => {
 		const id = modelId || helpers.makeId('model');
 		dispatch({
 			type: constants.ACTION_initMap,
@@ -79,7 +79,7 @@ function kbGetModel(modelId, handleExists, handleMissing) {
 		return;
 	}
 
-	return function(dispatch, getState) {
+	return (dispatch, getState) => {
 		dispatch({
 			type: constants.ACTION_kbGetModel,
 			modelId
@@ -122,7 +122,7 @@ function kbCreateModel(modelId) {
 		return;
 	}
 
-	return function(dispatch, getState) {
+	return (dispatch, getState) => {
 		dispatch({
 			type: constants.ACTION_kbCreateModel,
 			modelId
@@ -190,7 +190,7 @@ function hideContextMenu(event, context, menuItems) {
 
 module.exports.dropModelFragment =
 function dropModelFragment(fragment, clientOffset) {
-	return function(dispatch, getState) {
+	return (dispatch, getState) => {
 		const state = getState();
 		const editorXY = helpers.coordsRelativeToElem(
 			state.interface.editorElem,
@@ -208,7 +208,7 @@ function dropModelFragment(fragment, clientOffset) {
 
 module.exports.importFragment =
 function importFragment(fragment, xy) {
-	return function(dispatch, getState) {
+	return (dispatch, getState) => {
 		dispatch({
 			type: constants.ACTION_importFragment,
 			fragment,
@@ -324,7 +324,7 @@ function setPreviewEdge(previewEdge) {
 
 module.exports.setDrag =
 function setDrag(data) {
-	return function(dispatch, getState) {
+	return (dispatch, getState) => {
 		dispatch({
 			type: constants.ACTION_setDrag,
 			data
@@ -491,7 +491,7 @@ function selectWizardStep(name) {
 const loadXMLFile =
 module.exports.loadXMLFile =
 function loadXMLFile(file) {
-	return function(dispatch, getState) {
+	return (dispatch, getState) => {
 		const action = {
 			type: constants.ACTION_loadXMLFile,
 			file,
@@ -501,7 +501,7 @@ function loadXMLFile(file) {
 		// ———
 
 		let reader = new FileReader();
-		reader.onload = function(event) {
+		reader.onload = (event) => {
 			const content = event.target.result;
 			dispatch( loadXML(content) );
 		};
@@ -513,13 +513,13 @@ function loadXMLFile(file) {
 const loadXML =
 module.exports.loadXML =
 function loadXML(xmlString) {
-	return function(dispatch, getState) {
+	return (dispatch, getState) => {
 		dispatch({
 			type: constants.ACTION_loadXML,
 			xml: xmlString,
 		});
 
-		modelHelpers.XMLModelToGraph(xmlString, function(err, result) {
+		modelHelpers.XMLModelToGraph(xmlString, (err, result) => {
 			const {graph, other, metadata} = result;
 			if (err) { return; }
 
@@ -686,7 +686,7 @@ function putModelAndScenarioIntoKnowledgebase(modelId, modelData, scenarioData) 
 const runAnalysis =
 module.exports.runAnalysis =
 function runAnalysis(toolChainId, downloadScenario=false) {
-	return function(dispatch, getState) {
+	return (dispatch, getState) => {
 		const state = getState();
 
 		// collect relevant data
@@ -784,9 +784,9 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 					api.requestOptions.jquery.withCredentials
 				);
 				const retryRate = 1000;
-				const intervalId = setInterval(function() {
+				const intervalId = setInterval(() => {
 					Q($.ajax(params))
-						.then(function(taskData) {
+						.then((taskData) => {
 							switch (taskData.status) {
 								case 'error':
 								case 'rejected':
@@ -843,7 +843,7 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 const loadToolChains =
 module.exports.loadToolChains =
 function loadToolChains(xmlString) {
-	return function(dispatch, getState) {
+	return (dispatch, getState) => {
 		// dispatch({ type: constants.ACTION_loadToolChains });
 
 		const params = _.merge(
@@ -857,7 +857,7 @@ function loadToolChains(xmlString) {
 		);
 		const req = $.ajax(params);
 		Q(req)
-			.then(function(chains) {
+			.then((chains) => {
 				// only get those chains that begin with treemaker
 				const treemakerName = 'Treemaker'; // TODO: don't hardcode
 				const toolChains = chains
@@ -877,7 +877,7 @@ function loadToolChains(xmlString) {
 const loadAttackerProfiles =
 module.exports.loadAttackerProfiles =
 function loadAttackerProfiles() {
-	return function(dispatch, getState) {
+	return (dispatch, getState) => {
 		// dispatch({ type: constants.ACTION_loadAttackerProfiles });
 
 		const url = api.makeUrl(knowledgebaseApi, 'attackerprofile');
@@ -888,7 +888,7 @@ function loadAttackerProfiles() {
 
 		const req = $.ajax(params);
 		Q(req)
-			.then(function(attackerProfiles) {
+			.then((attackerProfiles) => {
 				dispatch({
 					type: constants.ACTION_loadAttackerProfiles_DONE,
 					normalizedAttackerProfiles: helpers.normalize(attackerProfiles)
@@ -938,7 +938,7 @@ function loadRelationTypes() {
 		})
 
 		Q(req)
-			.then(function(data) {
+			.then((data) => {
 				dispatch({
 					type: constants.ACTION_loadRelationTypes_DONE,
 					relationTypes: data.list
@@ -998,8 +998,8 @@ function loadComponentTypes() {
 /*
 module.exports.openDir =
 function openDir(dirName) {
-	return function(dispatch, getState) {
-		Q().then(function() {
+	return (dispatch, getState) => {
+		Q().then(() => {
 				const action = {
 					type: constants.OPEN_DIR,
 					selectedSubdir: dirName,

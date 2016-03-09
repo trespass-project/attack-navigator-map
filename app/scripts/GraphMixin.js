@@ -127,7 +127,7 @@ const GraphMixin = {
 
 		return (
 			/* prevent event propagation from map up to svg elem */
-			<g ref='map-group' onClick={ function(event) { event.stopPropagation(); } }>
+			<g ref='map-group' onClick={ (event) => { event.stopPropagation(); } }>
 				{graph.groupIds
 					.map((id) => props.graph.components[id])
 					.filter(function(group) {

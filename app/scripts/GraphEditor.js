@@ -42,7 +42,7 @@ let GraphEditor = React.createClass({
 			{
 				label: 'add group',
 				icon: icons['fa-plus'],
-				action: function(/*event*/) {
+				action: (/*event*/) => {
 					const group = {
 						x: event.clientX,
 						y: event.clientY,
@@ -53,14 +53,14 @@ let GraphEditor = React.createClass({
 			{
 				label: 'auto-layout',
 				icon: icons['fa-magic'],
-				action: function(/*event*/) {
+				action: (/*event*/) => {
 					context.dispatch( actionCreators.autoLayout() );
 				}
 			},
 			{
 				label: 'reset\nview',
 				icon: icons['fa-sliders'],
-				action: function(/*event*/) {
+				action: (/*event*/) => {
 					context.dispatch( actionCreators.resetTransformation() );
 				}
 			},

@@ -323,10 +323,10 @@ const Wizard = React.createClass({
 			'runanalysis': { renderFn: this.renderRunAnalysis },
 		};
 
-		let defaultRenderFn = function() {
+		const defaultRenderFn = () => {
 			return <div>error</div>;
 		};
-		let renderFn = (!!wizardSteps[wizardSelectedSection])
+		const renderFn = (!!wizardSteps[wizardSelectedSection])
 			? wizardSteps[wizardSelectedSection].renderFn
 				|| defaultRenderFn
 			: defaultRenderFn;
@@ -463,8 +463,8 @@ const Wizard = React.createClass({
 
 	loadXMLFile: function(event) {
 		event.preventDefault();
-		let $fileInput = $(this.refs['load-model']);
-		let file = $fileInput[0].files[0];
+		const $fileInput = $(this.refs['load-model']);
+		const file = $fileInput[0].files[0];
 		this.context.dispatch( actionCreators.loadXMLFile(file) );
 	},
 

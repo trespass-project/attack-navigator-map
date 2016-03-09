@@ -8,7 +8,7 @@ const actionCreators = require('./actionCreators.js');
 
 const SchleppMixin = {
 	componentDidMount: function() {
-		let that = this;
+		const that = this;
 
 		const elem = helpers.getElemByRef(this, 'dragRoot');
 		const $elem = $(elem);
@@ -16,7 +16,7 @@ const SchleppMixin = {
 		let lastX;
 		let lastY;
 
-		$elem.on('mousedown', function(event) {
+		$elem.on('mousedown', (event) => {
 			event.preventDefault();
 			event.stopPropagation();
 
@@ -41,12 +41,12 @@ const SchleppMixin = {
 			that.context.dispatch(
 				actionCreators.setDrag({
 					elem,
-					onMove: function(event) {
+					onMove: (event) => {
 						event._deltaX = event.clientX - lastX;
 						event._deltaY = event.clientY - lastY;
 						(that._onDragMove || helpers.noop)(event);
 					},
-					onEnd: function(event) {
+					onEnd: (event) => {
 						(that._onDragEnd || helpers.noop)(event);
 					},
 				})

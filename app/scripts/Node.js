@@ -126,19 +126,19 @@ const Node = React.createClass({
 			{	label: 'delete',
 				destructive: true,
 				icon: icons['fa-trash'],
-				action: function() {
+				action: () => {
 					context.dispatch( actionCreators.removeNode(props.node.id) );
 				}
 			},
 			{	label: 'clone',
 				icon: icons['fa-files-o'],
-				action: function() {
+				action: () => {
 					context.dispatch( actionCreators.cloneNode(props.node.id) );
 				}
 			},
 			{	label: 'remove\nfrom group',
 				icon: icons['fa-object-group'],
-				action: function() {
+				action: () => {
 					context.dispatch( actionCreators.ungroupNode(props.node.id) );
 				}
 			},

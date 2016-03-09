@@ -8,13 +8,13 @@ const actionCreators = require('./actionCreators.js');
 
 const SchleppManagerMixin = {
 	componentDidMount: function() {
-		let that = this;
+		const that = this;
 
-		let elem = helpers.getElemByRef(this, 'dragRoot');
-		let $elem = $(elem);
+		const elem = helpers.getElemByRef(this, 'dragRoot');
+		const $elem = $(elem);
 
 		const $body = $('body'); // TODO: move this elsewhere
-		$body.on('keydown', function(event) {
+		$body.on('keydown', (event) => {
 			if (event.keyCode === 32) {
 				if (that.props.mouseOverEditor) {
 					event.preventDefault();
@@ -30,7 +30,7 @@ const SchleppManagerMixin = {
 			}
 		});
 
-		$body.on('keyup', function(event) {
+		$body.on('keyup', (event) => {
 			if (event.keyCode === 32) {
 				that.context.dispatch( actionCreators.setSpacePressed(false) );
 				that.context.dispatch( actionCreators.setPannable(false) );

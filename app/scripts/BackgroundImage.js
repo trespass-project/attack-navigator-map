@@ -137,7 +137,7 @@ const Group = React.createClass({
 			{
 				label: 'convert to nodes',
 				icon: icons['fa-magic'],
-				action: function() {
+				action: () => {
 					context.dispatch( actionCreators.backgroundImageToNodes(props.group) );
 				}
 			}
@@ -196,6 +196,5 @@ const Group = React.createClass({
 		//
 	}
 });
-
 
 module.exports = Group;

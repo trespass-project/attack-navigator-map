@@ -11,7 +11,7 @@ var serverPort = require('./api.js').serverPort;
 
 
 function readJSONFile(filePath, cb) {
-	fs.readFile(filePath, function(err, data) {
+	fs.readFile(filePath, (err, data) => {
 		if (err) {
 			cb(err);
 		} else {
@@ -25,18 +25,18 @@ function readJSONFile(filePath, cb) {
 if (require.main === module) {
 	var app = express();
 
-	app.use(function(req, res, next) {
+	app.use((req, res, next) => {
 		res.header('Access-Control-Allow-Origin', '*');
 		res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
 		next();
 	});
 
 	R.values(api)
-		.forEach(function(item) {
+		.forEach((item) => {
 			console.log(item.url);
 
-			app.get(item.url, function(req, res) {
-				readJSONFile(item.file, function(err, data) {
+			app.get(item.url, (req, res) => {
+				readJSONFile(item.file, (err, data) => {
 					if (err) {
 						res.json({
 							error: true,
@@ -49,7 +49,7 @@ if (require.main === module) {
 			});
 		});
 
-	app.listen(serverPort, function() {
+	app.listen(serverPort, () => {
 		console.log(chalk.cyan(`http://localhost:${serverPort}`));
 	});
 }

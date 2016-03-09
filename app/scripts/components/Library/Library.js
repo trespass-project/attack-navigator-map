@@ -62,7 +62,7 @@ const Library = React.createClass({
 		const props = this.props;
 		let onClick = null;
 		if (_.isFunction(props.onClick)) {
-			onClick = function(event) {
+			onClick = (event) => {
 				props.onClick(item);
 			};
 		}
