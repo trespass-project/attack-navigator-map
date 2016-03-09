@@ -210,7 +210,7 @@ module.exports.importFragment =
 function importFragment(fragment, xy) {
 	return function(dispatch, getState) {
 		dispatch({
-			type: constants.ACTION_importModelFragment,
+			type: constants.ACTION_importFragment,
 			fragment,
 			xy
 		});

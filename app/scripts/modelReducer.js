@@ -104,7 +104,7 @@ function reducer(state=initialState, action) {
 			const {fragment, xy} = action;
 			const graph = modelHelpers.importFragment(
 				state.graph,
-				modelHelpers.prepareFragment(fragment),
+				modelHelpers.duplicateFragment(fragment),
 				xy
 			);
 			return mergeWithState({ graph });
