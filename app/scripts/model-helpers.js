@@ -27,6 +27,8 @@ module.exports.nonGraphModelComponents =
 const origin = { x: 0, y: 0 };
 
 
+const createFragment =
+module.exports.createFragment =
 function createFragment(data={}) {
 	return _.defaults(
 		data,
@@ -71,7 +73,9 @@ function duplicateEdge(edge={}, keepId=false) {
 const duplicateGroup =
 module.exports.duplicateGroup =
 function duplicateGroup(group={}, keepId=false) {
-	const defaults = {};
+	const defaults = {
+		nodeIds: []
+	};
 	return _duplicate(group, defaults, keepId, 'group');
 };
 
@@ -215,10 +219,7 @@ function importFragment(graph, fragment, atXY=origin) {
 			return node;
 		});
 
-	const combined = combineFragments([
-		graph,
-		fragment
-	]);
+	const combined = combineFragments([graph, fragment]);
 	return combined;
 };
 
@@ -228,67 +229,68 @@ module.exports.XMLModelToGraph =
 function XMLModelToGraph(xmlStr, done) {
 	trespass.model.parse(xmlStr, (err, model) => {
 		if (err) { return done(err); }
-
 		const {graph, other} = graphFromModel(model);
-
-		let colCounter = 0;
-		let rowCounter = 0;
-		let lastGroupIndex = 0;
-		const maxNodesPerCol = 7;
-		let isShifted = true;
-		const spacing = 100;
-		let xOffset = spacing / 2;
-		const yOffset = spacing / 2;
-		let groupIndex = -1;
-
-		// create groups for the different types
-		modelComponents
-			.forEach((collectionName) => {
-				const selection = graph.nodes
-					.filter((node) => {
-						return (node.modelComponentType === modelComponentsSingular[collectionName]);
-					});
-
-				if (!selection.length) {
-					return;
-				}
-
-				const group = {
-					name: collectionName,
-					id: helpers.makeId('group'),
-					nodeIds: []
-				};
-				groupIndex++;
-
-				selection.forEach(function(node) {
-					group.nodeIds.push(node.id);
-
-					// basic auto-layout
-					if (rowCounter > maxNodesPerCol || lastGroupIndex !== groupIndex) {
-						if (lastGroupIndex !== groupIndex) {
-							lastGroupIndex = groupIndex;
-							isShifted = true;
-							xOffset += spacing / 2;
-						} else {
-							isShifted = !isShifted;
-						}
-
-						rowCounter = 0;
-						colCounter++;
-					}
-					node.label = node.id;
-					node.modelComponentType = modelComponentsSingular[collectionName];
-					node.x = xOffset + colCounter * spacing;
-					node.y = yOffset + rowCounter * spacing + ((isShifted) ? 0 : 20);
-					rowCounter++;
-				});
-				if (group.nodeIds.length) {
-					graph.groups.push(group);
-				}
-			});
-
 		done(null, graph, other);
 	});
+};
+
+
+const layoutGraphByType = // TODO: test
+module.exports.layoutGraphByType =
+function layoutGraphByType(graph) {
+	let colCounter = 0;
+	let rowCounter = 0;
+	let lastGroupIndex = 0;
+	const maxNodesPerCol = 7;
+	let isShifted = true;
+	const spacing = 100;
+	let xOffset = spacing / 2;
+	const yOffset = spacing / 2;
+	let groupIndex = -1;
+
+	// create groups for the different types
+	modelComponents
+		.forEach((collectionName) => {
+			const selection = graph.nodes
+				.filter((node) => {
+					return (node.modelComponentType === modelComponentsSingular[collectionName]);
+				});
+
+			if (!selection.length) {
+				return;
+			}
+
+			const group = duplicateGroup({
+				name: collectionName,
+			});
+			groupIndex++;
+
+			selection.forEach(function(node) {
+				group.nodeIds.push(node.id);
+
+				// basic auto-layout
+				if (rowCounter > maxNodesPerCol || lastGroupIndex !== groupIndex) {
+					if (lastGroupIndex !== groupIndex) {
+						lastGroupIndex = groupIndex;
+						isShifted = true;
+						xOffset += spacing / 2;
+					} else {
+						isShifted = !isShifted;
+					}
+
+					rowCounter = 0;
+					colCounter++;
+				}
+				node.label = node.id;
+				node.modelComponentType = modelComponentsSingular[collectionName];
+				node.x = xOffset + colCounter * spacing;
+				node.y = yOffset + rowCounter * spacing + ((isShifted) ? 0 : 20);
+				rowCounter++;
+			});
+			if (group.nodeIds.length) {
+				graph.groups.push(group);
+			}
+		});
 };
 
 

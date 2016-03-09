@@ -519,8 +519,11 @@ function loadXML(xmlString) {
 			xml: xmlString,
 		});
 
-		modelHelpers.XMLModelToGraph(xmlString, function(err, graph, other) {
+		modelHelpers.XMLModelToGraph(xmlString, (err, graph, other) => {
 			if (err) { return; }
+
+			modelHelpers.layoutGraphByType(graph);
+
 			dispatch( initMap(other.modelId) );
 			dispatch({
 				type: constants.ACTION_loadXML_DONE,
