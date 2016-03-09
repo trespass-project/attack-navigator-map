@@ -437,8 +437,13 @@ function cloneNode(graph, origNodeId) {
 		group.nodeIds = [...group.nodeIds, newNodeId];
 	});
 
+	const xy = {
+		x: constants.CLONE_OFFSET,
+		y: constants.CLONE_OFFSET,
+	};
+
 	// add fragment
-	return importFragment(graph, fragment/*, xy*/);
+	return importFragment(graph, fragment, xy);
 };
 
 
