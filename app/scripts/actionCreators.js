@@ -385,13 +385,13 @@ function setMouseOverEditor(yesno) {
 };
 
 
-module.exports.addNode =
-function addNode(node) {
-	return {
-		type: constants.ACTION_addNode,
-		node
-	};
-};
+// module.exports.addNode =
+// function addNode(node) {
+// 	return {
+// 		type: constants.ACTION_addNode,
+// 		node
+// 	};
+// };
 
 
 module.exports.cloneNode =
