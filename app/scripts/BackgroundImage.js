@@ -56,7 +56,7 @@ const ResizeElem = React.createClass({
 });
 
 
-let Group = React.createClass({
+const Group = React.createClass({
 	mixins: [SchleppMixin],
 
 	propTypes: {

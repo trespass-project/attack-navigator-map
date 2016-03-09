@@ -69,7 +69,7 @@ function bezierPoint(p1, c1, c2, p2, t) {
 }
 
 
-let Edge = React.createClass({
+const Edge = React.createClass({
 	contextTypes: {
 		dispatch: React.PropTypes.func,
 	},

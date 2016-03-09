@@ -5,7 +5,7 @@ const reactDOM = require('react-dom');
 const $ = require('jquery');
 
 
-let AttackerToolTipComponent = React.createClass({
+const AttackerToolTipComponent = React.createClass({
 	propTypes: {
 		profile: React.PropTypes.object.isRequired,
 		active: React.PropTypes.string,

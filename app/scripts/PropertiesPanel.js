@@ -14,7 +14,7 @@ const api = require('trespass.js').api;
 const knowledgebaseApi = api.knowledgebase;
 
 
-let PropertiesPanel = React.createClass({
+const PropertiesPanel = React.createClass({
 	contextTypes: {
 		dispatch: React.PropTypes.func,
 	},

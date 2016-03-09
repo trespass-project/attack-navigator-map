@@ -9,7 +9,7 @@ const AttackerToolTipComponent = require('./AttackerToolTipComponent.js');
 
 
 // React module to represent an attacker profile for visualization
-let AttackerProfile = React.createClass({
+const AttackerProfile = React.createClass({
 	propTypes: {
 		profile: React.PropTypes.object/*.isRequired*/,
 		showToolTip: React.PropTypes.bool,

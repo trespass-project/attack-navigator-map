@@ -9,7 +9,7 @@ const classIdx = ['zero', 'one', 'two', 'three', 'four', 'five'];
 
 
 // React module to represent an attacker profile for visualization
-let CircleComponent = React.createClass({
+const CircleComponent = React.createClass({
 	propTypes: {
 		radius: React.PropTypes.number.isRequired,
 		cx: React.PropTypes.string.isRequired,

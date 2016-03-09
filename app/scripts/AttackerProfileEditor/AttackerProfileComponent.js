@@ -23,7 +23,7 @@ const accessIntentArray = R.xprod(accessArray, intentArray)
 
 
 // React module to represent an attacker profile for visualization
-let AttackerProfileComponent = React.createClass({
+const AttackerProfileComponent = React.createClass({
 	propTypes: {
 		profile: React.PropTypes.object/*.isRequired*/,
 		setActiveHover: React.PropTypes.func.isRequired,

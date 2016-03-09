@@ -4,7 +4,7 @@ const React = require('react');
 const $ = jQuery;
 
 
-let Selectize = React.createClass({
+const Selectize = React.createClass({
 	propTypes: {
 		value: React.PropTypes.string.isRequired,
 		options: React.PropTypes.array.isRequired,
