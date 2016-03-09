@@ -103,7 +103,9 @@ let Wizard = React.createClass({
 	renderProperties: function(props) {
 		return <PropertiesPanel
 			id='propspanel'
-			key={'propspanel' + ((props.selected) ? props.selected.componentId : '')}
+			key={`propspanel-${((props.selected)
+				? props.selected.componentId
+				: '')}`}
 			selected={props.selected}
 			graph={props.graph}
 			relationTypes={props.relationTypes}

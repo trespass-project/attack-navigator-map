@@ -20,7 +20,7 @@ const fakeApi = require('../../api.js');
 const serverPort = require('../../api.js').serverPort;
 const serverDomain = require('../../api.js').serverDomain;
 function fakeApiUrl(url) {
-	return 'http://' + serverDomain + ':' + serverPort + url;
+	return `http://${serverDomain}:${serverPort}${url}`;
 }
 
 
@@ -753,7 +753,7 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 		const params = _.merge(
 			{
 				dataType: 'json',
-				url: api.makeUrl(toolsApi, 'secured/tool-chain/'+toolChainId+'/run'),
+				url: api.makeUrl(toolsApi, `secured/tool-chain/${toolChainId}/run`),
 				data: formData,
 			},
 			api.requestOptions.jquery.crossDomain,
@@ -776,7 +776,7 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 
 				// then, wait for result to become available:
 				const url = api.makeUrl(toolsApi, `secured/task/${taskId}/status`);
-				// const url = api.makeUrl(toolsApi, 'secured/task/'+taskId);
+				// const url = api.makeUrl(toolsApi, `secured/task/${taskId}`);
 				const params = _.merge(
 					{ url, dataType: 'json' },
 					api.requestOptions.jquery.crossDomain,

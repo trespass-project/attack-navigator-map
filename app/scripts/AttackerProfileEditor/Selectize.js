@@ -32,7 +32,7 @@ let Selectize = React.createClass({
 			onChange: this.onChange,
 			// render: {
 			// 	option: function(item, escape) {
-			// 		return '<div class="label tag">'+escape(item.name)+'</div>';
+			// 		return `<div class="label tag">${escape(item.name)}</div>`;
 			// 	}
 			// }
 		});

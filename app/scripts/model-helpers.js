@@ -382,10 +382,10 @@ function modelFromGraph(graph) {
 
 	(graph.nodes || []).forEach((node) => {
 		const type = node.modelComponentType;
-		const fnName = 'add' + properCase(type);
+		const fnName = `add${properCase(type)}`;
 		const addFn = trespass.model[fnName];
 		if (!addFn) {
-			console.warn(fnName+'()', 'not found');
+			console.warn(`${fnName}()`, 'not found');
 		} else {
 			addFn(
 				model,

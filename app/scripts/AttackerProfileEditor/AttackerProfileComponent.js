@@ -125,7 +125,7 @@ let AttackerProfileComponent = React.createClass({
 		distances.limitIdx = limitArray.indexOf(profile.limit);
 		distances.visibilityIdx = visibilityArray.indexOf(profile.visibility);
 		distances.visibilityIdx = visibilityArray.indexOf(profile.visibility);
-		distances.intentIdx = accessIntentArray.indexOf(profile.access + ' ' + profile.intent);
+		distances.intentIdx = accessIntentArray.indexOf(`${profile.access} ${profile.intent}`);
 		distances.resourcesIdx = resourcesArray.indexOf(profile.resources);
 
 		distances.resourcesR = (distances.resourcesIdx + 1) * multiplier;

@@ -90,7 +90,7 @@ let AttackerProfileEditorLanguage = React.createClass({
 
 		// kind of hacky for now
 		if (item.options.length === 1 && item.options[0].value === Number) {
-			return <li key={'li-'+item.name}>
+			return <li key={`li-${item.name}`}>
 				<div className={barClasses}></div>
 				<span>{item.name} {(item.multiple) ? 'are' : 'is'} </span>
 				<input
@@ -103,7 +103,7 @@ let AttackerProfileEditorLanguage = React.createClass({
 			</li>;
 		}
 
-		return <li key={'li-'+item.name}>
+		return <li key={`li-${item.name}`}>
 			<div className={barClasses}></div>
 			<span>{item.name} {(item.multiple) ? 'are' : 'is'} </span>
 			{(item.multiple)

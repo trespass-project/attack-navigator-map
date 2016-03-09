@@ -18,10 +18,10 @@ let actionCreators = require('./actionCreators.js');
 
 function pathifyBezier(p1, c1, c2, p2) {
 	return [
-		'M', p1.x+','+p1.y,
-		'C', c1.x+','+c1.y,
-		     c2.x+','+c2.y,
-		     p2.x+','+p2.y
+		'M', `${p1.x}, ${p1.y}`,
+		'C', `${c1.x}, ${c1.y}`,
+		     `${c2.x}, ${c2.y}`,
+		     `${p2.x}, ${p2.y}`
 	].join(' ');
 }
 
@@ -36,11 +36,13 @@ function diagonalBezier(p1, p2) {
 
 
 function arrowHead(size) {
-	let path = 'M'+(size*0.5)+','+(0);
-	path += ' L'+(size*-0.5)+','+(size*0.5);
-	path += ' L'+(size*-0.5)+','+(size*-0.5);
-	path += ' Z';
-	return path;
+	const halfSize = size * 0.5;
+	return [
+		'M', `${halfSize}, 0`,
+		'L', `${-halfSize}, ${halfSize}`,
+		'L', `${-halfSize}, ${-halfSize}`,
+		'Z'
+	].join(' ');
 }
 
 
@@ -147,7 +149,7 @@ let Edge = React.createClass({
 			angleDeg = radians(angleDeg);
 
 			arrow = (
-				<g transform={'translate('+x+','+y+') rotate('+angleDeg+')'} fill='white'>
+				<g transform={`translate(${x}, ${y}) rotate(${angleDeg})`} fill='white'>
 					<path d={arrowShape} />
 				</g>
 			);

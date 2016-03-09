@@ -46,7 +46,7 @@ let ContextMenu = React.createClass({
 		let groupClasses = classnames({ 'destructive': item.destructive });
 
 		return (
-			<g key={'piece-' + index} className={groupClasses}>
+			<g key={`piece-${index}`} className={groupClasses}>
 				<path
 					className='menu-item'
 					d={d}
@@ -58,7 +58,7 @@ let ContextMenu = React.createClass({
 						{labelLines.map(function(line) {
 							const lineHTML = { __html: (line || '') };
 							return <tspan
-								key={'label-'+line+'-'+index}
+								key={`label-${line}-${index}`}
 								x='0'
 								dy='1.1em'
 								dangerouslySetInnerHTML={lineHTML} />;
@@ -99,7 +99,7 @@ let ContextMenu = React.createClass({
 
 		return (
 			<g className='context-menu'
-				transform={'translate('+props.contextMenu.x+','+props.contextMenu.y+')'}>
+				transform={`translate(${props.contextMenu.x}, ${props.contextMenu.y})`}>
 				{pieces}
 			</g>
 		);

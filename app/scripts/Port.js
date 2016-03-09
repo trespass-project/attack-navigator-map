@@ -39,7 +39,7 @@ let Port = React.createClass({
 			<g
 				style={props.style}
 				className='port-group'
-				transform={'translate('+props.x+','+props.y+')'}
+				transform={`translate(${props.x}, ${props.y})`}
 			>
 				<circle
 					className='port'

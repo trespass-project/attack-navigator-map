@@ -83,7 +83,7 @@ let Node = React.createClass({
 		return (
 			<g
 				className='node-group'
-				transform={'translate('+props.x+','+props.y+')'}
+				transform={`translate(${props.x}, ${props.y})`}
 				onContextMenu={this._onContextMenu}
 				onClick={this._onClick}
 				onMouseEnter={this._handleHover}

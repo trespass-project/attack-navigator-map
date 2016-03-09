@@ -23,7 +23,7 @@ let Dropzone = React.createClass({
 	render: function() {
 		const props = this.props;
 		return (
-			<g transform={'translate('+props.x+','+props.y+')'}>
+			<g transform={`translate(${props.x}, ${props.y})`}>
 				<circle
 					className='dropzone'
 					cx={0}
@@ -116,7 +116,7 @@ let Group = React.createClass({
 				onContextMenu={this._onContextMenu}
 				onMouseEnter={this._handleHover}
 				onMouseLeave={this._handleHoverOut}
-				transform={'translate('+props.x+','+props.y+')'}>
+				transform={`translate(${props.x}, ${props.y})`}>
 				<rect
 					className={classnames('group', { 'selected': props.selected })}
 					rx={props.theme.group.cornerRadius}
@@ -198,8 +198,8 @@ let Group = React.createClass({
 			const w = parseFloat($svg.attr('width'));
 			const h = parseFloat($svg.attr('height'));
 			const aspectRatio = w / h;
-			// const dataURI = 'data:image/svg+xml;utf8,'+svg;
-			const dataURI = 'data:image/svg+xml;base64,'+btoa(svg);
+			// const dataURI = `data:image/svg+xml;utf8,${svg}`;
+			const dataURI = `data:image/svg+xml;base64,${btoa(svg)}`;
 			this.context.dispatch( actionCreators.addGroupBackgroundImage(props.group.id, dataURI, aspectRatio, w) );
 		};
 		// reader.readAsDataURL(file);

@@ -107,7 +107,7 @@ const GraphMixin = {
 
 		if (props.isMinimap && props.visibleRect) {
 			return (
-				<g transform={'translate('+props.visibleRect.x+','+props.visibleRect.y+')'}>
+				<g transform={`translate(${props.visibleRect.x}, ${props.visibleRect.y})`}>
 					<rect
 						className='minimap-visible-rect'
 						strokeWidth={props.theme.minimap.viewport.strokeWidth / props.constantScale}
@@ -186,7 +186,7 @@ const GraphMixin = {
 					onClick={this._onClick || helpers.noop}
 				>
 					<g ref='panZoom'
-					   transform={'matrix('+scale+',0,0,'+scale+','+panX+','+panY+')'}>
+					   transform={`matrix(${scale}, 0, 0, ${scale}, ${panX}, ${panY})`}>
 						{this._renderMap()}
 					</g>
 					{(props.editable) ? <ContextMenu {...this.props} /> : null}

@@ -50,6 +50,6 @@ if (require.main === module) {
 		});
 
 	app.listen(serverPort, function() {
-		console.log(chalk.cyan('http://localhost:'+serverPort));
+		console.log(chalk.cyan(`http://localhost:${serverPort}`));
 	});
 }

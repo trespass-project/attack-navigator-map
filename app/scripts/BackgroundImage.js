@@ -97,10 +97,10 @@ let Group = React.createClass({
 		const height = props.height;
 		const aspectRatio = width / height;
 
-		const img = '<image class="background-image" xlink:href="'+props.group._bgImage.url+'" x="'+0+'" y="'+0+'" height="'+height+'" width="'+width+'"/>';
+		const img = `<image class="background-image" xlink:href="${props.group._bgImage.url}" x="0" y="0" height="${height}" width="${width}"/>`;
 
 		return (
-			<g transform={'translate('+x+','+y+')'}
+			<g transform={`translate(${x}, ${y})`}
 				onContextMenu={this._onContextMenu}
 				onMouseEnter={this._onMouseOver}
 				onMouseLeave={this._onMouseOut}>

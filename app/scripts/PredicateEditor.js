@@ -59,7 +59,7 @@ const PredicateEditor = React.createClass({
 	// 			? (state[item.name] || []).join(', ')
 	// 			: state[item.name];
 
-	// 	return <li key={'li-'+item.name}>
+	// 	return <li key={`li-${item.name}`}>
 	// 		<div className={barClasses}></div>
 	// 		<span>{item.name} {(item.multiple) ? 'are' : 'is'} </span>
 	// 		{(item.multiple)
