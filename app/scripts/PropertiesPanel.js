@@ -247,8 +247,12 @@ let PropertiesPanel = React.createClass({
 			selectedItem.modelComponentType
 		);
 
+		if (!kb) {
+			return null;
+		}
+
 		return <div>
-			{kb.attributes
+			{(kb.attributes || {})
 				.map((attr) => {
 					return <div key={attr.id}>
 						{attr.label}:&nbsp;
