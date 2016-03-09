@@ -27,6 +27,18 @@ module.exports.nonGraphModelComponents =
 const origin = { x: 0, y: 0 };
 
 
+function createFragment(data={}) {
+	return _.defaults(
+		data,
+		{
+			nodes: [],
+			edges: [],
+			groups: []
+		}
+	);
+}
+
+
 const _duplicate =
 module.exports._duplicate =
 function _duplicate(it={}, defaults, keepId=false, itsType) {
@@ -67,33 +79,24 @@ function duplicateGroup(group={}, keepId=false) {
 const nodeAsFragment =
 module.exports.nodeAsFragment =
 function nodeAsFragment(node) {
-	return {
-		edges: [],
-		nodes: [node],
-		groups: [],
-	};
+	return createFragment({ nodes: [node] });
 };
 
 
 const nodeAsFragmentInclEdges =
 module.exports.nodeAsFragmentInclEdges =
 function nodeAsFragmentInclEdges(node, edges) {
-	return {
+	return createFragment({
 		edges: getNodeEdges(edges, node.id),
-		nodes: [node],
-		groups: [],
-	};
+		nodes: [node]
+	});
 };
 
 
 const edgeAsFragment =
 module.exports.edgeAsFragment =
 function edgeAsFragment(edge) {
-	return {
-		edges: [edge],
-		nodes: [],
-		groups: [],
-	};
+	return createFragment({ edges: [edge] });
 };
 
 
@@ -101,22 +104,17 @@ const edgeAsFragmentInclNodes =
 module.exports.edgeAsFragmentInclNodes =
 function edgeAsFragmentInclNodes(edge, nodes) {
 	const {fromNode, toNode} = getEdgeNodes(edge, nodes);
-	return {
+	return createFragment({
 		edges: [edge],
-		nodes: [fromNode, toNode],
-		groups: [],
-	};
+		nodes: [fromNode, toNode]
+	});
 };
 
 
 const groupAsFragment =
 module.exports.groupAsFragment =
 function groupAsFragment(graph, group) {
-	const nodes = group.nodeIds
-		.map((nodeId) => {
-			const node = helpers.getItemById(graph.nodes, nodeId);
-			return node;
-		});
+	const nodes = getGroupNodes(graph, group);
 
 	const edges = group.nodeIds
 		.reduce((acc, nodeId) => {
@@ -125,11 +123,11 @@ function groupAsFragment(graph, group) {
 		}, []);
 	const uniqueEdges = R.uniqBy(R.prop('id'), edges);
 
-	return {
+	return createFragment({
 		nodes,
 		edges: uniqueEdges,
 		groups: [group],
-	};
+	});
 };
 
 
@@ -200,7 +198,7 @@ function combineFragments(fragments) {
 			acc.edges = acc.edges.concat(fragment.edges || []);
 			acc.groups = acc.groups.concat(fragment.groups || []);
 			return acc;
-		}, { nodes: [], edges: [], groups: [], });
+		}, createFragment());
 };
 
 
@@ -313,11 +311,7 @@ function downloadAsXML(model, fileName='model.xml') {
 const graphFromModel =
 module.exports.graphFromModel =
 function graphFromModel(model) {
-	const graph = {
-		nodes: [],
-		edges: [],
-		groups: [],
-	};
+	const graph = createFragment();
 
 	// for each edge in model, create edge in graph
 	graph.edges = model.system.edges
@@ -515,6 +509,16 @@ function getEdgeNodes(edge, nodes) {
 		toNode: helpers.getItemById(nodes, edge.to),
 	};
 	return edgeNodes;
+};
+
+
+const getGroupNodes =
+module.exports.getGroupNodes =
+function getGroupNodes(graph, group) {
+	return group.nodeIds
+		.map((nodeId) => {
+			return helpers.getItemById(graph.nodes, nodeId);
+		});
 };
 
 
