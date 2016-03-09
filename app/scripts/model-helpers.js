@@ -334,7 +334,8 @@ function graphFromModel(model) {
 				});
 		});
 
-	R.without(R.concat(['edges'], nonGraphModelComponents), modelComponents)
+	const nonGraphComponents = R.concat(['edges'], nonGraphModelComponents);
+	R.without(nonGraphComponents, modelComponents)
 		.forEach((collectionName) => {
 			const coll = model.system[collectionName];
 			graph.nodes = R.concat(graph.nodes, coll);
@@ -387,17 +388,15 @@ function modelFromGraph(graph) {
 		if (!addFn) {
 			console.warn(`${fnName}()`, 'not found');
 		} else {
-			addFn(
-				model,
-				R.omit([
-					/*'name', */
-					'label',
-					'x',
-					'y',
-					'modelComponentType',
-					'kbType'
-				], node)
-			);
+			const keysToOmit = [
+				/*'name', */
+				'label',
+				'x',
+				'y',
+				'modelComponentType',
+				'kbType'
+			];
+			addFn(model, R.omit(keysToOmit, node));
 		}
 	});
 
@@ -410,7 +409,7 @@ module.exports.removeGroup =
 function removeGroup(graph, groupId, removeNodes=false) {
 	graph.groups = graph.groups
 		.filter((group) => {
-			const keep = (groupId != group.id);
+			const keep = (groupId !== group.id);
 			if (!keep && removeNodes) {
 				// remove nodes
 				group.nodeIds.forEach((nodeId) => {
