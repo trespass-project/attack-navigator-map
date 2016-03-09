@@ -341,28 +341,28 @@ function setDrag(data) {
 
 
 module.exports.setDragNode =
-function setDragNode(node) {
+function setDragNode(nodeId) {
 	return {
 		type: constants.ACTION_setDragNode,
-		node
+		nodeId
 	};
 };
 
 
 module.exports.setHoverNode =
-function setHoverNode(node) {
+function setHoverNode(nodeId) {
 	return {
 		type: constants.ACTION_setHoverNode,
-		node
+		nodeId
 	};
 };
 
 
 module.exports.setHoverGroup =
-function setHoverGroup(group) {
+function setHoverGroup(groupId) {
 	return {
 		type: constants.ACTION_setHoverGroup,
-		group
+		groupId
 	};
 };
 
@@ -395,10 +395,10 @@ function setMouseOverEditor(yesno) {
 
 
 module.exports.cloneNode =
-function cloneNode(node) {
+function cloneNode(nodeId) {
 	return {
 		type: constants.ACTION_cloneNode,
-		node
+		nodeId
 	};
 };
 
@@ -413,10 +413,10 @@ function addNodeToGroup(nodeId, groupId) {
 
 
 module.exports.removeNode =
-function removeNode(node) {
+function removeNode(nodeId) {
 	return {
 		type: constants.ACTION_removeNode,
-		node
+		nodeId
 	};
 };
 
@@ -432,19 +432,19 @@ function moveNode(nodeId, xy) {
 
 
 module.exports.ungroupNode =
-function ungroupNode(node) {
+function ungroupNode(nodeId) {
 	return {
 		type: constants.ACTION_ungroupNode,
-		node
+		nodeId
 	};
 };
 
 
 module.exports.moveGroup =
-function moveGroup(group, posDelta) {
+function moveGroup(groupId, posDelta) {
 	return {
 		type: constants.ACTION_moveGroup,
-		group,
+		groupId,
 		posDelta
 	};
 };
@@ -519,7 +519,8 @@ function loadXML(xmlString) {
 			xml: xmlString,
 		});
 
-		modelHelpers.XMLModelToGraph(xmlString, (err, graph, other) => {
+		modelHelpers.XMLModelToGraph(xmlString, function(err, result) {
+			const {graph, other, metadata} = result;
 			if (err) { return; }
 
 			modelHelpers.layoutGraphByType(graph);
@@ -527,7 +528,7 @@ function loadXML(xmlString) {
 			dispatch( initMap(other.modelId) );
 			dispatch({
 				type: constants.ACTION_loadXML_DONE,
-				graph, other
+				result
 			});
 		});
 	};
@@ -687,6 +688,7 @@ module.exports.runAnalysis =
 function runAnalysis(toolChainId, downloadScenario=false) {
 	return function(dispatch, getState) {
 		const state = getState();
+
 		// collect relevant data
 		const data = R.pick([
 			'attackerProfile',
@@ -695,14 +697,13 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 			'attackerProfit',
 		], state.interface);
 
-		const modelId = state.model.modelId;
+		const modelId = state.model.metadata.id;
 		if (!modelId) {
 			throw new Error('missing model id');
 		}
 
 		// generate model xml
-		let model = modelHelpers.modelFromGraph(state.model.graph);
-		model.system.id = modelId;
+		let model = modelHelpers.modelFromGraph(state.model.graph, state.model.metadata);
 		const modelXmlStr = trespassModel.toXML(model);
 		// console.log(modelXmlStr);
 
@@ -865,7 +866,7 @@ function loadToolChains(xmlString) {
 					});
 				dispatch({
 					type: constants.ACTION_loadToolChains_DONE,
-					toolChains
+					normalizedToolChains: helpers.normalize(toolChains)
 				});
 			})
 			.catch(handleError);
@@ -890,7 +891,7 @@ function loadAttackerProfiles() {
 			.then(function(attackerProfiles) {
 				dispatch({
 					type: constants.ACTION_loadAttackerProfiles_DONE,
-					attackerProfiles
+					normalizedAttackerProfiles: helpers.normalize(attackerProfiles)
 				});
 			})
 			.catch(handleError);

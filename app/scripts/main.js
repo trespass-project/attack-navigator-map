@@ -3,7 +3,7 @@
 const React = require('react');
 const reactDOM = require('react-dom');
 const _ = require('lodash');
-
+const R = require('ramda');
 const createStore = require('redux').createStore;
 const combineReducers = require('redux').combineReducers;
 const applyMiddleware = require('redux').applyMiddleware;
@@ -108,8 +108,8 @@ const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
 const store = createStoreWithMiddleware(reducer);
 
 function mapStateToProps(state) {
-	const newState = _.merge({}, state.model, state.interface);
-	return newState;
+	// flatten one level
+	return _.assign.apply(null, [{}].concat(R.values(state)));
 }
 
 App = DragDropContext(HTML5Backend)(App);

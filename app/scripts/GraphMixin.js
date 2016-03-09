@@ -84,7 +84,7 @@ const GraphMixin = {
 		return <Node
 			{...this.props}
 			key={index}
-			hovered={props.hoverNode && (node.id === props.hoverNode.id)}
+			hovered={props.hoverNodeId && (node.id === props.hoverNodeId)}
 			selected={props.selected && (node.id === props.selected.componentId)}
 			x={node.x}
 			y={node.y}
@@ -128,22 +128,32 @@ const GraphMixin = {
 		return (
 			/* prevent event propagation from map up to svg elem */
 			<g ref='map-group' onClick={ function(event) { event.stopPropagation(); } }>
-				{graph.groups
+				{graph.groupIds
+					.map((id) => props.graph.components[id])
 					.filter(function(group) {
 						return !!group._bgImage;
 					})
 					.map(this.renderBgImage)
 				}
-				{graph.groups.map(this.renderGroup)}
+				{graph.groupIds
+					.map((id) => props.graph.components[id])
+					.map(this.renderGroup)
+				}
 				{(props.showEdges)
-					? graph.edges.map(this.renderEdge)
+					? graph.edgeIds
+						.map((id) => props.graph.components[id])
+						.map(this.renderEdge)
 					: null
 				}
 				{(props.previewEdge && !props.isMinimap)
-					? [props.previewEdge].map(this.renderPreviewEdge)
+					? [props.previewEdge]
+						.map(this.renderPreviewEdge)
 					: null
 				}
-				{graph.nodes.map(this.renderNode)}
+				{graph.nodeIds
+					.map((id) => props.graph.components[id])
+					.map(this.renderNode)
+				}
 				{this.renderVisibleRect()}
 			</g>
 		);
@@ -200,22 +210,6 @@ const GraphMixin = {
 		const connectDropTarget = props.connectDropTarget || _.identity;
 		return connectDropTarget(this._render());
 	},
-
-
-	// updateDimensions: function() {
-	// 	var $window = $(window);
-	// 	this.setState({ // TODO: unused
-	// 		width: $window.width(),
-	// 		height: $window.height()
-	// 	});
-	// },
-	// componentDidMount: function() {
-	// 	this.updateDimensions();
-	// 	window.addEventListener('resize', this.updateDimensions);
-	// },
-	// componentWillUnmount: function() {
-	// 	window.removeEventListener('resize', this.updateDimensions);
-	// }
 };
 
 

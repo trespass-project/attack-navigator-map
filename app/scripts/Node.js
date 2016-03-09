@@ -1,14 +1,14 @@
 'use strict';
 
-let R = require('ramda');
-let React = require('react');
-let reactDOM = require('react-dom');
-let classnames = require('classnames');
-let SchleppMixin = require('./SchleppMixin.js');
-let Port = require('./Port.js');
-let icons = require('./icons.js');
-let helpers = require('./helpers.js');
-let actionCreators = require('./actionCreators.js');
+const R = require('ramda');
+const React = require('react');
+const reactDOM = require('react-dom');
+const classnames = require('classnames');
+const SchleppMixin = require('./SchleppMixin.js');
+const Port = require('./Port.js');
+const icons = require('./icons.js');
+const helpers = require('./helpers.js');
+const actionCreators = require('./actionCreators.js');
 
 
 const typeIcons = {
@@ -24,7 +24,7 @@ const typeIcons = {
 };
 
 
-let Node = React.createClass({
+const Node = React.createClass({
 	mixins: [SchleppMixin],
 
 	contextTypes: {
@@ -109,8 +109,9 @@ let Node = React.createClass({
 						node={props.node}
 						editorElem={props.editorElem}
 						editorTransformElem={props.editorTransformElem}
-						hoverNode={props.hoverNode}
-						dragNode={props.dragNode} />
+						hoverNodeId={props.hoverNodeId}
+						dragNodeId={props.dragNodeId}
+					/>
 					: null
 				}
 			</g>
@@ -126,19 +127,19 @@ let Node = React.createClass({
 				destructive: true,
 				icon: icons['fa-trash'],
 				action: function() {
-					context.dispatch( actionCreators.removeNode(props.node) );
+					context.dispatch( actionCreators.removeNode(props.node.id) );
 				}
 			},
 			{	label: 'clone',
 				icon: icons['fa-files-o'],
 				action: function() {
-					context.dispatch( actionCreators.cloneNode(props.node) );
+					context.dispatch( actionCreators.cloneNode(props.node.id) );
 				}
 			},
 			{	label: 'remove\nfrom group',
 				icon: icons['fa-object-group'],
 				action: function() {
-					context.dispatch( actionCreators.ungroupNode(props.node) );
+					context.dispatch( actionCreators.ungroupNode(props.node.id) );
 				}
 			},
 		];
@@ -183,7 +184,7 @@ let Node = React.createClass({
 		const props = this.props;
 		const node = props.node;
 
-		this.context.dispatch( actionCreators.setDragNode(node) );
+		this.context.dispatch( actionCreators.setDragNode(node.id) );
 
 		this.originalPositionX = node.x;
 		this.originalPositionY = node.y;
@@ -267,7 +268,7 @@ let Node = React.createClass({
 	},
 
 	_handleHover: function(event) {
-		this.context.dispatch( actionCreators.setHoverNode(this.props.node) );
+		this.context.dispatch( actionCreators.setHoverNode(this.props.node.id) );
 	},
 
 	_handleHoverOut: function(event) {

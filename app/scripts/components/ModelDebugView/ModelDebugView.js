@@ -1,12 +1,12 @@
 'use strict';
 
-let React = require('react');
-let DropTarget = require('react-dnd').DropTarget;
+const React = require('react');
+const DropTarget = require('react-dnd').DropTarget;
 
 const constants = require('../../constants.js');
 
 
-let ModelDebugView = React.createClass({
+const ModelDebugView = React.createClass({
 	propTypes: {
 		model: React.PropTypes.object,
 
@@ -39,7 +39,7 @@ let ModelDebugView = React.createClass({
 
 const spec = {
 	drop: function (props, monitor, component) {
-		// let data = monitor.getItem().data;
+		// const data = monitor.getItem().data;
 		return { target: constants.DND_TARGET_DEBUG };
 	}
 };

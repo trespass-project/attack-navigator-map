@@ -1,13 +1,13 @@
 'use strict';
 
-let React = require('react');
-let reactDOM = require('react-dom');
-let $ = require('jquery');
-let helpers = require('./helpers.js');
-let Graph = require('./Graph.js');
+const React = require('react');
+const reactDOM = require('react-dom');
+const $ = require('jquery');
+const helpers = require('./helpers.js');
+const Graph = require('./Graph.js');
 
 
-let GraphMinimap = React.createClass({
+const GraphMinimap = React.createClass({
 	propTypes: {
 		constantScale: React.PropTypes.number,
 	},
@@ -19,7 +19,7 @@ let GraphMinimap = React.createClass({
 	render: function() {
 		const props = this.props;
 
-		let transform = {
+		const transform = {
 			scale: props.constantScale,
 			pan: { x: 0, y: 0 }
 		};
@@ -27,7 +27,8 @@ let GraphMinimap = React.createClass({
 		if (!transform.scale) {
 			if (!this.size) { return null; }
 
-			let bbox = helpers.getNodesBBox(props.graph.nodes);
+			const nodes = props.graph.nodeIds.map((id) => props.graph.components[id]);
+			const bbox = helpers.getNodesBBox(nodes);
 
 			// add some padding
 			const padding = props.theme.node.size;
@@ -70,7 +71,7 @@ let GraphMinimap = React.createClass({
 		const props = this.props;
 
 		const elem = reactDOM.findDOMNode(this);
-		let $minimap = $(elem);
+		const $minimap = $(elem);
 		this.size = {
 			width: $minimap.width(),
 			height: $minimap.height(),

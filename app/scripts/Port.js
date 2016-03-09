@@ -1,12 +1,12 @@
 'use strict';
 
-let React = require('react');
-let SchleppMixin = require('./SchleppMixin.js');
-let helpers = require('./helpers.js');
-let actionCreators = require('./actionCreators.js');
+const React = require('react');
+const SchleppMixin = require('./SchleppMixin.js');
+const helpers = require('./helpers.js');
+const actionCreators = require('./actionCreators.js');
 
 
-let Port = React.createClass({
+const Port = React.createClass({
 	mixins: [SchleppMixin],
 
 	contextTypes: {
@@ -21,8 +21,8 @@ let Port = React.createClass({
 		style: React.PropTypes.object.isRequired,
 		editorElem: React.PropTypes.object.isRequired,
 		editorTransformElem: React.PropTypes.object.isRequired,
-		hoverNode: React.PropTypes.object/*.isRequired*/,
-		dragNode: React.PropTypes.object/*.isRequired*/,
+		hoverNodeId: React.PropTypes.string/*.isRequired*/,
+		dragNodeId: React.PropTypes.string/*.isRequired*/,
 	},
 
 	getDefaultProps: function() {
@@ -53,8 +53,7 @@ let Port = React.createClass({
 	},
 
 	_onDragStart: function(event) {
-		const node = this.props.node;
-		this.context.dispatch( actionCreators.setDragNode(node) );
+		this.context.dispatch( actionCreators.setDragNode(this.props.node.id) );
 		// this._onDragMove(event);
 	},
 
@@ -85,10 +84,10 @@ let Port = React.createClass({
 		const context = this.context;
 		const props = this.props;
 
-		if (props.hoverNode != null && props.dragNode != null) {
+		if (props.hoverNodeId !== null && props.dragNodeId !== null) {
 			const newEdge = {
-				from: props.dragNode.id,
-				to: props.hoverNode.id
+				from: props.dragNodeId,
+				to: props.hoverNodeId
 			};
 			context.dispatch( actionCreators.addEdge(newEdge) );
 			context.dispatch( actionCreators.select(newEdge.id, 'edge') );

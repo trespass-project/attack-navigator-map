@@ -2,7 +2,6 @@
 
 const $ = require('jquery');
 const R = require('ramda');
-const _ = require('lodash');
 const mergeWith = require('./reducer-utils.js').mergeWith;
 const omitType = require('./reducer-utils.js').omitType;
 const constants = require('./constants.js');
@@ -12,9 +11,9 @@ const theme = require('./graph-theme-default.js');
 
 const initialState = {
 	drag: null,
-	dragNode: null,
-	hoverNode: null,
-	hoverGroup: null,
+	dragNodeId: null,
+	hoverNodeId: null,
+	hoverGroupId: null,
 	previewEdge: null,
 
 	spacePressed: false,
@@ -44,20 +43,20 @@ const initialState = {
 
 	interfaceMode: 'light', // 'pro'
 
-	wizard: {
-		selectedSection: 'import'
-	},
+	wizardSelectedSection: 'import',
 
 	// ——————————
 
-	attackerProfiles: [],
+	// this should not be here
+	attackerProfileIds: [],
+	attackerProfiles: {},
 	attackerProfile: null,
-
 	attackerGoalType: null,
 	attackerGoal: null,
 	attackerProfit: undefined,
 
-	toolChains: [],
+	toolChainIds: [],
+	toolChains: {},
 	toolChainId: null,
 	analysisRunning: false,
 
@@ -183,19 +182,17 @@ function reducer(state=initialState, action) {
 		case constants.ACTION_setPreviewEdge:
 			return mergeWithState({ previewEdge: action.previewEdge });
 
-		case constants.ACTION_setDrag: {
-			const newState = mergeWithState({ drag: action.data });
-			return newState;
-		}
+		case constants.ACTION_setDrag:
+			return mergeWithState({ drag: action.data });
 
 		case constants.ACTION_setDragNode:
-			return mergeWithState({ dragNode: action.node });
+			return mergeWithState({ dragNodeId: action.nodeId });
 
 		case constants.ACTION_setHoverNode:
-			return mergeWithState({ hoverNode: action.node });
+			return mergeWithState({ hoverNodeId: action.nodeId });
 
 		case constants.ACTION_setHoverGroup:
-			return mergeWithState({ hoverGroup: action.group });
+			return mergeWithState({ hoverGroupId: action.groupId });
 
 		case constants.ACTION_setSpacePressed:
 			return mergeWithState({ spacePressed: action.yesno });
@@ -210,47 +207,46 @@ function reducer(state=initialState, action) {
 			return mergeWithState({ pannable: action.yesno });
 
 		case constants.ACTION_selectWizardStep:
-			return mergeWithState({ wizard: { selectedSection: action.name } });
+			return mergeWithState({ wizardSelectedSection: action.name });
 
-		case constants.ACTION_attackerProfileChanged: {
-			const {profile} = action;
-			return mergeWithState({ attackerProfile: profile });
-		}
+		case constants.ACTION_attackerProfileChanged:
+			return mergeWithState({ attackerProfile: action.profile });
 
-		case constants.ACTION_setAttackerGoal: {
-			const {goalType, goalData} = action;
+		case constants.ACTION_setAttackerGoal:
 			return mergeWithState({
-				attackerGoalType: goalType,
-				attackerGoal: goalData,
+				attackerGoalType: action.goalType,
+				attackerGoal: action.goalData,
 			});
-		}
 
-		case constants.ACTION_setAttackerProfit: {
-			const {profit} = action;
-			return mergeWithState({ attackerProfit: profit });
-		}
+		case constants.ACTION_setAttackerProfit:
+			return mergeWithState({ attackerProfit: action.profit });
 
-		case constants.ACTION_runAnalysis: {
+		case constants.ACTION_runAnalysis:
 			return mergeWithState({
 				analysisRunning: true,
 				toolChainId: action.toolChainId,
 			});
-		}
 
-		case constants.ACTION_loadToolChains: {
-			return state; // noop
-		}
+		// case constants.ACTION_loadToolChains:
+		// 	return state; // noop
+
 		case constants.ACTION_loadToolChains_DONE: {
-			const {toolChains} = action;
-			return mergeWithState({toolChains});
+			const { ids, items } = action.normalizedToolChains;
+			return mergeWithState({
+				toolChainIds: ids,
+				toolChains: items,
+			});
 		}
 
-		case constants.ACTION_loadAttackerProfiles: {
-			return state; // noop
-		}
+		// case constants.ACTION_loadAttackerProfiles:
+		// 	return state; // noop
+
 		case constants.ACTION_loadAttackerProfiles_DONE: {
-			const {attackerProfiles} = action;
-			return mergeWithState({attackerProfiles});
+			const { ids, items } = action.normalizedAttackerProfiles;
+			return mergeWithState({
+				attackerProfileIds: ids,
+				attackerProfiles: items,
+			});
 		}
 
 		// case constants.ACTION_loadComponentTypes: {

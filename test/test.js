@@ -855,5 +855,4 @@ describe(f1('model-helpers.js'), function() {
 			assert(newNewGraph.groups.length === 3);
 		});
 	});
-
 });

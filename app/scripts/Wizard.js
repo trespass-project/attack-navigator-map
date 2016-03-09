@@ -19,7 +19,7 @@ const Tooltip = require('react-bootstrap').Tooltip;
 const PredicateEditor = require('./PredicateEditor.js');
 const AttackerProfileEditor = require('./AttackerProfileEditor/AttackerProfileEditorLanguage.js');
 
-const predicatesLib = require('../data/predicate-lib.json');
+const predicatesLib = helpers.normalize(require('../data/predicate-lib.json')).items;
 
 
 
@@ -35,7 +35,7 @@ function componentTypesFilter(types) {
 }
 
 
-let Tab = React.createClass({
+const Tab = React.createClass({
 	propTypes: {
 		name: React.PropTypes.string.isRequired,
 		selectedSection: React.PropTypes.string.isRequired,
@@ -71,7 +71,7 @@ let Tab = React.createClass({
 });
 
 
-let Wizard = React.createClass({
+const Wizard = React.createClass({
 	contextTypes: {
 		dispatch: React.PropTypes.func,
 	},
@@ -182,18 +182,12 @@ let Wizard = React.createClass({
 	},
 
 	renderConnections: function(props) {
-		const allNodeNames = props.graph.nodes
-			.map((item) => {
-				const name = item.label || item.name || item.id; // TODO: figure this out
-				return { name, label: name };
-			});
-
 		return <div>
 			<h2 className='title'>Connections</h2>
 			<PredicateEditor
-				allNames={allNodeNames}
+				nodeNames={props.nodeNames}
 				predicatesLib={props.predicatesLib || predicatesLib}
-				predicates={props.predicates || []}
+				predicates={props.predicates || {}}
 			/>
 		</div>;
 	},
@@ -244,7 +238,7 @@ let Wizard = React.createClass({
 
 			<h3>Tool chains</h3>
 			<select ref='toolchain'>
-				{props.toolChains
+				{R.values(props.toolChains)
 					.map((chain) => {
 						return <option
 							key={chain.id}
@@ -316,8 +310,7 @@ let Wizard = React.createClass({
 
 	render: function() {
 		const props = this.props;
-		const wizard = props.wizard;
-		const selectedSection = wizard.selectedSection;
+		const wizardSelectedSection = props.wizardSelectedSection;
 
 		const wizardSteps = {
 			'import': { renderFn: this.renderImport },
@@ -333,8 +326,8 @@ let Wizard = React.createClass({
 		let defaultRenderFn = function() {
 			return <div>error</div>;
 		};
-		let renderFn = (!!wizardSteps[wizard.selectedSection])
-			? wizardSteps[wizard.selectedSection].renderFn
+		let renderFn = (!!wizardSteps[wizardSelectedSection])
+			? wizardSteps[wizardSelectedSection].renderFn
 				|| defaultRenderFn
 			: defaultRenderFn;
 
@@ -348,49 +341,49 @@ let Wizard = React.createClass({
 				<div id='wizard-container'>
 					<div id='steps-container'>
 						<Tab name='import'
-							selectedSection={selectedSection}
+							selectedSection={wizardSelectedSection}
 							icon='images/icons/import-01.svg'
 							tooltip='Import model'
 							handleClick={R.partial(this.selectWizardStep, ['import'])}
 						/>
 						<Tab name='locations'
-							selectedSection={selectedSection}
+							selectedSection={wizardSelectedSection}
 							icon='images/icons/location-01.svg'
 							tooltip='Locations'
 							handleClick={R.partial(this.selectWizardStep, ['locations'])}
 						/>
 						<Tab name='assets'
-							selectedSection={selectedSection}
+							selectedSection={wizardSelectedSection}
 							icon='images/icons/assets-01.svg'
 							tooltip='Assets'
 							handleClick={R.partial(this.selectWizardStep, ['assets'])}
 						/>
 						<Tab name='actors'
-							selectedSection={selectedSection}
+							selectedSection={wizardSelectedSection}
 							icon='images/icons/actors-01.svg'
 							tooltip='Actors'
 							handleClick={R.partial(this.selectWizardStep, ['actors'])}
 						/>
 						<Tab name='connections'
-							selectedSection={selectedSection}
+							selectedSection={wizardSelectedSection}
 							icon='images/icons/connections-01.svg'
 							tooltip='Connections'
 							handleClick={R.partial(this.selectWizardStep, ['connections'])}
 						/>
 						<Tab name='policies'
-							selectedSection={selectedSection}
+							selectedSection={wizardSelectedSection}
 							icon='images/icons/policies-01.svg'
 							tooltip='Policies'
 							handleClick={R.partial(this.selectWizardStep, ['policies'])}
 						/>
 						<Tab name='attackerprofile'
-							selectedSection={selectedSection}
+							selectedSection={wizardSelectedSection}
 							icon='images/icons/attacker_profile-01.svg'
 							tooltip='Attacker profile'
 							handleClick={R.partial(this.selectWizardStep, ['attackerprofile'])}
 						/>
 						<Tab name='runanalysis'
-							selectedSection={selectedSection}
+							selectedSection={wizardSelectedSection}
 							icon='images/icons/run-01.svg'
 							tooltip='Run analysis'
 							handleClick={R.partial(this.selectWizardStep, ['runanalysis'])}
@@ -435,8 +428,7 @@ let Wizard = React.createClass({
 			return null;
 		}
 
-		// console.log(props.toolChainId, props.toolChains);
-		const toolChain = helpers.getItemById(props.toolChains, props.toolChainId);
+		const toolChain = props.toolChains[props.toolChainId];
 		// console.log(toolChain);
 
 		return <div id='task-overlay'>

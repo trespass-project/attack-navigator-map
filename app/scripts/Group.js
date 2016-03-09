@@ -1,18 +1,18 @@
 'use strict';
 
-let $ = require('jquery');
-let _ = require('lodash');
-let R = require('ramda');
-let classnames = require('classnames');
-let React = require('react');
-let reactDOM = require('react-dom');
-let SchleppMixin = require('./SchleppMixin.js');
-let icons = require('./icons.js');
-let helpers = require('./helpers.js');
-let actionCreators = require('./actionCreators.js');
+const $ = require('jquery');
+const _ = require('lodash');
+const R = require('ramda');
+const classnames = require('classnames');
+const React = require('react');
+const reactDOM = require('react-dom');
+const SchleppMixin = require('./SchleppMixin.js');
+const icons = require('./icons.js');
+const helpers = require('./helpers.js');
+const actionCreators = require('./actionCreators.js');
 
 
-let Dropzone = React.createClass({
+const Dropzone = React.createClass({
 	propTypes: {
 		x: React.PropTypes.number.isRequired,
 		y: React.PropTypes.number.isRequired,
@@ -36,7 +36,7 @@ let Dropzone = React.createClass({
 });
 
 
-let Group = React.createClass({
+const Group = React.createClass({
 	mixins: [SchleppMixin],
 
 	contextTypes: {
@@ -73,7 +73,8 @@ let Group = React.createClass({
 	renderDropzone: function() {
 		const props = this.props;
 
-		if (props.dragNode && !R.contains(props.dragNode.id, props.group.nodeIds)) {
+		if (props.dragNode && !R.contains(props.dragNodeId, props.group.nodeIds)) {
+			const dragNode = helpers.getItemById(props.graph.nodes, props.dragNodeId);
 			const groupRect = {
 				x: props.x,
 				y: props.y,
@@ -82,8 +83,8 @@ let Group = React.createClass({
 			};
 			const halfSize = 0.5 * props.theme.node.size;
 			const nodeRect = {
-				x: props.dragNode.x - halfSize,
-				y: props.dragNode.y - halfSize,
+				x: dragNode.x - halfSize,
+				y: dragNode.y - halfSize,
 				width: props.theme.node.size,
 				height: props.theme.node.size,
 			};
@@ -131,7 +132,7 @@ let Group = React.createClass({
 	},
 
 	_handleHover: function(event) {
-		this.context.dispatch( actionCreators.setHoverGroup(this.props.group) );
+		this.context.dispatch( actionCreators.setHoverGroup(this.props.group.id) );
 	},
 
 	_handleHoverOut: function(event) {
@@ -215,8 +216,9 @@ let Group = React.createClass({
 	},
 
 	_onMouseOver: function(event) {
-		this.context.dispatch( actionCreators.setHoverGroup(this.props.group) );
+		this.context.dispatch( actionCreators.setHoverGroup(this.props.group.id) );
 	},
+
 	_onMouseOut: function(event) {
 		this.context.dispatch( actionCreators.setHoverGroup(null) );
 	},
@@ -258,7 +260,7 @@ let Group = React.createClass({
 
 		this.context.dispatch(
 			actionCreators.moveGroup(
-				props.group,
+				props.group.id,
 				{ // delta of the delta
 					x: newPositionX - this.currentPositionX,
 					y: newPositionY - this.currentPositionY

@@ -4,9 +4,10 @@ const R = require('ramda');
 const $ = require('jquery');
 const reactDOM = require('react-dom');
 const shortid = require('shortid');
+const normalizr = require('normalizr');
 
 
-let getElemByRef = module.exports.getElemByRef =
+const getElemByRef = module.exports.getElemByRef =
 function getElemByRef(component, refName) {
 	if (refName && component.refs[refName]) {
 		return component.refs[refName];
@@ -16,11 +17,25 @@ function getElemByRef(component, refName) {
 };
 
 
-let noop = module.exports.noop =
+const noop = module.exports.noop =
 function noop() {};
 
 
-let getItemByKey = module.exports.getItemByKey =
+const normalize = module.exports.normalize =
+function normalize(data, idAttribute='id') {
+	const name = 'collection';
+	const schema = new normalizr.Schema(name, { idAttribute });
+	const normalized = normalizr.normalize(
+		data,
+		normalizr.arrayOf(schema)
+	);
+	const items = normalized.entities[name];
+	const ids = normalized.result;
+	return { ids, items };
+};
+
+
+const getItemByKey = module.exports.getItemByKey =
 function getItemByKey(key, coll, value) {
 	return R.find( R.propEq(key, value) )(coll);
 };
@@ -28,9 +43,9 @@ const getItemById = module.exports.getItemById = R.partial(getItemByKey, ['id'])
 
 
 // TODO: test
-let getNodesBBox = module.exports.getNodesBBox =
+const getNodesBBox = module.exports.getNodesBBox =
 function getNodesBBox(nodes) {
-	let bounds = nodes.reduce(
+	const bounds = nodes.reduce(
 		function(_bounds, node) {
 			_bounds.minX = Math.min(_bounds.minX, node.x);
 			_bounds.minY = Math.min(_bounds.minY, node.y);
@@ -57,7 +72,7 @@ function getNodesBBox(nodes) {
 };
 
 
-let getGroupInitialPosition = module.exports.getGroupInitialPosition =
+const getGroupInitialPosition = module.exports.getGroupInitialPosition =
 function getGroupInitialPosition(group) {
 	return {
 		x: group.x || 0,
@@ -68,10 +83,10 @@ function getGroupInitialPosition(group) {
 
 // TODO: test
 // get bounding box for all nodes in group
-let getGroupBBox = module.exports.getGroupBBox =
+const getGroupBBox = module.exports.getGroupBBox =
 function getGroupBBox(allNodes, group) {
 	const nodes = group.nodeIds.map(R.partial(getItemById, [allNodes]));
-	let bbox = getNodesBBox(nodes);
+	const bbox = getNodesBBox(nodes);
 	if (nodes.length === 0) {
 		const initialPos = getGroupInitialPosition(group);
 		bbox.x = initialPos.x;
@@ -85,7 +100,7 @@ function getGroupBBox(allNodes, group) {
 };
 
 
-let distBetweenPoints = module.exports.distBetweenPoints =
+const distBetweenPoints = module.exports.distBetweenPoints =
 function distBetweenPoints(a, b) {
 	const x = b.x - a.x;
 	const y = b.y - a.y;
@@ -93,13 +108,13 @@ function distBetweenPoints(a, b) {
 };
 
 
-let isBetween = module.exports.isBetween =
+const isBetween = module.exports.isBetween =
 function isBetween(what, low, high) {
 	return (what >= low) && (what <= high);
 };
 
 
-let isRectInsideRect = module.exports.isRectInsideRect =
+const isRectInsideRect = module.exports.isRectInsideRect =
 function isRectInsideRect(r1, r2) {
 	// expects a rect to have: x, y, width, height
 
@@ -138,7 +153,7 @@ function isRectInsideRect(r1, r2) {
 };
 
 
-let areAttackerProfilesEqual = module.exports.areAttackerProfilesEqual =
+const areAttackerProfilesEqual = module.exports.areAttackerProfilesEqual =
 function areAttackerProfilesEqual(p1, p2) {
 	// const outcomes1 = (p1.outcomes || []);
 	// const outcomes2 = (p2.outcomes || []);
@@ -166,21 +181,21 @@ function areAttackerProfilesEqual(p1, p2) {
 };
 
 
-let makeId = module.exports.makeId =
+const makeId = module.exports.makeId =
 function makeId(type) {
-	return ['id', Date.now(), shortid(), type || ''].join('-');
+	return ['id', /*Date.now(),*/ shortid(), type || ''].join('-');
 };
 
 
-let ellipsize = module.exports.ellipsize =
+const ellipsize = module.exports.ellipsize =
 function ellipsize(maxLen, s) {
 	const E = '…';
-	let len = s.length;
-	let diff = maxLen - len;
+	const len = s.length;
+	const diff = maxLen - len;
 	if (diff < 0) {
-		let centerIndex = len / 2;
-		let numDel = Math.abs(diff);
-		let startIndex = Math.round(centerIndex - (numDel / 2));
+		const centerIndex = len / 2;
+		const numDel = Math.abs(diff);
+		const startIndex = Math.round(centerIndex - (numDel / 2));
 		return s.substring(0, startIndex) + E + s.substring(startIndex + numDel);
 	} else {
 		return s;
@@ -189,13 +204,13 @@ function ellipsize(maxLen, s) {
 
 
 const radFactor = Math.PI / 180;
-let degToRad = module.exports.degToRad =
+const degToRad = module.exports.degToRad =
 function degToRad(deg) {
 	return deg * radFactor;
 };
 
 
-let coordsRelativeToElem = module.exports.coordsRelativeToElem =
+const coordsRelativeToElem = module.exports.coordsRelativeToElem =
 function coordsRelativeToElem(elem, xy) {
 	const $elem = $(elem);
 	const elemOffset = $elem.offset();
@@ -207,7 +222,7 @@ function coordsRelativeToElem(elem, xy) {
 
 
 // https://code.google.com/p/chromium/issues/detail?id=524432#c3
-let getTransformToElement = module.exports.getTransformToElement =
+const getTransformToElement = module.exports.getTransformToElement =
 function getTransformToElement(element, target) {
 	try {
     	var mTargetInverse = target.getScreenCTM().inverse();
@@ -220,15 +235,15 @@ function getTransformToElement(element, target) {
 
 // http://stackoverflow.com/a/6084322/2839801
 // http://phrogz.net/svg/drag_under_transformation.xhtml
-let unTransform = module.exports.unTransform =
+const unTransform = module.exports.unTransform =
 function unTransform(point, ctm) {
 	return point.matrixTransform(ctm/*.inverse()*/);
 };
 
 
-let unTransformFromTo = module.exports.unTransformFromTo =
+const unTransformFromTo = module.exports.unTransformFromTo =
 function unTransformFromTo(fromElem, toElem, xy) {
-	let point = (fromElem.ownerSVGElement || fromElem).createSVGPoint();
+	const point = (fromElem.ownerSVGElement || fromElem).createSVGPoint();
 	point.x = xy.x;
 	point.y = xy.y;
 	// const ctm = fromElem.getTransformToElement(toElem);

@@ -1,17 +1,17 @@
 'use strict';
 
-let React = require('react');
-let d3 = require('d3');
-let classnames = require('classnames');
-let sf = require('sf');
-let helpers = require('./helpers.js');
+const React = require('react');
+const d3 = require('d3');
+const classnames = require('classnames');
+const sf = require('sf');
+const helpers = require('./helpers.js');
 
 
 const halfPI = Math.PI * 0.5;
-let arc = d3.svg.arc();
+const arc = d3.svg.arc();
 
 
-let ContextMenu = React.createClass({
+const ContextMenu = React.createClass({
 	propTypes: {
 		theme: React.PropTypes.object.isRequired,
 		contextMenu: React.PropTypes.any/*.isRequired*/,
