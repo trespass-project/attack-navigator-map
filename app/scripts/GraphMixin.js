@@ -128,20 +128,17 @@ const GraphMixin = {
 		return (
 			/* prevent event propagation from map up to svg elem */
 			<g ref='map-group' onClick={ (event) => { event.stopPropagation(); } }>
-				{graph.groupIds
-					.map((id) => props.graph.components[id])
+				{graph.groups
 					.filter(function(group) {
 						return !!group._bgImage;
 					})
 					.map(this.renderBgImage)
 				}
-				{graph.groupIds
-					.map((id) => props.graph.components[id])
+				{graph.groups
 					.map(this.renderGroup)
 				}
 				{(props.showEdges)
-					? graph.edgeIds
-						.map((id) => props.graph.components[id])
+					? graph.edges
 						.map(this.renderEdge)
 					: null
 				}
@@ -150,8 +147,7 @@ const GraphMixin = {
 						.map(this.renderPreviewEdge)
 					: null
 				}
-				{graph.nodeIds
-					.map((id) => props.graph.components[id])
+				{graph.nodes
 					.map(this.renderNode)
 				}
 				{this.renderVisibleRect()}

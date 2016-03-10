@@ -15,9 +15,9 @@ const initialState = {
 	},
 
 	graph: {
-		nodeIds: [],
-		edgeIds: [],
-		groupIds: [],
+		nodes: [],
+		edges: [],
+		groups: [],
 	},
 	predicates: {},
 	// ...

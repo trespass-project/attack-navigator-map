@@ -27,7 +27,7 @@ const GraphMinimap = React.createClass({
 		if (!transform.scale) {
 			if (!this.size) { return null; }
 
-			const nodes = props.graph.nodeIds.map((id) => props.graph.components[id]);
+			const nodes = props.graph.nodes;
 			const bbox = helpers.getNodesBBox(nodes);
 
 			// add some padding
