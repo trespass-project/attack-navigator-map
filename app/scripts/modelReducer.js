@@ -10,16 +10,17 @@ const constants = require('./constants.js');
 
 
 const initialState = {
+	metadata: {
+		id: undefined,
+	},
+
 	graph: {
-		components: {}, // map id → component
 		nodeIds: [],
 		edgeIds: [],
 		groupIds: [],
 	},
 	predicates: {},
-	metadata: {
-		id: undefined,
-	},
+	// ...
 };
 
 

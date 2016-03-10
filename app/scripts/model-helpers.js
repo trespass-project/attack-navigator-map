@@ -27,6 +27,9 @@ module.exports.nonGraphModelComponents =
 const origin = { x: 0, y: 0 };
 
 
+const propId = R.prop('id');
+
+
 const createFragment =
 module.exports.createFragment =
 function createFragment(data={}) {
