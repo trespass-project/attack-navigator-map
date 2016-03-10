@@ -1,5 +1,6 @@
 'use strict';
 
+const update = require('react-addons-update');
 const _ = require('lodash');
 const R = require('ramda');
 const properCase = require('mout/string/properCase');
@@ -27,18 +28,15 @@ module.exports.nonGraphModelComponents =
 const origin = { x: 0, y: 0 };
 
 
-const propId = R.prop('id');
-
-
 const createFragment =
 module.exports.createFragment =
 function createFragment(data={}) {
 	return _.defaults(
 		data,
 		{
-			nodes: [],
-			edges: [],
-			groups: []
+			nodes: {},
+			edges: {},
+			groups: {},
 		}
 	);
 }
@@ -83,57 +81,102 @@ function duplicateGroup(group={}, keepId=false) {
 };
 
 
+/*
+deeply clones a fragment, and creates new ids for everything inside.
+→ returns a new fragment
+*/
+const duplicateFragment =
+module.exports.duplicateFragment =
+function duplicateFragment(_fragment) {
+	const fragment = _.merge({}, _fragment);
+
+	const oldToNewNodeId = {};
+	fragment.nodes = R.values(fragment.nodes || {})
+		.reduce((acc, _node) => {
+			const node = duplicateNode(_node);
+			acc[node.id] = node;
+			oldToNewNodeId[_node.id] = node.id;
+			return acc;
+		}, {});
+
+	fragment.edges = R.values(fragment.edges || {})
+		.reduce((acc, _edge) => {
+			const edge = duplicateEdge(_edge);
+			replaceIdInEdge(oldToNewNodeId, edge);
+			acc[edge.id] = edge;
+			return acc;
+		}, {});
+
+	fragment.groups = R.values(fragment.groups || {})
+		.reduce((acc, _group) => {
+			const group = duplicateGroup(_group);
+			replaceIdInGroup(oldToNewNodeId, group);
+			acc[group.id] = group;
+			return acc;
+		}, {});
+
+	return fragment;
+};
+
+
 const nodeAsFragment =
 module.exports.nodeAsFragment =
 function nodeAsFragment(node) {
-	return createFragment({ nodes: [node] });
+	return createFragment({
+		nodes: helpers.toHashMap('id', [node])
+	});
 };
 
 
 const nodeAsFragmentInclEdges =
 module.exports.nodeAsFragmentInclEdges =
 function nodeAsFragmentInclEdges(node, edges) {
-	return createFragment({
-		edges: getNodeEdges(edges, node.id),
-		nodes: [node]
+	const nodeFragment = nodeAsFragment(node);
+	const nodeEdges = getNodeEdges(node, edges)
+	const edgesFragment = createFragment({
+		edges: helpers.toHashMap('id', nodeEdges)
 	});
+	return combineFragments([nodeFragment, edgesFragment]);
 };
 
 
 const edgeAsFragment =
 module.exports.edgeAsFragment =
 function edgeAsFragment(edge) {
-	return createFragment({ edges: [edge] });
+	return createFragment({
+		edges: helpers.toHashMap('id', [edge])
+	});
 };
 
 
 const edgeAsFragmentInclNodes =
 module.exports.edgeAsFragmentInclNodes =
 function edgeAsFragmentInclNodes(edge, nodes) {
+	const edgeFragment = edgeAsFragment(edge);
 	const {fromNode, toNode} = getEdgeNodes(edge, nodes);
-	return createFragment({
-		edges: [edge],
-		nodes: [fromNode, toNode]
+	const nodesFragment = createFragment({
+		nodes: helpers.toHashMap('id', [fromNode, toNode])
 	});
+	return combineFragments([edgeFragment, nodesFragment]);
 };
 
 
 const groupAsFragment =
 module.exports.groupAsFragment =
 function groupAsFragment(graph, group) {
-	const nodes = getGroupNodes(graph, group);
+	const nodes = getGroupNodes(group, graph.nodes);
 
 	const edges = group.nodeIds
 		.reduce((acc, nodeId) => {
-			const nodeEdges = getNodeEdges(graph.edges, nodeId);
+			const node = graph.nodes[nodeId];
+			const nodeEdges = getNodeEdges(node, graph.edges);
 			return acc.concat(nodeEdges);
 		}, []);
-	const uniqueEdges = R.uniqBy(R.prop('id'), edges);
 
 	return createFragment({
-		nodes,
-		edges: uniqueEdges,
-		groups: [group],
+		nodes: helpers.toHashMap('id', nodes),
+		edges: helpers.toHashMap('id', edges),
+		groups: helpers.toHashMap('id', [group]),
 	});
 };
 
@@ -163,48 +206,19 @@ function replaceIdInEdge(mapping, edge) {
 };
 
 
-/*
-deeply clones a fragment, and creates new ids for everything inside.
-→ returns a new fragment
-*/
-const duplicateFragment =
-module.exports.duplicateFragment =
-function duplicateFragment(_fragment) {
-	const fragment = _.merge({}, _fragment);
-
-	const oldToNewNodeId = {};
-	fragment.nodes = (fragment.nodes || [])
-		.map((_node) => {
-			const node = duplicateNode(_node);
-			oldToNewNodeId[_node.id] = node.id;
-			return node;
-		});
-
-	fragment.edges = (fragment.edges || [])
-		.map((_edge) => {
-			const edge = duplicateEdge(_edge);
-			return replaceIdInEdge(oldToNewNodeId, edge);
-		});
-
-	fragment.groups = (fragment.groups || [])
-		.map((_group) => {
-			const group = duplicateGroup(_group);
-			return replaceIdInGroup(oldToNewNodeId, group);
-		});
-
-	return fragment;
-};
-
-
 const combineFragments =
 module.exports.combineFragments =
 function combineFragments(fragments) {
 	return fragments
 		.reduce((acc, fragment) => {
-			acc.nodes = acc.nodes.concat(fragment.nodes || []);
-			acc.edges = acc.edges.concat(fragment.edges || []);
-			acc.groups = acc.groups.concat(fragment.groups || []);
-			return acc;
+			return update(
+				acc,
+				{
+					nodes: { $merge: (fragment.nodes || {}) },
+					edges: { $merge: (fragment.edges || {}) },
+					groups: { $merge: (fragment.groups || {}) },
+				}
+			);
 		}, createFragment());
 };
 
@@ -212,18 +226,33 @@ function combineFragments(fragments) {
 const importFragment =
 module.exports.importFragment =
 function importFragment(graph, fragment, atXY=origin) {
-	// offset nodes
-	const xOffset = 60;
-	const yOffset = 30;
-	fragment.nodes = fragment.nodes
-		.map((node, index) => {
-			node.x = atXY.x + (node.x || index * xOffset)
-			node.y = atXY.y + (node.y || index * yOffset)
-			return node;
+	// TODO:
+	R.keys(fragment)
+		.forEach((key) => {
+			const item = fragment[key];
+			if (_.isArray(item)) {
+				fragment[key] = helpers.toHashMap('id', item);
+			}
 		});
 
-	const combined = combineFragments([graph, fragment]);
-	return combined;
+	function offsetNodes(nodes) {
+		const xOffset = 60;
+		const yOffset = 30;
+		return R.values(nodes)
+			.reduce((acc, node, index) => {
+				const coords = {
+					x: atXY.x + (node.x || index * xOffset),
+					y: atXY.y + (node.y || index * yOffset),
+				};
+				acc[node.id] = update(node, { $merge: coords });
+				return acc;
+			}, {});
+	}
+
+	return combineFragments([
+		graph,
+		update(fragment, { nodes: { $apply: offsetNodes } })
+	]);
 };
 
 
@@ -410,18 +439,17 @@ function modelFromGraph(graph) {
 const removeGroup =
 module.exports.removeGroup =
 function removeGroup(graph, groupId, removeNodes=false) {
-	graph.groups = graph.groups
-		.filter((group) => {
-			const keep = (groupId !== group.id);
-			if (!keep && removeNodes) {
-				// remove nodes
-				group.nodeIds.forEach((nodeId) => {
-					removeNode(graph, nodeId);
-				});
-			}
-			return keep;
-		});
-	return graph;
+	const group = graph.groups[groupId];
+
+	const g = (!removeNodes)
+		? graph
+		: group.nodeIds
+			.reduce((graph, nodeId) => {
+				return removeNode(graph, nodeId);
+			}, graph);
+
+	const newGroups = R.omit([groupId], g.groups);
+	return update(g, { groups: { $set: newGroups } });
 };
 
 
@@ -435,7 +463,7 @@ function cloneNode(graph, origNodeId) {
 	const newNodeId = fragment.nodes[0].id;
 
 	// if node is in a group, so is the clone
-	const groups = getNodeGroups(origNode.id, graph.groups);
+	const groups = getNodeGroups(origNode, graph.groups);
 	groups.forEach((group) => {
 		group.nodeIds = [...group.nodeIds, newNodeId];
 	});
@@ -497,30 +525,30 @@ function addNodeToGroup(graph, nodeId, groupId) {
 
 const getNodeGroups =
 module.exports.getNodeGroups =
-function getNodeGroups(nodeId, groups) {
-	return groups
+function getNodeGroups(node, groupsMap) {
+	return R.values(groupsMap)
 		.filter((group) => {
-			return R.contains(nodeId, group.nodeIds);
+			return R.contains(node.id, group.nodeIds);
 		});
 };
 
 
 const getNodeEdges =
 module.exports.getNodeEdges =
-function getNodeEdges(edges, nodeId) {
-	return edges
+function getNodeEdges(node, edgesMap) {
+	return R.values(edgesMap)
 		.filter((edge) => {
-			return R.contains(nodeId, [edge.from, edge.to]);
+			return R.contains(node.id, [edge.from, edge.to]);
 		});
 };
 
 
 const getEdgeNodes =
 module.exports.getEdgeNodes =
-function getEdgeNodes(edge, nodes) {
+function getEdgeNodes(edge, nodesMap) {
 	const edgeNodes = {
-		fromNode: helpers.getItemById(nodes, edge.from),
-		toNode: helpers.getItemById(nodes, edge.to),
+		fromNode: nodesMap[edge.from],
+		toNode: nodesMap[edge.to],
 	};
 	return edgeNodes;
 };
@@ -528,11 +556,9 @@ function getEdgeNodes(edge, nodes) {
 
 const getGroupNodes =
 module.exports.getGroupNodes =
-function getGroupNodes(graph, group) {
+function getGroupNodes(group, nodesMap) {
 	return group.nodeIds
-		.map((nodeId) => {
-			return helpers.getItemById(graph.nodes, nodeId);
-		});
+		.map(nodeId => nodesMap[nodeId]);
 };
 
 
@@ -557,26 +583,25 @@ const removeNode =
 module.exports.removeNode =
 function removeNode(graph, nodeId) {
 	// remove node
-	graph.nodes = graph.nodes
-		.filter((node) => {
-			return nodeId !== node.id;
-		});
+	const node = graph.nodes[nodeId];
+	const updateNodes = { nodes: { $set: R.omit([nodeId], graph.nodes) } };
 
 	// and also all edges connected to it
-	graph.edges = graph.edges
-		.filter((edge) => {
-			return (edge.from !== nodeId) && (edge.to !== nodeId);
-		});
+	const nodeEdgesIds = getNodeEdges(node, graph.edges)
+		.map(item => item.id);
+	const updateEdges = { edges: { $set: R.omit(nodeEdgesIds, graph.edges) } };
 
 	// remove from groups
-	graph.groups
-		.forEach((group) => {
-			group.nodeIds = group.nodeIds
-				.filter((groupNodeId) => {
-					return groupNodeId !== nodeId;
-				});
-		});
-	return graph;
+	const nodeGroups = getNodeGroups(node, graph.groups);
+	const updateGroupsNodeIds = nodeGroups
+		.reduce((acc, group) => {
+			acc[group.id] = { nodeIds: { $set: R.without([nodeId], group.nodeIds) } }
+			return acc;
+		}, {});
+	const updateGroups = { groups: updateGroupsNodeIds };
+
+	const allUpdates = _.assign({}, updateNodes, updateEdges, updateGroups);
+	return update(graph, allUpdates);
 };
 
 

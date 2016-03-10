@@ -21,6 +21,16 @@ const noop = module.exports.noop =
 function noop() {};
 
 
+const toHashMap = module.exports.toHashMap =
+function toHashMap(key='id', list) {
+	return list
+		.reduce((acc, item) => {
+			acc[item[key]] = item;
+			return acc;
+		}, {});
+};
+
+
 const normalize = module.exports.normalize =
 function normalize(data, idAttribute='id') {
 	const name = 'collection';
@@ -84,8 +94,8 @@ function getGroupInitialPosition(group) {
 // TODO: test
 // get bounding box for all nodes in group
 const getGroupBBox = module.exports.getGroupBBox =
-function getGroupBBox(allNodes, group) {
-	const nodes = group.nodeIds.map(R.partial(getItemById, [allNodes]));
+function getGroupBBox(nodesMap, group) {
+	const nodes = group.nodeIds.map(nodeId => nodesMap[nodeId]);
 	const bbox = getNodesBBox(nodes);
 	if (nodes.length === 0) {
 		const initialPos = getGroupInitialPosition(group);
