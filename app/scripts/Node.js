@@ -235,29 +235,31 @@ const Node = React.createClass({
 		const groups = graph.groups;
 		const node = props.node;
 		const halfSize = 0.5 * props.theme.node.size;
-		const dropGroups = groups.filter(function(group) {
-			const groupRect = helpers.getGroupBBox(graph.nodes, group);
-			const nodeRect = {
-				x: node.x - halfSize,
-				y: node.y - halfSize,
-				width: props.theme.node.size,
-				height: props.theme.node.size,
-			};
-			const groupCenter = {
-				x: groupRect.x + groupRect.width * 0.5,
-				y: groupRect.y + groupRect.height * 0.5,
-			};
-			// console.log(helpers.distBetweenPoints(node, groupCenter));
-			// if (helpers.isRectInsideRect(nodeRect, groupRect)
-			// 	|| helpers.isRectInsideRect(groupRect, nodeRect) // or, when group is smaller than node
-			// 	) {
-				// check if actually inside dropzone
-				if (helpers.distBetweenPoints(nodeRect, groupCenter) <= props.theme.group.dropzoneRadius) {
-					return true;
-				}
-			// }
-			return false;
-		});
+		const dropGroups = R.values(groups)
+			.filter((group) => {
+				const groupRect = helpers.getGroupBBox(graph.nodes, group);
+				const nodeRect = {
+					x: node.x - halfSize,
+					y: node.y - halfSize,
+					width: props.theme.node.size,
+					height: props.theme.node.size,
+				};
+				const groupCenter = {
+					x: groupRect.x + groupRect.width * 0.5,
+					y: groupRect.y + groupRect.height * 0.5,
+				};
+				// console.log(helpers.distBetweenPoints(node, groupCenter));
+				// if (helpers.isRectInsideRect(nodeRect, groupRect)
+				// 	|| helpers.isRectInsideRect(groupRect, nodeRect) // or, when group is smaller than node
+				// 	) {
+					// check if actually inside dropzone
+					if (helpers.distBetweenPoints(nodeRect, groupCenter) <= props.theme.group.dropzoneRadius) {
+						return true;
+					}
+				// }
+				return false;
+			});
+
 		if (dropGroups.length) {
 			context.dispatch(
 				actionCreators.addNodeToGroup(node.id, R.last(dropGroups).id)

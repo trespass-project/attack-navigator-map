@@ -1,6 +1,7 @@
 'use strict';
 
 const React = require('react');
+const R = require('ramda');
 const _ = require('lodash');
 const classnames = require('classnames');
 const helpers = require('./helpers.js');
@@ -61,8 +62,9 @@ const GraphMixin = {
 			group={group}
 			x={bounds.minX}
 			y={bounds.minY}
-			width={bounds.maxX-bounds.minX}
-			height={bounds.maxY-bounds.minY} />;
+			width={bounds.maxX - bounds.minX}
+			height={bounds.maxY - bounds.minY}
+		/>;
 	},
 
 	renderPreviewEdge: function(edge, index, collection) {
@@ -128,17 +130,17 @@ const GraphMixin = {
 		return (
 			/* prevent event propagation from map up to svg elem */
 			<g ref='map-group' onClick={ (event) => { event.stopPropagation(); } }>
-				{graph.groups
+				{R.values(graph.groups)
 					.filter(function(group) {
 						return !!group._bgImage;
 					})
 					.map(this.renderBgImage)
 				}
-				{graph.groups
+				{R.values(graph.groups)
 					.map(this.renderGroup)
 				}
 				{(props.showEdges)
-					? graph.edges
+					? R.values(graph.edges)
 						.map(this.renderEdge)
 					: null
 				}
@@ -147,7 +149,7 @@ const GraphMixin = {
 						.map(this.renderPreviewEdge)
 					: null
 				}
-				{graph.nodes
+				{R.values(graph.nodes)
 					.map(this.renderNode)
 				}
 				{this.renderVisibleRect()}

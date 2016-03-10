@@ -256,7 +256,7 @@ const Wizard = React.createClass({
 				onChange={this.setAttackerGoal}
 			>
 				<option value=''>— select goal —</option>
-				{props.graph.nodes
+				{R.values(props.graph.nodes)
 					.filter((item) => {
 						return item.modelComponentType === 'item' ||
 							item.modelComponentType === 'data';

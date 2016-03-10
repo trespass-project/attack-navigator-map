@@ -214,9 +214,6 @@ function importFragment(fragment, xy) {
 			fragment,
 			xy
 		});
-
-		// update model afterwards:
-		// dispatch({ type: constants.ACTION_updateModel });
 	};
 };
 

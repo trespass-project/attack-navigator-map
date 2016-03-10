@@ -2,6 +2,7 @@
 
 const React = require('react');
 const reactDOM = require('react-dom');
+const R = require('ramda');
 const $ = require('jquery');
 const helpers = require('./helpers.js');
 const Graph = require('./Graph.js');
@@ -27,7 +28,7 @@ const GraphMinimap = React.createClass({
 		if (!transform.scale) {
 			if (!this.size) { return null; }
 
-			const nodes = props.graph.nodes;
+			const nodes = R.values(props.graph.nodes);
 			const bbox = helpers.getNodesBBox(nodes);
 
 			// add some padding

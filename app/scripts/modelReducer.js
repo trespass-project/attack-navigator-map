@@ -1,5 +1,6 @@
 'use strict';
 
+const update = require('react-addons-update');
 const R = require('ramda');
 const _ = require('lodash');
 const trespass = require('trespass.js');
@@ -176,48 +177,55 @@ function reducer(state=initialState, action) {
 			return mergeWithState({ graph: newGraph });
 		}
 
-		// TODO: fix this
 		case constants.ACTION_moveNode: {
 			const {nodeId, xy} = action;
-			let newState = _.merge({}, state);
-			let node = helpers.getItemById(newState.graph.nodes, nodeId);
-			node.x = xy.x;
-			node.y = xy.y;
-			return newState;
+			return update(
+				state,
+				{ graph: { nodes: { [nodeId]: { $merge: xy } } } }
+			);
 		}
 
 		case constants.ACTION_ungroupNode: {
-			// TODO: do this in modelHelpers
-
 			const {nodeId} = action;
-			const newState = mergeWithState(state);
 
-			function isIdEqual(id) {
-				return R.equals(id, nodeId);
-			}
+			// TODO: do this in modelHelpers
+			const groups = R.values(state.graph.groups);
+			const updateGroups = groups
+				.reduce((acc, group) => {
+					if (R.contains(nodeId, group.nodeIds)) {
+						const newNodeIds = R.without([nodeId], group.nodeIds);
+						acc[group.id] = { nodeIds: { $set: newNodeIds } }
+					}
+					return acc;
+				}, {});
 
-			// remove node from all groups it is in
-			newState.graph.groups = newState.graph.groups
-				.map((group) => {
-					group.nodeIds = R.uniq( R.reject(isIdEqual, group.nodeIds) );
-					return group;
-				});
+			console.log(updateGroups);
 
-			return newState;
+			return update(
+				state,
+				{ graph: { groups: updateGroups } }
+			);
 		}
 
-		// TODO: fix this
 		case constants.ACTION_moveGroup: {
 			const {groupId, posDelta} = action;
-			let newState = _.merge({}, state);
-			const group = helpers.getItemById(newState.graph.groups, groupId);
-			group.nodeIds
-				.forEach(function(id) {
-					let node = helpers.getItemById(newState.graph.nodes, id);
-					node.x += posDelta.x;
-					node.y += posDelta.y;
-				});
-			return newState;
+
+			const group = state.graph.groups[groupId];
+			const updateNodes = group.nodeIds
+				.reduce((acc, id) => {
+					const node = state.graph.nodes[id];
+					const coords = {
+						x: node.x + posDelta.x,
+						y: node.y + posDelta.y,
+					}
+					acc[id] = { $merge: coords };
+					return acc;
+				}, {});
+
+			return update(
+				state,
+				{ graph: { nodes: updateNodes } }
+			);
 		}
 
 		case constants.ACTION_addEdge: {
@@ -274,13 +282,13 @@ function reducer(state=initialState, action) {
 
 		case constants.ACTION_removeGroup: {
 			const {groupId, removeNodes} = action;
-			return mergeWithState({
-				graph: modelHelpers.removeGroup(
-					state.graph,
-					groupId,
-					removeNodes
-				)
-			});
+			const graph = modelHelpers.removeGroup(
+				state.graph,
+				groupId,
+				removeNodes
+			);
+			console.log(graph);
+			return mergeWithState({	graph });
 		}
 
 		// TODO: fix this
