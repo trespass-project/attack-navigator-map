@@ -1,30 +1,30 @@
 'use strict';
 
-var assert = require('assert');
-var chalk = require('chalk');
-var R = require('ramda');
-var _ = require('lodash');
+const assert = require('assert');
+const chalk = require('chalk');
+const R = require('ramda');
+const _ = require('lodash');
 
 
-var f1 = function(s) {
+const f1 = (s) => {
 	return chalk.magenta(s);
 };
-var f2 = function(s) {
+const f2 = (s) => {
 	return chalk.bgMagenta.black(s);
 };
-var f3 = function(s) {
+const f3 = (s) => {
 	return chalk.bgMagenta.white(s);
 };
 
 
-var trespass = require('trespass.js');
-var helpers = require('../app/scripts/helpers.js');
-var modelHelpers = require('../app/scripts/model-helpers.js');
+const trespass = require('trespass.js');
+const helpers = require('../app/scripts/helpers.js');
+const modelHelpers = require('../app/scripts/model-helpers.js');
 
 
-describe(f1('helpers.js'), function() {
+describe(f1('helpers.js'), () => {
 
-	describe(f2('getItemByKey()'), function() {
+	describe(f2('getItemByKey()'), () => {
 		const coll = [
 			{ id: '1' },
 			{ id: '2' },
@@ -37,26 +37,26 @@ describe(f1('helpers.js'), function() {
 		const badKey = 'name';
 		const badValue = '7';
 
-		it(f3('should find the item'), function() {
+		it(f3('should find the item'), () => {
 			const result = helpers.getItemByKey(key, coll, value);
 			assert(!!result && result.id === value);
 		});
 
-		it(f3('should not find the item #1'), function() {
+		it(f3('should not find the item #1'), () => {
 			const result = helpers.getItemByKey(key, coll, badValue);
 			assert(!result);
 		});
 
-		it(f3('should not find the item #2'), function() {
+		it(f3('should not find the item #2'), () => {
 			const result = helpers.getItemByKey(badKey, coll, value);
 			assert(!result);
 		});
 	});
 
-	describe(f2('ellipsize()'), function() {
-		it(f3('should work'), function() {
-			var input = '0123456789';
-			var shortened = helpers.ellipsize(5, input);
+	describe(f2('ellipsize()'), () => {
+		it(f3('should work'), () => {
+			let input = '0123456789';
+			let shortened = helpers.ellipsize(5, input);
 			assert(shortened === '012…89' || shortened === '01…789');
 
 			input = '012';
@@ -73,19 +73,19 @@ describe(f1('helpers.js'), function() {
 		});
 	});
 
-	describe(f2('isBetween()'), function() {
-		it(f3('should work'), function() {
+	describe(f2('isBetween()'), () => {
+		it(f3('should work'), () => {
 			assert(helpers.isBetween(5, 0, 10));
 			assert(!helpers.isBetween(11, 0, 10));
 			assert(!helpers.isBetween(-1, 0, 10));
 		});
-		it(f3('should include edge cases'), function() {
+		it(f3('should include edge cases'), () => {
 			assert(helpers.isBetween(0, 0, 10));
 			assert(helpers.isBetween(10, 0, 10));
 		});
 	});
 
-	describe(f2('isRectInsideRect()'), function() {
+	describe(f2('isRectInsideRect()'), () => {
 		const rect = { x: 0, y: 0, width: 100, height: 100 };
 		const rectInside = { x: 10, y: 10, width: 50, height: 50 };
 		const rectOutside = { x: -10, y: -10, width: 5, height: 5 };
@@ -94,26 +94,26 @@ describe(f1('helpers.js'), function() {
 		const rectPartialOverlap1 = { x: 40, y: -10, width: 20, height: 120 };
 		const rectPartialOverlap2 = { x: -10, y: 40, width: 120, height: 20 };
 
-		it(f3('should work'), function() {
+		it(f3('should work'), () => {
 			assert( helpers.isRectInsideRect(rectInside, rect) );
 			assert( !helpers.isRectInsideRect(rectOutside, rect) );
 		});
 
-		it(f3('partial overlap should be considered "inside" #1'), function() {
+		it(f3('partial overlap should be considered "inside" #1'), () => {
 			assert( helpers.isRectInsideRect(rectPartiallyInside, rect) );
 		});
 
-		it(f3('partial overlap should be considered "inside" #2'), function() {
+		it(f3('partial overlap should be considered "inside" #2'), () => {
 			assert( helpers.isRectInsideRect(rectPartialOverlap1, rect) );
 			assert( helpers.isRectInsideRect(rectPartialOverlap2, rect) );
 		});
 
-		it(f3('complete overlap should be considered "inside"'), function() {
+		it(f3('complete overlap should be considered "inside"'), () => {
 			assert( helpers.isRectInsideRect(rectFullOverlap, rect) );
 		});
 	});
 
-	describe(f2('areAttackerProfilesEqual()'), function() {
+	describe(f2('areAttackerProfilesEqual()'), () => {
 		const profile = {
 			// "intent": "hostile",
 			// "access": "external",
@@ -197,17 +197,17 @@ describe(f1('helpers.js'), function() {
 			time: 'HR',
 		};
 
-		it(f3('should work with equal profiles'), function() {
+		it(f3('should work with equal profiles'), () => {
 			assert(helpers.areAttackerProfilesEqual(profile, profileEqual));
 			assert(helpers.areAttackerProfilesEqual(profileEqual, profile));
 		});
 
-		it(f3('should work with unequal profiles'), function() {
+		it(f3('should work with unequal profiles'), () => {
 			assert(!helpers.areAttackerProfilesEqual(profile, profileNotEqual));
 			assert(!helpers.areAttackerProfilesEqual(profileNotEqual, profile));
 		});
 
-		it(f3('should work with incomplete profiles'), function() {
+		it(f3('should work with incomplete profiles'), () => {
 			assert.doesNotThrow(() => {
 				helpers.areAttackerProfilesEqual(profileIncomplete, profileNotEqual);
 			});
@@ -216,9 +216,9 @@ describe(f1('helpers.js'), function() {
 });
 
 
-describe(f1('model-helpers.js'), function() {
+describe(f1('model-helpers.js'), () => {
 
-	describe(f2('getNodeGroups()'), function() {
+	describe(f2('getNodeGroups()'), () => {
 		const nodeId = 'node-id';
 		const groups = [
 			{ id: 'group-1', nodeIds: ['a', 'b', 'c'] },
@@ -227,20 +227,20 @@ describe(f1('model-helpers.js'), function() {
 			{ id: 'group-4', nodeIds: ['node-id', 'i', 'j'] },
 		];
 
-		it(f3('should return the groups'), function() {
+		it(f3('should return the groups'), () => {
 			const nodeGroups = modelHelpers.getNodeGroups(nodeId, groups);
 			assert(nodeGroups.length === 2);
 			assert(nodeGroups[0].id === 'group-2');
 			assert(nodeGroups[1].id === 'group-4');
 		});
 
-		it(f3('should return empty list'), function() {
+		it(f3('should return empty list'), () => {
 			const nodeGroups = modelHelpers.getNodeGroups('non-existing-node', groups);
 			assert(nodeGroups.length === 0);
 		});
 	});
 
-	describe(f2('getEdgeNodes()'), function() {
+	describe(f2('getEdgeNodes()'), () => {
 		const edge = {
 			from: 'node-1',
 			to: 'node-2',
@@ -252,30 +252,30 @@ describe(f1('model-helpers.js'), function() {
 			{ id: 'node-4' },
 		];
 
-		it(f3('should return the groups'), function() {
+		it(f3('should return the groups'), () => {
 			const edgeNodes = modelHelpers.getEdgeNodes(edge, nodes);
 			assert(edgeNodes.fromNode.id === 'node-1');
 			assert(edgeNodes.toNode.id === 'node-2');
 		});
 	});
 
-	describe(f2('inferEdgeType()'), function() {
-		it(f3('edges between locations should have type "connection"'), function() {
+	describe(f2('inferEdgeType()'), () => {
+		it(f3('edges between locations should have type "connection"'), () => {
 			const edgeType = modelHelpers.inferEdgeType('location', 'location');
 			assert(edgeType === 'connection');
 		});
 
-		it(f3('edges between items should have type "networkConnection"'), function() {
+		it(f3('edges between items should have type "networkConnection"'), () => {
 			const edgeType = modelHelpers.inferEdgeType('item', 'item');
 			assert(edgeType === 'networkConnection');
 		});
 
-		it(f3('edges between items and locations should have type "atLocation"'), function() {
+		it(f3('edges between items and locations should have type "atLocation"'), () => {
 			const edgeType = modelHelpers.inferEdgeType('item', 'location');
 			assert(edgeType === 'atLocation');
 		});
 
-		// it(f3('spread operator test'), function() {
+		// it(f3('spread operator test'), () => {
 		// 	const edges = [
 		// 		{ type: 'location' },
 		// 		{ type: 'location' },
@@ -284,13 +284,13 @@ describe(f1('model-helpers.js'), function() {
 		// 	assert(edgeType === 'connection');
 		// });
 
-		it(f3('edge types that cannot be inferred should be undefined'), function() {
+		it(f3('edge types that cannot be inferred should be undefined'), () => {
 			const edgeType = modelHelpers.inferEdgeType('location', 'item');
 			assert(!edgeType);
 		});
 	});
 
-	describe(f2('updateComponentProperties()'), function() {
+	describe(f2('updateComponentProperties()'), () => {
 		const graph = {
 			nodes: [
 				{ id: 'node-1' },
@@ -306,7 +306,7 @@ describe(f1('model-helpers.js'), function() {
 			]
 		};
 
-		it(f3('should work with nodes'), function() {
+		it(f3('should work with nodes'), () => {
 			const updatedGraph = modelHelpers.updateComponentProperties(
 				_.merge({}, graph),
 				'node',
@@ -316,7 +316,7 @@ describe(f1('model-helpers.js'), function() {
 			assert(updatedGraph.nodes[0].id === 'updated-node-1');
 		});
 
-		it(f3('should work with edges'), function() {
+		it(f3('should work with edges'), () => {
 			const updatedGraph = modelHelpers.updateComponentProperties(
 				_.merge({}, graph),
 				'edge',
@@ -327,7 +327,7 @@ describe(f1('model-helpers.js'), function() {
 			assert(updatedGraph.edges[0].to === 'node-4');
 		});
 
-		it(f3('should work with groups'), function() {
+		it(f3('should work with groups'), () => {
 			const updatedGraph = modelHelpers.updateComponentProperties(
 				_.merge({}, graph),
 				'group',
@@ -480,22 +480,22 @@ describe(f1('model-helpers.js'), function() {
 		});
 	});
 
-	describe(f2('replaceIdInEdge()'), function() {
-		it(f3('should stay the same'), function() {
+	describe(f2('replaceIdInEdge()'), () => {
+		it(f3('should stay the same'), () => {
 			const mapping = {};
 			const edge = { from: 'a', to: 'b' }
 			const newEdge = modelHelpers.replaceIdInEdge(mapping, edge);
 			assert(newEdge.from === edge.from);
 		});
 
-		it(f3('should work with `from`'), function() {
+		it(f3('should work with `from`'), () => {
 			const mapping = { 'a': 'something' };
 			const edge = { from: 'a', to: 'b' }
 			const newEdge = modelHelpers.replaceIdInEdge(mapping, edge);
 			assert(newEdge.from === 'something');
 		});
 
-		it(f3('should work with `to`'), function() {
+		it(f3('should work with `to`'), () => {
 			const mapping = { 'b': 'something' };
 			const edge = { from: 'a', to: 'b' }
 			const newEdge = modelHelpers.replaceIdInEdge(mapping, edge);
@@ -602,7 +602,7 @@ describe(f1('model-helpers.js'), function() {
 		// TODO: what else?
 	});
 
-	describe(f2('graphFromModel()'), function() {
+	describe(f2('graphFromModel()'), () => {
 		let model = trespass.model.create();
 		model = trespass.model.addEdge(model, {
 			source: 'source',
@@ -615,18 +615,18 @@ describe(f1('model-helpers.js'), function() {
 
 		// TODO: test `other`
 
-		it(f3('should create edges'), function() {
+		it(f3('should create edges'), () => {
 			assert(graph.edges.length === 1);
 			assert(graph.edges[0].from === 'source');
 			assert(graph.edges[0].to === 'target');
 		});
-		it(f3('should create locations'), function() {
+		it(f3('should create locations'), () => {
 			assert(graph.nodes.length === 1);
 			assert(graph.nodes[0].id === 'location');
 		});
 	});
 
-	describe(f2('addNodeToGroup()'), function() {
+	describe(f2('addNodeToGroup()'), () => {
 		const node = { id: 'node-id' };
 		const group = { id: 'group-id', nodeIds: [] };
 		let graph = {
@@ -636,13 +636,13 @@ describe(f1('model-helpers.js'), function() {
 		};
 		const newGraph = modelHelpers.addNodeToGroup(graph, node.id, group.id);
 
-		it(f3('should work'), function() {
+		it(f3('should work'), () => {
 			assert(newGraph.groups[0].nodeIds.length === 1);
 			assert(newGraph.groups[0].nodeIds[0] === newGraph.nodes[0].id);
 		});
 	});
 
-	describe(f2('removeNode()'), function() {
+	describe(f2('removeNode()'), () => {
 		const nodeId = 'node-id';
 		let graph = {
 			nodes: [ { id: nodeId } ],
@@ -655,20 +655,20 @@ describe(f1('model-helpers.js'), function() {
 		};
 		const newGraph = modelHelpers.removeNode(graph, nodeId);
 
-		it(f3('should remove node'), function() {
+		it(f3('should remove node'), () => {
 			assert(newGraph.nodes.length === 0);
 		});
 
-		it(f3('should remove edges to / from node'), function() {
+		it(f3('should remove edges to / from node'), () => {
 			assert(newGraph.edges.length === 1);
 		});
 
-		it(f3('should remove node from groups'), function() {
+		it(f3('should remove node from groups'), () => {
 			assert(newGraph.groups[0].nodeIds.length === 0);
 		});
 	});
 
-	describe(f2('removeGroup()'), function() {
+	describe(f2('removeGroup()'), () => {
 		const nodeId = 'node-id';
 		const groupId = 'group-id';
 		let graph = {
@@ -679,15 +679,15 @@ describe(f1('model-helpers.js'), function() {
 		let removeNodes = true;
 		const newGraph = modelHelpers.removeGroup(graph, groupId, removeNodes);
 
-		it(f3('should remove group'), function() {
+		it(f3('should remove group'), () => {
 			assert(newGraph.groups.length === 0);
 		});
 
-		it(f3('should remove nodes'), function() {
+		it(f3('should remove nodes'), () => {
 			assert(newGraph.nodes.length === 0);
 		});
 
-		it(f3('should leave nodes alone'), function() {
+		it(f3('should leave nodes alone'), () => {
 			const nodeId = 'node-id';
 			const groupId = 'group-id';
 			let graph = {
@@ -717,7 +717,7 @@ describe(f1('model-helpers.js'), function() {
 		});
 	});
 
-	describe(f2('modelFromGraph()'), function() {
+	describe(f2('modelFromGraph()'), () => {
 		const graph = {
 			nodes: [
 				{ id: 'node-1', modelComponentType: 'item', atLocations: ['location'] },
@@ -727,7 +727,7 @@ describe(f1('model-helpers.js'), function() {
 		};
 		const model = modelHelpers.modelFromGraph(graph);
 
-		it(f3('should create elements'), function() {
+		it(f3('should create elements'), () => {
 			assert(model.system.items.length === 1);
 			assert(model.system.data.length === 1);
 			assert(model.system.predicates.length === 1);
@@ -736,7 +736,7 @@ describe(f1('model-helpers.js'), function() {
 		// TODO: more
 	});
 
-	describe(f2('cloneNode()'), function() {
+	describe(f2('cloneNode()'), () => {
 		const nodeId1 = 'node-id-1';
 		const nodeId2 = 'node-id-2';
 		const groupId = 'group-id';
@@ -753,26 +753,26 @@ describe(f1('model-helpers.js'), function() {
 		const clonedNode = newGraph.nodes[2];
 		const clonedEdge = newGraph.edges[1];
 
-		it(f3('should create a new node'), function() {
+		it(f3('should create a new node'), () => {
 			assert(newGraph.nodes.length === (graph.nodes.length + 1));
 		});
 
-		it(f3('should give cloned node a new id'), function() {
+		it(f3('should give cloned node a new id'), () => {
 			assert(clonedNode.id !== origNode.id);
 		});
 
-		it(f3('cloned node should have original edges'), function() {
+		it(f3('cloned node should have original edges'), () => {
 			assert(newGraph.edges.length === 2);
 			assert(clonedEdge.to === nodeId2);
 			assert(clonedEdge.from === clonedNode.id);
 		});
 
-		it(f3('cloned node should be in original group'), function() {
+		it(f3('cloned node should be in original group'), () => {
 			assert( R.contains(clonedNode.id, newGraph.groups[0].nodeIds) );
 		});
 	});
 
-	describe(f2('cloneGroup()'), function() {
+	describe(f2('cloneGroup()'), () => {
 		const groupId = 'group-id';
 		const group = { id: groupId, nodeIds: ['node-id-1', 'node-id-2', 'node-id-3'] };
 		const graph = {
@@ -782,29 +782,29 @@ describe(f1('model-helpers.js'), function() {
 		};
 		const newGraph = modelHelpers.cloneGroup(graph, group.id);
 
-		it(f3('should create a new group'), function() {
+		it(f3('should create a new group'), () => {
 			assert(newGraph.groups.length === 2);
 		});
 
-		it(f3('should give cloned group a new id'), function() {
+		it(f3('should give cloned group a new id'), () => {
 			assert(newGraph.groups[1].id !== groupId);
 		});
 
-		it(f3('original group and cloned group should contain the same number of nodes'), function() {
+		it(f3('original group and cloned group should contain the same number of nodes'), () => {
 			assert(newGraph.groups[0].nodeIds.length === newGraph.groups[1].nodeIds.length);
 		});
 
-		it(f3('should give cloned nodes a new id'), function() {
+		it(f3('should give cloned nodes a new id'), () => {
 			assert(newGraph.groups[0].nodeIds[0] !== newGraph.groups[1].nodeIds[0]);
 			assert(newGraph.groups[0].nodeIds[1] !== newGraph.groups[1].nodeIds[1]);
 			assert(newGraph.groups[0].nodeIds[2] !== newGraph.groups[1].nodeIds[2]);
 		});
 
-		it(f3('all nodes should exist afterwards'), function() {
+		it(f3('all nodes should exist afterwards'), () => {
 			assert(newGraph.nodes.length === 6);
 		});
 
-		it(f3('all original nodes should be in original group'), function() {
+		it(f3('all original nodes should be in original group'), () => {
 			const origNodeIds = newGraph.groups[0].nodeIds;
 			const origNodes = [newGraph.nodes[0], newGraph.nodes[1], newGraph.nodes[2]];
 			assert(R.contains(origNodes[0].id, origNodeIds));
@@ -812,7 +812,7 @@ describe(f1('model-helpers.js'), function() {
 			assert(R.contains(origNodes[2].id, origNodeIds));
 		});
 
-		it(f3('all new nodes should be in new group'), function() {
+		it(f3('all new nodes should be in new group'), () => {
 			const newNodeIds = newGraph.groups[1].nodeIds;
 			const newNodes = [newGraph.nodes[3], newGraph.nodes[4], newGraph.nodes[5]];
 			assert(R.contains(newNodes[0].id, newNodeIds));
@@ -820,7 +820,7 @@ describe(f1('model-helpers.js'), function() {
 			assert(R.contains(newNodes[2].id, newNodeIds));
 		});
 
-		it(f3('edges should stay intact, and be cloned as well'), function() {
+		it(f3('edges should stay intact, and be cloned as well'), () => {
 			const graph = {
 				nodes: [
 					{ id: 'node-id-1' },
@@ -850,7 +850,7 @@ describe(f1('model-helpers.js'), function() {
 			assert(newGraph.edges[3].to === 'external-node');
 		});
 
-		it(f3('should clone only one group'), function() {
+		it(f3('should clone only one group'), () => {
 			const newNewGraph = modelHelpers.cloneGroup(newGraph, newGraph.groups[1].id);
 			assert(newNewGraph.groups.length === 3);
 		});
