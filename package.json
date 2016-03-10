@@ -62,6 +62,7 @@
     "react": "^0.14.7",
     "react-addons-perf": "^0.14.7",
     "react-addons-pure-render-mixin": "^0.14.7",
+    "react-addons-update": "^0.14.7",
     "react-bootstrap": "^0.28.3",
     "react-dnd": "^2.1.2",
     "react-dnd-html5-backend": "^2.1.2",
