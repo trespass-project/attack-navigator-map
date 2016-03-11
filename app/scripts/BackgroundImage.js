@@ -59,6 +59,10 @@ const ResizeElem = React.createClass({
 const Group = React.createClass({
 	mixins: [SchleppMixin],
 
+	contextTypes: {
+		dispatch: React.PropTypes.func,
+	},
+
 	propTypes: {
 		groupCenterOffsetX: React.PropTypes.number.isRequired,
 		groupCenterOffsetY: React.PropTypes.number.isRequired,

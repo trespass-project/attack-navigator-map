@@ -615,6 +615,69 @@ function cloneGroup(graph, groupId) {
 };
 
 
+const addGroupBackgroundImage = // TODO: test
+module.exports.addGroupBackgroundImage =
+function addGroupBackgroundImage(graph, groupId, dataURI, aspectRatio) {
+	const _bgImage = {
+		aspectRatio,
+		url: dataURI,
+		width: 550,
+		height: 550 / aspectRatio,
+	};
+	return update(
+		graph,
+		{ groups: { [groupId]: { _bgImage: { $set: _bgImage } } } }
+	);
+};
+
+
+const removeGroupBackgroundImage = // TODO: test
+module.exports.removeGroupBackgroundImage =
+function removeGroupBackgroundImage(graph, groupId) {
+	const group = graph.groups[groupId];
+	const newGroup = R.omit(['_bgImage'], group);
+	return update(
+		graph,
+		{ groups: { [groupId]: { $set: newGroup } } }
+	);
+};
+
+
+const resizeGroupBackgroundImage = // TODO: test
+module.exports.resizeGroupBackgroundImage =
+function resizeGroupBackgroundImage(graph, groupId, width, height) {
+	const group = graph.groups[groupId];
+	if (!group._bgImage) {
+		return graph;
+	}
+
+	const _bgImage = { width, height };
+	return update(
+		graph,
+		{ groups: { [groupId]: { _bgImage: { $merge: _bgImage } } } }
+	);
+};
+
+
+const moveGroupBackgroundImage = // TODO: test
+module.exports.moveGroupBackgroundImage =
+function moveGroupBackgroundImage(graph, groupId, groupCenterOffsetXY) {
+	const group = graph.groups[groupId];
+	if (!group._bgImage) {
+		return graph;
+	}
+
+	const _bgImage = {
+		groupCenterOffsetX: groupCenterOffsetXY.x,
+		groupCenterOffsetY: groupCenterOffsetXY.y,
+	};
+	return update(
+		graph,
+		{ groups: { [groupId]: { _bgImage: { $merge: _bgImage } } } }
+	);
+};
+
+
 const addNodeToGroup =
 module.exports.addNodeToGroup =
 function addNodeToGroup(graph, nodeId, groupId) {

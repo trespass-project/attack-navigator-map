@@ -57,57 +57,45 @@ function reducer(state=initialState, action) {
 
 		case constants.ACTION_addGroupBackgroundImage: {
 			const {groupId, dataURI, aspectRatio/*, width*/} = action;
-
-			const newState = mergeWithState(state);
-			let group = helpers.getItemById(newState.graph.groups, groupId);
-
-			group._bgImage = group._bgImage || {};
-			group._bgImage.url = dataURI;
-			group._bgImage.width = 550;
-			group._bgImage.height = 550 / aspectRatio;
-
-			return newState;
+			const newGraph = modelHelpers.addGroupBackgroundImage(
+				state.graph,
+				groupId,
+				dataURI,
+				aspectRatio
+			);
+			return mergeWithState({ graph: newGraph });
 		}
 
 		case constants.ACTION_resizeGroupBackgroundImage: {
 			const {groupId, width, height} = action;
 
-			const newState = mergeWithState(state);
-			let group = helpers.getItemById(newState.graph.groups, groupId);
-
-			if (!group._bgImage) {
-				return state;
-			}
-
 			const minSize = 100;
-			group._bgImage.width = Math.max(width, minSize);
-			group._bgImage.height = Math.max(height, minSize);
-
-			return newState;
+			const newGraph = modelHelpers.resizeGroupBackgroundImage(
+				state.graph,
+				groupId,
+				Math.max(width, minSize),
+				Math.max(height, minSize)
+			);
+			return mergeWithState({ graph: newGraph });
 		}
 
 		case constants.ACTION_moveGroupBackgroundImage: {
 			const {groupId, groupCenterOffsetXY} = action;
-
-			const newState = mergeWithState(state);
-			let group = helpers.getItemById(newState.graph.groups, groupId);
-
-			if (!group._bgImage) {
-				return state;
-			}
-
-			group._bgImage.groupCenterOffsetX = groupCenterOffsetXY.x;
-			group._bgImage.groupCenterOffsetY = groupCenterOffsetXY.y;
-
-			return newState;
+			const newGraph = modelHelpers.moveGroupBackgroundImage(
+				state.graph,
+				groupId,
+				groupCenterOffsetXY
+			);
+			return mergeWithState({ graph: newGraph });
 		}
 
 		case constants.ACTION_removeGroupBackgroundImage: {
 			const {groupId} = action;
-			const newState = mergeWithState(state);
-			let group = helpers.getItemById(newState.graph.groups, groupId);
-			delete group._bgImage;
-			return newState;
+			const newGraph = modelHelpers.removeGroupBackgroundImage(
+				state.graph,
+				groupId
+			);
+			return mergeWithState({ graph: newGraph });
 		}
 
 		case constants.ACTION_importFragment: {
