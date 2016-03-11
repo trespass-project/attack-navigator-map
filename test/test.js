@@ -632,73 +632,303 @@ describe(f1('model-helpers.js'), () => {
 			nodeIds: []
 		};
 		const graph = {
-			nodes: [node],
-			edges: [],
-			groups: [group],
+			nodes: helpers.toHashMap('id', [node]),
+			edges: {},
+			groups: helpers.toHashMap('id', [group]),
 		};
+
 		const newGraph = modelHelpers.addNodeToGroup(graph, node.id, group.id);
-		console.log(newGraph);
 
 		it(f3('should work'), () => {
-			assert(newGraph.groups[0].nodeIds.length === 1);
-			assert(newGraph.groups[0].nodeIds[0] === newGraph.nodes[0].id);
+			const groups = R.values(newGraph.groups);
+			const nodes = R.values(newGraph.nodes);
+			assert(groups[0].nodeIds.length === 1);
+			assert(groups[0].nodeIds[0] === nodes[0].id);
 		});
 	});
 
-	return;
+	describe(f2('removeNode()'), () => {
+		const node = { id: 'node-id' };
+		const nodes = [node];
+		const edges = [
+			{ id: 'edge-1', from: node.id, to: 'another' },
+			{ id: 'edge-2', from: 'another', to: node.id },
+			{ id: 'edge-3', from: 'another1', to: 'another2' },
+		];
+		const groups = [{ id: 'group-id', nodeIds: [node.id] }];
+		const graph = {
+			nodes: helpers.toHashMap('id', nodes),
+			edges: helpers.toHashMap('id', edges),
+			groups: helpers.toHashMap('id', groups),
+		};
+		const newGraph = modelHelpers.removeNode(graph, node.id);
+
+		it(f3('should remove node'), () => {
+			assert(R.keys(newGraph.nodes).length === 0);
+		});
+
+		it(f3('should remove edges to / from node'), () => {
+			assert(R.keys(newGraph.edges).length === 1);
+		});
+
+		it(f3('should remove node from groups'), () => {
+			const groups = R.values(newGraph.groups);
+			assert(groups[0].nodeIds.length === 0);
+		});
+	});
+
+	describe(f2('removeGroup()'), () => {
+		const node = { id: 'node-id' };
+		const nodes = [node];
+		const group = { id: 'group-id', nodeIds: [node.id] };
+		const groups = [group];
+		const graph = {
+			nodes: helpers.toHashMap('id', nodes),
+			edges: {},
+			groups: helpers.toHashMap('id', groups),
+		};
+
+		const removeNodes = true;
+		const newGraph = modelHelpers.removeGroup(graph, group.id, removeNodes);
+		it(f3('should remove group'), () => {
+			assert(R.keys(newGraph.groups).length === 0);
+		});
+		it(f3('should remove nodes'), () => {
+			assert(R.keys(newGraph.nodes).length === 0);
+		});
+
+		it(f3('should leave nodes alone'), () => {
+			const removeNodes = false;
+			const newGraph = modelHelpers.removeGroup(graph, group.id, removeNodes);
+			assert(R.keys(newGraph.nodes).length === 1);
+		});
+	});
+
+	describe(f2('cloneNode()'), () => {
+		const node1 = { id: 'node-id-1' };
+		const node2 = { id: 'node-id-2' };
+		const nodes = [node1, node2];
+		const edge = { id: 'edge-id', from: node1.id, to: node2.id };
+		const edges = [edge];
+		const group = { id: 'group-id', nodeIds: [node1.id] };
+		const graph = {
+			nodes: helpers.toHashMap('id', nodes),
+			edges: helpers.toHashMap('id', edges),
+			groups: helpers.toHashMap('id', [group]),
+		};
+
+		const newGraph = modelHelpers.cloneNode(graph, node1.id);
+
+		const newNodes = R.values(newGraph.nodes);
+		const newEdges = R.values(newGraph.edges);
+
+		it(f3('should create a new node'), () => {
+			assert(newNodes.length === nodes.length + 1);
+		});
+
+		it(f3('should create a new edge'), () => {
+			assert(newEdges.length === edges.length + 1);
+		});
+
+		const origNode = node1;
+		const clonedNodeId = R.symmetricDifference(
+			R.keys(newGraph.nodes),
+			R.keys(graph.nodes)
+		)[0];
+
+		it(f3('should give cloned node a new id'), () => {
+			assert(!!clonedNodeId);
+		});
+
+		const clonedNode = newGraph.nodes[clonedNodeId];
+		const clonedNodeEdges = modelHelpers.getNodeEdges(clonedNode, newGraph.edges);
+		const clonedEdge = clonedNodeEdges[0];
+
+		it(f3('cloned node should have original edges'), () => {
+			assert(clonedEdge.from === clonedNode.id);
+			assert(clonedEdge.to === node2.id);
+		});
+
+		it(f3('cloned node should be in original group'), () => {
+			const group = R.values(newGraph.groups)[0];
+			assert( R.contains(clonedNode.id, group.nodeIds) );
+		});
+	});
+
+	describe(f2('cloneGroup()'), () => {
+		const nodes = [
+			{ id: 'node-id-1' },
+			{ id: 'node-id-2' },
+			{ id: 'node-id-3' }
+		];
+		const groupId = 'group-id';
+		const group = {
+			id: groupId,
+			nodeIds: ['node-id-1', 'node-id-2', 'node-id-3']
+		};
+		const graph = {
+			nodes: helpers.toHashMap('id', nodes),
+			edges: {},
+			groups: helpers.toHashMap('id', [group]),
+		};
+		const newGraph = modelHelpers.cloneGroup(graph, group.id);
+		const newNodes = R.values(newGraph.nodes);
+		const newGroups = R.values(newGraph.groups);
+
+		const clonedGroupId = R.symmetricDifference(
+			R.keys(newGraph.groups),
+			R.keys(graph.groups)
+		)[0];
+		const clonedGroup = newGraph.groups[clonedGroupId];
+
+		it(f3('should create a new group'), () => {
+			assert(!!clonedGroupId);
+			assert(newGroups.length === 2);
+		});
+
+		it(f3('should give cloned group a new id'), () => {
+			assert(clonedGroupId !== groupId);
+		});
+
+		it(f3('original group and cloned group should contain the same number of nodes'), () => {
+			assert(newGroups[0].nodeIds.length === newGroups[1].nodeIds.length);
+		});
+
+		it(f3('should give cloned nodes a new id'), () => {
+			newGroups[1].nodeIds
+				.forEach((nodeId) => {
+					assert(!R.contains(nodeId, newGroups[0].nodeIds))
+				});
+		});
+
+		it(f3('all nodes should exist afterwards'), () => {
+			assert(newNodes.length === 6);
+		});
+
+		it(f3('all original nodes should be in original group'), () => {
+			const origGroup = newGraph.groups[groupId];
+			const origNodeIds = origGroup.nodeIds;
+			const origNodes = nodes;
+			assert(origGroup.nodeIds.length === 3);
+			assert(R.contains(origNodes[0].id, origNodeIds));
+			assert(R.contains(origNodes[1].id, origNodeIds));
+			assert(R.contains(origNodes[2].id, origNodeIds));
+		});
+
+		it(f3('all new nodes should be in new group'), () => {
+			assert(clonedGroup.nodeIds.length === 3);
+		});
+
+		it(f3('edges should stay intact, and be cloned as well'), () => {
+			const nodes = [
+				{ id: 'node-id-1' },
+				{ id: 'node-id-2' },
+				{ id: 'external-node' }
+			];
+			const groups = [{
+				id: 'group-id',
+				nodeIds: ['node-id-1', 'node-id-2']
+			}];
+			const edges = [
+				{ id: 'edge-1', from: 'node-id-1', to: 'node-id-2' },
+				{ id: 'edge-2', from: 'node-id-1', to: 'external-node' },
+			];
+			const graph = {
+				nodes: helpers.toHashMap('id', nodes),
+				groups: helpers.toHashMap('id', groups),
+				edges: helpers.toHashMap('id', edges),
+			};
+
+			const newGraph = modelHelpers.cloneGroup(graph, group.id);
+			const newEdges = R.values(newGraph.edges);
+
+			assert(newEdges.length === 4);
+		});
+
+		it(f3('should clone only one group'), () => {
+			const newNewGraph = modelHelpers.cloneGroup(newGraph, clonedGroupId);
+			assert(R.values(newNewGraph.groups).length === 3);
+		});
+	});
 
 	describe(f2('updateComponentProperties()'), () => {
+		const nodes = [
+			{ id: 'node-1' },
+			{ id: 'node-2' }
+		];
+		const edges = [
+			{ id: 'edge-1', from: 'node-1', to: 'node-2' },
+			{ id: 'edge-2', from: 'node-2', to: 'node-1' }
+		];
+		const groups = [
+			{ id: 'group-1', nodeIds: [] },
+			{ id: 'group-2', nodeIds: ['node-1'] }
+		];
 		const graph = {
-			nodes: [
-				{ id: 'node-1' },
-				{ id: 'node-2' }
-			],
-			edges: [
-				{ id: 'edge-1', from: 'node-1', to: 'node-2' },
-				{ id: 'edge-2', from: 'node-2', to: 'node-1' }
-			],
-			groups: [
-				{ id: 'group-1', nodeIds: [] },
-				{ id: 'group-2', nodeIds: ['node-1'] }
-			]
+			nodes: helpers.toHashMap('id', nodes),
+			edges: helpers.toHashMap('id', edges),
+			groups: helpers.toHashMap('id', groups),
 		};
 
 		it(f3('should work with nodes'), () => {
 			const updatedGraph = modelHelpers.updateComponentProperties(
-				_.merge({}, graph),
+				graph,
 				'node',
 				'node-1',
 				{ id: 'updated-node-1', attribute: 'test' }
 			);
-			assert(updatedGraph.nodes[0].id === 'updated-node-1');
+			assert(!updatedGraph.nodes['node-1']);
+			assert(!!updatedGraph.nodes['updated-node-1']);
+			assert(updatedGraph.nodes['updated-node-1']['attribute'] === 'test');
 		});
 
 		it(f3('should work with edges'), () => {
 			const updatedGraph = modelHelpers.updateComponentProperties(
-				_.merge({}, graph),
+				graph,
 				'edge',
 				'edge-1',
 				{ from: 'node-3', to: 'node-4' }
 			);
-			assert(updatedGraph.edges[0].from === 'node-3');
-			assert(updatedGraph.edges[0].to === 'node-4');
+			assert(updatedGraph.edges['edge-1'].from === 'node-3');
+			assert(updatedGraph.edges['edge-1'].to === 'node-4');
 		});
 
 		it(f3('should work with groups'), () => {
 			const updatedGraph = modelHelpers.updateComponentProperties(
-				_.merge({}, graph),
+				graph,
 				'group',
 				'group-2',
 				{ nodeIds: ['node-3', 'node-4'] }
 			);
-			assert(updatedGraph.groups[1].nodeIds.length === 2);
+			assert(updatedGraph.groups['group-2'].nodeIds.length === 2);
 		});
 	});
 
+	describe(f2('layoutGraphByType()'), () => {
+		const nodes = [
+			{ id: 'node-1', modelComponentType: 'location' },
+			{ id: 'node-2', modelComponentType: 'location' },
+			{ id: 'node-3', modelComponentType: 'item' },
+			{ id: 'node-4', modelComponentType: 'data' },
+		];
+		const graph = {
+			nodes: helpers.toHashMap('id', nodes),
+		};
 
+		const newGraph = modelHelpers.layoutGraphByType(graph);
 
+		it(f3('should be immutable'), () => {
+			assert(graph !== newGraph);
+		});
 
+		const groups = R.values(newGraph.groups);
 
+		it(f3('should group the nodes'), () => {
+			assert(groups.length === 3);
+		});
+
+		// TODO: more
+	});
 
 	describe(f2('graphFromModel()'), () => {
 		let model = trespass.model.create();
@@ -709,91 +939,47 @@ describe(f1('model-helpers.js'), () => {
 		model = trespass.model.addLocation(model, {
 			id: 'location'
 		});
+		model = trespass.model.addPredicate(model, {
+			id: 'predicate',
+			arity: 2,
+			value: ['val1', 'val2']
+		});
+		model = trespass.model.addPolicy(model, {
+			id: 'policy'
+		});
 		const {graph, other} = modelHelpers.graphFromModel(model);
 
-		// TODO: test `other`
+		const edges = R.values(graph.edges);
+		const nodes = R.values(graph.nodes);
 
 		it(f3('should create edges'), () => {
-			assert(graph.edges.length === 1);
-			assert(graph.edges[0].from === 'source');
-			assert(graph.edges[0].to === 'target');
+			assert(edges.length === 1);
+			assert(edges[0].from === 'source');
+			assert(edges[0].to === 'target');
 		});
+
 		it(f3('should create locations'), () => {
-			assert(graph.nodes.length === 1);
-			assert(graph.nodes[0].id === 'location');
+			assert(nodes.length === 1);
+			assert(nodes[0].id === 'location');
 		});
+
+		it(f3('should put predicates, policies, etc. into `other`'), () => {
+			assert(other.policies.length === 1);
+			// assert(other.predicates.length === 1);
+		});
+
+		// TODO: predicates
 	});
-
-
-
-	describe(f2('removeNode()'), () => {
-		const nodeId = 'node-id';
-		let graph = {
-			nodes: [ { id: nodeId } ],
-			edges: [
-				{ from: nodeId, to: 'another' },
-				{ from: 'another', to: nodeId },
-				{ from: 'another1', to: 'another2' },
-			],
-			groups: [ { nodeIds: [nodeId] } ],
-		};
-		const newGraph = modelHelpers.removeNode(graph, nodeId);
-
-		it(f3('should remove node'), () => {
-			assert(newGraph.nodes.length === 0);
-		});
-
-		it(f3('should remove edges to / from node'), () => {
-			assert(newGraph.edges.length === 1);
-		});
-
-		it(f3('should remove node from groups'), () => {
-			assert(newGraph.groups[0].nodeIds.length === 0);
-		});
-	});
-
-	describe(f2('removeGroup()'), () => {
-		const nodeId = 'node-id';
-		const groupId = 'group-id';
-		let graph = {
-			nodes: [ { id: nodeId } ],
-			edges: [],
-			groups: [ { id: groupId, nodeIds: [nodeId] } ],
-		};
-		let removeNodes = true;
-		const newGraph = modelHelpers.removeGroup(graph, groupId, removeNodes);
-
-		it(f3('should remove group'), () => {
-			assert(newGraph.groups.length === 0);
-		});
-
-		it(f3('should remove nodes'), () => {
-			assert(newGraph.nodes.length === 0);
-		});
-
-		it(f3('should leave nodes alone'), () => {
-			const nodeId = 'node-id';
-			const groupId = 'group-id';
-			let graph = {
-				nodes: [ { id: nodeId } ],
-				edges: [],
-				groups: [ { id: groupId, nodeIds: [nodeId] } ],
-			};
-			let removeNodes = false;
-			const newGraph = modelHelpers.removeGroup(graph, groupId, removeNodes);
-			assert(newGraph.nodes.length === 1);
-		});
-	});
-
-
 
 	describe(f2('modelFromGraph()'), () => {
+		const nodes = [
+			{ id: 'node-1', modelComponentType: 'item', atLocations: ['location'] },
+			{ id: 'node-2', modelComponentType: 'data', value: 'value', atLocations: ['location'] },
+			{ id: 'node-3', modelComponentType: 'predicate', arity: '2', value: ['value'] }
+		];
 		const graph = {
-			nodes: [
-				{ id: 'node-1', modelComponentType: 'item', atLocations: ['location'] },
-				{ id: 'node-2', modelComponentType: 'data', value: 'value', atLocations: ['location'] },
-				{ id: 'node-3', modelComponentType: 'predicate', arity: '2', value: ['value'] }
-			]
+			nodes: helpers.toHashMap('id', nodes),
+			// TODO: edges
 		};
 		const model = modelHelpers.modelFromGraph(graph);
 
@@ -804,125 +990,5 @@ describe(f1('model-helpers.js'), () => {
 		});
 
 		// TODO: more
-	});
-
-	describe(f2('cloneNode()'), () => {
-		const nodeId1 = 'node-id-1';
-		const nodeId2 = 'node-id-2';
-		const groupId = 'group-id';
-		const group = { id: groupId, nodeIds: [nodeId1] };
-		const graph = {
-			nodes: [ { id: nodeId1 }, { id: nodeId2 } ],
-			edges: [ { from: nodeId1, to: nodeId2 } ],
-			groups: [group],
-		};
-
-		const newGraph = modelHelpers.cloneNode(graph, graph.nodes[0].id);
-
-		const origNode = newGraph.nodes[0];
-		const clonedNode = newGraph.nodes[2];
-		const clonedEdge = newGraph.edges[1];
-
-		it(f3('should create a new node'), () => {
-			assert(newGraph.nodes.length === (graph.nodes.length + 1));
-		});
-
-		it(f3('should give cloned node a new id'), () => {
-			assert(clonedNode.id !== origNode.id);
-		});
-
-		it(f3('cloned node should have original edges'), () => {
-			assert(newGraph.edges.length === 2);
-			assert(clonedEdge.to === nodeId2);
-			assert(clonedEdge.from === clonedNode.id);
-		});
-
-		it(f3('cloned node should be in original group'), () => {
-			assert( R.contains(clonedNode.id, newGraph.groups[0].nodeIds) );
-		});
-	});
-
-	describe(f2('cloneGroup()'), () => {
-		const groupId = 'group-id';
-		const group = { id: groupId, nodeIds: ['node-id-1', 'node-id-2', 'node-id-3'] };
-		const graph = {
-			nodes: [ { id: 'node-id-1' }, { id: 'node-id-2' }, { id: 'node-id-3' } ],
-			edges: [],
-			groups: [group],
-		};
-		const newGraph = modelHelpers.cloneGroup(graph, group.id);
-
-		it(f3('should create a new group'), () => {
-			assert(newGraph.groups.length === 2);
-		});
-
-		it(f3('should give cloned group a new id'), () => {
-			assert(newGraph.groups[1].id !== groupId);
-		});
-
-		it(f3('original group and cloned group should contain the same number of nodes'), () => {
-			assert(newGraph.groups[0].nodeIds.length === newGraph.groups[1].nodeIds.length);
-		});
-
-		it(f3('should give cloned nodes a new id'), () => {
-			assert(newGraph.groups[0].nodeIds[0] !== newGraph.groups[1].nodeIds[0]);
-			assert(newGraph.groups[0].nodeIds[1] !== newGraph.groups[1].nodeIds[1]);
-			assert(newGraph.groups[0].nodeIds[2] !== newGraph.groups[1].nodeIds[2]);
-		});
-
-		it(f3('all nodes should exist afterwards'), () => {
-			assert(newGraph.nodes.length === 6);
-		});
-
-		it(f3('all original nodes should be in original group'), () => {
-			const origNodeIds = newGraph.groups[0].nodeIds;
-			const origNodes = [newGraph.nodes[0], newGraph.nodes[1], newGraph.nodes[2]];
-			assert(R.contains(origNodes[0].id, origNodeIds));
-			assert(R.contains(origNodes[1].id, origNodeIds));
-			assert(R.contains(origNodes[2].id, origNodeIds));
-		});
-
-		it(f3('all new nodes should be in new group'), () => {
-			const newNodeIds = newGraph.groups[1].nodeIds;
-			const newNodes = [newGraph.nodes[3], newGraph.nodes[4], newGraph.nodes[5]];
-			assert(R.contains(newNodes[0].id, newNodeIds));
-			assert(R.contains(newNodes[1].id, newNodeIds));
-			assert(R.contains(newNodes[2].id, newNodeIds));
-		});
-
-		it(f3('edges should stay intact, and be cloned as well'), () => {
-			const graph = {
-				nodes: [
-					{ id: 'node-id-1' },
-					{ id: 'node-id-2' },
-					{ id: 'external-node' }
-				],
-				groups: [{
-					id: 'group-id',
-					nodeIds: ['node-id-1', 'node-id-2']
-				}],
-				edges: [
-					{ id: 'edge-1', from: 'node-id-1', to: 'node-id-2' },
-					{ id: 'edge-2', from: 'node-id-1', to: 'external-node' },
-				],
-			};
-			const newGraph = modelHelpers.cloneGroup(graph, group.id);
-
-			assert(newGraph.edges.length === 4);
-
-			assert(newGraph.edges[2].id !== newGraph.edges[0].id);
-			assert(newGraph.edges[3].id !== newGraph.edges[1].id);
-
-			assert(newGraph.edges[2].from !== newGraph.edges[0].from);
-			assert(newGraph.edges[2].to !== newGraph.edges[0].to);
-
-			assert(newGraph.edges[3].from !== newGraph.edges[1].from);
-			assert(newGraph.edges[3].to === 'external-node');
-		});
-
-		it(f3('should clone only one group'), () => {
-			const newNewGraph = modelHelpers.cloneGroup(newGraph, newGraph.groups[1].id);
-			assert(newNewGraph.groups.length === 3);
-		});
 	});
 });

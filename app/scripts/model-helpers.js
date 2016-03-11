@@ -267,9 +267,14 @@ function XMLModelToGraph(xmlStr, done) {
 };
 
 
-const layoutGraphByType = // TODO: test
+const layoutGraphByType =
 module.exports.layoutGraphByType =
-function layoutGraphByType(graph) {
+function layoutGraphByType(_graph) {
+	let graph = update(
+		createFragment(),
+		{ $merge: _graph }
+	);
+
 	let colCounter = 0;
 	let rowCounter = 0;
 	let lastGroupIndex = 0;
@@ -283,7 +288,7 @@ function layoutGraphByType(graph) {
 	// create groups for the different types
 	modelComponents
 		.forEach((collectionName) => {
-			const selection = graph.nodes
+			const selection = R.values(graph.nodes)
 				.filter((node) => {
 					return (node.modelComponentType === modelComponentsSingular[collectionName]);
 				});
@@ -297,7 +302,7 @@ function layoutGraphByType(graph) {
 			});
 			groupIndex++;
 
-			selection.forEach(function(node) {
+			selection.forEach((node) => {
 				group.nodeIds.push(node.id);
 
 				// basic auto-layout
@@ -319,10 +324,14 @@ function layoutGraphByType(graph) {
 				node.y = yOffset + rowCounter * spacing + ((isShifted) ? 0 : 20);
 				rowCounter++;
 			});
+
 			if (group.nodeIds.length) {
-				graph.groups.push(group);
+				const setGroup = { $set: group };
+				graph = update(graph, { groups: { [group.id]: setGroup } });
 			}
 		});
+
+	return graph;
 };
 
 
@@ -345,7 +354,7 @@ function downloadAsXML(model, fileName='model.xml') {
 const graphFromModel =
 module.exports.graphFromModel =
 function graphFromModel(model) {
-	const graph = createFragment();
+	let graph = createFragment();
 
 	// for each edge in model, create edge in graph
 	graph.edges = model.system.edges
@@ -358,7 +367,8 @@ function graphFromModel(model) {
 		});
 
 	// set model component type
-	R.without(['edges'], modelComponents)
+	const nonEdges = R.without(['edges'], modelComponents);
+	nonEdges
 		.forEach((collectionName) => {
 			model.system[collectionName]
 				.forEach((item) => {
@@ -366,11 +376,14 @@ function graphFromModel(model) {
 				});
 		});
 
-	const nonGraphComponents = R.concat(['edges'], nonGraphModelComponents);
+	const nonGraphComponents = [...nonGraphModelComponents, 'edges'];
 	R.without(nonGraphComponents, modelComponents)
 		.forEach((collectionName) => {
-			const coll = model.system[collectionName];
-			graph.nodes = R.concat(graph.nodes, coll);
+			// TODO: warn or s.th.
+			const coll = (_.isArray(model.system[collectionName]))
+				? helpers.toHashMap('id', model.system[collectionName])
+				: model.system[collectionName];
+			graph = update(graph, { nodes: { $merge: coll } });
 		});
 
 	const other = nonGraphModelComponents
@@ -381,13 +394,11 @@ function graphFromModel(model) {
 
 	// predicates
 	other.predicates = other.predicates
-		.reduce((result, item) => {
-			item.value.forEach((value) => {
-				result.push({
-					id: item.id,
-					value
+		.reduce((result, predicate) => {
+			predicate.value
+				.forEach((value) => {
+					result.push({ id: predicate.id, value });
 				});
-			});
 			return result;
 		}, []);
 
@@ -405,34 +416,64 @@ function modelFromGraph(graph) {
 	// embed entire graph in model
 	model.system.anm_data = JSON.stringify(graph);
 
-	(graph.edges || []).forEach((edge) => {
-		trespass.model.addEdge(model, {
-			source: edge.from,
-			target: edge.to,
-			directed: edge.directed,
+	R.values(graph.edges || {})
+		.forEach((edge) => {
+			trespass.model.addEdge(model, {
+				source: edge.from,
+				target: edge.to,
+				directed: edge.directed,
+			});
 		});
-	});
 
-	(graph.nodes || []).forEach((node) => {
-		const type = node.modelComponentType;
-		const fnName = `add${properCase(type)}`;
-		const addFn = trespass.model[fnName];
-		if (!addFn) {
-			console.warn(`${fnName}()`, 'not found');
-		} else {
-			const keysToOmit = [
-				/*'name', */
-				'label',
-				'x',
-				'y',
-				'modelComponentType',
-				'kbType'
-			];
-			addFn(model, R.omit(keysToOmit, node));
-		}
-	});
+	const keysToOmit = [
+		/*'name', */
+		'label',
+		'x',
+		'y',
+		'modelComponentType',
+		'kbType'
+	];
+	R.values(graph.nodes || {})
+		.forEach((node) => {
+			const type = node.modelComponentType;
+			const fnName = `add${properCase(type)}`;
+			const addFn = trespass.model[fnName];
+			if (!addFn) {
+				console.warn(`${fnName}()`, 'not found');
+			} else {
+				addFn(model, R.omit(keysToOmit, node));
+			}
+		});
 
 	return model;
+};
+
+
+const removeNode =
+module.exports.removeNode =
+function removeNode(graph, nodeId) {
+	// remove node
+	const node = graph.nodes[nodeId];
+	const updateNodes = { nodes: { $set: R.omit([nodeId], graph.nodes) } };
+
+	// and also all edges connected to it
+	const nodeEdgesIds = getNodeEdges(node, graph.edges)
+		.map(item => item.id);
+	const updateEdges = { edges: { $set: R.omit(nodeEdgesIds, graph.edges) } };
+
+	// remove from groups
+	const nodeGroups = getNodeGroups(node, graph.groups);
+	const updateGroupsNodeIds = nodeGroups
+		.reduce((acc, group) => {
+			acc[group.id] = { nodeIds: { $set: R.without([nodeId], group.nodeIds) } }
+			return acc;
+		}, {});
+	const updateGroups = { groups: updateGroupsNodeIds };
+
+	return update(
+		graph,
+		_.assign({}, updateNodes, updateEdges, updateGroups)
+	);
 };
 
 
@@ -456,17 +497,20 @@ function removeGroup(graph, groupId, removeNodes=false) {
 const cloneNode =
 module.exports.cloneNode =
 function cloneNode(graph, origNodeId) {
-	const origNode = helpers.getItemById(graph.nodes, origNodeId);
+	const origNode = graph.nodes[origNodeId];
 
-	const _fragment = nodeAsFragmentInclEdges(origNode, graph.edges);
-	const fragment = duplicateFragment(_fragment);
-	const newNodeId = fragment.nodes[0].id;
+	const fragment = duplicateFragment(
+		nodeAsFragmentInclEdges(origNode, graph.edges)
+	);
+	const newNode = R.values(fragment.nodes)[0];
 
 	// if node is in a group, so is the clone
-	const groups = getNodeGroups(origNode, graph.groups);
-	groups.forEach((group) => {
-		group.nodeIds = [...group.nodeIds, newNodeId];
-	});
+	const nodeGroups = getNodeGroups(origNode, graph.groups);
+	const g = nodeGroups
+		.reduce((graph, group) => {
+			const pushNewNode = { $push: [newNode.id] };
+			return update(graph, { groups: { [group.id]: { nodeIds: pushNewNode } } });
+		}, graph);
 
 	const xy = {
 		x: constants.CLONE_OFFSET,
@@ -474,17 +518,18 @@ function cloneNode(graph, origNodeId) {
 	};
 
 	// add fragment
-	return importFragment(graph, fragment, xy);
+	return importFragment(g, fragment, xy);
 };
 
 
 const cloneGroup =
 module.exports.cloneGroup =
 function cloneGroup(graph, groupId) {
-	const origGroup = helpers.getItemById(graph.groups, groupId);
+	const origGroup = graph.groups[groupId];
 
-	const _fragment = groupAsFragment(graph, origGroup);
-	const fragment = duplicateFragment(_fragment);
+	const fragment = duplicateFragment(
+		groupAsFragment(graph, origGroup)
+	);
 
 	const xy = {
 		x: constants.CLONE_OFFSET,
@@ -496,30 +541,15 @@ function cloneGroup(graph, groupId) {
 };
 
 
-// const addNode = // TODO: test
-// module.exports.addNode =
-// function addNode(graph, _node) {
-// 	// const node = duplicateNode(
-// 	// 	_.defaults({}, node, { label: 'new node' })
-// 	// );
-// 	// graph.nodes.push(node);
-// 	// return graph;
-
-// 	const node = _.defaults({}, node, { label: 'new node' });
-// 	return combineFragments([
-// 		graph,
-// 		nodeAsFragment(node)
-// 	]);
-// };
-
-
 const addNodeToGroup =
 module.exports.addNodeToGroup =
 function addNodeToGroup(graph, nodeId, groupId) {
-	const group = helpers.getItemById(graph.groups, groupId);
-	group.nodeIds.push(nodeId);
-	group.nodeIds = R.uniq(group.nodeIds);
-	return graph;
+	const group = graph.groups[groupId];
+	const newNodeIds = R.uniq([...group.nodeIds, nodeId]);
+	return update(
+		graph,
+		{ groups: { [groupId]: { nodeIds: { $set: newNodeIds } } } }
+	);
 };
 
 
@@ -579,40 +609,35 @@ function inferEdgeType(fromType, toType) {
 };
 
 
-const removeNode =
-module.exports.removeNode =
-function removeNode(graph, nodeId) {
-	// remove node
-	const node = graph.nodes[nodeId];
-	const updateNodes = { nodes: { $set: R.omit([nodeId], graph.nodes) } };
-
-	// and also all edges connected to it
-	const nodeEdgesIds = getNodeEdges(node, graph.edges)
-		.map(item => item.id);
-	const updateEdges = { edges: { $set: R.omit(nodeEdgesIds, graph.edges) } };
-
-	// remove from groups
-	const nodeGroups = getNodeGroups(node, graph.groups);
-	const updateGroupsNodeIds = nodeGroups
-		.reduce((acc, group) => {
-			acc[group.id] = { nodeIds: { $set: R.without([nodeId], group.nodeIds) } }
-			return acc;
-		}, {});
-	const updateGroups = { groups: updateGroupsNodeIds };
-
-	const allUpdates = _.assign({}, updateNodes, updateEdges, updateGroups);
-	return update(graph, allUpdates);
-};
-
-
 const updateComponentProperties =
 module.exports.updateComponentProperties =
 function updateComponentProperties(graph, graphComponentType, componentId, newProperties) {
-	let list = {
-		'node': graph.nodes,
-		'edge': graph.edges,
-		'group': graph.groups,
-	}[graphComponentType] || [];
+	const pluralToSingular = {
+		'nodes': 'node',
+		'edges': 'edge',
+		'groups': 'group',
+	};
+	const singularToPlural = R.invertObj(pluralToSingular);
+	const collectionName = singularToPlural[graphComponentType];
+
+	const item = graph[collectionName][componentId];
+	const updatedItem = update(item, { $merge: newProperties });
+
+	let g = graph;
+	if (item.id !== updatedItem.id) {
+		const withoutOldId = R.omit([item.id], graph[collectionName]);
+		g = update(
+			graph,
+			{ [collectionName]: { $set: withoutOldId } }
+		);
+	}
+
+	g = update(
+		g,
+		{ [collectionName]: { [updatedItem.id]: { $set: updatedItem } } }
+	);
+
+	return g;
 
 	list = list.map((item) => {
 		if (item.id === componentId) {
