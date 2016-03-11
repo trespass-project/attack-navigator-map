@@ -180,7 +180,7 @@ const Edge = React.createClass({
 				destructive: true,
 				icon: icons['fa-trash'],
 				action: () => {
-					context.dispatch( actionCreators.removeEdge(props.edge) );
+					context.dispatch( actionCreators.removeEdge(props.edge.id) );
 				}
 			}
 		];

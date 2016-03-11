@@ -50,11 +50,7 @@ function reducer(state=initialState, action) {
 			const newState = _.merge(
 				{},
 				initialState,
-				{
-					metadata: {
-						id: modelId
-					}
-				}
+				{ metadata: { id: modelId } }
 			);
 			return newState;
 		}
@@ -124,20 +120,20 @@ function reducer(state=initialState, action) {
 			return mergeWithState({ graph: newGraph });
 		}
 
-		case constants.ACTION_updateModel: {
-			const model = modelFromGraph(state.graph);
-			if (!model) { // debounced
-				return state;
-			}
-			return mergeWithState({ model });
-		}
+		// case constants.ACTION_updateModel: {
+		// 	const model = modelFromGraph(state.graph);
+		// 	if (!model) { // debounced
+		// 		return state;
+		// 	}
+		// 	return mergeWithState({ model });
+		// }
 
 		// case constants.ACTION_loadXML:
 		// 	return state; // noop
 
 		case constants.ACTION_loadXML_DONE: {
 			const {graph, other, metadata} = action.result;
-			return _.assign(
+			return _.merge(
 				{},
 				initialState,
 				{ graph, metadata },
@@ -153,13 +149,6 @@ function reducer(state=initialState, action) {
 			);
 			return state;
 		}
-
-		// case constants.ACTION_addNode: {
-		// 	const {node} = action;
-		// 	let newState = _.merge({}, state);
-		// 	newState.graph = modelHelpers.addNode(newState.graph, node);
-		// 	return newState;
-		// }
 
 		case constants.ACTION_addNodeToGroup: {
 			const {nodeId, groupId} = action;
@@ -181,64 +170,23 @@ function reducer(state=initialState, action) {
 
 		case constants.ACTION_moveNode: {
 			const {nodeId, xy} = action;
-
-			// const node = state.graph.nodes[nodeId];
-			// const newNode = udpate(node, { $merge: xy });
-			// state.graph.nodes[nodeId] = newNode;
-			// return state;
-
-			return update(
-				state,
-				{ graph: { nodes: { [nodeId]: { $merge: xy } } } }
-			);
+			const newGraph = modelHelpers.moveNode(state.graph, nodeId, xy);
+			return mergeWithState({ graph: newGraph });
 		}
 
 		case constants.ACTION_ungroupNode: {
 			const {nodeId} = action;
-
-			// TODO: do this in modelHelpers
-			const groups = R.values(state.graph.groups);
-			const updateGroups = groups
-				.reduce((acc, group) => {
-					if (R.contains(nodeId, group.nodeIds)) {
-						const newNodeIds = R.without([nodeId], group.nodeIds);
-						acc[group.id] = { nodeIds: { $set: newNodeIds } }
-					}
-					return acc;
-				}, {});
-
-			console.log(updateGroups);
-
-			return update(
-				state,
-				{ graph: { groups: updateGroups } }
-			);
+			const newGraph = modelHelpers.ungroupNode(state.graph, nodeId);
+			return mergeWithState({ graph: newGraph });
 		}
 
 		case constants.ACTION_moveGroup: {
 			const {groupId, posDelta} = action;
-
-			const group = state.graph.groups[groupId];
-			const updateNodes = group.nodeIds
-				.reduce((acc, id) => {
-					const node = state.graph.nodes[id];
-					const coords = {
-						x: node.x + posDelta.x,
-						y: node.y + posDelta.y,
-					}
-					acc[id] = { $merge: coords };
-					return acc;
-				}, {});
-
-			return update(
-				state,
-				{ graph: { nodes: updateNodes } }
-			);
+			const newGraph = modelHelpers.moveGroup(state.graph, groupId, posDelta);
+			return mergeWithState({ graph: newGraph });
 		}
 
 		case constants.ACTION_addEdge: {
-			// TODO: do this in modelHelpers
-
 			const {edge} = action;
 
 			if (edge.from === edge.to) {
@@ -246,70 +194,47 @@ function reducer(state=initialState, action) {
 				return state;
 			}
 
-			const newState = mergeWithState(state);
-			newState.graph.edges = [
-				...newState.graph.edges,
-				_.merge(edge, { id: helpers.makeId('edge') })
-				// TODO: use modelHelpers.createEdge()
-			]
-			return newState;
+			const newGraph = modelHelpers.addEdge(state.graph, edge);
+			return mergeWithState({ graph: newGraph });
 		}
 
 		case constants.ACTION_removeEdge: {
-			const {edge} = action;
-			// TODO: do this in modelHelpers
-			const without = R.omit([edge.id], state.graph.edges);
-			return update(
-				state,
-				{ graph: { edges: { $set: without } } }
-			);
+			const {edgeId} = action;
+			const newGraph = modelHelpers.removeEdge(state.graph, edgeId);
+			return mergeWithState({ graph: newGraph });
 		}
 
 		case constants.ACTION_addGroup: {
-			// TODO: do this in modelHelpers
-
 			const {group} = action;
-			const newState = mergeWithState(state);
-			newState.graph.groups = [
-				...newState.graph.groups,
-				_.merge(group, { // TODO: use modelHelpers.createGroup()
-					id: helpers.makeId('group'),
-					name: 'new group', // TODO: should be label
-					nodeIds: []
-				})
-			];
-			return newState;
+			const newGraph = modelHelpers.addGroup(state.graph, group);
+			return mergeWithState({ graph: newGraph });
 		}
 
 		case constants.ACTION_cloneGroup: {
 			const {groupId} = action;
-			const newState = mergeWithState(state);
-			newState.graph = modelHelpers.cloneGroup(newState.graph, groupId);
-			return newState;
+			const newGraph = modelHelpers.cloneGroup(state.graph, groupId);
+			return mergeWithState({ graph: newGraph });
 		}
 
 		case constants.ACTION_removeGroup: {
 			const {groupId, removeNodes} = action;
-			const graph = modelHelpers.removeGroup(
+			const newGraph = modelHelpers.removeGroup(
 				state.graph,
 				groupId,
 				removeNodes
 			);
-			console.log(graph);
-			return mergeWithState({	graph });
+			return mergeWithState({	graph: newGraph });
 		}
 
-		// TODO: fix this
 		case constants.ACTION_updateComponentProperties: {
 			const {componentId, graphComponentType, newProperties} = action;
-			let newState = _.merge({}, state);
-			newState.graph = modelHelpers.updateComponentProperties(
-				newState.graph,
+			const newGraph = modelHelpers.updateComponentProperties(
+				state.graph,
 				graphComponentType,
 				componentId,
 				newProperties
 			);
-			return newState;
+			return mergeWithState({	graph: newGraph });
 		}
 
 		default: {

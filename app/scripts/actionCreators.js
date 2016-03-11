@@ -554,10 +554,10 @@ function addEdge(edge) {
 
 const removeEdge =
 module.exports.removeEdge =
-function removeEdge(edge) {
+function removeEdge(edgeId) {
 	return {
 		type: constants.ACTION_removeEdge,
-		edge
+		edgeId
 	};
 };
 

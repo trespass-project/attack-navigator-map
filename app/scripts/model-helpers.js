@@ -86,7 +86,8 @@ const duplicateGroup =
 module.exports.duplicateGroup =
 function duplicateGroup(group={}, keepId=false) {
 	const defaults = {
-		nodeIds: []
+		nodeIds: [],
+		name: 'new group', // TODO: should be label
 	};
 	return _duplicate(group, defaults, keepId, 'group');
 };
@@ -494,6 +495,62 @@ function removeNode(graph, nodeId) {
 };
 
 
+const addEdge = // TODO: test
+module.exports.addEdge =
+function addEdge(graph, _edge) {
+	const edge = duplicateEdge(_edge);
+	return update(
+		graph,
+		{ edges: { [edge.id]: { $set: edge } } }
+	);
+};
+
+
+const removeEdge = // TODO: test
+module.exports.removeEdge =
+function removeEdge(graph, edgeId) {
+	const without = R.omit([edgeId], graph.edges);
+	return update(
+		graph,
+		{ edges: { $set: without } }
+	);
+};
+
+
+const addGroup = // TODO: test
+module.exports.addGroup =
+function addGroup(graph, _group) {
+	const group = duplicateGroup(_group);
+	return update(
+		graph,
+		{ groups: { [group.id]: { $set: group } } }
+	);
+};
+
+
+const moveGroup = // TODO: test
+module.exports.moveGroup =
+function moveGroup(graph, groupId, deltaXY) {
+	const group = graph.groups[groupId];
+
+	const updateNodes = group.nodeIds
+		.reduce((acc, id) => {
+			const node = graph.nodes[id];
+			const coords = {
+				x: node.x + deltaXY.x,
+				y: node.y + deltaXY.y,
+			}
+			acc[id] = { $merge: coords };
+			return acc;
+		}, {});
+
+	return update(
+		graph,
+		{ nodes: updateNodes }
+	);
+};
+
+
 const removeGroup =
 module.exports.removeGroup =
 function removeGroup(graph, groupId, removeNodes=false) {
@@ -566,6 +623,36 @@ function addNodeToGroup(graph, nodeId, groupId) {
 	return update(
 		graph,
 		{ groups: { [groupId]: { nodeIds: { $set: newNodeIds } } } }
+	);
+};
+
+
+const moveNode = // TODO: test
+module.exports.moveNode =
+function moveNode(graph, nodeId, xy) {
+	return update(
+		graph,
+		{ nodes: { [nodeId]: { $merge: xy } } }
+	);
+};
+
+
+const ungroupNode = // TODO: test
+module.exports.ungroupNode =
+function ungroupNode(graph, nodeId) {
+	const groups = R.values(graph.groups);
+	const updateGroups = groups
+		.reduce((acc, group) => {
+			if (R.contains(nodeId, group.nodeIds)) {
+				const newNodeIds = R.without([nodeId], group.nodeIds);
+				acc[group.id] = { nodeIds: { $set: newNodeIds } }
+			}
+			return acc;
+		}, {});
+
+	return update(
+		graph,
+		{ groups: updateGroups }
 	);
 };
 
