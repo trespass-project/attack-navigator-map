@@ -109,7 +109,10 @@ const store = createStoreWithMiddleware(reducer);
 
 function mapStateToProps(state) {
 	// flatten one level
-	return _.assign.apply(null, [{}].concat(R.values(state)));
+	return _.assign.apply(
+		null,
+		[{}].concat(R.values(state))
+	);
 }
 
 App = DragDropContext(HTML5Backend)(App);

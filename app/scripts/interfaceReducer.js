@@ -29,7 +29,8 @@ const initialState = {
 	showGroups: true,
 	contextMenu: null,
 
-	selected: null,
+	selectedId: null,
+	selectedType: null,
 
 	editorElem: null,
 	editorTransformElem: null,
@@ -124,13 +125,12 @@ function reducer(state=initialState, action) {
 			return mergeWithState({editorElem, editorTransformElem, editorElemSize});
 		}
 
-		case constants.ACTION_select:
+		case constants.ACTION_select: {
 			return mergeWithState({
-				selected: {
-					componentId: action.componentId,
-					graphComponentType: action.graphComponentType,
-				},
+				selectedId: action.componentId,
+				selectedType: action.graphComponentType,
 			});
+		}
 
 		case constants.ACTION_showContextMenu:
 		case constants.ACTION_hideContextMenu:

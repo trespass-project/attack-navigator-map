@@ -9,21 +9,32 @@ const helpers = require('./helpers.js');
 const constants = require('./constants.js');
 
 
-const modelComponents =
-module.exports.modelComponents =
+const collectionNames =
+module.exports.collectionNames =
 trespass.model.collectionNames;
 
-const modelComponentsSingular =
-module.exports.modelComponentsSingular =
+const collectionNamesSingular =
+module.exports.collectionNamesSingular =
 trespass.model.collectionNamesSingular;
 
 const nonDirectedRelationTypes =
 module.exports.nonDirectedRelationTypes =
 ['network', 'connects'];
 
-const nonGraphModelComponents =
-module.exports.nonGraphModelComponents =
+const nonGraphCollectionNames =
+module.exports.nonGraphCollectionNames =
 ['predicates', 'policies', 'processes'];
+
+const graphComponentSingular =
+module.exports.graphComponentSingular = {
+	'nodes': 'node',
+	'edges': 'edge',
+	'groups': 'group',
+};
+
+const graphComponentPlural =
+module.exports.graphComponentPlural =
+R.invertObj(graphComponentSingular);
 
 const origin = { x: 0, y: 0 };
 
@@ -261,8 +272,7 @@ module.exports.XMLModelToGraph =
 function XMLModelToGraph(xmlStr, done) {
 	trespass.model.parse(xmlStr, (err, model) => {
 		if (err) { return done(err); }
-		const {graph, other} = graphFromModel(model);
-		done(null, graph, other);
+		done(null, graphFromModel(model));
 	});
 };
 
@@ -286,11 +296,11 @@ function layoutGraphByType(_graph) {
 	let groupIndex = -1;
 
 	// create groups for the different types
-	modelComponents
+	collectionNames
 		.forEach((collectionName) => {
 			const selection = R.values(graph.nodes)
 				.filter((node) => {
-					return (node.modelComponentType === modelComponentsSingular[collectionName]);
+					return (node.modelComponentType === collectionNamesSingular[collectionName]);
 				});
 
 			if (!selection.length) {
@@ -319,7 +329,7 @@ function layoutGraphByType(_graph) {
 					colCounter++;
 				}
 				node.label = node.id;
-				node.modelComponentType = modelComponentsSingular[collectionName];
+				node.modelComponentType = collectionNamesSingular[collectionName];
 				node.x = xOffset + colCounter * spacing;
 				node.y = yOffset + rowCounter * spacing + ((isShifted) ? 0 : 20);
 				rowCounter++;
@@ -367,17 +377,17 @@ function graphFromModel(model) {
 		});
 
 	// set model component type
-	const nonEdges = R.without(['edges'], modelComponents);
+	const nonEdges = R.without(['edges'], collectionNames);
 	nonEdges
 		.forEach((collectionName) => {
 			model.system[collectionName]
 				.forEach((item) => {
-					item.modelComponentType = modelComponentsSingular[collectionName];
+					item.modelComponentType = collectionNamesSingular[collectionName];
 				});
 		});
 
-	const nonGraphComponents = [...nonGraphModelComponents, 'edges'];
-	R.without(nonGraphComponents, modelComponents)
+	const nonGraphComponents = [...nonGraphCollectionNames, 'edges'];
+	R.without(nonGraphComponents, collectionNames)
 		.forEach((collectionName) => {
 			// TODO: warn or s.th.
 			const coll = (_.isArray(model.system[collectionName]))
@@ -386,7 +396,7 @@ function graphFromModel(model) {
 			graph = update(graph, { nodes: { $merge: coll } });
 		});
 
-	const other = nonGraphModelComponents
+	const other = nonGraphCollectionNames
 		.reduce((result, collectionName) => {
 			result[collectionName] = model.system[collectionName];
 			return result;
@@ -402,19 +412,26 @@ function graphFromModel(model) {
 			return result;
 		}, []);
 
-	other.modelId = model.system.id;
+	const metadata = R.pick(trespass.model.knownAttributes.system, model.system);
 
-	return {graph, other};
+	return {graph, other, metadata};
 };
 
 
 const modelFromGraph =
 module.exports.modelFromGraph =
-function modelFromGraph(graph) {
+function modelFromGraph(graph, metadata={}) {
 	const model = trespass.model.create();
 
 	// embed entire graph in model
 	model.system.anm_data = JSON.stringify(graph);
+
+	// include metadata
+	model.system = _.merge(
+		{},
+		model.system,
+		metadata
+	);
 
 	R.values(graph.edges || {})
 		.forEach((edge) => {
@@ -612,14 +629,7 @@ function inferEdgeType(fromType, toType) {
 const updateComponentProperties =
 module.exports.updateComponentProperties =
 function updateComponentProperties(graph, graphComponentType, componentId, newProperties) {
-	const pluralToSingular = {
-		'nodes': 'node',
-		'edges': 'edge',
-		'groups': 'group',
-	};
-	const singularToPlural = R.invertObj(pluralToSingular);
-	const collectionName = singularToPlural[graphComponentType];
-
+	const collectionName = graphComponentPlural[graphComponentType];
 	const item = graph[collectionName][componentId];
 	const updatedItem = update(item, { $merge: newProperties });
 

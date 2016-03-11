@@ -78,7 +78,7 @@ const constants = {
 	ACTION_loadRelationTypes: 'ACTION_loadRelationTypes',
 	ACTION_loadRelationTypes_DONE: 'ACTION_loadRelationTypes_DONE',
 
-	CLONE_OFFSET: 100,
+	CLONE_OFFSET: 70,
 };
 
 

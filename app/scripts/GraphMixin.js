@@ -58,7 +58,7 @@ const GraphMixin = {
 			{...props}
 			key={group.id}
 			hovered={props.hoverGroup && (group.id === props.hoverGroup.id)}
-			selected={props.selected && (group.id === props.selected.componentId)}
+			selected={group.id === props.selectedId}
 			group={group}
 			x={bounds.minX}
 			y={bounds.minY}
@@ -77,7 +77,7 @@ const GraphMixin = {
 			{...props}
 			key={index}
 			edge={edge}
-			selected={props.selected && (edge.id === props.selected.componentId)}
+			selected={edge.id === props.selectedId}
 			preview={isPreview} />;
 	},
 
@@ -87,7 +87,7 @@ const GraphMixin = {
 			{...this.props}
 			key={index}
 			hovered={props.hoverNodeId && (node.id === props.hoverNodeId)}
-			selected={props.selected && (node.id === props.selected.componentId)}
+			selected={node.id === props.selectedId}
 			x={node.x}
 			y={node.y}
 			node={node} />;

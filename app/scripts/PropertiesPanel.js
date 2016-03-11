@@ -22,7 +22,8 @@ const PropertiesPanel = React.createClass({
 	propTypes: {
 		id: React.PropTypes.string.isRequired,
 		graph: React.PropTypes.object.isRequired,
-		selected: React.PropTypes.object/*.isRequired*/,
+		selectedId: React.PropTypes.string/*.isRequired*/,
+		selectedType: React.PropTypes.string/*.isRequired*/,
 
 		relationTypes: React.PropTypes.array.isRequired,
 	},
@@ -34,11 +35,11 @@ const PropertiesPanel = React.createClass({
 	},
 
 	onChange: function(selected, event) {
-		let newProperties = { [event.target.name]: event.target.value };
+		const newProperties = { [event.target.name]: event.target.value };
 		this.context.dispatch(
 			actionCreators.updateComponentProperties(
-				selected.componentId,
-				selected.graphComponentType,
+				selected.selectedId,
+				selected.selectedType,
 				newProperties
 			)
 		);
@@ -49,8 +50,9 @@ const PropertiesPanel = React.createClass({
 	},
 
 	renderTypeOptions: function() {
-		return R.without(['edges'], modelHelpers.collectionNames)
-			.map(function(typePlural) {
+		const nonEdgeCollectionNames = R.without(['edges'], modelHelpers.collectionNames);
+		return nonEdgeCollectionNames
+			.map((typePlural) => {
 				const type = modelHelpers.collectionNamesSingular[typePlural];
 				return <option key={type} value={type}>{type}</option>;
 			});
@@ -63,11 +65,15 @@ const PropertiesPanel = React.createClass({
 			return null;
 		}
 
-		const onChange = (props.selected)
-			? R.partial(this.onChange, [props.selected])
+		const arg = {
+			selectedId: props.selectedId,
+			selectedType: props.selectedType,
+		};
+		const onChange = (props.selectedId)
+			? R.partial(this.onChange, [arg])
 			: null;
 
-		switch (props.selected.graphComponentType) {
+		switch (props.selectedType) {
 			case 'node':
 				const node = selectedItem;
 				const groupNames = modelHelpers.getNodeGroups(node.id, props.graph.groups)
@@ -187,27 +193,16 @@ const PropertiesPanel = React.createClass({
 	},
 
 	render: function() {
-		let state = this.state;
 		const props = this.props;
 
 		let selectedItem;
-		let graphComponentType;
-		let componentId;
-
-		if (props.selected) {
-			graphComponentType = props.selected.graphComponentType;
-			componentId = props.selected.componentId;
-
-			const list = {
-				'node': props.graph.nodes,
-				'edge': props.graph.edges,
-				'group': props.graph.groups,
-			}[graphComponentType] || [];
-			selectedItem = helpers.getItemById(list, componentId);
+		if (props.selectedId /*&& props.selectedType*/) {
+			const collectionName = modelHelpers.graphComponentPlural[props.selectedType];
+			selectedItem = props.graph[collectionName][props.selectedId];
 		}
 
 		const selectedType = (selectedItem)
-			? graphComponentType || '(unknown type)'
+			? props.selectedType || '(unknown type)'
 			: '';
 
 		return (
@@ -220,7 +215,7 @@ const PropertiesPanel = React.createClass({
 						<span className='disabled'>
 							{(!selectedItem)
 								? 'nothing selected'
-								: this.renderProperties(selectedItem, graphComponentType)}
+								: this.renderProperties(selectedItem, props.selectedType)}
 						</span>
 						{(!selectedItem)
 							? null
@@ -237,7 +232,7 @@ const PropertiesPanel = React.createClass({
 	renderKnowledgebase: function(selectedItem) {
 		const props = this.props;
 
-		if (props.selected.graphComponentType !== 'node') {
+		if (props.selectedType !== 'node') {
 			return null;
 		}
 

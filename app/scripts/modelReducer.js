@@ -12,7 +12,7 @@ const constants = require('./constants.js');
 
 const initialState = {
 	metadata: {
-		id: undefined,
+		id: null,
 	},
 
 	graph: {
@@ -20,6 +20,8 @@ const initialState = {
 		edges: {},
 		groups: {},
 	},
+
+	// other
 	predicates: {},
 	// ...
 };
@@ -135,7 +137,7 @@ function reducer(state=initialState, action) {
 
 		case constants.ACTION_loadXML_DONE: {
 			const {graph, other, metadata} = action.result;
-			return _.merge(
+			return _.assign(
 				{},
 				initialState,
 				{ graph, metadata },
@@ -179,6 +181,12 @@ function reducer(state=initialState, action) {
 
 		case constants.ACTION_moveNode: {
 			const {nodeId, xy} = action;
+
+			// const node = state.graph.nodes[nodeId];
+			// const newNode = udpate(node, { $merge: xy });
+			// state.graph.nodes[nodeId] = newNode;
+			// return state;
+
 			return update(
 				state,
 				{ graph: { nodes: { [nodeId]: { $merge: xy } } } }
@@ -248,13 +256,13 @@ function reducer(state=initialState, action) {
 		}
 
 		case constants.ACTION_removeEdge: {
-			// TODO: do this in modelHelpers
-
 			const {edge} = action;
-			const newState = mergeWithState(state);
-			newState.graph.edges = state.graph.edges
-				.filter(e => edge.id !== e.id);
-			return newState;
+			// TODO: do this in modelHelpers
+			const without = R.omit([edge.id], state.graph.edges);
+			return update(
+				state,
+				{ graph: { edges: { $set: without } } }
+			);
 		}
 
 		case constants.ACTION_addGroup: {

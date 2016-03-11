@@ -517,12 +517,13 @@ function loadXML(xmlString) {
 		});
 
 		modelHelpers.XMLModelToGraph(xmlString, (err, result) => {
-			const {graph, other, metadata} = result;
 			if (err) { return; }
 
-			modelHelpers.layoutGraphByType(graph);
+			result.graph = modelHelpers.layoutGraphByType(result.graph);
 
-			dispatch( initMap(other.modelId) );
+			dispatch(
+				initMap(result.metadata.id)
+			);
 			dispatch({
 				type: constants.ACTION_loadXML_DONE,
 				result

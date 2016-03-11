@@ -103,10 +103,11 @@ const Wizard = React.createClass({
 	renderProperties: function(props) {
 		return <PropertiesPanel
 			id='propspanel'
-			key={`propspanel-${((props.selected)
-				? props.selected.componentId
+			key={`propspanel-${((props.selectedId)
+				? props.selectedId
 				: '')}`}
-			selected={props.selected}
+			selectedId={props.selectedId}
+			selectedType={props.selectedType}
 			graph={props.graph}
 			relationTypes={props.relationTypes}
 			componentTypes={props.componentTypes}
@@ -185,7 +186,7 @@ const Wizard = React.createClass({
 		return <div>
 			<h2 className='title'>Connections</h2>
 			<PredicateEditor
-				nodeNames={props.nodeNames}
+				nodeNames={R.values(props.graph.nodes).map(R.prop('label'))}
 				predicatesLib={props.predicatesLib || predicatesLib}
 				predicates={props.predicates || {}}
 			/>
