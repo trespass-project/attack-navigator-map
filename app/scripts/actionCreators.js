@@ -688,7 +688,7 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 	return function(dispatch, getState) {
 		const state = getState();
 		const toolChains = state.interface.toolChains;
-		const toolChainData = helpers.getItemById(toolChains, toolChainId);
+		const toolChainData = toolChains[toolChainId];
 		console.log(toolChainData);
 		if (!toolChainData) {
 			throw new Error('Tool chain not found.');
@@ -779,7 +779,7 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 				console.log('->', data);
 			})
 			.catch((err) => {
-				console.dir(err);
+				console.error(err.stack);
 			});
 
 		dispatch({
