@@ -12,15 +12,14 @@ const PropertiesPanel = require('./PropertiesPanel.js');
 const GraphOutline = require('./GraphOutline.js');
 const Library = require('./components/Library/Library.js');
 
-const Loader = require('react-loader');
 const OverlayTrigger = require('react-bootstrap').OverlayTrigger;
 const Tooltip = require('react-bootstrap').Tooltip;
 
+const ToolChainOverlay = require('./ToolChainOverlay.js');
 const PredicateEditor = require('./PredicateEditor.js');
 const AttackerProfileEditor = require('./AttackerProfileEditor/AttackerProfileEditorLanguage.js');
 
 const predicatesLib = helpers.normalize(require('../data/predicate-lib.json')).items;
-
 
 
 function handleAdd() {
@@ -429,32 +428,10 @@ const Wizard = React.createClass({
 			return null;
 		}
 
-		const toolChain = props.toolChains[props.toolChainId];
-		// console.log(toolChain);
-
-		return <div id='task-overlay'>
-			<div>{/* TODO: display / link to intermediate results */}
-				{(!toolChain)
-					? 'Tool chain not found.'
-					: toolChain.tools
-						.map(R.prop('name'))
-						.map((name, index) => {
-							return <h3 key={name}>{name} ...</h3>;
-						})
-				}
-				<Loader
-					loaded={false}
-					length={7}
-					lines={10}
-					radius={15}>
-				</Loader>
-				<h3>
-					<a href='http://lustlab.net/dev/trespass/visualizations/analytics5/' target='_blank'>
-						Visualise results
-					</a>
-				</h3>
-			</div>
-		</div>;
+		return <ToolChainOverlay
+			toolChain={props.toolChains[props.toolChainId]}
+		>
+		</ToolChainOverlay>;
 	},
 
 	clickFileButton: function(event) {
