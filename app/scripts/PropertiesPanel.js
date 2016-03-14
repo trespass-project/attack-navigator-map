@@ -251,18 +251,21 @@ const PropertiesPanel = React.createClass({
 				.map((attr) => {
 					return <div key={attr.id}>
 						{attr.label}:&nbsp;
-						<select>
-							{attr.values
-								.map((value) => {
-									return <option
-										key={value['@id']}
-										value={value['@id']}
-									>
-										{value['@label']}
-									</option>;
-								})
-							}
-						</select>
+						{(!!attr.values)
+							? <select>
+								{(attr.values || [])
+									.map((value) => {
+										return <option
+											key={value['@id']}
+											value={value['@id']}
+										>
+											{value['@label']}
+										</option>;
+									})
+								}
+							</select>
+							: <input type="text" />
+						}
 					</div>;
 				})
 			}

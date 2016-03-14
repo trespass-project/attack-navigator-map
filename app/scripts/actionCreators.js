@@ -928,9 +928,11 @@ function loadComponentTypes() {
 									return [...acc, {
 										id: attr['@id'],
 										label: attr['@label'],
-										values: attr['tkb:values'],
+										values: (!attr['tkb:mvalues'])
+											? null
+											: attr['tkb:mvalues']['@list'],
 									}];
-								}),
+								}, []),
 
 							// TODO: rest
 						};
