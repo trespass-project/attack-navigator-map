@@ -689,7 +689,7 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 		const state = getState();
 		const toolChains = state.interface.toolChains;
 		const toolChainData = toolChains[toolChainId];
-		console.log(toolChainData);
+
 		if (!toolChainData) {
 			throw new Error('Tool chain not found.');
 			return;
@@ -764,15 +764,16 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 		const callbacks = {
 			// onToolChainStart: () => {},
 			// onToolChainEnd: () => {},
-			onToolStart: (toolId) => {
-				console.log('onToolStart', toolId);
+			onToolStart: (toolData) => {
+				console.log('————————————————————');
+				console.log(toolData.name);
 			},
-			// onToolEnd: (toolId) => {
-			// 	console.log('onToolEnd', toolId);
+			// onToolEnd: (toolData) => {
+			// 	console.log('onToolEnd', toolData.name);
 			// },
-			// onTaskStatus: (taskStatusData) => {
-			// 	console.log('onTaskStatus', taskStatusData);
-			// },
+			onTaskStatus: (taskStatusData) => {
+				console.log('  ', taskStatusData.status);
+			},
 		}
 		toolsApi.runToolChain(fetch, toolChainData, callbacks, params)
 			.then((data) => {
