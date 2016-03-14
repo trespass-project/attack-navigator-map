@@ -247,7 +247,7 @@ const PropertiesPanel = React.createClass({
 		}
 
 		return <div>
-			{(kb.attributes || {})
+			{(kb.attributes || [])
 				.map((attr) => {
 					return <div key={attr.id}>
 						{attr.label}:&nbsp;
