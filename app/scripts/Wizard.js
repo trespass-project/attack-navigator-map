@@ -414,7 +414,7 @@ const Wizard = React.createClass({
 	runAnalysis: function() {
 		const dlScenarioCheckbox = this.refs['checkbox-dl-scenario'];
 		const select = this.refs.toolchain;
-		// watch out: value comes back as string
+		// watch out: (numeric) value comes back as string
 		this.context.dispatch(
 			actionCreators.runAnalysis(
 				parseInt(select.value, 10),

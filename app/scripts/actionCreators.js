@@ -2,6 +2,7 @@
 
 const $ = require('jquery');
 const Q = require('q');
+require('whatwg-fetch');
 const R = require('ramda');
 const _ = require('lodash');
 const JSZip = require('jszip');
@@ -684,8 +685,15 @@ function putModelAndScenarioIntoKnowledgebase(modelId, modelData, scenarioData) 
 const runAnalysis =
 module.exports.runAnalysis =
 function runAnalysis(toolChainId, downloadScenario=false) {
-	return (dispatch, getState) => {
+	return function(dispatch, getState) {
 		const state = getState();
+		const toolChains = state.interface.toolChains;
+		const toolChainData = helpers.getItemById(toolChains, toolChainId);
+		console.log(toolChainData);
+		if (!toolChainData) {
+			throw new Error('Tool chain not found.');
+			return;
+		}
 
 		// collect relevant data
 		const data = R.pick([
@@ -735,7 +743,7 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 		);
 
 		// zip it!
-		let zip = new JSZip();
+		const zip = new JSZip();
 		zip.file(modelFileName, modelXmlStr);
 		zip.file(scenarioFileName, scenarioXmlStr);
 		const blob = zip.generate({ type: 'blob' });
@@ -747,88 +755,32 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 		}
 
 		// start tool chain
-		let formData = new FormData();
+		const formData = new FormData();
 		formData.append('file', blob, zipFileName);
-		const params = _.merge(
-			{
-				dataType: 'json',
-				url: api.makeUrl(toolsApi, `secured/tool-chain/${toolChainId}/run`),
-				data: formData,
+		const params = {
+			method: 'post',
+			body: formData
+		};
+		const callbacks = {
+			// onToolChainStart: () => {},
+			// onToolChainEnd: () => {},
+			onToolStart: (toolId) => {
+				console.log('onToolStart', toolId);
 			},
-			api.requestOptions.jquery.crossDomain,
-			api.requestOptions.jquery.withCredentials,
-			api.requestOptions.jquery.fileUpload
-		);
-		const req = $.ajax(params);
-
-		// wait for it to finish
-		Q(req) // TODO: make this reusable, as part of trespass.api
-			.then((runData) => {
-				if (runData.error) {
-					alert(runData.error);
-					console.error(runData.error);
-					return;
-				}
-
-				console.log(runData);
-				const taskId = runData.id;
-
-				// then, wait for result to become available:
-				const url = api.makeUrl(toolsApi, `secured/task/${taskId}/status`);
-				// const url = api.makeUrl(toolsApi, `secured/task/${taskId}`);
-				const params = _.merge(
-					{ url, dataType: 'json' },
-					api.requestOptions.jquery.crossDomain,
-					api.requestOptions.jquery.withCredentials
-				);
-				const retryRate = 1000;
-				const intervalId = setInterval(() => {
-					Q($.ajax(params))
-						.then((taskData) => {
-							switch (taskData.status) {
-								case 'error':
-								case 'rejected':
-								case 'task_not_found':
-								case 'app_not_found': {
-									clearInterval(intervalId);
-									alert(taskData.status);
-									console.error(taskData);
-									break;
-								}
-
-								case 'abort': {
-									clearInterval(intervalId);
-									break;
-								}
-
-								case 'pending':
-								case 'processing': {
-									// do nothing
-									break;
-								}
-
-								case 'done': {
-									clearInterval(intervalId);
-									console.log(taskData);
-									// TODO:
-									// dispatch({
-									// 	type: constants.API_UPDATE_TASK_DATA,
-									// 	taskData: _.merge(taskData, { error: null })
-									// });
-									break;
-								}
-
-								default: {
-									clearInterval(intervalId);
-									// TODO: what?
-									break;
-								}
-							}
-						});
-				}, retryRate);
+			// onToolEnd: (toolId) => {
+			// 	console.log('onToolEnd', toolId);
+			// },
+			// onTaskStatus: (taskStatusData) => {
+			// 	console.log('onTaskStatus', taskStatusData);
+			// },
+		}
+		toolsApi.runToolChain(fetch, toolChainData, callbacks, params)
+			.then((data) => {
+				console.log('->', data);
 			})
-			.catch(handleError);
-
+			.catch((err) => {
+				console.dir(err);
+			});
 
 		dispatch({
 			type: constants.ACTION_runAnalysis,
