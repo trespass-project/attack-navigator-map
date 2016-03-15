@@ -76,16 +76,22 @@ const Edge = React.createClass({
 	},
 
 	propTypes: {
+		// TODO: remove graph dependency
+		graph: React.PropTypes.object.isRequired,
 		edge: React.PropTypes.object.isRequired,
-		theme: React.PropTypes.object.isRequired,
 		isSelected: React.PropTypes.bool,
 		isPreview: React.PropTypes.bool,
+		showEdgeLabels: React.PropTypes.bool,
+
+		// TODO: context
+		theme: React.PropTypes.object.isRequired,
 	},
 
 	getDefaultProps: function() {
 		return {
 			isPreview: false,
 			isSelected: false,
+			showEdgeLabels: true,
 		};
 	},
 

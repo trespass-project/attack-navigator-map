@@ -74,8 +74,9 @@ const GraphMixin = {
 	renderEdge: function(edge, index, collection, isPreview) {
 		const props = this.props;
 		return <Edge
-			{...props}
 			key={index}
+			theme={props.theme}
+			graph={props.graph}
 			edge={edge}
 			isSelected={edge.id === props.selectedId}
 			isPreview={isPreview} />;
