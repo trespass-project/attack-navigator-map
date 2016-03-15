@@ -34,16 +34,18 @@ const Node = React.createClass({
 	propTypes: {
 		x: React.PropTypes.number.isRequired,
 		y: React.PropTypes.number.isRequired,
-		hovered: React.PropTypes.bool,
-		selected: React.PropTypes.bool,
-		theme: React.PropTypes.object.isRequired,
+		isHovered: React.PropTypes.bool,
+		isSelected: React.PropTypes.bool,
 		node: React.PropTypes.object.isRequired,
+
+		// TODO: context
+		theme: React.PropTypes.object.isRequired,
 	},
 
 	getDefaultProps: function() {
 		return {
-			selected: false,
-			hovered: false,
+			isSelected: false,
+			isHovered: false,
 		};
 	},
 
@@ -76,7 +78,7 @@ const Node = React.createClass({
 		// DON'T TOUCH THIS!
 		// trying to 'clean this up' resulted in dragging edges
 		// not working anymore, previously.
-		const portStyle = (!props.hovered)
+		const portStyle = (!props.isHovered)
 			? { display: 'none' }
 			: {};
 
@@ -90,7 +92,7 @@ const Node = React.createClass({
 				onMouseLeave={this._handleHoverOut}>
 				<g ref='dragRoot'>
 					<rect
-						className={classnames('node', { 'hover': props.hovered, 'selected': props.selected })}
+						className={classnames('node', { 'hover': props.isHovered, 'selected': props.isSelected })}
 						x={-radius}
 						y={-radius}
 						rx={props.theme.node.cornerRadius}
