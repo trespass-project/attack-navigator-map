@@ -134,11 +134,15 @@ const Group = React.createClass({
 	},
 
 	_handleHover: function(event) {
-		this.context.dispatch( actionCreators.setHoverGroup(this.props.group.id) );
+		this.context.dispatch(
+			actionCreators.setHoverGroup(this.props.group.id)
+		);
 	},
 
 	_handleHoverOut: function(event) {
-		this.context.dispatch( actionCreators.setHoverGroup(null) );
+		this.context.dispatch(
+			actionCreators.setHoverGroup(null)
+		);
 	},
 
 	_onContextMenu: function(event) {
@@ -203,7 +207,9 @@ const Group = React.createClass({
 			const aspectRatio = w / h;
 			// const dataURI = `data:image/svg+xml;utf8,${svg}`;
 			const dataURI = `data:image/svg+xml;base64,${btoa(svg)}`;
-			this.context.dispatch( actionCreators.addGroupBackgroundImage(props.group.id, dataURI, aspectRatio, w) );
+			this.context.dispatch(
+				actionCreators.addGroupBackgroundImage(props.group.id, dataURI, aspectRatio, w)
+			);
 		};
 		// reader.readAsDataURL(file);
 		reader.readAsText(file);
@@ -214,15 +220,21 @@ const Group = React.createClass({
 	_onClick: function(event) {
 		event.preventDefault();
 		event.stopPropagation();
-		this.context.dispatch( actionCreators.select(this.props.group.id, 'group') );
+		this.context.dispatch(
+			actionCreators.select(this.props.group.id, 'group')
+		);
 	},
 
 	_onMouseOver: function(event) {
-		this.context.dispatch( actionCreators.setHoverGroup(this.props.group.id) );
+		this.context.dispatch(
+			actionCreators.setHoverGroup(this.props.group.id)
+		);
 	},
 
 	_onMouseOut: function(event) {
-		this.context.dispatch( actionCreators.setHoverGroup(null) );
+		this.context.dispatch(
+			actionCreators.setHoverGroup(null)
+		);
 	},
 
 	_onDragStart: function(event) {
