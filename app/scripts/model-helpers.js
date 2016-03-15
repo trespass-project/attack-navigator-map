@@ -825,20 +825,4 @@ function updateComponentProperties(graph, graphComponentType, componentId, newPr
 	);
 
 	return g;
-
-	list = list.map((item) => {
-		if (item.id === componentId) {
-			if (graphComponentType === 'edge') {
-				newProperties.directed = // TODO: should this be here, or should Edge know how to draw different relations
-					(R.contains((newProperties.relation || item.relation), nonDirectedRelationTypes))
-						? false
-						: true;
-			}
-			return _.merge(item, newProperties);
-		} else {
-			return item;
-		}
-	});
-
-	return graph;
 };

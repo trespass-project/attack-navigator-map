@@ -3,6 +3,7 @@
 const React = require('react');
 const reactDOM = require('react-dom');
 // const d3 = require('d3');
+const R = require('ramda');
 const mout = require('mout');
 const classnames = require('classnames');
 const icons = require('./icons.js');
@@ -134,10 +135,12 @@ const Edge = React.createClass({
 			return null;
 		}
 
-		let { p1, c1, c2, p2 } = diagonalBezier(edgeNodes.fromNode, edgeNodes.toNode);
+		const { p1, c1, c2, p2 } = diagonalBezier(edgeNodes.fromNode, edgeNodes.toNode);
+
+		const isDirected = !R.contains(edge.relation, modelHelpers.nonDirectedRelationTypes);
 
 		let arrow = null;
-		if (edge.directed) {
+		if (/*edge.directed*/ isDirected) {
 			const arrowPosition = bezierPoint(p1, c1, c2, p2, 0.75);
 			const size = 10;
 			const x = arrowPosition.x;
@@ -148,11 +151,11 @@ const Edge = React.createClass({
 			let angleDeg = vectorAngle(edgeNodes.toNode.x - edgeNodes.fromNode.x, edgeNodes.toNode.y - edgeNodes.fromNode.y);
 			angleDeg = radians(angleDeg);
 
-			arrow = (
-				<g transform={`translate(${x}, ${y}) rotate(${angleDeg})`} fill='white'>
-					<path d={arrowShape} />
-				</g>
-			);
+			arrow = <g
+				transform={`translate(${x}, ${y}) rotate(${angleDeg})`}
+				fill='white'>
+				<path d={arrowShape} />
+			</g>;
 		}
 
 		return (
