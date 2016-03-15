@@ -24,12 +24,15 @@ const DragDropContext = require('react-dnd').DragDropContext;
 
 let App = React.createClass({
 	childContextTypes: {
+		theme: React.PropTypes.object,
 		dispatch: React.PropTypes.func,
 	},
 
 	getChildContext: function() {
+		const props = this.props;
 		return {
-			dispatch: this.props.dispatch,
+			theme: props.theme,
+			dispatch: props.dispatch,
 		};
 	},
 

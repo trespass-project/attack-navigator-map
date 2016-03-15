@@ -12,6 +12,7 @@ const ResizeElem = React.createClass({
 	mixins: [SchleppMixin],
 
 	contextTypes: {
+		theme: React.PropTypes.object,
 		dispatch: React.PropTypes.func,
 	},
 
@@ -60,6 +61,7 @@ const Group = React.createClass({
 	mixins: [SchleppMixin],
 
 	contextTypes: {
+		theme: React.PropTypes.object,
 		dispatch: React.PropTypes.func,
 	},
 
@@ -69,7 +71,6 @@ const Group = React.createClass({
 		group: React.PropTypes.object.isRequired,
 		width: React.PropTypes.number.isRequired,
 		height: React.PropTypes.number.isRequired,
-		theme: React.PropTypes.object.isRequired,
 	},
 
 	getDefaultProps: function() {
@@ -81,11 +82,13 @@ const Group = React.createClass({
 
 	render: function() {
 		const props = this.props;
+		const context = this.context;
+
 		if (!props.showImages || !props.showGroups) { return null; }
 
 		// TODO: DRY
 		let bounds = helpers.getGroupBBox(props.graph.nodes, props.group);
-		const halfNodeSize = props.theme.node.size * 0.5;
+		const halfNodeSize = context.theme.node.size * 0.5;
 		bounds.minX -= halfNodeSize;
 		bounds.minY -= halfNodeSize;
 		bounds.maxX += halfNodeSize;

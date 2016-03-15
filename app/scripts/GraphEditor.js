@@ -22,6 +22,7 @@ let GraphEditor = React.createClass({
 	],
 
 	contextTypes: {
+		// theme: React.PropTypes.object,
 		dispatch: React.PropTypes.func,
 	},
 

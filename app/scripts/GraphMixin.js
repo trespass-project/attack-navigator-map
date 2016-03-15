@@ -14,6 +14,10 @@ const Edge = require('./Edge.js');
 
 
 const GraphMixin = {
+	contextTypes: {
+		theme: React.PropTypes.object,
+	},
+
 	propTypes: {
 		graph: React.PropTypes.object.isRequired,
 		editable: React.PropTypes.bool.isRequired,
@@ -32,10 +36,11 @@ const GraphMixin = {
 
 	renderGroup: function(group) {
 		const props = this.props;
+		const context = this.context;
 
 		let bounds = null;
 		const extraPadding = 5;
-		const s = (props.theme.node.size * 0.5) + (2 * extraPadding);
+		const s = (context.theme.node.size * 0.5) + (2 * extraPadding);
 
 		if (group.nodeIds.length === 0) {
 			const xOffset = group.x || 0;
@@ -73,9 +78,10 @@ const GraphMixin = {
 
 	renderEdge: function(edge, index, collection, isPreview) {
 		const props = this.props;
+		const context = this.context;
 		return <Edge
 			key={index}
-			theme={props.theme}
+			theme={context.theme}
 			graph={props.graph}
 			edge={edge}
 			isSelected={edge.id === props.selectedId}
@@ -107,13 +113,13 @@ const GraphMixin = {
 
 	renderVisibleRect: function() {
 		const props = this.props;
-
+		const context = this.context;
 		if (props.isMinimap && props.visibleRect) {
 			return (
 				<g transform={`translate(${props.visibleRect.x}, ${props.visibleRect.y})`}>
 					<rect
 						className='minimap-visible-rect'
-						strokeWidth={props.theme.minimap.viewport.strokeWidth / props.constantScale}
+						strokeWidth={context.theme.minimap.viewport.strokeWidth / props.constantScale}
 						width={props.visibleRect.width}
 						height={props.visibleRect.height}>
 					</rect>

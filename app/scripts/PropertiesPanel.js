@@ -16,6 +16,7 @@ const knowledgebaseApi = api.knowledgebase;
 
 const PropertiesPanel = React.createClass({
 	contextTypes: {
+		// theme: React.PropTypes.object,
 		dispatch: React.PropTypes.func,
 	},
 
@@ -24,7 +25,6 @@ const PropertiesPanel = React.createClass({
 		graph: React.PropTypes.object.isRequired,
 		selectedId: React.PropTypes.string/*.isRequired*/,
 		selectedType: React.PropTypes.string/*.isRequired*/,
-
 		relationTypes: React.PropTypes.array.isRequired,
 	},
 

@@ -9,6 +9,10 @@ const Graph = require('./Graph.js');
 
 
 const GraphMinimap = React.createClass({
+	contextTypes: {
+		theme: React.PropTypes.object,
+	},
+
 	propTypes: {
 		constantScale: React.PropTypes.number,
 	},
@@ -19,6 +23,7 @@ const GraphMinimap = React.createClass({
 
 	render: function() {
 		const props = this.props;
+		const context = this.context;
 
 		const transform = {
 			scale: props.constantScale,
@@ -32,7 +37,7 @@ const GraphMinimap = React.createClass({
 			const bbox = helpers.getNodesBBox(nodes);
 
 			// add some padding
-			const padding = props.theme.node.size;
+			const padding = context.theme.node.size;
 			bbox.minX -= padding;
 			bbox.maxX += padding;
 			bbox.minY -= padding;

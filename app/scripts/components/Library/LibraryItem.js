@@ -10,6 +10,7 @@ const actionCreators = require('../../actionCreators.js');
 
 let LibraryItem = React.createClass({
 	contextTypes: {
+		// theme: React.PropTypes.object,
 		dispatch: React.PropTypes.func,
 	},
 

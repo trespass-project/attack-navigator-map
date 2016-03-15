@@ -10,6 +10,7 @@ const Port = React.createClass({
 	mixins: [SchleppMixin],
 
 	contextTypes: {
+		// theme: React.PropTypes.object,
 		dispatch: React.PropTypes.func,
 	},
 

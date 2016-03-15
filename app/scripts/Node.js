@@ -28,6 +28,7 @@ const Node = React.createClass({
 	mixins: [SchleppMixin],
 
 	contextTypes: {
+		theme: React.PropTypes.object,
 		dispatch: React.PropTypes.func,
 	},
 
@@ -39,7 +40,8 @@ const Node = React.createClass({
 		node: React.PropTypes.object.isRequired,
 
 		// TODO: context
-		theme: React.PropTypes.object.isRequired,
+		// editorElem: React.PropTypes.object.isRequired,
+		// editorTransformElem: React.PropTypes.object.isRequired,
 	},
 
 	getDefaultProps: function() {
@@ -63,17 +65,26 @@ const Node = React.createClass({
 
 	renderLabel: function() {
 		const props = this.props;
+		const context = this.context;
+
 		if (!props.showGroupLabels) { return null; }
+
 		let label = props.node.label || 'no label';
 		label = helpers.ellipsize(15, label);
-		return <text ref='label' className='label' x='0' y={10+props.theme.node.size*0.5}>
+
+		return <text
+			ref='label'
+			className='label'
+			x='0'
+			y={10+context.theme.node.size*0.5}>
 			{label}
 		</text>;
 	},
 
 	render: function() {
 		const props = this.props;
-		const radius = props.theme.node.size * 0.5;
+		const context = this.context;
+		const radius = context.theme.node.size * 0.5;
 
 		// DON'T TOUCH THIS!
 		// trying to 'clean this up' resulted in dragging edges
@@ -95,8 +106,8 @@ const Node = React.createClass({
 						className={classnames('node', { 'hover': props.isHovered, 'selected': props.isSelected })}
 						x={-radius}
 						y={-radius}
-						rx={props.theme.node.cornerRadius}
-						ry={props.theme.node.cornerRadius}
+						rx={context.theme.node.cornerRadius}
+						ry={context.theme.node.cornerRadius}
 						height={radius*2}
 						width={radius*2} />
 					{this.renderLabel()}
@@ -107,7 +118,7 @@ const Node = React.createClass({
 						style={portStyle}
 						x={0}
 						y={-radius}
-						size={props.theme.port.size}
+						size={context.theme.port.size}
 						node={props.node}
 						editorElem={props.editorElem}
 						editorTransformElem={props.editorTransformElem}
@@ -159,7 +170,7 @@ const Node = React.createClass({
 	// _positionPorts: function() {
 	// 	var w = this._getLabelWidth();
 	// 	this.setState({
-	// 		portPosX: props.theme.port.size+props.theme.label.fontSize+w*0.5
+	// 		portPosX: context.theme.port.size+context.theme.label.fontSize+w*0.5
 	// 	});
 	// },
 
@@ -179,14 +190,18 @@ const Node = React.createClass({
 	_onClick: function(event) {
 		event.preventDefault();
 		event.stopPropagation();
-		this.context.dispatch( actionCreators.select(this.props.node.id, 'node') );
+		this.context.dispatch(
+			actionCreators.select(this.props.node.id, 'node')
+		);
 	},
 
 	_onDragStart: function(event) {
 		const props = this.props;
 		const node = props.node;
 
-		this.context.dispatch( actionCreators.setDragNode(node.id) );
+		this.context.dispatch(
+			actionCreators.setDragNode(node.id)
+		);
 
 		this.originalPositionX = node.x;
 		this.originalPositionY = node.y;
@@ -236,15 +251,15 @@ const Node = React.createClass({
 		const graph = props.graph;
 		const groups = graph.groups;
 		const node = props.node;
-		const halfSize = 0.5 * props.theme.node.size;
+		const halfSize = 0.5 * context.theme.node.size;
 		const dropGroups = R.values(groups)
 			.filter((group) => {
 				const groupRect = helpers.getGroupBBox(graph.nodes, group);
 				const nodeRect = {
 					x: node.x - halfSize,
 					y: node.y - halfSize,
-					width: props.theme.node.size,
-					height: props.theme.node.size,
+					width: context.theme.node.size,
+					height: context.theme.node.size,
 				};
 				const groupCenter = {
 					x: groupRect.x + groupRect.width * 0.5,
@@ -255,7 +270,7 @@ const Node = React.createClass({
 				// 	|| helpers.isRectInsideRect(groupRect, nodeRect) // or, when group is smaller than node
 				// 	) {
 					// check if actually inside dropzone
-					if (helpers.distBetweenPoints(nodeRect, groupCenter) <= props.theme.group.dropzoneRadius) {
+					if (helpers.distBetweenPoints(nodeRect, groupCenter) <= context.theme.group.dropzoneRadius) {
 						return true;
 					}
 				// }

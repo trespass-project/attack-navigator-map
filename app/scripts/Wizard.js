@@ -72,6 +72,7 @@ const Tab = React.createClass({
 
 const Wizard = React.createClass({
 	contextTypes: {
+		theme: React.PropTypes.object,
 		dispatch: React.PropTypes.func,
 	},
 
@@ -86,7 +87,7 @@ const Wizard = React.createClass({
 		return <GraphMinimap
 			id='minimap'
 			graph={props.graph}
-			theme={props.theme}
+			theme={this.context.theme}
 			showEdges={true}
 		/>;
 	},

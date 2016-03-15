@@ -72,6 +72,7 @@ function bezierPoint(p1, c1, c2, p2, t) {
 
 const Edge = React.createClass({
 	contextTypes: {
+		theme: React.PropTypes.object,
 		dispatch: React.PropTypes.func,
 	},
 
@@ -82,9 +83,6 @@ const Edge = React.createClass({
 		isSelected: React.PropTypes.bool,
 		isPreview: React.PropTypes.bool,
 		showEdgeLabels: React.PropTypes.bool,
-
-		// TODO: context
-		theme: React.PropTypes.object.isRequired,
 	},
 
 	getDefaultProps: function() {
@@ -126,6 +124,7 @@ const Edge = React.createClass({
 	},
 
 	render: function() {
+		const context = this.context;
 		const props = this.props;
 		const edge = props.edge;
 
@@ -174,8 +173,8 @@ const Edge = React.createClass({
 				<path
 					className={classnames('edge', { 'preview': props.isPreview, 'selected': props.isSelected })}
 					d={pathifyBezier(p1, c1, c2, p2)}
-					stroke={(props.isPreview) ? props.theme.previewEdge.stroke : props.theme.edge.stroke}
-					strokeWidth={props.theme.edge.strokeWidth} />
+					stroke={(props.isPreview) ? context.theme.previewEdge.stroke : context.theme.edge.stroke}
+					strokeWidth={context.theme.edge.strokeWidth} />
 				{arrow}
 				{this.renderLabel(edgeNodes)}
 			</g>

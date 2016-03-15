@@ -40,6 +40,7 @@ const Group = React.createClass({
 	mixins: [SchleppMixin],
 
 	contextTypes: {
+		theme: React.PropTypes.object,
 		dispatch: React.PropTypes.func,
 	},
 
@@ -51,7 +52,6 @@ const Group = React.createClass({
 		group: React.PropTypes.object.isRequired,
 		selected: React.PropTypes.bool,
 		hovered: React.PropTypes.bool,
-		theme: React.PropTypes.object.isRequired,
 	},
 
 	getDefaultProps: function() {
@@ -72,6 +72,7 @@ const Group = React.createClass({
 
 	renderDropzone: function() {
 		const props = this.props;
+		const context = this.context;
 
 		if (props.dragNode && !R.contains(props.dragNodeId, props.group.nodeIds)) {
 			const dragNode = helpers.getItemById(props.graph.nodes, props.dragNodeId);
@@ -81,12 +82,12 @@ const Group = React.createClass({
 				width: props.width,
 				height: props.height,
 			};
-			const halfSize = 0.5 * props.theme.node.size;
+			const halfSize = 0.5 * context.theme.node.size;
 			const nodeRect = {
 				x: dragNode.x - halfSize,
 				y: dragNode.y - halfSize,
-				width: props.theme.node.size,
-				height: props.theme.node.size,
+				width: context.theme.node.size,
+				height: context.theme.node.size,
 			};
 			if (helpers.isRectInsideRect(nodeRect, groupRect) ||
 				helpers.isRectInsideRect(groupRect, nodeRect) // or, when group is smaller than node
@@ -94,7 +95,7 @@ const Group = React.createClass({
 				return (
 					<Dropzone
 						group={props.group}
-						radius={props.theme.group.dropzoneRadius}
+						radius={context.theme.group.dropzoneRadius}
 						x={props.width*0.5}
 						y={props.height*0.5}
 					/>
@@ -107,6 +108,7 @@ const Group = React.createClass({
 
 	render: function() {
 		const props = this.props;
+		const context = this.context;
 
 		if (!props.showGroups) { return null; }
 
@@ -120,8 +122,8 @@ const Group = React.createClass({
 				transform={`translate(${props.x}, ${props.y})`}>
 				<rect
 					className={classnames('group', { 'selected': props.selected })}
-					rx={props.theme.group.cornerRadius}
-					ry={props.theme.group.cornerRadius}
+					rx={context.theme.group.cornerRadius}
+					ry={context.theme.group.cornerRadius}
 					width={props.width}
 					height={props.height}>
 				</rect>

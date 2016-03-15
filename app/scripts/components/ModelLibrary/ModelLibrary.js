@@ -7,7 +7,9 @@ const Library = require('../Library/Library.js');
 
 
 const ModelLibrary = React.createClass({
+
 	contextTypes: {
+		// theme: React.PropTypes.object,
 		dispatch: React.PropTypes.func,
 	},
 

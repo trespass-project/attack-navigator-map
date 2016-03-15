@@ -12,8 +12,11 @@ const arc = d3.svg.arc();
 
 
 const ContextMenu = React.createClass({
+	contextTypes: {
+		theme: React.PropTypes.object,
+	},
+
 	propTypes: {
-		theme: React.PropTypes.object.isRequired,
 		contextMenu: React.PropTypes.any/*.isRequired*/,
 	},
 
@@ -70,13 +73,14 @@ const ContextMenu = React.createClass({
 	},
 
 	render: function() {
-		let that = this;
+		const that = this;
 		const props = this.props;
+		const context = this.context;
 
 		if (!props.contextMenu) { return null; }
 
 		const numItems = props.contextMenu.menuItems.length;
-		let angleStep = (numItems === 1) ? 160 : props.theme.contextMenu.desiredAngle;
+		let angleStep = (numItems === 1) ? 160 : context.theme.contextMenu.desiredAngle;
 		const maxAngle = 360;
 		if (angleStep * numItems > maxAngle) {
 			angleStep = maxAngle / numItems;
@@ -90,8 +94,8 @@ const ContextMenu = React.createClass({
 			return that.renderPiePiece(
 				helpers.degToRad(startAngle + angleStep * index),
 				helpers.degToRad(startAngle + angleStep * (index + 1)),
-				props.theme.contextMenu.innerRadius,
-				props.theme.contextMenu.outerRadius,
+				context.theme.contextMenu.innerRadius,
+				context.theme.contextMenu.outerRadius,
 				index,
 				item
 			);

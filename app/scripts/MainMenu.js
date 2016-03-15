@@ -6,6 +6,7 @@ const actionCreators = require('./actionCreators.js');
 
 const MainMenu = React.createClass({
 	contextTypes: {
+		// theme: React.PropTypes.object,
 		dispatch: React.PropTypes.func,
 	},
 
