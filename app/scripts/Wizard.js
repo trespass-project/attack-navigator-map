@@ -185,9 +185,9 @@ const Wizard = React.createClass({
 		return <div>
 			<h2 className='title'>Connections</h2>
 			<PredicateEditor
-				nodeNames={R.values(props.graph.nodes).map(R.prop('label'))}
+				nodes={R.values(props.graph.nodes)}
 				predicatesLib={props.predicatesLib || predicatesLib}
-				predicates={props.predicates || {}}
+				predicates={props.predicates || []}
 			/>
 		</div>;
 	},

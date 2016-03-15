@@ -81,10 +81,13 @@ const DropdownSearchable = React.createClass({
 
 		const re = new RegExp(state.query, 'ig');
 		const options = props.items
-			.filter(function(item) {
-				if (item[props.valueAttribute] === null) { return true; } // always show default option
+			.filter((item) => {
+				// always show default option
+				if (item[props.valueAttribute] === null) { return true; }
+
 				if (item.divider) { return true; }
 				if (item.header) { return true; }
+
 				return item[props.displayAttribute].match(re);
 			});
 
