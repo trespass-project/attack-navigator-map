@@ -334,7 +334,6 @@ function setDrag(data) {
 			// only for live debug view
 		}
 	};
-
 };
 
 

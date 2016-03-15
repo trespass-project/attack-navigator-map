@@ -114,7 +114,9 @@ const Edge = React.createClass({
 	_onClick: function(event) {
 		event.preventDefault();
 		event.stopPropagation();
-		this.context.dispatch( actionCreators.select(this.props.edge.id, 'edge') );
+		this.context.dispatch(
+			actionCreators.select(this.props.edge.id, 'edge')
+		);
 	},
 
 	render: function() {
@@ -122,7 +124,7 @@ const Edge = React.createClass({
 		const edge = props.edge;
 
 		// look up actual nodes by id
-		let edgeNodes = modelHelpers.getEdgeNodes(edge, props.graph.nodes);
+		const edgeNodes = modelHelpers.getEdgeNodes(edge, props.graph.nodes);
 		// in preview edges 'to' is not an id,
 		// an actual object, with x and y properties.
 		if (props.preview) {
