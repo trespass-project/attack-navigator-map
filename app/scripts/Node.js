@@ -37,6 +37,7 @@ const Node = React.createClass({
 		y: React.PropTypes.number.isRequired,
 		isHovered: React.PropTypes.bool,
 		isSelected: React.PropTypes.bool,
+		showNodeLabels: React.PropTypes.bool,
 		node: React.PropTypes.object.isRequired,
 
 		// TODO: context
@@ -48,13 +49,17 @@ const Node = React.createClass({
 		return {
 			isSelected: false,
 			isHovered: false,
+			showNodeLabels: true,
 		};
 	},
 
 	renderIcon: function() {
 		const props = this.props;
-		if (!props.showGroupLabels) { return null; }
+
+		if (!props.showNodeLabels) { return null; }
+
 		const icon = icons[typeIcons[props.node.modelComponentType]];
+
 		return <text
 			ref='icon'
 			className='icon fa'
@@ -67,7 +72,7 @@ const Node = React.createClass({
 		const props = this.props;
 		const context = this.context;
 
-		if (!props.showGroupLabels) { return null; }
+		if (!props.showNodeLabels) { return null; }
 
 		let label = props.node.label || 'no label';
 		label = helpers.ellipsize(15, label);
