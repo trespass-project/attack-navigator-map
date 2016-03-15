@@ -19,11 +19,11 @@ trespass.model.collectionNamesSingular;
 
 const nonDirectedRelationTypes =
 module.exports.nonDirectedRelationTypes =
-['network', 'connects'];
+['network', 'connects', undefined];
 
 const nonEdgeRelationTypes =
 module.exports.nonEdgeRelationTypes =
-['network', 'connects'];
+['network', 'connects', undefined];
 
 const nonGraphCollectionNames =
 module.exports.nonGraphCollectionNames =
@@ -426,9 +426,7 @@ function graphFromModel(model) {
 const relationConvertsToEdge =
 module.exports.relationConvertsToEdge =
 function relationConvertsToEdge(relation) {
-	return !relation
-		|| R.contains(relation, nonEdgeRelationTypes)
-		|| R.contains(relation, nonEdgeRelationTypes);
+	return R.contains(relation, nonEdgeRelationTypes);
 };
 
 
