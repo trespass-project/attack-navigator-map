@@ -1020,6 +1020,13 @@ describe(f1('model-helpers.js'), () => {
 			assert(R.contains('node-2', atLocations));
 		});
 
+		it(f3('should set edge directedness'), () => {
+			model.system.edges
+				.forEach((edge) => {
+					assert(edge.directed !== undefined);
+				});
+		});
+
 		// TODO: more
 	});
 });

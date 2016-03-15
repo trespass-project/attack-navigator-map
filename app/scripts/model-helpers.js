@@ -451,11 +451,12 @@ function modelFromGraph(graph, metadata={}) {
 
 	R.values(graph.edges || {})
 		.forEach((edge) => {
+			const isDirected = !R.contains(edge.relation, nonDirectedRelationTypes);
 			if (relationConvertsToEdge(edge.relation)) {
 				trespass.model.addEdge(model, {
 					source: edge.from,
 					target: edge.to,
-					directed: edge.directed,
+					directed: /*edge.directed*/ isDirected,
 				});
 			} else {
 				if (edge.relation === 'atLocation') {
