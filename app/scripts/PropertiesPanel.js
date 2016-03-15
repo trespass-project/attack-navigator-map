@@ -171,7 +171,7 @@ const PropertiesPanel = React.createClass({
 										value={edge.relation || null}>
 										{props.relationTypes.map(function(relation) {
 											return <option
-												key={relation.value}
+												key={relation.label}
 												value={relation.value}>
 												{relation.label}
 											</option>;

@@ -20,8 +20,17 @@
 
 		{
 			"type": "relation",
-			"value": "contained in",
+			"value": "atLocation",
 			"label": "contained in",
+			"directed": true,
+			"acceptsSource": ["location"],
+			"acceptsTarget": ["location"]
+		},
+
+		{
+			"type": "relation",
+			"value": "atLocation",
+			"label": "is at",
 			"directed": true,
 			"acceptsSource": ["location"],
 			"acceptsTarget": ["location"]

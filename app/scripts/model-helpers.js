@@ -419,6 +419,15 @@ function graphFromModel(model) {
 };
 
 
+const relationConvertsToEdge =
+module.exports.relationConvertsToEdge =
+function relationConvertsToEdge(relation) {
+	return !relation
+		|| (relation === 'connects')
+		|| (relation === 'network');
+};
+
+
 const modelFromGraph =
 module.exports.modelFromGraph =
 function modelFromGraph(graph, metadata={}) {
@@ -436,11 +445,23 @@ function modelFromGraph(graph, metadata={}) {
 
 	R.values(graph.edges || {})
 		.forEach((edge) => {
-			trespass.model.addEdge(model, {
-				source: edge.from,
-				target: edge.to,
-				directed: edge.directed,
-			});
+			if (relationConvertsToEdge(edge.relation)) {
+				trespass.model.addEdge(model, {
+					source: edge.from,
+					target: edge.to,
+					directed: edge.directed,
+				});
+			} else {
+				if (edge.relation === 'atLocation') {
+					const fromNode = graph.nodes[edge.from];
+					if (!fromNode.atLocations) {
+						fromNode.atLocations = [];
+					}
+					fromNode.atLocations = [...fromNode.atLocations, edge.to];
+				} else {
+					// TODO: what else could there be?
+				}
+			}
 		});
 
 	const keysToOmit = [

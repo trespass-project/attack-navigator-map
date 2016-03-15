@@ -973,13 +973,34 @@ describe(f1('model-helpers.js'), () => {
 
 	describe(f2('modelFromGraph()'), () => {
 		const nodes = [
-			{ id: 'node-1', modelComponentType: 'item', atLocations: ['location'] },
-			{ id: 'node-2', modelComponentType: 'data', value: 'value', atLocations: ['location'] },
-			{ id: 'node-3', modelComponentType: 'predicate', arity: '2', value: ['value'] }
+			{
+				id: 'node-1',
+				modelComponentType: 'item',
+				atLocations: ['location']
+			},
+			{
+				id: 'node-2',
+				modelComponentType: 'data',
+				value: 'value',
+				atLocations: ['location']
+			},
+			{
+				id: 'node-3',
+				modelComponentType: 'predicate',
+				arity: '2',
+				value: ['value']
+			}
+		];
+		const edges = [
+			{ id: 'edge-1', relation: undefined },
+			{ id: 'edge-2', relation: 'connects' },
+			{ id: 'edge-4', relation: 'network' },
+			{ id: 'edge-3', relation: 'atLocation', from: 'node-1', to: 'node-2' },
 		];
 		const graph = {
 			nodes: helpers.toHashMap('id', nodes),
-			// TODO: edges
+			edges: helpers.toHashMap('id', edges),
+			// TODO: groups
 		};
 		const model = modelHelpers.modelFromGraph(graph);
 
@@ -987,6 +1008,16 @@ describe(f1('model-helpers.js'), () => {
 			assert(model.system.items.length === 1);
 			assert(model.system.data.length === 1);
 			assert(model.system.predicates.length === 1);
+		});
+
+		it(f3('should create edges'), () => {
+			assert(model.system.edges.length === 3);
+		});
+
+		it(f3('should convert `atLocation` type edges to `atLocations`'), () => {
+			const atLocations = model.system.items[0].atLocations;
+			assert(atLocations.length === 2);
+			assert(R.contains('node-2', atLocations));
 		});
 
 		// TODO: more
