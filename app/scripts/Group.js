@@ -57,12 +57,14 @@ const Group = React.createClass({
 		group: React.PropTypes.object.isRequired,
 		isHovered: React.PropTypes.bool,
 		isSelected: React.PropTypes.bool,
+		showGroupLabels: React.PropTypes.bool,
 	},
 
 	getDefaultProps: function() {
 		return {
 			isHovered: false,
 			isSelected: false,
+			showGroupLabels: true,
 		};
 	},
 
