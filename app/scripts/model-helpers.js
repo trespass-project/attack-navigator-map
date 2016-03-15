@@ -21,6 +21,10 @@ const nonDirectedRelationTypes =
 module.exports.nonDirectedRelationTypes =
 ['network', 'connects'];
 
+const nonEdgeRelationTypes =
+module.exports.nonEdgeRelationTypes =
+['network', 'connects'];
+
 const nonGraphCollectionNames =
 module.exports.nonGraphCollectionNames =
 ['predicates', 'policies', 'processes'];
@@ -423,8 +427,8 @@ const relationConvertsToEdge =
 module.exports.relationConvertsToEdge =
 function relationConvertsToEdge(relation) {
 	return !relation
-		|| (relation === 'connects')
-		|| (relation === 'network');
+		|| R.contains(relation, nonEdgeRelationTypes)
+		|| R.contains(relation, nonEdgeRelationTypes);
 };
 
 
