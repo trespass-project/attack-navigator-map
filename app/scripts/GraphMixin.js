@@ -130,13 +130,17 @@ const GraphMixin = {
 		}
 	},
 
+	stopProp: function(event) {
+		event.stopPropagation();
+	},
+
 	_renderMap: function() {
 		const props = this.props;
 		const graph = props.graph;
 
 		return (
 			/* prevent event propagation from map up to svg elem */
-			<g ref='map-group' onClick={ (event) => { event.stopPropagation(); } }>
+			<g ref='map-group' onClick={this.stopProp}>
 				{R.values(graph.groups)
 					.filter(function(group) {
 						return !!group._bgImage;
