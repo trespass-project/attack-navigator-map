@@ -20,6 +20,11 @@ const Dropzone = React.createClass({
 		radius: React.PropTypes.number.isRequired,
 	},
 
+	// getDefaultProps: function() {
+	// 	return {
+	// 	};
+	// },
+
 	render: function() {
 		const props = this.props;
 		return (
@@ -50,14 +55,14 @@ const Group = React.createClass({
 		width: React.PropTypes.number.isRequired,
 		height: React.PropTypes.number.isRequired,
 		group: React.PropTypes.object.isRequired,
-		selected: React.PropTypes.bool,
-		hovered: React.PropTypes.bool,
+		isHovered: React.PropTypes.bool,
+		isSelected: React.PropTypes.bool,
 	},
 
 	getDefaultProps: function() {
 		return {
-			hovered: false,
-			selected: false,
+			isHovered: false,
+			isSelected: false,
 		};
 	},
 
@@ -121,7 +126,7 @@ const Group = React.createClass({
 				onMouseLeave={this._handleHoverOut}
 				transform={`translate(${props.x}, ${props.y})`}>
 				<rect
-					className={classnames('group', { 'selected': props.selected })}
+					className={classnames('group', { 'selected': props.isSelected })}
 					rx={context.theme.group.cornerRadius}
 					ry={context.theme.group.cornerRadius}
 					width={props.width}
