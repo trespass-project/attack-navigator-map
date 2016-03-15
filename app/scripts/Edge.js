@@ -79,12 +79,12 @@ const Edge = React.createClass({
 		edge: React.PropTypes.object.isRequired,
 		theme: React.PropTypes.object.isRequired,
 		selected: React.PropTypes.bool,
-		preview: React.PropTypes.bool,
+		isPreview: React.PropTypes.bool,
 	},
 
 	getDefaultProps: function() {
 		return {
-			preview: false,
+			isPreview: false,
 			selected: false,
 		};
 	},
@@ -127,7 +127,7 @@ const Edge = React.createClass({
 		const edgeNodes = modelHelpers.getEdgeNodes(edge, props.graph.nodes);
 		// in preview edges 'to' is not an id,
 		// an actual object, with x and y properties.
-		if (props.preview) {
+		if (props.isPreview) {
 			edgeNodes.toNode = edge.to;
 		}
 
@@ -166,9 +166,9 @@ const Edge = React.createClass({
 				onContextMenu={this._onContextMenu}
 			>
 				<path
-					className={classnames('edge', { 'preview': props.preview, 'selected': props.selected })}
+					className={classnames('edge', { 'preview': props.isPreview, 'selected': props.selected })}
 					d={pathifyBezier(p1, c1, c2, p2)}
-					stroke={(props.preview) ? props.theme.previewEdge.stroke : props.theme.edge.stroke}
+					stroke={(props.isPreview) ? props.theme.previewEdge.stroke : props.theme.edge.stroke}
 					strokeWidth={props.theme.edge.strokeWidth} />
 				{arrow}
 				{this.renderLabel(edgeNodes)}

@@ -78,7 +78,7 @@ const GraphMixin = {
 			key={index}
 			edge={edge}
 			selected={edge.id === props.selectedId}
-			preview={isPreview} />;
+			isPreview={isPreview} />;
 	},
 
 	renderNode: function(node, index) {
