@@ -78,14 +78,14 @@ const Edge = React.createClass({
 	propTypes: {
 		edge: React.PropTypes.object.isRequired,
 		theme: React.PropTypes.object.isRequired,
-		selected: React.PropTypes.bool,
+		isSelected: React.PropTypes.bool,
 		isPreview: React.PropTypes.bool,
 	},
 
 	getDefaultProps: function() {
 		return {
 			isPreview: false,
-			selected: false,
+			isSelected: false,
 		};
 	},
 
@@ -166,7 +166,7 @@ const Edge = React.createClass({
 				onContextMenu={this._onContextMenu}
 			>
 				<path
-					className={classnames('edge', { 'preview': props.isPreview, 'selected': props.selected })}
+					className={classnames('edge', { 'preview': props.isPreview, 'selected': props.isSelected })}
 					d={pathifyBezier(p1, c1, c2, p2)}
 					stroke={(props.isPreview) ? props.theme.previewEdge.stroke : props.theme.edge.stroke}
 					strokeWidth={props.theme.edge.strokeWidth} />
