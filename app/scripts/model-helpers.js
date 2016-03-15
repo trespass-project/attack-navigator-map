@@ -431,6 +431,10 @@ function relationConvertsToEdge(relation) {
 const modelFromGraph =
 module.exports.modelFromGraph =
 function modelFromGraph(graph, metadata={}) {
+	if (_.isEmpty(metadata)) {
+		console.warn('metadata missing');
+	}
+
 	const model = trespass.model.create();
 
 	// embed entire graph in model
