@@ -943,31 +943,38 @@ function loadComponentTypes() {
 		const req = $.ajax(params);
 		Q(req)
 			.then((types) => {
-				const componentTypes = types
+				const kbTypeAttributes = types
+					.reduce((acc, type) => {
+						acc[type['@id']] = type['tkb:has_attribute']
+							.reduce((attributes, attr) => {
+								return [...attributes, {
+									id: attr['@id'],
+									label: attr['@label'],
+									values: (!attr['tkb:mvalues'])
+										? null
+										: attr['tkb:mvalues']['@list'],
+								}];
+							}, [])
+						return acc;
+					}, {});
+
+				const componentsLib = types
 					.map((type) => {
+						const id = type['@id'];
+						const modelComponentType = type['tkb:tml_class'];
 						return {
-							id: type['@id'],
-							kbType: type['@id'],
+							id,
+							modelComponentType,
+							kbType: id,
 							label: type['@label'],
-							modelComponentType: type['tkb:tml_class'],
-
-							attributes: type['tkb:has_attribute']
-								.reduce((acc, attr) => {
-									return [...acc, {
-										id: attr['@id'],
-										label: attr['@label'],
-										values: (!attr['tkb:mvalues'])
-											? null
-											: attr['tkb:mvalues']['@list'],
-									}];
-								}, []),
-
 							// TODO: rest
 						};
 					});
+
 				dispatch({
 					type: constants.ACTION_loadComponentTypes_DONE,
-					componentTypes
+					kbTypeAttributes,
+					componentsLib,
 				});
 			})
 			.catch(handleError);

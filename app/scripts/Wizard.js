@@ -110,7 +110,8 @@ const Wizard = React.createClass({
 			selectedType={props.selectedType}
 			graph={props.graph}
 			relationTypes={props.relationTypes}
-			componentTypes={props.componentTypes}
+			componentsLib={props.componentsLib}
+			kbTypeAttributes={props.kbTypeAttributes}
 		/>;
 	},
 
@@ -133,7 +134,7 @@ const Wizard = React.createClass({
 	},
 
 	renderLocations: function(props) {
-		const items = props.componentTypes.filter(componentTypesFilter(['location']));
+		const items = props.componentsLib.filter(componentTypesFilter(['location']));
 		return <div>
 			<h2 className='title'>Locations</h2>
 			<div id='pattern-lib'>
@@ -152,7 +153,7 @@ const Wizard = React.createClass({
 	},
 
 	renderAssets: function(props) {
-		const items = props.componentTypes.filter(componentTypesFilter(['item', 'data']));
+		const items = props.componentsLib.filter(componentTypesFilter(['item', 'data']));
 		return <div>
 			<h2 className='title'>Assets</h2>
 			<div id='component-lib'>
@@ -165,7 +166,7 @@ const Wizard = React.createClass({
 	},
 
 	renderActors: function(props) {
-		const items = props.componentTypes.filter(componentTypesFilter(['actor']));
+		const items = props.componentsLib.filter(componentTypesFilter(['actor']));
 		return <div>
 			<h2 className='title'>Actors</h2>
 			{/*<div id='pattern-lib'>

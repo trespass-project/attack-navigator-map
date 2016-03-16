@@ -236,18 +236,13 @@ const PropertiesPanel = React.createClass({
 			return null;
 		}
 
-		const kb = helpers.getItemByKey(
-			'modelComponentType',
-			props.componentTypes,
-			selectedItem.modelComponentType
-		);
-
-		if (!kb) {
+		const attributes = props.kbTypeAttributes[selectedItem.kbType];
+		if (!attributes) {
 			return null;
 		}
 
 		return <div>
-			{(kb.attributes || [])
+			{(attributes || [])
 				.map((attr) => {
 					return <div key={attr.id}>
 						{attr.label}:&nbsp;

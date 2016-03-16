@@ -61,9 +61,10 @@ const initialState = {
 	toolChainId: null,
 	analysisRunning: false,
 
-	componentTypes: [],
 	relationTypes: [],
-	modelPatterns: [],
+	kbTypeAttributes: {},
+	componentsLib: [],
+	modelPatterns: [], // pre-made fragments
 };
 
 
@@ -253,8 +254,8 @@ function reducer(state=initialState, action) {
 		// 	return state; // noop
 		// }
 		case constants.ACTION_loadComponentTypes_DONE: {
-			const {componentTypes} = action;
-			return mergeWithState({componentTypes});
+			const {componentsLib, kbTypeAttributes} = action;
+			return mergeWithState({componentsLib, kbTypeAttributes});
 		}
 
 		case constants.ACTION_loadModelPatterns_DONE: {
