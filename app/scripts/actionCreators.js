@@ -681,6 +681,31 @@ function putModelAndScenarioIntoKnowledgebase(modelId, modelData, scenarioData) 
 };
 
 
+function kbRunToolchain(toolChainId=1, modelId) {
+	const url = `${api.makeUrl(knowledgebaseApi, 'runTools')}/${toolChainId}?model_id=${modelId}`;
+	console.log(url);
+
+	const params = _.merge(
+		{
+			// method: 'put',
+			// body: item.data
+		},
+		api.requestOptions.fetch.crossDomain
+	);
+
+	return fetch(url, params)
+		.catch((err) => {
+			console.error(err);
+		})
+		.then((res) => {
+			return res.json();
+		})
+		.then((data) => {
+			return console.log(data);
+		});
+}
+
+
 const runAnalysis =
 module.exports.runAnalysis =
 function runAnalysis(toolChainId, downloadScenario=false) {
@@ -739,7 +764,11 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 				fileName: scenarioFileName,
 				fileContent: scenarioXmlStr
 			}
-		);
+		)
+			.then(() => {
+				const toolChainId = 1;
+				kbRunToolchain(toolChainId, modelId);
+			});
 
 		// zip it!
 		const zip = new JSZip();
@@ -753,34 +782,34 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 			saveAs(blob, 'scenario.zip');
 		}
 
-		// start tool chain
-		const formData = new FormData();
-		formData.append('file', blob, zipFileName);
-		const params = {
-			method: 'post',
-			body: formData
-		};
-		const callbacks = {
-			// onToolChainStart: () => {},
-			// onToolChainEnd: () => {},
-			onToolStart: (toolData) => {
-				console.log('————————————————————');
-				console.log(toolData.name);
-			},
-			// onToolEnd: (toolData) => {
-			// 	console.log('onToolEnd', toolData.name);
-			// },
-			onTaskStatus: (taskStatusData) => {
-				console.log('  ', taskStatusData.status);
-			},
-		}
-		toolsApi.runToolChain(fetch, toolChainData, callbacks, params)
-			.then((data) => {
-				console.log('->', data);
-			})
-			.catch((err) => {
-				console.error(err.stack);
-			});
+		// // start tool chain
+		// const formData = new FormData();
+		// formData.append('file', blob, zipFileName);
+		// const params = {
+		// 	method: 'post',
+		// 	body: formData
+		// };
+		// const callbacks = {
+		// 	// onToolChainStart: () => {},
+		// 	// onToolChainEnd: () => {},
+		// 	onToolStart: (toolData) => {
+		// 		console.log('————————————————————');
+		// 		console.log(toolData.name);
+		// 	},
+		// 	// onToolEnd: (toolData) => {
+		// 	// 	console.log('onToolEnd', toolData.name);
+		// 	// },
+		// 	onTaskStatus: (taskStatusData) => {
+		// 		console.log('  ', taskStatusData.status);
+		// 	},
+		// }
+		// toolsApi.runToolChain(fetch, toolChainData, callbacks, params)
+		// 	.then((data) => {
+		// 		console.log('->', data);
+		// 	})
+		// 	.catch((err) => {
+		// 		console.error(err.stack);
+		// 	});
 
 		dispatch({
 			type: constants.ACTION_runAnalysis,
