@@ -142,9 +142,9 @@ const PropertiesPanel = React.createClass({
 								<td><span>{(group._bgImage) ? group._bgImage.url : '—'}</span></td>
 							</tr>
 							{/*<tr>
-															<td><label>children:</label></td>
-															<td><span>TODO</span></td>
-														</tr>*/}
+								<td><label>children:</label></td>
+								<td><span>TODO</span></td>
+							</tr>*/}
 						</tbody>
 					</table>
 				);
