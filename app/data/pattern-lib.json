@@ -45,22 +45,26 @@
 					{
 						"id": "a",
 						"from": "corridor",
-						"to": "door1"
+						"to": "door1",
+						"relation": "connects"
 					},
 					{
 						"id": "b",
 						"from": "corridor",
-						"to": "door2"
+						"to": "door2",
+						"relation": "connects"
 					},
 					{
 						"id": "c",
 						"from": "door1",
-						"to": "room1"
+						"to": "room1",
+						"relation": "connects"
 					},
 					{
 						"id": "d",
 						"from": "door2",
-						"to": "room2"
+						"to": "room2",
+						"relation": "connects"
 					}
 				],
 				"groups": [
@@ -127,28 +131,33 @@
 					{
 						"id": "a",
 						"from": "vfw",
+						"relation": "network",
 						"to": "vsw"
 					},
 					{
 						"id": "b",
 						"from": "vsw",
+						"relation": "network",
 						"to": "vm1"
 					},
 					{
 						"id": "c",
 						"from": "vsw",
+						"relation": "network",
 						"to": "vm2"
 					},
 					{
 						"id": "d",
 						"to": "vm1",
 						"from": "file1",
+						"relation": "atLocation",
 						"directed": true
 					},
 					{
 						"id": "e",
 						"to": "vm2",
 						"from": "file2",
+						"relation": "atLocation",
 						"directed": true
 					}
 				],
