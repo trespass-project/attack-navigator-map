@@ -681,9 +681,8 @@ function putModelAndScenarioIntoKnowledgebase(modelId, modelData, scenarioData) 
 };
 
 
-function kbRunToolchain(toolChainId=1, modelId) {
-	const url = `${api.makeUrl(knowledgebaseApi, 'runTools')}/${toolChainId}?model_id=${modelId}`;
-	console.log(url);
+function kbRunToolchain(toolChainId=1, modelId, attackerProfileId) {
+	const url = `${api.makeUrl(knowledgebaseApi, 'runTools')}/${toolChainId}?model_id=${modelId}&attackerprofile_id=${attackerProfileId}`;
 
 	const params = _.merge(
 		{
@@ -767,7 +766,7 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 		)
 			.then(() => {
 				const toolChainId = 1;
-				kbRunToolchain(toolChainId, modelId);
+				kbRunToolchain(toolChainId, modelId, data.attackerProfile.id);
 			});
 
 		// zip it!
