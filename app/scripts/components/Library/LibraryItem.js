@@ -60,7 +60,7 @@ const spec = {
 					? item.value
 					: { nodes: [item] }; // treat single nodes like fragments
 				component.context.dispatch(
-					actionCreators.importFragment(
+					actionCreators.dropModelFragment(
 						fragment,
 						result.clientOffset
 					)

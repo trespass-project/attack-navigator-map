@@ -207,6 +207,7 @@ function dropModelFragment(fragment, clientOffset) {
 };
 
 
+const importFragment =
 module.exports.importFragment =
 function importFragment(fragment, xy) {
 	return (dispatch, getState) => {
