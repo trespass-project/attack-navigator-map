@@ -85,14 +85,14 @@
 			"value": {
 				"nodes": [
 					{
-						"modelComponentType": "location",
+						"modelComponentType": "item",
 						"id": "vm1",
 						"x": 300,
 						"y": 1,
 						"label": "VM1"
 					},
 					{
-						"modelComponentType": "location",
+						"modelComponentType": "item",
 						"id": "vm2",
 						"x": 300,
 						"y": 100,
@@ -113,14 +113,14 @@
 						"label": "File 2"
 					},
 					{
-						"modelComponentType": "location",
+						"modelComponentType": "item",
 						"id": "vsw",
 						"x": 150,
 						"y": 50,
 						"label": "Virtual switch"
 					},
 					{
-						"modelComponentType": "location",
+						"modelComponentType": "item",
 						"id": "vfw",
 						"x": 1,
 						"y": 50,
