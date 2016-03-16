@@ -695,13 +695,15 @@ function kbRunToolchain(toolChainId=1, modelId, attackerProfileId) {
 
 	return fetch(url, params)
 		.catch((err) => {
+			alert(err);
 			console.error(err);
 		})
 		.then((res) => {
 			return res.json();
 		})
 		.then((data) => {
-			return console.log(data);
+			// TODO: do s.th.
+			console.log(data);
 		});
 }
 

@@ -473,11 +473,11 @@ function modelFromGraph(graph, metadata={}) {
 
 	const keysToOmit = [
 		/*'name', */
-		'label',
+		// 'label',
 		'x',
 		'y',
 		'modelComponentType',
-		'kbType'
+		'kbType' // TODO: what to do with this?
 	];
 	R.values(graph.nodes || {})
 		.forEach((node) => {
