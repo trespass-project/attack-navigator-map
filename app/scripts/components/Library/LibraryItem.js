@@ -5,6 +5,7 @@ const constants = require('../../constants.js');
 const helpers = require('../../helpers.js');
 const React = require('react');
 const DragSource = require('react-dnd').DragSource;
+const modelHelpers = require('../../model-helpers.js');
 const actionCreators = require('../../actionCreators.js');
 
 
@@ -55,10 +56,11 @@ const spec = {
 			if (result.target === constants.DND_TARGET_MAP /*||
 				result.target === constants.DND_TARGET_DEBUG*/) {
 				const item = monitor.getItem();
-				// TODO: use modelHelpers.nodeAsFragment()
-				const fragment = (item.fragment)
+
+				const fragment = (item.isFragment)
 					? item.value
-					: { nodes: [item] }; // treat single nodes like fragments
+					: modelHelpers.nodeAsFragment(item);
+
 				component.context.dispatch(
 					actionCreators.dropModelFragment(
 						fragment,

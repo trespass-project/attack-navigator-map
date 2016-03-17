@@ -2,7 +2,7 @@
 	"list": [
 		{
 			"type": "template",
-			"fragment": true,
+			"isFragment": true,
 			"value": {
 				"nodes": [
 					{
@@ -81,7 +81,7 @@
 
 		{
 			"type": "template",
-			"fragment": true,
+			"isFragment": true,
 			"value": {
 				"nodes": [
 					{
@@ -175,7 +175,7 @@
 
 		{
 			"type": "pattern",
-			"fragment": true,
+			"isFragment": true,
 			"value": {
 				"nodes": [
 					{ "modelComponentType": "actor", "label": "Boss" },
