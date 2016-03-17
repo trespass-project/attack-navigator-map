@@ -949,6 +949,12 @@ describe(f1('model-helpers.js'), () => {
 		});
 		const {graph, other} = modelHelpers.graphFromModel(model);
 
+		it(f3('should produce hash-maps, not arrays'), () => {
+			assert(!_.isArray(graph.edges));
+			assert(!_.isArray(graph.nodes));
+			assert(!_.isArray(graph.groups));
+		});
+
 		const edges = R.values(graph.edges);
 		const nodes = R.values(graph.nodes);
 

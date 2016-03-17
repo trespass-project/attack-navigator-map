@@ -372,14 +372,16 @@ function graphFromModel(model) {
 	let graph = createFragment();
 
 	// for each edge in model, create edge in graph
-	graph.edges = model.system.edges
+	const edges = model.system.edges
 		.map((edge) => {
 			return duplicateEdge({
 				from: edge.source,
 				to: edge.target,
-				directed: edge.directed
+				directed: edge.directed,
+				// TODO: infer type?
 			});
 		});
+	graph.edges = helpers.toHashMap('id', edges);
 
 	// set model component type
 	const nonEdges = R.without(['edges'], collectionNames);
