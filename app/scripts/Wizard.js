@@ -445,6 +445,7 @@ const Wizard = React.createClass({
 		event.preventDefault();
 		const $fileInput = $(this.refs['load-model']);
 		const file = $fileInput[0].files[0];
+		$fileInput.val(''); // reset, so that we can import the same file again, if needed
 		this.context.dispatch( actionCreators.loadXMLFile(file) );
 	},
 
