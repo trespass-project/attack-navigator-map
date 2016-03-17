@@ -39,19 +39,23 @@ let App = React.createClass({
 	componentDidMount: function() {
 		const props = this.props;
 
-		props.dispatch( actionCreators.initMap() );
+		props.dispatch(
+			actionCreators.initMap(undefined, () => {
+				// kb api
+				props.dispatch( actionCreators.loadComponentTypes() );
+				props.dispatch( actionCreators.loadAttackerProfiles() );
+			})
+		);
 
-		const editorElem = document.querySelector('#editor > svg');
-		props.dispatch( actionCreators.setEditorElem(editorElem) );
-
-		// kb api
-		props.dispatch( actionCreators.loadComponentTypes() );
-		props.dispatch( actionCreators.loadAttackerProfiles() );
+		// fake api
 		props.dispatch( actionCreators.loadModelPatterns() );
 		props.dispatch( actionCreators.loadRelationTypes() );
 
 		// tools api
 		props.dispatch( actionCreators.loadToolChains() );
+
+		const editorElem = document.querySelector('#editor > svg');
+		props.dispatch( actionCreators.setEditorElem(editorElem) );
 
 		window.addEventListener('beforeunload', this.handleBeforeUnload);
 	},

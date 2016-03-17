@@ -25,6 +25,9 @@ function fakeApiUrl(url) {
 }
 
 
+const noop = () => {};
+
+
 // let requests = {};
 // function abortRequests(requests, key) {
 // 	requests[key] = requests[key] || [];
@@ -43,7 +46,7 @@ function handleError(err) {
 
 const initMap =
 module.exports.initMap =
-function initMap(modelId=undefined) {
+function initMap(modelId=undefined, cb=noop) {
 	return (dispatch, getState) => {
 		const id = modelId || helpers.makeId('model');
 		dispatch({
@@ -59,12 +62,13 @@ function initMap(modelId=undefined) {
 				// handleExists
 				(res, modelId) => {
 					// TODO: do s.th. with the data
+					cb();
 				},
 
 				// handleMissing
 				(modelId) => {
 					// ... otherwise create it
-					dispatch( kbCreateModel(modelId) );
+					dispatch( kbCreateModel(modelId, cb) );
 				}
 			)
 		);
@@ -114,7 +118,7 @@ function kbGetModel(modelId, handleExists, handleMissing) {
 
 const kbCreateModel =
 module.exports.kbCreateModel =
-function kbCreateModel(modelId) {
+function kbCreateModel(modelId, cb=noop) {
 	// TODO: only create model, once model/graph is not empty anymore.
 	// otherwise we might be creatings tons of empty ones ...
 
@@ -148,6 +152,7 @@ function kbCreateModel(modelId) {
 							}
 						)
 					);
+					cb();
 				} else {
 					console.error(`something went wrong: ${res.status}`);
 				};
@@ -865,7 +870,9 @@ function loadAttackerProfiles() {
 	return (dispatch, getState) => {
 		// dispatch({ type: constants.ACTION_loadAttackerProfiles });
 
-		const url = api.makeUrl(knowledgebaseApi, 'attackerprofile');
+		const state = getState();
+		const modelId = state.model.metadata.id;
+		const url = api.makeUrl(knowledgebaseApi, `attackerprofile?model_id=${modelId}`);
 		const params = _.merge(
 			{ url, dataType: 'json' },
 			api.requestOptions.jquery.crossDomain
@@ -940,7 +947,9 @@ function loadComponentTypes() {
 	return (dispatch, getState) => {
 		// dispatch({ type: constants.ACTION_loadComponentTypes });
 
-		const url = api.makeUrl(knowledgebaseApi, 'type');
+		const state = getState();
+		const modelId = state.model.metadata.id;
+		const url = api.makeUrl(knowledgebaseApi, `type?model_id=${modelId}`);
 		const params = _.merge(
 			{ url, dataType: 'json' },
 			api.requestOptions.jquery.crossDomain
