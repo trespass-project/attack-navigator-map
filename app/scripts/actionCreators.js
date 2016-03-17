@@ -790,7 +790,7 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 		if (downloadScenario) {
 			// download it
 			const saveAs = require('browser-saveas');
-			saveAs(blob, 'scenario.zip');
+			saveAs(zipBlob, zipFileName);
 		}
 
 		// // start tool chain
