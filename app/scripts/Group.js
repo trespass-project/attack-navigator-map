@@ -74,7 +74,7 @@ const Group = React.createClass({
 		return <text
 			dx={props.width*0.5}
 			dy={/*props.height*0.5 + 16*/ -10}
-			className='label'>{props.group.name}</text>;
+			className='label'>{props.group.label}</text>;
 	},
 
 	renderDropzone: function() {

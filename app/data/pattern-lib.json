@@ -69,7 +69,7 @@
 				],
 				"groups": [
 					{
-						"name": "Building",
+						"label": "Building",
 						"id": "building",
 						"nodeIds": ["room1", "room2", "corridor", "door1", "door2"]
 					}
@@ -163,7 +163,7 @@
 				],
 				"groups": [
 					{
-						"name": "Virtual network",
+						"label": "Virtual network",
 						"id": "virtual-network",
 						"nodeIds": ["vfw", "vsw", "vm1", "vm2", "file1", "file2"]
 					}

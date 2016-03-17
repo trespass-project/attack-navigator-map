@@ -91,7 +91,7 @@ module.exports.duplicateGroup =
 function duplicateGroup(group={}, keepId=false) {
 	const defaults = {
 		nodeIds: [],
-		name: 'new group', // TODO: should be label
+		label: 'new group',
 	};
 	return _duplicate(group, defaults, keepId, 'group');
 };
@@ -313,7 +313,7 @@ function layoutGraphByType(_graph) {
 			}
 
 			const group = duplicateGroup({
-				name: collectionName,
+				label: collectionName,
 			});
 			groupIndex++;
 

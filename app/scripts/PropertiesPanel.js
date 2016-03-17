@@ -77,7 +77,7 @@ const PropertiesPanel = React.createClass({
 			case 'node':
 				const node = selectedItem;
 				const groupNames = modelHelpers.getNodeGroups(node.id, props.graph.groups)
-					.map(R.prop('name'))
+					.map(R.prop('label'))
 					.join(', ');
 				return (
 					<table>
@@ -129,8 +129,8 @@ const PropertiesPanel = React.createClass({
 									onChange={onChange}
 									type='text'
 									className='form-control'
-									name='name'
-									placeholder='name' value={group.name || ''} />
+									name='label'
+									placeholder='label' value={group.label || ''} />
 								</td>
 							</tr>
 							<tr>
