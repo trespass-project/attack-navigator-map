@@ -302,6 +302,7 @@ function setTransformation(transformation) {
 };
 
 
+const resetTransformation =
 module.exports.resetTransformation =
 function resetTransformation() {
 	return setTransformation({
@@ -490,11 +491,14 @@ const loadXMLFile =
 module.exports.loadXMLFile =
 function loadXMLFile(file) {
 	return (dispatch, getState) => {
-		const action = {
+		dispatch({
 			type: constants.ACTION_loadXMLFile,
 			file,
-		};
-		dispatch(action);
+		});
+
+		dispatch(
+			resetTransformation()
+		);
 
 		// ———
 
