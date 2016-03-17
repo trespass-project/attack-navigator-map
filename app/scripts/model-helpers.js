@@ -457,6 +457,7 @@ function modelFromGraph(graph, metadata={}) {
 					source: edge.from,
 					target: edge.to,
 					directed: /*edge.directed*/ isDirected,
+					kind: edge.relation,
 				});
 			} else {
 				if (edge.relation === 'atLocation') {
@@ -473,7 +474,7 @@ function modelFromGraph(graph, metadata={}) {
 
 	const keysToOmit = [
 		/*'name', */
-		// 'label',
+		'label',
 		'x',
 		'y',
 		'modelComponentType',
@@ -487,7 +488,11 @@ function modelFromGraph(graph, metadata={}) {
 			if (!addFn) {
 				console.warn(`${fnName}()`, 'not found');
 			} else {
-				addFn(model, R.omit(keysToOmit, node));
+				const item = R.omit(keysToOmit, node);
+				if (node.label) {
+					item.name = node.label;
+				}
+				addFn(model, item);
 			}
 		});
 
