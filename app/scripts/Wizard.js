@@ -220,38 +220,14 @@ const Wizard = React.createClass({
 		this.context.dispatch( actionCreators.setAttackerProfit(profit) );
 	},
 
-	renderRunAnalysis: function(props) {
+	renderAttackerGoal: function() {
+		const props = this.props;
+
 		const goalValue = (!!props.attackerGoal && !!props.attackerGoalType)
 			? props.attackerGoal[props.attackerGoalType].asset || ''
 			: '';
 
-		const readyToRun = (!!props.attackerGoal);
-
 		return <div>
-			<h2 className='title'>Run analysis</h2>
-
-			<button
-				onClick={this.downloadAsXML}
-				className='btn btn-default btn-xs'>
-				Save current model as XML
-			</button>
-
-			<hr/>
-
-			<h3>Tool chains</h3>
-			<select ref='toolchain'>
-				{R.values(props.toolChains)
-					.map((chain) => {
-						return <option
-							key={chain.id}
-							value={chain.id}>
-							{chain.name}
-						</option>;
-					})
-				}
-			</select>
-			<br/>
-
 			<h3>Attacker goal</h3>
 			<select
 				value={goalValue}
@@ -275,23 +251,105 @@ const Wizard = React.createClass({
 				value={props.attackerProfit}
 				onChange={this.handleAttackerProfitUpdate}
 			/>
-			<br/>
+		</div>;
+	},
 
+	renderToolChainSelection: function() {
+		const props = this.props;
+
+		return <div>
+			<h3>Tool chains</h3>
+			<select ref='toolchain'
+				onChange={this.setSelectedToolChain}
+				value={props.toolChainId}>
+				{R.values(props.toolChains)
+					.map((chain) => {
+						return <option
+							key={chain.id}
+							value={chain.id}>
+							{chain.name}
+						</option>;
+					})
+				}
+			</select>
+		</div>;
+	},
+
+	renderDownloadButtons: function(isReadyToDownload=false) {
+		return <div>
+			<button
+				onClick={this.downloadModelXML}
+				className='btn btn-default btn-xs'>
+				Save current model as XML
+			</button>
+			<br/>
+			<button
+				onClick={this.downloadZippedScenario}
+				disabled={!isReadyToDownload}
+				className='btn btn-default btn-xs'>
+				Save model and scenario as ZIP
+			</button>
+		</div>;
+	},
+
+	renderRunAnalysis: function(props) {
+		const missingForScenario = [
+			{ value: props.attackerGoal, message: 'No attacker goal selected' },
+			{ value: props.attackerProfit, message: 'No attacker profit entered' },
+		]
+			.reduce((acc, item) => {
+				if (!item.value) {
+					acc = [...acc, item.message];
+				}
+				return acc;
+			}, []);
+
+		const missingForAnalysis = [
+			{ value: props.attackerProfile, message: 'No attacker profile selected' },
+			{ value: props.toolChainId, message: 'No toolchain selected' },
+		]
+			.reduce((acc, item) => {
+				if (!item.value) {
+					acc = [...acc, item.message];
+				}
+				return acc;
+			}, missingForScenario);
+
+		const isReadyToDownload = (missingForScenario.length === 0);
+		const isReadyToRun = (missingForAnalysis.length === 0);
+
+		return <div>
+			<h2 className='title'>Run analysis</h2>
 			<hr/>
+			{this.renderAttackerGoal()}
+			<hr/>
+			{this.renderToolChainSelection()}
+			<hr/>
+			{this.renderDownloadButtons(isReadyToDownload)}
+			<hr/>
+
+			<div>
+				<ul>
+					{missingForAnalysis
+						.map(item => <li key={item}>{item}</li>)
+					}
+				</ul>
+			</div>
+
 			<div style={{
 				display: 'flex',
 				flexDirection: 'column',
 				alignItems: 'center',
 				justifyContent: 'center',
 			}}>
-				<div>
+				{/*<div>
 					<input type='checkbox' name='checkbox-dl-scenario' ref='checkbox-dl-scenario' />&nbsp;
 					<label style={{ fontWeight: 'normal' }} htmlFor='checkbox-dl-scenario'>
 						Download scenario file(s)
 					</label>
-				</div>
+				</div>*/}
 				<button
-					disabled={!readyToRun}
+					disabled={!isReadyToRun}
 					onClick={this.runAnalysis}
 					className='btn btn-primary'
 				>
@@ -412,14 +470,21 @@ const Wizard = React.createClass({
 		this.context.dispatch( actionCreators.setAttackerGoal(goalType, goalData) );
 	},
 
+	setSelectedToolChain: function(event) {
+		// watch out: (numeric) value comes back as string
+		const toolChainId = parseInt(this.refs.toolchain.value, 10);
+
+		this.context.dispatch(
+			actionCreators.setSelectedToolChain(toolChainId)
+		);
+	},
+
 	runAnalysis: function() {
 		const dlScenarioCheckbox = this.refs['checkbox-dl-scenario'];
-		const select = this.refs.toolchain;
-		// watch out: (numeric) value comes back as string
 		this.context.dispatch(
 			actionCreators.runAnalysis(
-				parseInt(select.value, 10),
-				dlScenarioCheckbox.checked
+				this.props.toolChainId,
+				(!dlScenarioCheckbox) ? false : dlScenarioCheckbox.checked
 			)
 		);
 	},
@@ -449,9 +514,14 @@ const Wizard = React.createClass({
 		this.context.dispatch( actionCreators.loadXMLFile(file) );
 	},
 
-	downloadAsXML: function(event) {
+	downloadModelXML: function(event) {
 		event.preventDefault();
-		this.context.dispatch( actionCreators.downloadAsXML() );
+		this.context.dispatch( actionCreators.downloadModelXML() );
+	},
+
+	downloadZippedScenario: function(event) {
+		event.preventDefault();
+		this.context.dispatch( actionCreators.downloadZippedScenario() );
 	},
 
 	selectWizardStep(name, event) {

@@ -222,10 +222,15 @@ function reducer(state=initialState, action) {
 		case constants.ACTION_setAttackerProfit:
 			return mergeWithState({ attackerProfit: action.profit });
 
+		case constants.ACTION_setSelectedToolChain:
+			return mergeWithState({
+				toolChainId: action.toolChainId,
+			});
+
 		case constants.ACTION_runAnalysis:
 			return mergeWithState({
 				analysisRunning: true,
-				toolChainId: action.toolChainId,
+				// toolChainId: action.toolChainId,
 			});
 
 		// case constants.ACTION_loadToolChains:

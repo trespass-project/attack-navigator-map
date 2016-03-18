@@ -129,15 +129,6 @@ function reducer(state=initialState, action) {
 			);
 		}
 
-		case constants.ACTION_downloadAsXML: {
-			const model = modelHelpers.modelFromGraph(state.graph, state.metadata);
-			modelHelpers.downloadAsXML( // TODO: do this elsewhere
-				model,
-				`${model.system.title.replace(/\s/g, '-')}.xml`
-			);
-			return state;
-		}
-
 		case constants.ACTION_addNodeToGroup: {
 			const {nodeId, groupId} = action;
 			const newGraph = modelHelpers.addNodeToGroup(state.graph, nodeId, groupId);

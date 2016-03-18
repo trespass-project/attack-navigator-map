@@ -6,6 +6,7 @@ require('whatwg-fetch');
 const R = require('ramda');
 const _ = require('lodash');
 const JSZip = require('jszip');
+const saveAs = require('browser-saveas');
 require('whatwg-fetch');
 const queryString = require('query-string');
 const trespassModel = require('trespass.js').model;
@@ -543,11 +544,55 @@ function loadXML(xmlString) {
 };
 
 
-const downloadAsXML =
-module.exports.downloadAsXML =
-function downloadAsXML() {
-	return {
-		type: constants.ACTION_downloadAsXML,
+const getXMLBlob =
+module.exports.getXMLBlob =
+function getXMLBlob(xmlStr) {
+	return new Blob(
+		[xmlStr],
+		{ type: 'text/plain;charset=utf-8' }
+	);
+};
+
+
+const downloadModelXML =
+module.exports.downloadModelXML =
+function downloadModelXML() {
+	return (dispatch, getState) => {
+		const state = getState();
+		const model = modelHelpers.modelFromGraph(state.model.graph, state.model.metadata);
+		const modelXmlStr = trespassModel.toXML(model);
+		const modelFileName = `${model.system.title.replace(/\s/g, '-')}.xml`;
+		saveAs(getXMLBlob(modelXmlStr), modelFileName);
+	};
+};
+
+
+const downloadZippedScenario =
+module.exports.downloadZippedScenario =
+function downloadZippedScenario() {
+	return (dispatch, getState) => {
+		const state = getState();
+		const model = modelHelpers.modelFromGraph(state.model.graph, state.model.metadata);
+		const modelId = model.system.id;
+		const modelXmlStr = trespassModel.toXML(model);
+
+		const modelFileName = 'model.xml';
+		const scenarioFileName = 'scenario.xml';
+		const zipFileName = 'scenario.zip';
+
+		const scenarioXmlStr = generateScenarioXML(
+			modelId,
+			modelFileName,
+			state.interface
+		);
+
+		const zipBlob = zipScenario(
+			modelXmlStr,
+			modelFileName,
+			scenarioXmlStr,
+			scenarioFileName
+		);
+		saveAs(zipBlob, zipFileName);
 	};
 };
 
@@ -696,8 +741,10 @@ function kbRunToolchain(toolChainId=1, modelId, attackerProfileId) {
 
 	const params = _.merge(
 		{
-			// method: 'put',
-			// body: item.data
+			headers: {
+				'Accept': 'application/json',
+				// 'Content-Type': 'application/json'
+			},
 		},
 		api.requestOptions.fetch.crossDomain
 	);
@@ -717,6 +764,43 @@ function kbRunToolchain(toolChainId=1, modelId, attackerProfileId) {
 }
 
 
+const generateScenarioXML =
+module.exports.generateScenarioXML =
+function generateScenarioXML(
+	modelId, modelFileName,
+	{ attackerGoal, attackerGoalType, attackerProfit }
+) {
+	const attackerId = attackerGoal[attackerGoalType].attacker;
+	const assetId = attackerGoal[attackerGoalType].asset;
+	const profit = attackerProfit;
+	let scenario = trespassModel.createScenario();
+	scenario = trespassModel.scenarioSetModel(scenario, modelFileName);
+	scenario = trespassModel.scenarioSetAssetGoal(scenario, attackerId, assetId, profit);
+	scenario.scenario.id = modelId.replace(/-model$/i, '-scenario');
+	return trespassModel.scenarioToXML(scenario);
+};
+
+
+const zipScenario =
+module.exports.zipScenario =
+function zipScenario(modelXmlStr, modelFileName, scenarioXmlStr, scenarioFileName) {
+	const zip = new JSZip();
+	zip.file(modelFileName, modelXmlStr);
+	zip.file(scenarioFileName, scenarioXmlStr);
+	return zip.generate({ type: 'blob' });
+};
+
+
+const setSelectedToolChain =
+module.exports.setSelectedToolChain =
+function setSelectedToolChain(toolChainId) {
+	return {
+		type: constants.ACTION_setSelectedToolChain,
+		toolChainId
+	};
+};
+
+
 const runAnalysis =
 module.exports.runAnalysis =
 function runAnalysis(toolChainId, downloadScenario=false) {
@@ -730,37 +814,34 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 			return;
 		}
 
-		// collect relevant data
-		const data = R.pick([
-			'attackerProfile',
-			'attackerGoalType',
-			'attackerGoal',
-			'attackerProfit',
-		], state.interface);
-
 		const modelId = state.model.metadata.id;
 		if (!modelId) {
 			throw new Error('missing model id');
 		}
 
-		// generate model xml
-		let model = modelHelpers.modelFromGraph(state.model.graph, state.model.metadata);
+		const model = modelHelpers.modelFromGraph(state.model.graph, state.model.metadata);
 		const modelXmlStr = trespassModel.toXML(model);
-		// console.log(modelXmlStr);
 
-		// generate scenario xml
 		const modelFileName = 'model.xml';
 		const scenarioFileName = 'scenario.xml';
 		const zipFileName = 'scenario.zip';
-		const attackerId = data.attackerGoal[data.attackerGoalType].attacker;
-		const assetId = data.attackerGoal[data.attackerGoalType].asset;
-		const profit = data.attackerProfit;
-		let scenario = trespassModel.createScenario();
-		scenario = trespassModel.scenarioSetModel(scenario, modelFileName);
-		scenario = trespassModel.scenarioSetAssetGoal(scenario, attackerId, assetId, profit);
-		scenario.scenario.id = modelId.replace(/-model$/i, '-scenario');
-		const scenarioXmlStr = trespassModel.scenarioToXML(scenario);
-		// console.log(scenarioXmlStr);
+
+		const scenarioXmlStr = generateScenarioXML(
+			modelId,
+			modelFileName,
+			state.interface
+		);
+
+		// download
+		if (downloadScenario) {
+			const zipBlob = zipScenario(
+				modelXmlStr,
+				modelFileName,
+				scenarioXmlStr,
+				scenarioFileName
+			);
+			saveAs(zipBlob, zipFileName);
+		}
 
 		// upload to knowledgebase
 		putModelAndScenarioIntoKnowledgebase(
@@ -778,20 +859,8 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 		)
 			.then(() => {
 				const toolChainId = 1;
-				kbRunToolchain(toolChainId, modelId, data.attackerProfile.id);
+				kbRunToolchain(toolChainId, modelId, state.interface.attackerProfile.id);
 			});
-
-		// zip it!
-		const zip = new JSZip();
-		zip.file(modelFileName, modelXmlStr);
-		zip.file(scenarioFileName, scenarioXmlStr);
-		const blob = zip.generate({ type: 'blob' });
-
-		if (downloadScenario) {
-			// download it
-			const saveAs = require('browser-saveas');
-			saveAs(zipBlob, zipFileName);
-		}
 
 		// // start tool chain
 		// const formData = new FormData();

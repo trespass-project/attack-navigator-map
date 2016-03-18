@@ -350,22 +350,6 @@ function layoutGraphByType(_graph) {
 };
 
 
-const downloadAsXML =
-module.exports.downloadAsXML =
-function downloadAsXML(model, fileName='model.xml') {
-	const xml = trespass.model.toXML(model);
-	const blob = new Blob(
-		[xml],
-		{ type: 'text/plain;charset=utf-8' }
-	);
-	if (document) { // only in browser
-		const saveAs = require('browser-saveas');
-		saveAs(blob, fileName);
-	}
-	return blob;
-};
-
-
 const graphFromModel =
 module.exports.graphFromModel =
 function graphFromModel(model) {
