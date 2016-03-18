@@ -1059,7 +1059,7 @@ function loadComponentTypes() {
 						return {
 							id,
 							modelComponentType,
-							kbType: id,
+							type: id,
 							label: type['@label'],
 							// TODO: rest
 						};

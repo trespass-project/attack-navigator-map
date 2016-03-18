@@ -236,7 +236,7 @@ const PropertiesPanel = React.createClass({
 			return null;
 		}
 
-		const attributes = props.kbTypeAttributes[selectedItem.kbType];
+		const attributes = props.kbTypeAttributes[selectedItem.type];
 		if (!attributes) {
 			return null;
 		}

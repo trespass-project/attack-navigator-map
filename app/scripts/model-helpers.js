@@ -464,7 +464,7 @@ function modelFromGraph(graph, metadata={}) {
 		'x',
 		'y',
 		'modelComponentType',
-		'kbType' // TODO: what to do with this?
+		// 'type' // knowledgebase type
 	];
 	R.values(graph.nodes || {})
 		.forEach((node) => {

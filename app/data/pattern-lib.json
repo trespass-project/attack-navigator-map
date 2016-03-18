@@ -10,6 +10,7 @@
 						"id": "room1",
 						"x": 240,
 						"y": -120,
+						"type": "tkb:room",
 						"label": "Room 1"
 					},
 					{
@@ -17,6 +18,7 @@
 						"id": "room2",
 						"x": 240,
 						"y": 120,
+						"type": "tkb:room",
 						"label": "Room 2"
 					},
 					{
@@ -24,6 +26,7 @@
 						"id": "door1",
 						"x": 130,
 						"y": -70,
+						"type": "tkb:door",
 						"label": "Door 1"
 					},
 					{
@@ -31,6 +34,7 @@
 						"id": "door2",
 						"x": 130,
 						"y": 70,
+						"type": "tkb:door",
 						"label": "Door 2"
 					},
 					{
@@ -38,6 +42,7 @@
 						"id": "corridor",
 						"x": 1,
 						"y": 1,
+						"type": "tkb:room",
 						"label": "Corridor"
 					}
 				],
@@ -89,6 +94,7 @@
 						"id": "vm1",
 						"x": 300,
 						"y": 1,
+						"type": "tkb:vmware-virtualmachine",
 						"label": "VM1"
 					},
 					{
@@ -96,6 +102,7 @@
 						"id": "vm2",
 						"x": 300,
 						"y": 100,
+						"type": "tkb:vmware-virtualmachine",
 						"label": "VM2"
 					},
 					{
@@ -103,6 +110,7 @@
 						"id": "file1",
 						"x": 450,
 						"y": 1,
+						"type": "tkb:file",
 						"label": "File 1"
 					},
 					{
@@ -110,6 +118,7 @@
 						"id": "file2",
 						"x": 450,
 						"y": 100,
+						"type": "tkb:file",
 						"label": "File 2"
 					},
 					{
@@ -117,6 +126,7 @@
 						"id": "vsw",
 						"x": 150,
 						"y": 50,
+						"type": "tkb:vmware-network",
 						"label": "Virtual switch"
 					},
 					{
@@ -124,6 +134,7 @@
 						"id": "vfw",
 						"x": 1,
 						"y": 50,
+						"type": "tkb:vmware-firewall",
 						"label": "Virtual firewall"
 					}
 				],
@@ -178,9 +189,21 @@
 			"isFragment": true,
 			"value": {
 				"nodes": [
-					{ "modelComponentType": "actor", "label": "Boss" },
-					{ "modelComponentType": "actor", "label": "Personal assistant" },
-					{ "modelComponentType": "actor", "label": "Employee" }
+					{
+						"modelComponentType": "actor",
+						"type": "tkb:actor",
+						"label": "Boss"
+					},
+					{
+						"modelComponentType": "actor",
+						"type": "tkb:actor",
+						"label": "Personal assistant"
+					},
+					{
+						"modelComponentType": "actor",
+						"type": "tkb:actor",
+						"label": "Employee"
+					}
 				],
 				"edges": [],
 				"groups": []
