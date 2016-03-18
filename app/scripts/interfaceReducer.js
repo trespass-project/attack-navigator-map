@@ -55,6 +55,7 @@ const initialState = {
 	attackerGoalType: null,
 	attackerGoal: null,
 	attackerProfit: undefined,
+	attackerActorId: null,
 
 	toolChainIds: [],
 	toolChains: {},
@@ -218,6 +219,9 @@ function reducer(state=initialState, action) {
 				attackerGoalType: action.goalType,
 				attackerGoal: action.goalData,
 			});
+
+		case constants.ACTION_setAttackerActor:
+			return mergeWithState({ attackerActorId: action.actorId });
 
 		case constants.ACTION_setAttackerProfit:
 			return mergeWithState({ attackerProfit: action.profit });

@@ -657,6 +657,16 @@ function attackerProfileChanged(profile) {
 };
 
 
+const setAttackerActor =
+module.exports.setAttackerActor =
+function setAttackerActor(actorId) {
+	return {
+		type: constants.ACTION_setAttackerActor,
+		actorId
+	};
+};
+
+
 const setAttackerGoal =
 module.exports.setAttackerGoal =
 function setAttackerGoal(goalType, goalData) {
@@ -768,9 +778,9 @@ const generateScenarioXML =
 module.exports.generateScenarioXML =
 function generateScenarioXML(
 	modelId, modelFileName,
-	{ attackerGoal, attackerGoalType, attackerProfit }
+	{ attackerActorId, attackerGoal, attackerGoalType, attackerProfit }
 ) {
-	const attackerId = attackerGoal[attackerGoalType].attacker;
+	const attackerId = attackerActorId || 'X';
 	const assetId = attackerGoal[attackerGoalType].asset;
 	const profit = attackerProfit;
 	let scenario = trespassModel.createScenario();

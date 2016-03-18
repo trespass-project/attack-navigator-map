@@ -200,8 +200,32 @@ const Wizard = React.createClass({
 		</div>;
 	},
 
+	renderAttackerActor: function() {
+		const props = this.props;
+		const actors = R.values(props.graph.nodes)
+			.filter((item) => {
+				return item.modelComponentType === 'actor';
+			});
+
+		return <div>
+			<h3>Select attacker</h3>
+			<select
+				value={props.attackerActorId}
+				onChange={this.setAttackerActor}
+			>
+				<option value=''>— select attacker —</option>
+				{actors
+					.map(this.renderOption)
+				}
+			</select>
+		</div>;
+	},
+
 	renderAttackerProfile: function(props) {
 		return <div>
+			{this.renderAttackerActor()}
+			<hr/>
+
 			<h2 className='title'>Attacker profile</h2>
 			<AttackerProfileEditor
 				profile={props.attackerProfile}
@@ -239,7 +263,7 @@ const Wizard = React.createClass({
 						return item.modelComponentType === 'item' ||
 							item.modelComponentType === 'data';
 					})
-					.map(this.renderGoalOption)
+					.map(this.renderOption)
 				}
 			</select>
 			<br/>
@@ -293,27 +317,23 @@ const Wizard = React.createClass({
 	},
 
 	renderRunAnalysis: function(props) {
+		function pushIfFalsey(acc, item) {
+			if (!item.value) {
+				acc = [...acc, item.message];
+			}
+			return acc;
+		}
+
 		const missingForScenario = [
+			{ value: props.attackerActorId, message: 'No attacker selected' },
 			{ value: props.attackerGoal, message: 'No attacker goal selected' },
 			{ value: props.attackerProfit, message: 'No attacker profit entered' },
-		]
-			.reduce((acc, item) => {
-				if (!item.value) {
-					acc = [...acc, item.message];
-				}
-				return acc;
-			}, []);
+		].reduce(pushIfFalsey, []);
 
 		const missingForAnalysis = [
 			{ value: props.attackerProfile, message: 'No attacker profile selected' },
 			{ value: props.toolChainId, message: 'No toolchain selected' },
-		]
-			.reduce((acc, item) => {
-				if (!item.value) {
-					acc = [...acc, item.message];
-				}
-				return acc;
-			}, missingForScenario);
+		].reduce(pushIfFalsey, missingForScenario);
 
 		const isReadyToDownload = (missingForScenario.length === 0);
 		const isReadyToRun = (missingForAnalysis.length === 0);
@@ -359,7 +379,7 @@ const Wizard = React.createClass({
 		</div>;
 	},
 
-	renderGoalOption: function(item) {
+	renderOption: function(item) {
 		return <option
 			key={item.id}
 			value={item.id}
@@ -458,16 +478,24 @@ const Wizard = React.createClass({
 		);
 	},
 
+	setAttackerActor: function(event) {
+		const actorId = event.target.value;
+		this.context.dispatch(
+			actionCreators.setAttackerActor(actorId)
+		);
+	},
+
 	setAttackerGoal: function(event) {
 		const assetId = event.target.value;
 		const goalType = 'assetGoal';
 		const goalData = {
 			[goalType]: {
-				attacker: 'X',
 				asset: assetId
 			}
 		};
-		this.context.dispatch( actionCreators.setAttackerGoal(goalType, goalData) );
+		this.context.dispatch(
+			actionCreators.setAttackerGoal(goalType, goalData)
+		);
 	},
 
 	setSelectedToolChain: function(event) {

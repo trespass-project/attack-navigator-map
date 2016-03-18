@@ -65,6 +65,7 @@ const constants = {
 	ACTION_removeEdge: 'ACTION_removeEdge',
 	ACTION_updateComponentProperties: 'ACTION_updateComponentProperties',
 	ACTION_attackerProfileChanged: 'ACTION_attackerProfileChanged',
+	ACTION_setAttackerActor: 'ACTION_setAttackerActor',
 	ACTION_setAttackerGoal: 'ACTION_setAttackerGoal',
 	ACTION_setAttackerProfit: 'ACTION_setAttackerProfit',
 	ACTION_runAnalysis: 'ACTION_runAnalysis',
