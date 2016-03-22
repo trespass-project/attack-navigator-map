@@ -2,7 +2,6 @@
 
 const $ = require('jquery');
 const Q = require('q');
-require('whatwg-fetch');
 const R = require('ramda');
 const _ = require('lodash');
 const JSZip = require('jszip');
