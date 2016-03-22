@@ -26,6 +26,7 @@ function fakeApiUrl(url) {
 
 
 const noop = () => {};
+const retryRate = 1000;
 
 
 // let requests = {};
@@ -93,6 +94,7 @@ function kbGetModel(modelId, handleExists, handleMissing) {
 		const url = api.makeUrl(knowledgebaseApi, `model/${modelId}`);
 		const params = _.merge(
 			{},
+			api.requestOptions.fetch.acceptJSON,
 			api.requestOptions.fetch.crossDomain
 		);
 		fetch(url, params)
@@ -136,6 +138,7 @@ function kbCreateModel(modelId, cb=noop) {
 		const url = api.makeUrl(knowledgebaseApi, `model/${modelId}`);
 		const params = _.merge(
 			{ method: 'put', },
+			api.requestOptions.fetch.acceptJSON,
 			api.requestOptions.fetch.crossDomain
 		);
 		fetch(url, params)
@@ -717,6 +720,7 @@ function putModelAndScenarioIntoKnowledgebase(modelId, modelData, scenarioData) 
 					method: 'put',
 					body: item.data
 				},
+				api.requestOptions.fetch.acceptJSON,
 				api.requestOptions.fetch.crossDomain
 			);
 
@@ -745,14 +749,101 @@ function putModelAndScenarioIntoKnowledgebase(modelId, modelData, scenarioData) 
 };
 
 
+function monitorTaskStatus(taskUrl) {
+	const url = taskUrl;
+	const params = _.merge(
+		api.requestOptions.fetch.acceptJSON,
+		api.requestOptions.fetch.crossDomain
+	);
+
+	return new Promise((resolve, reject) => {
+		let intervalId;
+
+		function handleStatus(taskStatusData) {
+			const completed = R.takeWhile(
+				item => (item.status === 'done'),
+				taskStatusData.tool_status
+			);
+			const pending = R.dropWhile(
+				item => (item.status === 'done'),
+				taskStatusData.tool_status
+			);
+			const current = R.filter(
+				item => (item.status !== 'not started'),
+				taskStatusData.tool_status
+			);
+
+			// console.log('completed', completed.map(R.prop('name')));
+			// console.log('current', current.map(R.prop('name')));
+			console.log(current[0].name);
+			// console.log('pending', pending.map(R.prop('name')));
+
+			return { completed, current, pending };
+		}
+
+		function check() {
+			fetch(url, params)
+				.catch((err) => {
+					console.error(err);
+					clearInterval(intervalId);
+					reject(err);
+				})
+				.then((res) => {
+					return res.json();
+				})
+				.then((taskStatusData) => {
+					if (taskStatusData.status) {
+						console.warn(taskStatusData.status);
+						const categorized = handleStatus(taskStatusData);
+
+						switch (taskStatusData.status) {
+							case 'not started':
+							case 'running':
+								// do nothing
+								break;
+
+							case 'error':
+								clearInterval(intervalId);
+								const errorMessage = categorized.current[0]['error-message'];
+								alert(errorMessage);
+								console.log(errorMessage);
+								break;
+
+							case 'done':
+								clearInterval(intervalId);
+
+								// TODO: get output file
+
+								// workaround, to get the correct duration
+								// const {beginDate, endDate} = taskStatusData;
+
+								// getTask(fetch, taskId, propagateParams)
+								// 	.then((taskData) => {
+								// 		const merged = _.merge(taskData, {beginDate, endDate});
+								// 		resolve(merged);
+								// 	});
+								break;
+
+							default:
+								clearInterval(intervalId);
+								reject(new Error(`Unknown status: ${taskStatusData.status}`));
+								break;
+						}
+					}
+				});
+		}
+
+		intervalId = setInterval(check, retryRate);
+	});
+}
+
+
 function kbRunToolchain(toolChainId, modelId, attackerProfileId) {
 	const url = `${api.makeUrl(knowledgebaseApi, 'toolchain')}/${toolChainId}?model_id=${modelId}&attackerprofile_id=${attackerProfileId}`;
 
 	const params = _.merge(
-		{
-			method: 'post',
-			headers: { 'Accept': 'application/json' }
-		},
+		{ method: 'post' },
+		api.requestOptions.fetch.acceptJSON,
 		api.requestOptions.fetch.crossDomain
 	);
 
@@ -767,6 +858,7 @@ function kbRunToolchain(toolChainId, modelId, attackerProfileId) {
 		.then((data) => {
 			// TODO: do s.th.
 			console.log(data);
+			monitorTaskStatus(data.task_url);
 		});
 }
 
@@ -916,6 +1008,7 @@ function loadToolChains() {
 		const url = api.makeUrl(knowledgebaseApi, `toolchain?model_id=${modelId}`);
 		const params = _.merge(
 			{},
+			api.requestOptions.fetch.acceptJSON,
 			api.requestOptions.fetch.crossDomain
 		);
 		fetch(url, params)
