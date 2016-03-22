@@ -286,6 +286,7 @@ const Wizard = React.createClass({
 			<select ref='toolchain'
 				onChange={this.setSelectedToolChain}
 				value={props.toolChainId}>
+				<option value=''>— select tool chain —</option>
 				{R.values(props.toolChains)
 					.map((chain) => {
 						return <option

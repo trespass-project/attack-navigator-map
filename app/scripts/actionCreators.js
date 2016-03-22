@@ -727,7 +727,7 @@ function putModelAndScenarioIntoKnowledgebase(modelId, modelData, scenarioData) 
 					})
 					.then((res) => {
 						if (res.status === 200) {
-							console.log('success (200)', url);
+							// console.log('success (200)', url);
 						} else {
 							console.error(`something went wrong (${res.status})`, url);
 						}
@@ -745,15 +745,13 @@ function putModelAndScenarioIntoKnowledgebase(modelId, modelData, scenarioData) 
 };
 
 
-function kbRunToolchain(toolChainId=1, modelId, attackerProfileId) {
-	const url = `${api.makeUrl(knowledgebaseApi, 'runTools')}/${toolChainId}?model_id=${modelId}&attackerprofile_id=${attackerProfileId}`;
+function kbRunToolchain(toolChainId, modelId, attackerProfileId) {
+	const url = `${api.makeUrl(knowledgebaseApi, 'toolchain')}/${toolChainId}?model_id=${modelId}&attackerprofile_id=${attackerProfileId}`;
 
 	const params = _.merge(
 		{
-			headers: {
-				'Accept': 'application/json',
-				// 'Content-Type': 'application/json'
-			},
+			method: 'post',
+			headers: { 'Accept': 'application/json' }
 		},
 		api.requestOptions.fetch.crossDomain
 	);
@@ -867,7 +865,6 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 			}
 		)
 			.then(() => {
-				const toolChainId = 1;
 				kbRunToolchain(toolChainId, modelId, state.interface.attackerProfile.id);
 			});
 
