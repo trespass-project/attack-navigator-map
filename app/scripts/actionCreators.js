@@ -910,36 +910,67 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 
 const loadToolChains =
 module.exports.loadToolChains =
-function loadToolChains(xmlString) {
+function loadToolChains() {
 	return (dispatch, getState) => {
 		// dispatch({ type: constants.ACTION_loadToolChains });
 
+		const state = getState();
+		const modelId = state.model.metadata.id;
+		const url = api.makeUrl(knowledgebaseApi, `toolchain?model_id=${modelId}`);
 		const params = _.merge(
-			{
-				dataType: 'json',
-				url: api.makeUrl(toolsApi, 'secured/tool-chain'),
-				// data: data,
-			},
-			api.requestOptions.jquery.crossDomain,
-			api.requestOptions.jquery.withCredentials
+			{},
+			api.requestOptions.fetch.crossDomain
 		);
-		const req = $.ajax(params);
-		Q(req)
-			.then((chains) => {
-				// only get those chains that begin with treemaker
-				const treemakerName = 'Treemaker'; // TODO: don't hardcode
-				const toolChains = chains
-					.filter((toolChain) => {
-						return toolChain.tools[0].name === treemakerName;
-					});
+		fetch(url, params)
+			.catch((err) => {
+				console.error(err);
+			})
+			.then((res) => {
+				return res.json();
+			})
+			.then((toolChains) => {
+				// TODO: do they all begin with treemaker?
 				dispatch({
 					type: constants.ACTION_loadToolChains_DONE,
 					normalizedToolChains: helpers.normalize(toolChains)
 				});
-			})
-			.catch(handleError);
+			});
 	};
 };
+
+
+// const loadToolChains =
+// module.exports.loadToolChains =
+// function loadToolChains() {
+// 	return (dispatch, getState) => {
+// 		// dispatch({ type: constants.ACTION_loadToolChains });
+
+// 		const params = _.merge(
+// 			{
+// 				dataType: 'json',
+// 				url: api.makeUrl(toolsApi, 'secured/tool-chain'),
+// 				// data: data,
+// 			},
+// 			api.requestOptions.jquery.crossDomain,
+// 			api.requestOptions.jquery.withCredentials
+// 		);
+// 		const req = $.ajax(params);
+// 		Q(req)
+// 			.then((chains) => {
+// 				// only get those chains that begin with treemaker
+// 				const treemakerName = 'Treemaker'; // TODO: don't hardcode
+// 				const toolChains = chains
+// 					.filter((toolChain) => {
+// 						return toolChain.tools[0].name === treemakerName;
+// 					});
+// 				dispatch({
+// 					type: constants.ACTION_loadToolChains_DONE,
+// 					normalizedToolChains: helpers.normalize(toolChains)
+// 				});
+// 			})
+// 			.catch(handleError);
+// 	};
+// };
 
 
 const loadAttackerProfiles =

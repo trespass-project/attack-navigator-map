@@ -44,6 +44,7 @@ let App = React.createClass({
 				// kb api
 				props.dispatch( actionCreators.loadComponentTypes() );
 				props.dispatch( actionCreators.loadAttackerProfiles() );
+				props.dispatch( actionCreators.loadToolChains() );
 			})
 		);
 
@@ -52,7 +53,7 @@ let App = React.createClass({
 		props.dispatch( actionCreators.loadRelationTypes() );
 
 		// tools api
-		props.dispatch( actionCreators.loadToolChains() );
+		// props.dispatch( actionCreators.loadToolChains() );
 
 		const editorElem = document.querySelector('#editor > svg');
 		props.dispatch( actionCreators.setEditorElem(editorElem) );
