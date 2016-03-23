@@ -111,6 +111,7 @@
 						"x": 450,
 						"y": 1,
 						"type": "tkb:file",
+						"value": "42",
 						"label": "File 1"
 					},
 					{
@@ -119,6 +120,7 @@
 						"x": 450,
 						"y": 100,
 						"type": "tkb:file",
+						"value": "42",
 						"label": "File 2"
 					},
 					{

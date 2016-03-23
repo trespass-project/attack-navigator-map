@@ -8,8 +8,9 @@ const JSZip = require('jszip');
 const saveAs = require('browser-saveas');
 require('whatwg-fetch');
 const queryString = require('query-string');
-const trespassModel = require('trespass.js').model;
-const api = require('trespass.js').api;
+const trespass = require('trespass.js');
+const trespassModel = trespass.model;
+const api = trespass.api;
 const toolsApi = api.tools;
 const knowledgebaseApi = api.knowledgebase;
 const constants = require('./constants.js');
@@ -806,7 +807,7 @@ function monitorTaskStatus(taskUrl) {
 								clearInterval(intervalId);
 								const errorMessage = categorized.current[0]['error-message'];
 								alert(errorMessage);
-								console.log(errorMessage);
+								console.error(errorMessage);
 								break;
 
 							case 'done':
@@ -920,6 +921,15 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 
 		const model = modelHelpers.modelFromGraph(state.model.graph, state.model.metadata);
 		const modelXmlStr = trespassModel.toXML(model);
+
+		const validationErrors = trespass.model.validateModel(model);
+		if (validationErrors.length) {
+			alert([
+				'Model validation failed:',
+				...(validationErrors.map(R.prop('message')))
+			].join('\n'));
+			return;
+		}
 
 		const modelFileName = 'model.xml';
 		const scenarioFileName = 'scenario.xml';
