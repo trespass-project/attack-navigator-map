@@ -365,7 +365,6 @@ function graphFromModel(model) {
 				// TODO: infer type?
 			});
 		});
-	graph.edges = helpers.toHashMap('id', edges);
 
 	// set model component type
 	const nonEdges = R.without(['edges'], collectionNames);
@@ -384,6 +383,23 @@ function graphFromModel(model) {
 			const coll = (_.isArray(model.system[collectionName]))
 				? helpers.toHashMap('id', model.system[collectionName])
 				: model.system[collectionName];
+
+			// convert atLocations to edges:
+			R.values(coll)
+				.forEach((item) => {
+					(item.atLocations || [])
+						.forEach((loc) => {
+							const edge = duplicateEdge({
+								from: item.id,
+								to: loc,
+								directed: true,
+								relation: 'atLocation'
+							});
+							edges.push(edge);
+						});
+					delete item.atLocations;
+				});
+
 			graph = update(graph, { nodes: { $merge: coll } });
 		});
 
@@ -402,6 +418,8 @@ function graphFromModel(model) {
 				});
 			return result;
 		}, []);
+
+	graph.edges = helpers.toHashMap('id', edges);
 
 	const metadata = R.pick(trespass.model.knownAttributes.system, model.system);
 
