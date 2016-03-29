@@ -1036,3 +1036,34 @@ describe(f1('model-helpers.js'), () => {
 		// TODO: more
 	});
 });
+
+
+
+
+
+
+describe(f1('helpers.js'), () => {
+
+	describe(f2('handleStatus()'), () => {
+		const taskStatusData = {
+			tool_status: [
+				{ name: 'done-1', status: 'done' },
+				{ name: 'done-2', status: 'done' },
+				{ name: 'done-3', status: 'done' },
+				{ name: 'running', status: 'running' },
+				{ name: 'test', status: 'test' },
+				{ name: 'not-started-1', status: 'not started' },
+				{ name: 'not-started-2', status: 'not started' },
+			]
+		};
+
+		it(f3('should return the groups'), () => {
+			const categorized = helpers.handleStatus(taskStatusData);
+			console.log(categorized);
+			assert(categorized.completed.length === 3);
+			assert(categorized.current.length === 2);
+			assert(categorized.pending.length === 2);
+		});
+	});
+
+});

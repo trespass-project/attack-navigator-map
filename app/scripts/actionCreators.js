@@ -760,28 +760,6 @@ function monitorTaskStatus(taskUrl) {
 	return new Promise((resolve, reject) => {
 		let intervalId;
 
-		function handleStatus(taskStatusData) {
-			const completed = R.takeWhile(
-				item => (item.status === 'done'),
-				taskStatusData.tool_status
-			);
-			const pending = R.dropWhile(
-				item => (item.status === 'done'),
-				taskStatusData.tool_status
-			);
-			const current = R.filter(
-				item => (item.status !== 'not started'),
-				taskStatusData.tool_status
-			);
-
-			// console.log('completed', completed.map(R.prop('name')));
-			// console.log('current', current.map(R.prop('name')));
-			console.log(current[0].name);
-			// console.log('pending', pending.map(R.prop('name')));
-
-			return { completed, current, pending };
-		}
-
 		function check() {
 			fetch(url, params)
 				.catch((err) => {
@@ -794,8 +772,8 @@ function monitorTaskStatus(taskUrl) {
 				})
 				.then((taskStatusData) => {
 					if (taskStatusData.status) {
-						console.warn(taskStatusData.status);
-						const categorized = handleStatus(taskStatusData);
+						const categorized = helpers.handleStatus(taskStatusData);
+						console.warn(categorized.current[0].name, taskStatusData.status);
 
 						switch (taskStatusData.status) {
 							case 'not started':

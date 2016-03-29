@@ -260,3 +260,27 @@ function unTransformFromTo(fromElem, toElem, xy) {
 	const ctm = getTransformToElement(fromElem, toElem);
 	return unTransform(point, ctm);
 };
+
+
+const handleStatus =
+module.exports.handleStatus =
+function handleStatus(taskStatusData) {
+	const completed = R.takeWhile(
+		item => (item.status === 'done'),
+		taskStatusData.tool_status
+	);
+	const notCompleted = R.dropWhile(
+		item => (item.status === 'done'),
+		taskStatusData.tool_status
+	);
+	const current = R.filter(
+		item => (item.status !== 'not started'),
+		notCompleted
+	);
+	const pending = R.dropWhile(
+		item => (item.status !== 'not started'),
+		notCompleted
+	);
+
+	return { completed, current, pending };
+};
