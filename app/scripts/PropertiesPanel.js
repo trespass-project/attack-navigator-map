@@ -277,7 +277,15 @@ const PropertiesPanel = React.createClass({
 									})
 								}
 							</select>
-							: <input type="text" />
+							: <input
+								type='text'
+								name={attr.id}
+								readOnly={(attr.id === 'tkb:name')}
+								value={(attr.id === 'tkb:name')
+									? selectedItem.label
+									: selectedItem[attr.id]
+								}
+							/>
 						}
 					</div>;
 				})
