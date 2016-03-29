@@ -265,7 +265,13 @@ const PropertiesPanel = React.createClass({
 					return <div key={attr.id}>
 						<span>{attr.label}: </span>
 						{(!!attr.values)
-							? <select key={attr.id+'-values'}>
+							? <select
+								onChange={onChange}
+								name={attr.id}
+								value={selectedItem[attr.id]}
+								key={attr.id+'-values'}
+							>
+								<option value=''>— select —</option>
 								{(attr.values || [])
 									.map((value) => {
 										return <option
@@ -279,6 +285,7 @@ const PropertiesPanel = React.createClass({
 							</select>
 							: <input
 								type='text'
+								onChange={onChange}
 								name={attr.id}
 								readOnly={(attr.id === 'tkb:name')}
 								value={(attr.id === 'tkb:name')

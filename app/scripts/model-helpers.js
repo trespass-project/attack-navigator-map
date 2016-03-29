@@ -484,6 +484,7 @@ function modelFromGraph(graph, metadata={}) {
 		'modelComponentType',
 		// 'type' // knowledgebase type
 	];
+	const re = new RegExp('^tkb:', 'i');
 	R.values(graph.nodes || {})
 		.forEach((node) => {
 			const type = node.modelComponentType;
@@ -492,7 +493,12 @@ function modelFromGraph(graph, metadata={}) {
 			if (!addFn) {
 				console.warn(`${fnName}()`, 'not found');
 			} else {
-				const item = R.omit(keysToOmit, node);
+				let item = R.omit(keysToOmit, node);
+				// also remove all kb stuff
+				item = R.pickBy(
+					(value, key) => !re.test(key),
+					item
+				);
 				if (node.label) {
 					item.name = node.label;
 				}
