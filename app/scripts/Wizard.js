@@ -112,6 +112,7 @@ const Wizard = React.createClass({
 			relationTypes={props.relationTypes}
 			componentsLib={props.componentsLib}
 			kbTypeAttributes={props.kbTypeAttributes}
+			modelComponentTypeToKbTypes={props.modelComponentTypeToKbTypes}
 		/>;
 	},
 

@@ -1186,19 +1186,34 @@ function loadComponentTypes() {
 					.map((type) => {
 						const id = type['@id'];
 						const modelComponentType = type['tkb:tml_class'];
-						return {
+						const _type = {
 							id,
 							modelComponentType,
 							type: id,
 							label: type['@label'],
 							// TODO: rest
 						};
+						return _type;
 					});
+
+				// the different kb types a model component can be
+				const modelComponentTypeToKbTypes = componentsLib
+					.reduce((acc, item) => {
+						if (!acc[item.modelComponentType]) {
+							acc[item.modelComponentType] = [];
+						}
+						acc[item.modelComponentType].push({
+							label: item.label,
+							type: item.type,
+						});
+						return acc;
+					}, {});
 
 				dispatch({
 					type: constants.ACTION_loadComponentTypes_DONE,
 					kbTypeAttributes,
 					componentsLib,
+					modelComponentTypeToKbTypes
 				});
 			})
 			.catch(handleError);

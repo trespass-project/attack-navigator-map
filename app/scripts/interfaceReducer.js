@@ -65,6 +65,8 @@ const initialState = {
 	relationTypes: [],
 	kbTypeAttributes: {},
 	componentsLib: [],
+	modelComponentTypeToKbTypes: [],
+
 	modelPatterns: [], // pre-made fragments
 };
 
@@ -263,8 +265,8 @@ function reducer(state=initialState, action) {
 		// 	return state; // noop
 		// }
 		case constants.ACTION_loadComponentTypes_DONE: {
-			const {componentsLib, kbTypeAttributes} = action;
-			return mergeWithState({componentsLib, kbTypeAttributes});
+			const {componentsLib, kbTypeAttributes, modelComponentTypeToKbTypes} = action;
+			return mergeWithState({componentsLib, kbTypeAttributes, modelComponentTypeToKbTypes});
 		}
 
 		case constants.ACTION_loadModelPatterns_DONE: {

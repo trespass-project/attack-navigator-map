@@ -236,18 +236,36 @@ const PropertiesPanel = React.createClass({
 			return null;
 		}
 
-		const attributes = props.kbTypeAttributes[selectedItem.type];
-		if (!attributes) {
-			return null;
-		}
+		const attributes = (selectedItem.type)
+			? props.kbTypeAttributes[selectedItem.type]
+			: undefined;
+		// if (!attributes) {
+		// 	return null;
+		// }
+
+		const options = props.modelComponentTypeToKbTypes[selectedItem.modelComponentType] || [];
+
+		// TODO: DRY
+		const arg = {
+			selectedId: props.selectedId,
+			selectedType: props.selectedType,
+		};
+		const onChange = (props.selectedId)
+			? R.partial(this.onChange, [arg])
+			: null;
 
 		return <div>
+			<span>kb type: </span>
+			<select name='type' key='type' value={selectedItem.type} onChange={onChange}>
+				<option value=''>— select —</option>
+				{options.map(item => <option key={item.type} value={item.type}>{item.label}</option>)}
+			</select>
 			{(attributes || [])
 				.map((attr) => {
 					return <div key={attr.id}>
-						{attr.label}:&nbsp;
+						<span>{attr.label}: </span>
 						{(!!attr.values)
-							? <select>
+							? <select key={attr.id+'-values'}>
 								{(attr.values || [])
 									.map((value) => {
 										return <option
