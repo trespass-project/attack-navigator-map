@@ -436,7 +436,7 @@ function relationConvertsToEdge(relation) {
 
 const modelFromGraph =
 module.exports.modelFromGraph =
-function modelFromGraph(graph, metadata={}) {
+function modelFromGraph(graph, metadata={}, other={}) {
 	if (_.isEmpty(metadata)) {
 		console.warn('metadata missing');
 	}
