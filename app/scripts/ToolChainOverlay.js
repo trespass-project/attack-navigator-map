@@ -18,7 +18,14 @@ const ToolChainOverlay = React.createClass({
 	// },
 
 	renderCompleted: function(item, index) {
-		return <h3 className='completed' key={item.name}>{item.name} ✔</h3>;
+		const hasResult = !!item.result_file_url;
+		return <h3 className='completed' key={item.name}>
+			{item.name} ✔
+			{hasResult
+				? <a href={item.result_file_url} className='result-link'> output︎</a>
+				: null
+			}
+		</h3>;
 	},
 
 	renderCurrent: function(item, index) {
