@@ -527,8 +527,8 @@ const Wizard = React.createClass({
 
 		return <ToolChainOverlay
 			toolChain={props.toolChains[props.toolChainId]}
-		>
-		</ToolChainOverlay>;
+			taskStatusCategorized={props.taskStatusCategorized}
+		/>;
 	},
 
 	clickFileButton: function(event) {

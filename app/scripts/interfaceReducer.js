@@ -61,6 +61,7 @@ const initialState = {
 	toolChains: {},
 	toolChainId: null,
 	analysisRunning: false,
+	taskStatusCategorized: undefined,
 
 	relationTypes: [],
 	kbTypeAttributes: {},
@@ -236,7 +237,16 @@ function reducer(state=initialState, action) {
 		case constants.ACTION_runAnalysis:
 			return mergeWithState({
 				analysisRunning: true,
-				// toolChainId: action.toolChainId,
+			});
+
+		case constants.ACTION_setAnalysisRunning:
+			return mergeWithState({
+				analysisRunning: action.yesno,
+			});
+
+		case constants.ACTION_setTaskStatusCategorized:
+			return mergeWithState({
+				taskStatusCategorized: action.taskStatusCategorized,
 			});
 
 		// case constants.ACTION_loadToolChains:

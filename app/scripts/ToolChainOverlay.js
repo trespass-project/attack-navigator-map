@@ -10,28 +10,56 @@ const Loader = require('react-loader');
 const ToolChainOverlay = React.createClass({
 	propTypes: {
 		toolChain: React.PropTypes.object.isRequired,
-		currentlyRunningToolId: React.PropTypes.number/*.isRequired*/,
+		taskStatusCategorized: React.PropTypes.object/*.isRequired*/,
 	},
 
 	// getDefaultProps: function() {
 	// 	return {};
 	// },
 
-	renderTool: function(name, index) {
-		return <h3 key={name}>{name} ...</h3>;
+	renderCompleted: function(item, index) {
+		return <h3 className='completed' key={item.name}>{item.name} ✔</h3>;
+	},
+
+	renderCurrent: function(item, index) {
+		const hasError = (item.status === 'error');
+		return <h3 className='current' key={item.name}>
+			{item.name}
+			{hasError
+				? <span className='error'> ⚠︎</span>
+				: null
+			}
+		</h3>;
+	},
+
+	renderPending: function(item, index) {
+		return <h3 className='pending' key={item.name}>{item.name}</h3>;
+	},
+
+	renderTools: function(taskStatusCategorized) {
+		return <div>
+			{taskStatusCategorized.completed.map(this.renderCompleted)}
+			{taskStatusCategorized.current.map(this.renderCurrent)}
+			{taskStatusCategorized.pending.map(this.renderPending)}
+		</div>;
 	},
 
 	render: function() {
 		const props = this.props;
 		const toolChain = props.toolChain;
 
+		const taskStatusCategorized = props.taskStatusCategorized
+			|| {
+				completed: [],
+				current: [],
+				pending: (!!toolChain) ? toolChain.tools : [],
+			};
+
 		return <div id='task-overlay'>
 			<div>{/* TODO: display / link to intermediate results */}
 				{(!toolChain)
 					? 'Tool chain not found.'
-					: toolChain.tools
-						.map(R.prop('name'))
-						.map(this.renderTool)
+					: this.renderTools(taskStatusCategorized)
 				}
 
 				{/*<Loader

@@ -750,7 +750,11 @@ function putModelAndScenarioIntoKnowledgebase(modelId, modelData, scenarioData) 
 };
 
 
-function monitorTaskStatus(taskUrl) {
+function monitorTaskStatus(taskUrl, _callbacks={}) {
+	const callbacks = _.defaults(_callbacks, {
+		onTaskStatus: noop,
+	});
+
 	const url = taskUrl;
 	const params = _.merge(
 		api.requestOptions.fetch.acceptJSON,
@@ -772,8 +776,9 @@ function monitorTaskStatus(taskUrl) {
 				})
 				.then((taskStatusData) => {
 					if (taskStatusData.status) {
-						const categorized = helpers.handleStatus(taskStatusData);
-						console.warn(categorized.current[0].name, taskStatusData.status);
+						const taskStatusDataCategorized = helpers.handleStatus(taskStatusData);
+						console.warn(taskStatusDataCategorized.current[0].name, taskStatusData.status);
+						callbacks.onTaskStatus(taskStatusDataCategorized);
 
 						switch (taskStatusData.status) {
 							case 'not started':
@@ -783,7 +788,7 @@ function monitorTaskStatus(taskUrl) {
 
 							case 'error':
 								clearInterval(intervalId);
-								const errorMessage = categorized.current[0]['error-message'];
+								const errorMessage = taskStatusDataCategorized.current[0]['error-message'];
 								alert(errorMessage);
 								console.error(errorMessage);
 								break;
@@ -817,7 +822,30 @@ function monitorTaskStatus(taskUrl) {
 }
 
 
-function kbRunToolchain(toolChainId, modelId, attackerProfileId) {
+const setAnalysisRunning =
+module.exports.setAnalysisRunning =
+function setAnalysisRunning(yesno) {
+	return {
+		type: constants.ACTION_setAnalysisRunning,
+		yesno
+	};
+};
+
+
+function handleError(err) {
+	alert(err);
+	console.error(err);
+
+	// TODO: set analysisRunning to false
+}
+
+
+function kbRunToolchain(toolChainId, modelId, attackerProfileId, _callbacks={}) {
+	const callbacks = _.defaults(_callbacks, {
+		onToolChainStart: noop,
+		onToolChainEnd: noop,
+	});
+
 	const url = `${api.makeUrl(knowledgebaseApi, 'toolchain')}/${toolChainId}?model_id=${modelId}&attackerprofile_id=${attackerProfileId}`;
 
 	const params = _.merge(
@@ -826,18 +854,16 @@ function kbRunToolchain(toolChainId, modelId, attackerProfileId) {
 		api.requestOptions.fetch.crossDomain
 	);
 
+	callbacks.onToolChainStart();
 	return fetch(url, params)
-		.catch((err) => {
-			alert(err);
-			console.error(err);
-		})
+		.catch(handleError)
 		.then((res) => {
 			return res.json();
 		})
 		.then((data) => {
 			// TODO: do s.th.
 			console.log(data);
-			monitorTaskStatus(data.task_url);
+			monitorTaskStatus(data.task_url, callbacks);
 		});
 }
 
@@ -875,6 +901,16 @@ function setSelectedToolChain(toolChainId) {
 	return {
 		type: constants.ACTION_setSelectedToolChain,
 		toolChainId
+	};
+};
+
+
+const setTaskStatusCategorized =
+module.exports.setTaskStatusCategorized =
+function setTaskStatusCategorized(taskStatusDataCategorized) {
+	return {
+		type: constants.ACTION_setTaskStatusCategorized,
+		taskStatusCategorized: taskStatusDataCategorized
 	};
 };
 
@@ -945,7 +981,27 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 			}
 		)
 			.then(() => {
-				kbRunToolchain(toolChainId, modelId, state.interface.attackerProfile.id);
+				const callbacks = {
+					// onToolChainStart: () => {
+					// 	console.log('onToolChainStart');
+					// },
+					// onToolChainEnd: () => {
+					// 	console.log('onToolChainEnd');
+					// },
+					// onToolStart: (toolId) => {
+					// 	console.log('onToolStart', toolId);
+					// },
+					// onToolEnd: (toolId) => {
+					// 	console.log('onToolEnd', toolId);
+					// },
+					onTaskStatus: (taskStatusDataCategorized) => {
+						// console.log('onTaskStatus', taskStatusDataCategorized);
+						dispatch(
+							setTaskStatusCategorized(taskStatusDataCategorized)
+						);
+					},
+				};
+				kbRunToolchain(toolChainId, modelId, state.interface.attackerProfile.id, callbacks);
 			});
 
 		// // start tool chain

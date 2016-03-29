@@ -144,8 +144,15 @@ svg.graph
 	display: flex
 	align-items: center
 	justify-content: center
-	*
+
+	.completed
+		font-weight: 500 !important
+	.current
 		font-weight: 600 !important
+	.error
+		color: $trespass_red;
+	.pending
+		font-weight: 500 !important
 
 
 @import 'components.styl'
