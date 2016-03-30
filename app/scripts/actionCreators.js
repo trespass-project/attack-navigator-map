@@ -101,7 +101,7 @@ function kbGetModel(modelId, handleExists, handleMissing) {
 		);
 		fetch(url, params)
 			.catch((err) => {
-				console.error(err);
+				console.error(err.stack);
 			})
 			.then((res) => {
 				if (res.status === 404) {
@@ -137,25 +137,16 @@ function kbCreateModel(modelId, cb=noop) {
 			modelId
 		});
 
-		const url = api.makeUrl(knowledgebaseApi, `model/${modelId}`);
-		const params = _.merge(
-			{ method: 'put', },
-			api.requestOptions.fetch.acceptJSON,
-			api.requestOptions.fetch.crossDomain
-		);
-		fetch(url, params)
+		knowledgebaseApi.createModel(fetch, modelId)
 			.catch((err) => {
-				console.error(err);
+				console.error(err.stack);
 			})
 			.then((res) => {
 				if (res.status === 200) {
 					dispatch(
-						kbGetModel(
-							modelId,
-							(res, modelId) => {
-								// TODO: do s.th. with the data
-							}
-						)
+						kbGetModel(modelId, (res, modelId) => {
+							// TODO: do s.th. with the data
+						})
 					);
 					cb();
 				} else {
@@ -169,44 +160,22 @@ function kbCreateModel(modelId, cb=noop) {
 const kbCreateItem =
 module.exports.kbCreateItem =
 function kbCreateItem(modelId, item) {
-	console.log('creating', item);
+	// console.log('creating', item);
 
 	if (!modelId) {
 		console.error('no model id provided');
 		return;
 	}
 
-	const data = R.omit(['id'], item);
-
-	// "http://localhost:8080/tkb/model/new_model/door1" -d '{"id":"door1", "class":"class1"}'
-	const url = api.makeUrl(knowledgebaseApi, `model/${modelId}/${item.id}`);
-	const params = _.merge(
-		{
-			headers: { 'Content-Type': 'application/json' }
-		},
-		{
-			method: 'put',
-			body: JSON.stringify(data), // looks like we need to stringify!
-		},
-		api.requestOptions.fetch.acceptJSON,
-		api.requestOptions.fetch.crossDomain
-	);
-	fetch(url, params)
+	knowledgebaseApi.createItem(fetch, modelId, item)
 		.catch((err) => {
-			console.error(err);
+			console.error(err.stack);
 		})
 		.then((res) => {
 			if (res.status === 200) {
-
-				const url = api.makeUrl(knowledgebaseApi, `model/${modelId}/${item.id}`);
-				const params = _.merge(
-					{ method: 'get' },
-					api.requestOptions.fetch.acceptJSON,
-					api.requestOptions.fetch.crossDomain
-				);
-				fetch(url, params)
+				knowledgebaseApi.getItem(fetch, modelId, item.id)
 					.catch((err) => {
-						console.error(err);
+						console.error(err.stack);
 					})
 					.then((res) => {
 						return res.json();
@@ -225,26 +194,20 @@ function kbCreateItem(modelId, item) {
 const kbDeleteItem =
 module.exports.kbDeleteItem =
 function kbDeleteItem(modelId, itemId) {
-	console.log('deleting', itemId);
+	// console.log('deleting', itemId);
 
 	if (!modelId) {
 		console.error('no model id provided');
 		return;
 	}
 
-	const url = api.makeUrl(knowledgebaseApi, `model/${modelId}/${itemId}`);
-	const params = _.merge(
-		{ method: 'delete' },
-		api.requestOptions.fetch.acceptJSON,
-		api.requestOptions.fetch.crossDomain
-	);
-	fetch(url, params)
+	knowledgebaseApi.deleteItem(fetch, modelId, itemId)
 		.catch((err) => {
-			console.error(err);
+			console.error(err.stack);
 		})
 		.then((res) => {
 			if (res.status === 200) {
-
+				// TODO: ?
 			} else {
 				console.error(`something went wrong: ${res.status}`);
 			};
@@ -522,11 +485,9 @@ function removeNode(nodeId) {
 
 		dispatch({
 			type: constants.ACTION_removeNode,
-			nodeId
+			nodeId,
+			cb: kbDeleteItem
 		});
-
-		const modelId = getState().model.metadata.id;
-		kbDeleteItem(modelId, nodeId);
 	};
 };
 
@@ -740,7 +701,8 @@ module.exports.removeGroup =
 function removeGroup(groupId, removeNodes=false) {
 	return {
 		type: constants.ACTION_removeGroup,
-		groupId, removeNodes
+		groupId, removeNodes,
+		cb: kbDeleteItem
 	};
 };
 
@@ -834,7 +796,7 @@ function putModelAndScenarioIntoKnowledgebase(modelId, modelData, scenarioData) 
 			return () => {
 				return fetch(url, params)
 					.catch((err) => {
-						console.error(err);
+						console.error(err.stack);
 					})
 					.then((res) => {
 						if (res.status === 200) {
@@ -873,7 +835,7 @@ function monitorTaskStatus(taskUrl, _callbacks={}) {
 		function check() {
 			fetch(url, params)
 				.catch((err) => {
-					console.error(err);
+					console.error(err.stack);
 					clearInterval(intervalId);
 					reject(err);
 				})
@@ -932,7 +894,7 @@ function setAnalysisRunning(yesno) {
 
 function handleError(err) {
 	alert(err);
-	console.error(err);
+	console.error(err.stack);
 
 	// TODO: set analysisRunning to false
 }
@@ -1156,7 +1118,7 @@ function loadToolChains() {
 		);
 		fetch(url, params)
 			.catch((err) => {
-				console.error(err);
+				console.error(err.stack);
 			})
 			.then((res) => {
 				return res.json();

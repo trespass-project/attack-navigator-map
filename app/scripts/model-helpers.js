@@ -553,7 +553,7 @@ function modelFromGraph(graph, metadata={}, other={}) {
 
 const removeNode =
 module.exports.removeNode =
-function removeNode(graph, nodeId) {
+function removeNode(graph, nodeId, cb=noop) {
 	// remove node
 	const node = graph.nodes[nodeId];
 	const updateNodes = { nodes: { $set: R.omit([nodeId], graph.nodes) } };
@@ -571,6 +571,8 @@ function removeNode(graph, nodeId) {
 			return acc;
 		}, {});
 	const updateGroups = { groups: updateGroupsNodeIds };
+
+	cb(nodeId);
 
 	return update(
 		graph,
@@ -637,7 +639,7 @@ function moveGroup(graph, groupId, deltaXY) {
 
 const removeGroup =
 module.exports.removeGroup =
-function removeGroup(graph, groupId, removeNodes=false) {
+function removeGroup(graph, groupId, removeNodes=false, cb=noop) {
 	const group = graph.groups[groupId];
 
 	const g = (!removeNodes)
@@ -646,6 +648,10 @@ function removeGroup(graph, groupId, removeNodes=false) {
 			.reduce((graph, nodeId) => {
 				return removeNode(graph, nodeId);
 			}, graph);
+
+	if (removeNodes) {
+		cb(group.nodeIds);
+	}
 
 	const newGroups = R.omit([groupId], g.groups);
 	return update(g, { groups: { $set: newGroups } });

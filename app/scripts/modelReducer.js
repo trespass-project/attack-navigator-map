@@ -143,8 +143,12 @@ function reducer(state=initialState, action) {
 		}
 
 		case constants.ACTION_removeNode: {
-			const {nodeId} = action;
-			const newGraph = modelHelpers.removeNode(state.graph, nodeId);
+			const { nodeId, cb } = action;
+			const newGraph = modelHelpers.removeNode(
+				state.graph,
+				nodeId,
+				(nodeId) => { cb(state.metadata.id, nodeId); }
+			);
 			return mergeWithState({ graph: newGraph });
 		}
 
@@ -197,11 +201,16 @@ function reducer(state=initialState, action) {
 		}
 
 		case constants.ACTION_removeGroup: {
-			const {groupId, removeNodes} = action;
+			const {groupId, removeNodes, cb} = action;
 			const newGraph = modelHelpers.removeGroup(
 				state.graph,
 				groupId,
-				removeNodes
+				removeNodes,
+				(nodeIds) => {
+					nodeIds.forEach((nodeId) => {
+						cb(state.metadata.id, nodeId);
+					});
+				}
 			);
 			return mergeWithState({	graph: newGraph });
 		}
