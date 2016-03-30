@@ -173,17 +173,16 @@ function kbCreateItem(modelId, item) {
 		})
 		.then((res) => {
 			if (res.status === 200) {
-				knowledgebaseApi.getItem(fetch, modelId, item.id)
-					.catch((err) => {
-						console.error(err.stack);
-					})
-					.then((res) => {
-						return res.json();
-					})
-					.then((data) => {
-						return console.log(data);
-					});
-
+				// knowledgebaseApi.getItem(fetch, modelId, item.id)
+				// 	.catch((err) => {
+				// 		console.error(err.stack);
+				// 	})
+				// 	.then((res) => {
+				// 		return res.json();
+				// 	})
+				// 	.then((data) => {
+				// 		return console.log(data);
+				// 	});
 			} else {
 				console.error(`something went wrong: ${res.status}`);
 			};
