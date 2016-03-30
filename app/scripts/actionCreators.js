@@ -535,6 +535,7 @@ function loadXML(xmlString) {
 
 			result.graph = modelHelpers.layoutGraphByType(result.graph);
 
+			result.metadata.id = result.metadata.id || helpers.makeId('model');
 			dispatch(
 				initMap(result.metadata.id)
 			);

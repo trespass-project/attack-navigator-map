@@ -1059,7 +1059,6 @@ describe(f1('helpers.js'), () => {
 
 		it(f3('should return the groups'), () => {
 			const categorized = helpers.handleStatus(taskStatusData);
-			console.log(categorized);
 			assert(categorized.completed.length === 3);
 			assert(categorized.current.length === 2);
 			assert(categorized.pending.length === 2);
