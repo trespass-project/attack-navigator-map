@@ -414,7 +414,11 @@ function graphFromModel(model) {
 		.reduce((result, predicate) => {
 			predicate.value
 				.forEach((value) => {
-					result.push({ id: predicate.id, value });
+					result.push({
+						id: predicate.id,
+						value,
+						arity: predicate.arity,
+					});
 				});
 			return result;
 		}, []);
@@ -439,6 +443,10 @@ module.exports.modelFromGraph =
 function modelFromGraph(graph, metadata={}, other={}) {
 	if (_.isEmpty(metadata)) {
 		console.warn('metadata missing');
+	}
+
+	if (_.isEmpty(other)) {
+		console.warn('other missing');
 	}
 
 	const model = trespass.model.create();
@@ -474,6 +482,26 @@ function modelFromGraph(graph, metadata={}, other={}) {
 					// TODO: what else could there be?
 				}
 			}
+		});
+
+	// other
+	const predicatesMap = (other.predicates || [])
+		.reduce((acc, item) => {
+			if (!acc[item.id]) {
+				acc[item.id] = {
+					id: item.id,
+					arity: item.arity,
+					value: [],
+				}
+			}
+			acc[item.id].value.push( item.value.join(' ') );
+			return acc;
+		}, {});
+
+	R.values(predicatesMap)
+		.forEach((item) => {
+			console.log(item);
+			trespass.model.addPredicate(model, item);
 		});
 
 	const keysToOmit = [
