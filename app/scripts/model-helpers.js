@@ -461,6 +461,16 @@ function modelFromGraph(graph, metadata={}, other={}) {
 		metadata
 	);
 
+	const keysToOmit = [
+		/*'name', */
+		'label',
+		'x',
+		'y',
+		'modelComponentType',
+		// 'type' // knowledgebase type
+	];
+	const re = new RegExp('^tkb:', 'i');
+
 	R.values(graph.edges || {})
 		.forEach((edge) => {
 			const isDirected = !R.contains(edge.relation, nonDirectedRelationTypes);
@@ -484,7 +494,7 @@ function modelFromGraph(graph, metadata={}, other={}) {
 			}
 		});
 
-	// other
+	// predicates
 	const predicatesMap = (other.predicates || [])
 		.reduce((acc, item) => {
 			if (!acc[item.id]) {
@@ -497,22 +507,22 @@ function modelFromGraph(graph, metadata={}, other={}) {
 			acc[item.id].value.push( item.value.join(' ') );
 			return acc;
 		}, {});
-
 	R.values(predicatesMap)
 		.forEach((item) => {
-			console.log(item);
-			trespass.model.addPredicate(model, item);
+			trespass.model.addPredicate(model, R.omit(keysToOmit, item));
 		});
 
-	const keysToOmit = [
-		/*'name', */
-		'label',
-		'x',
-		'y',
-		'modelComponentType',
-		// 'type' // knowledgebase type
-	];
-	const re = new RegExp('^tkb:', 'i');
+	(other.policies || [])
+		.forEach((item) => {
+			trespass.model.addPolicy(model, R.omit(keysToOmit, item));
+		});
+
+	(other.processes || [])
+		.forEach((item) => {
+			console.log(item);
+			trespass.model.addProcess(model, R.omit(keysToOmit, item));
+		});
+
 	R.values(graph.nodes || {})
 		.forEach((node) => {
 			const type = node.modelComponentType;
