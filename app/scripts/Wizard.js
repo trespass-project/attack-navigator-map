@@ -521,13 +521,22 @@ const Wizard = React.createClass({
 
 	renderToolChainOverlay: function() {
 		const props = this.props;
+		const context = this.context;
+
 		if (!props.analysisRunning) {
 			return null;
+		}
+
+		function onClose() {
+			context.dispatch(
+				actionCreators.setAnalysisRunning(false)
+			);
 		}
 
 		return <ToolChainOverlay
 			toolChain={props.toolChains[props.toolChainId]}
 			taskStatusCategorized={props.taskStatusCategorized}
+			onClose={onClose}
 		/>;
 	},
 

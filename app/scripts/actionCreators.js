@@ -800,17 +800,7 @@ function monitorTaskStatus(taskUrl, _callbacks={}) {
 
 							case 'done':
 								clearInterval(intervalId);
-
-								// TODO: get output file
-
-								// workaround, to get the correct duration
-								// const {beginDate, endDate} = taskStatusData;
-
-								// getTask(fetch, taskId, propagateParams)
-								// 	.then((taskData) => {
-								// 		const merged = _.merge(taskData, {beginDate, endDate});
-								// 		resolve(merged);
-								// 	});
+								// console.log('done!');
 								break;
 
 							default:

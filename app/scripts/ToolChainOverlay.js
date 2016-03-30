@@ -22,7 +22,7 @@ const ToolChainOverlay = React.createClass({
 		return <h3 className='completed' key={item.name}>
 			{item.name} ✔
 			{hasResult
-				? <a href={item.result_file_url} className='result-link'> output︎</a>
+				? <a href={item.result_file_url} target='_blank' className='result-link'> output︎</a>
 				: null
 			}
 		</h3>;
@@ -45,9 +45,9 @@ const ToolChainOverlay = React.createClass({
 
 	renderTools: function(taskStatusCategorized) {
 		return <div>
-			{taskStatusCategorized.completed.map(this.renderCompleted)}
-			{taskStatusCategorized.current.map(this.renderCurrent)}
-			{taskStatusCategorized.pending.map(this.renderPending)}
+			{(taskStatusCategorized.completed || []).map(this.renderCompleted)}
+			{(taskStatusCategorized.current || []).map(this.renderCurrent)}
+			{(taskStatusCategorized.pending || []).map(this.renderPending)}
 		</div>;
 	},
 
@@ -56,11 +56,17 @@ const ToolChainOverlay = React.createClass({
 		const toolChain = props.toolChain;
 
 		const taskStatusCategorized = props.taskStatusCategorized
-			|| {
-				completed: [],
-				current: [],
-				pending: (!!toolChain) ? toolChain.tools : [],
-			};
+			|| { pending: (!!toolChain) ? toolChain.tools : [] };
+
+		const isDone = ['pending', 'current']
+			.reduce((count, collName) => {
+				return count + (taskStatusCategorized[collName] || []).length;
+			}, 0) === 0;
+
+		const hasErrors = R.any(
+			item => item.status === 'error',
+			taskStatusCategorized.current || []
+		);
 
 		return <div id='task-overlay'>
 			<div>{/* TODO: display / link to intermediate results */}
@@ -76,13 +82,25 @@ const ToolChainOverlay = React.createClass({
 					radius={15} >
 				</Loader>*/}
 
-				<h3>
-					<a href='http://lustlab.net/dev/trespass/visualizations/analytics5/' target='_blank'>
-						Visualise results
-					</a>
-				</h3>
+				{isDone || hasErrors
+					? <div>
+						<hr/>
+						<button
+							className='btn btn-primary'
+							onClick={this.onClose}
+						>Close</button>
+					</div>
+					: null
+				}
 			</div>
 		</div>;
+	},
+
+	onClose: function(event) {
+		const props = this.props;
+		if (props.onClose) {
+			props.onClose();
+		}
 	},
 });
 
