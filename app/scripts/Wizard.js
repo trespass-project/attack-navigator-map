@@ -337,6 +337,18 @@ const Wizard = React.createClass({
 			{ value: props.toolChainId, message: 'No toolchain selected' },
 		].reduce(pushIfFalsey, missingForScenario);
 
+		// check if all actorso have a an `tkb:actor_type`
+		R.values(props.graph.nodes)
+			// .filter(R.propEq('type', 'tkb:actor'))
+			.filter(R.propEq('modelComponentType', 'actor'))
+			.filter((item) => {
+				return !item['tkb:actor_type'];
+			})
+			.forEach((item) => {
+				const msg = `Actor "${item.label}" does not have an actor type`;
+				missingForAnalysis.push(msg);
+			});
+
 		const isReadyToDownload = (missingForScenario.length === 0);
 		const isReadyToRun = (missingForAnalysis.length === 0);
 
