@@ -780,7 +780,9 @@ function monitorTaskStatus(taskUrl, _callbacks={}) {
 				.then((taskStatusData) => {
 					if (taskStatusData.status) {
 						const taskStatusDataCategorized = helpers.handleStatus(taskStatusData);
-						console.warn(taskStatusDataCategorized.current[0].name, taskStatusData.status);
+						if (taskStatusDataCategorized.current[0]) {
+							console.warn(taskStatusDataCategorized.current[0].name, taskStatusData.status);
+						}
 						callbacks.onTaskStatus(taskStatusDataCategorized);
 
 						switch (taskStatusData.status) {
