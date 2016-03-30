@@ -1,5 +1,6 @@
 'use strict';
 
+const isBrowserEnvironment = !require('detect-node');
 const $ = require('jquery');
 const Q = require('q');
 const R = require('ramda');
@@ -165,6 +166,92 @@ function kbCreateModel(modelId, cb=noop) {
 };
 
 
+const kbCreateItem =
+module.exports.kbCreateItem =
+function kbCreateItem(modelId, item) {
+	console.log('creating', item);
+
+	if (!modelId) {
+		console.error('no model id provided');
+		return;
+	}
+
+	const data = R.omit(['id'], item);
+
+	// "http://localhost:8080/tkb/model/new_model/door1" -d '{"id":"door1", "class":"class1"}'
+	const url = api.makeUrl(knowledgebaseApi, `model/${modelId}/${item.id}`);
+	const params = _.merge(
+		{
+			headers: { 'Content-Type': 'application/json' }
+		},
+		{
+			method: 'put',
+			body: JSON.stringify(data), // looks like we need to stringify!
+		},
+		api.requestOptions.fetch.acceptJSON,
+		api.requestOptions.fetch.crossDomain
+	);
+	fetch(url, params)
+		.catch((err) => {
+			console.error(err);
+		})
+		.then((res) => {
+			if (res.status === 200) {
+
+				const url = api.makeUrl(knowledgebaseApi, `model/${modelId}/${item.id}`);
+				const params = _.merge(
+					{ method: 'get' },
+					api.requestOptions.fetch.acceptJSON,
+					api.requestOptions.fetch.crossDomain
+				);
+				fetch(url, params)
+					.catch((err) => {
+						console.error(err);
+					})
+					.then((res) => {
+						return res.json();
+					})
+					.then((data) => {
+						return console.log(data);
+					});
+
+			} else {
+				console.error(`something went wrong: ${res.status}`);
+			};
+		});
+};
+
+
+const kbDeleteItem =
+module.exports.kbDeleteItem =
+function kbDeleteItem(modelId, itemId) {
+	console.log('deleting', itemId);
+
+	if (!modelId) {
+		console.error('no model id provided');
+		return;
+	}
+
+	const url = api.makeUrl(knowledgebaseApi, `model/${modelId}/${itemId}`);
+	const params = _.merge(
+		{ method: 'delete' },
+		api.requestOptions.fetch.acceptJSON,
+		api.requestOptions.fetch.crossDomain
+	);
+	fetch(url, params)
+		.catch((err) => {
+			console.error(err);
+		})
+		.then((res) => {
+			if (res.status === 200) {
+
+			} else {
+				console.error(`something went wrong: ${res.status}`);
+			};
+		});
+};
+
+
 module.exports.setEditorElem =
 function setEditorElem(elem) {
 	return {
@@ -223,7 +310,13 @@ function importFragment(fragment, xy) {
 		dispatch({
 			type: constants.ACTION_importFragment,
 			fragment,
-			xy
+			xy,
+			cb: (modelId, importedNodes) => {
+				importedNodes
+					.forEach((node) => {
+						kbCreateItem(modelId, node);
+					})
+			}
 		});
 	};
 };
@@ -422,9 +515,18 @@ function addNodeToGroup(nodeId, groupId) {
 
 module.exports.removeNode =
 function removeNode(nodeId) {
-	return {
-		type: constants.ACTION_removeNode,
-		nodeId
+	return (dispatch, getState) => {
+		if (isBrowserEnvironment) {
+			// TODO: make kb call
+		}
+
+		dispatch({
+			type: constants.ACTION_removeNode,
+			nodeId
+		});
+
+		const modelId = getState().model.metadata.id;
+		kbDeleteItem(modelId, nodeId);
 	};
 };
 
@@ -648,7 +750,8 @@ module.exports.updateComponentProperties =
 function updateComponentProperties(componentId, graphComponentType, newProperties) {
 	return {
 		type: constants.ACTION_updateComponentProperties,
-		componentId, graphComponentType, newProperties
+		componentId, graphComponentType, newProperties,
+		cb: kbCreateItem
 	};
 };
 

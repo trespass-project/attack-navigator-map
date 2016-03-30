@@ -49,6 +49,7 @@
     "browser-saveas": "^1.0.0",
     "classnames": "^2.2.0",
     "d3": "^3.5.6",
+    "detect-node": "^2.0.3",
     "jquery": "^2.1.4",
     "jszip": "^2.5.0",
     "klayjs": "^0.3.2",

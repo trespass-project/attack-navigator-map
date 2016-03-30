@@ -54,12 +54,12 @@ const initialState = {
 	attackerProfile: null,
 	attackerGoalType: null,
 	attackerGoal: null,
-	attackerProfit: undefined,
+	attackerProfit: 500/*undefined*/,
 	attackerActorId: null,
 
 	toolChainIds: [],
 	toolChains: {},
-	toolChainId: null,
+	toolChainId: 1/*null*/,
 	analysisRunning: false,
 	taskStatusCategorized: undefined,
 

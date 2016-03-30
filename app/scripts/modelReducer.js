@@ -99,11 +99,12 @@ function reducer(state=initialState, action) {
 		}
 
 		case constants.ACTION_importFragment: {
-			const {fragment, xy} = action;
+			const {fragment, xy, cb} = action;
 			const newGraph = modelHelpers.importFragment(
 				state.graph,
 				modelHelpers.duplicateFragment(fragment),
-				xy
+				xy,
+				(importedNodesMap) => { cb(state.metadata.id, R.values(importedNodesMap)); }
 			);
 			return mergeWithState({ graph: newGraph });
 		}
@@ -206,12 +207,13 @@ function reducer(state=initialState, action) {
 		}
 
 		case constants.ACTION_updateComponentProperties: {
-			const {componentId, graphComponentType, newProperties} = action;
+			const {componentId, graphComponentType, newProperties, cb} = action;
 			const newGraph = modelHelpers.updateComponentProperties(
 				state.graph,
 				graphComponentType,
 				componentId,
-				newProperties
+				newProperties,
+				(updatedItem) => { cb(state.metadata.id, updatedItem); }
 			);
 			return mergeWithState({	graph: newGraph });
 		}

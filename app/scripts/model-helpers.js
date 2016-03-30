@@ -41,6 +41,7 @@ module.exports.graphComponentPlural =
 R.invertObj(graphComponentSingular);
 
 const origin = { x: 0, y: 0 };
+const noop = () => {};
 
 
 const createFragment =
@@ -241,7 +242,7 @@ function combineFragments(fragments) {
 
 const importFragment =
 module.exports.importFragment =
-function importFragment(graph, fragment, atXY=origin) {
+function importFragment(graph, fragment, atXY=origin, cb=noop) {
 	// TODO:
 	R.keys(fragment)
 		.forEach((key) => {
@@ -264,6 +265,8 @@ function importFragment(graph, fragment, atXY=origin) {
 				return acc;
 			}, {});
 	}
+
+	cb(fragment.nodes);
 
 	return combineFragments([
 		graph,
@@ -859,13 +862,15 @@ function inferEdgeType(fromType, toType) {
 
 const updateComponentProperties =
 module.exports.updateComponentProperties =
-function updateComponentProperties(graph, graphComponentType, componentId, newProperties) {
+function updateComponentProperties(graph, graphComponentType, componentId, newProperties, cb=noop) {
 	const collectionName = graphComponentPlural[graphComponentType];
 	const item = graph[collectionName][componentId];
 	const updatedItem = update(item, { $merge: newProperties });
 
+	cb(updatedItem);
+
 	let g = graph;
-	if (item.id !== updatedItem.id) {
+	if (item.id !== updatedItem.id) { // id has changed
 		const withoutOldId = R.omit([item.id], graph[collectionName]);
 		g = update(
 			graph,
