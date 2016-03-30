@@ -338,15 +338,14 @@ const Wizard = React.createClass({
 		].reduce(pushIfFalsey, missingForScenario);
 
 		// check if all actorso have a an `tkb:actor_type`
-		R.values(props.graph.nodes)
+		const otherWarnings = R.values(props.graph.nodes)
 			// .filter(R.propEq('type', 'tkb:actor'))
 			.filter(R.propEq('modelComponentType', 'actor'))
 			.filter((item) => {
 				return !item['tkb:actor_type'];
 			})
-			.forEach((item) => {
-				const msg = `Actor "${item.label}" does not have an actor type`;
-				missingForAnalysis.push(msg);
+			.map((item) => {
+				return `Actor "${item.label}" does not have an actor type`;
 			});
 
 		const isReadyToDownload = (missingForScenario.length === 0);
@@ -363,6 +362,11 @@ const Wizard = React.createClass({
 			<hr/>
 
 			<div>
+				<ul>
+					{otherWarnings
+						.map(item => <li key={item}>{item}</li>)
+					}
+				</ul>
 				<ul>
 					{missingForAnalysis
 						.map(item => <li key={item}>{item}</li>)
