@@ -220,7 +220,7 @@ const PropertiesPanel = React.createClass({
 						{(!selectedItem)
 							? null
 							: <div className='kb'>
-								Knowledge base:<br/>
+								{/*Knowledge base:<br/>*/}
 								{this.renderKnowledgebase(selectedItem)}
 							</div>}
 					</div>
@@ -255,17 +255,30 @@ const PropertiesPanel = React.createClass({
 			: null;
 
 		return <div>
-			<span>kb type: </span>
-			<select name='type' key='type' value={selectedItem.type} onChange={onChange}>
-				<option value=''>— select —</option>
-				{options.map(item => <option key={item.type} value={item.type}>{item.label}</option>)}
-			</select>
+			<table><tbody>
+			<tr>
+				<td>
+					<label>KB Type: </label>
+				</td>
+				<td>
+					<select className='form-control'
+						name='type'
+						key='type'
+						value={selectedItem.type}
+						onChange={onChange}
+					>
+						<option value=''>— select —</option>
+						{options.map(item => <option key={item.type} value={item.type}>{item.label}</option>)}
+					</select>
+				</td>
+			</tr>
 			{(attributes || [])
 				.map((attr) => {
-					return <div key={attr.id}>
-						<span>{attr.label}: </span>
+					return <tr key={attr.id}>
+						<td><label>{attr.label}:</label> </td>
+						<td>
 						{(!!attr.values)
-							? <select
+							? <select className='form-control'
 								onChange={onChange}
 								name={attr.id}
 								value={selectedItem[attr.id]}
@@ -283,7 +296,7 @@ const PropertiesPanel = React.createClass({
 									})
 								}
 							</select>
-							: <input
+							: <input className='form-control'
 								type='text'
 								onChange={onChange}
 								name={attr.id}
@@ -294,9 +307,11 @@ const PropertiesPanel = React.createClass({
 								}
 							/>
 						}
-					</div>;
+						</td>
+					</tr>;
 				})
 			}
+			</tbody></table>
 		</div>;
 	},
 });
