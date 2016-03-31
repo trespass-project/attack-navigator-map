@@ -864,7 +864,7 @@ function monitorTaskStatus(taskUrl, _callbacks={}) {
 
 							case 'done':
 								clearInterval(intervalId);
-								// console.log('done!');
+								console.log('done', taskStatusData);
 								break;
 
 							default:
