@@ -88,7 +88,9 @@ const blacklist = [
 	constants.ACTION_setHoverGroup,
 	constants.ACTION_setPreviewEdge,
 	constants.ACTION_setTransformation,
-	// constants.ACTION_updateComponentProperties,
+	constants.ACTION_setTaskStatusCategorized,
+	constants.ACTION_setAnalysisRunning,
+	constants.ACTION_updateComponentProperties,
 ];
 // const whitelist = [
 // 	constants.ACTION_loadXMLFile,
