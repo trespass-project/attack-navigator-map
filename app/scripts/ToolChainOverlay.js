@@ -3,7 +3,6 @@
 const R = require('ramda');
 const React = require('react');
 const classnames = require('classnames');
-
 const Loader = require('react-loader');
 
 
@@ -34,7 +33,13 @@ const ToolChainOverlay = React.createClass({
 			{item.name}
 			{hasError
 				? <span className='error'> ⚠︎</span>
-				: null
+				: <Loader
+					loaded={false}
+					length={4}
+					width={2.5}
+					lines={10}
+					radius={5} >
+				</Loader>
 			}
 		</h3>;
 	},
@@ -74,13 +79,6 @@ const ToolChainOverlay = React.createClass({
 					? 'Tool chain not found.'
 					: this.renderTools(taskStatusCategorized)
 				}
-
-				{/*<Loader
-					loaded={false}
-					length={7}
-					lines={10}
-					radius={15} >
-				</Loader>*/}
 
 				{isDone || hasErrors
 					? <div>
