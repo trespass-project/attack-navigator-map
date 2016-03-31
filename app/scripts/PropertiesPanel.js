@@ -301,7 +301,7 @@ const PropertiesPanel = React.createClass({
 								onChange={onChange}
 								name={attr.id}
 								readOnly={(attr.id === 'tkb:name')}
-								value={(attr.id === 'tkb:name')
+								value={(attr.id === 'tkb:name' || attr.id === 'tkb:actor_name')
 									? selectedItem.label
 									: selectedItem[attr.id]
 								}

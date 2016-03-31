@@ -194,23 +194,62 @@
 					{
 						"modelComponentType": "actor",
 						"type": "tkb:actor",
-						"label": "Boss"
+						"tkb:actor_type": "tkb:actor_employee_it",
+						"label": "Terry",
+						"id": "Terry"
 					},
 					{
 						"modelComponentType": "actor",
 						"type": "tkb:actor",
-						"label": "Personal assistant"
+						"tkb:actor_type": "tkb:actor_other",
+						"label": "Cleo",
+						"id": "Cleo"
 					},
 					{
 						"modelComponentType": "actor",
 						"type": "tkb:actor",
-						"label": "Employee"
+						"tkb:actor_type": "tkb:actor_other",
+						"label": "Grey",
+						"id": "Grey"
+					},
+					{
+						"modelComponentType": "actor",
+						"type": "tkb:actor",
+						"tkb:actor_type": "tkb:actor_management",
+						"label": "Big",
+						"id": "Big"
+					},
+					{
+						"modelComponentType": "actor",
+						"type": "tkb:actor",
+						"tkb:actor_type": "tkb:actor_employee_trained",
+						"label": "Sydney",
+						"id": "Sydney"
+					},
+					{
+						"modelComponentType": "actor",
+						"type": "tkb:actor",
+						"tkb:actor_type": "tkb:actor_employee",
+						"label": "Finn",
+						"id": "Finn"
+					},
+					{
+						"modelComponentType": "actor",
+						"type": "tkb:actor",
+						"tkb:actor_type": "tkb:actor_employee",
+						"label": "Ethan",
+						"id": "Ethan"
 					}
 				],
 				"edges": [],
-				"groups": []
+				"groups": [
+					{
+						"label": "Cloud actors",
+						"nodeIds": ["Terry", "Cleo", "Grey", "Big", "Sydney", "Finn", "Ethan"]
+					}
+				]
 			},
-			"label": "Staff pattern"
+			"label": "Cloud actors"
 		}
 	]
 }
