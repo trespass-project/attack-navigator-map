@@ -15,11 +15,35 @@ const Library = require('./components/Library/Library.js');
 const OverlayTrigger = require('react-bootstrap').OverlayTrigger;
 const Tooltip = require('react-bootstrap').Tooltip;
 
+import JSONTree from 'react-json-tree';
+
 const ToolChainOverlay = require('./ToolChainOverlay.js');
 const PredicateEditor = require('./PredicateEditor.js');
 const AttackerProfileEditor = require('./AttackerProfileEditor/AttackerProfileEditorLanguage.js');
 
 const predicatesLib = helpers.normalize(require('../data/predicate-lib.json')).items;
+
+
+const theme = {
+	scheme: 'asdf',
+	author: 'asdf',
+	base00: '#000000',
+	base01: '#000000',
+	base02: '#000000',
+	base03: '#000000',
+	base04: '#000000',
+	base05: '#000000',
+	base06: '#000000',
+	base07: '#000000',
+	base08: '#000000',
+	base09: '#000000',
+	base0A: '#000000',
+	base0B: '#000000',
+	base0C: '#000000',
+	base0D: '#000000',
+	base0E: '#000000',
+	base0F: '#000000'
+};
 
 
 function handleAdd() {
@@ -201,9 +225,27 @@ const Wizard = React.createClass({
 		</div>;
 	},
 
-	renderPolicies: function(props) {
+	renderPolicies: function() {
+		const props = this.props;
 		return <div>
 			<h2 className='title'>Policies</h2>
+			{(props.policies || [])
+				.map((item) => {
+					return <JSONTree theme={theme} data={R.omit(['modelComponentType'], item)} />;
+				})
+			}
+		</div>;
+	},
+
+	renderProcesses: function() {
+		const props = this.props;
+		return <div>
+			<h2 className='title'>Processes</h2>
+			{(props.processes || [])
+				.map((item) => {
+					return <JSONTree theme={theme} data={R.omit(['modelComponentType'], item)} />;
+				})
+			}
 		</div>;
 	},
 
@@ -423,6 +465,7 @@ const Wizard = React.createClass({
 			'actors': { renderFn: this.renderActors },
 			'connections': { renderFn: this.renderConnections },
 			'policies': { renderFn: this.renderPolicies },
+			'processes': { renderFn: this.renderProcesses },
 			'attackerprofile': { renderFn: this.renderAttackerProfile },
 			'runanalysis': { renderFn: this.renderRunAnalysis },
 		};
@@ -470,7 +513,7 @@ const Wizard = React.createClass({
 						/>
 						<Tab name='connections'
 							selectedSection={wizardSelectedSection}
-							icon='images/icons/connections-01.svg'
+							icon='images/icons/edges-01.svg'
 							tooltip='Connections'
 							handleClick={R.partial(this.selectWizardStep, ['connections'])}
 						/>
@@ -479,6 +522,12 @@ const Wizard = React.createClass({
 							icon='images/icons/policies-01.svg'
 							tooltip='Policies'
 							handleClick={R.partial(this.selectWizardStep, ['policies'])}
+						/>
+						<Tab name='processes'
+							selectedSection={wizardSelectedSection}
+							icon='images/icons/connections-01.svg'
+							tooltip='Processes'
+							handleClick={R.partial(this.selectWizardStep, ['processes'])}
 						/>
 						<Tab name='attackerprofile'
 							selectedSection={wizardSelectedSection}

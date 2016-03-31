@@ -23,6 +23,7 @@ const initialState = {
 
 	// other
 	predicates: [],
+	policies: [],
 	// ...
 };
 
