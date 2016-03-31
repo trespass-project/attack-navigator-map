@@ -894,34 +894,17 @@ function setAnalysisRunning(yesno) {
 function handleError(err) {
 	alert(err);
 	console.error(err.stack);
-
-	// TODO: set analysisRunning to false
 }
 
 
-function kbRunToolchain(toolChainId, modelId, attackerProfileId, _callbacks={}) {
-	const callbacks = _.defaults(_callbacks, {
-		onToolChainStart: noop,
-		onToolChainEnd: noop,
-	});
-
-	const url = `${api.makeUrl(knowledgebaseApi, 'toolchain')}/${toolChainId}?model_id=${modelId}&attackerprofile_id=${attackerProfileId}`;
-
-	const params = _.merge(
-		{ method: 'post' },
-		api.requestOptions.fetch.acceptJSON,
-		api.requestOptions.fetch.crossDomain
-	);
-
-	callbacks.onToolChainStart();
-	return fetch(url, params)
-		.catch(handleError)
+function kbRunToolchain(toolChainId, modelId, attackerProfileId, callbacks={}) {
+	knowledgebaseApi.runToolChain(fetch, modelId, toolChainId, attackerProfileId, callbacks)
 		.then((res) => {
 			return res.json();
 		})
 		.then((data) => {
 			// TODO: do s.th.
-			console.log(data);
+			// console.log(data);
 			monitorTaskStatus(data.task_url, callbacks);
 		});
 }
