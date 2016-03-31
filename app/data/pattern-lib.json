@@ -9,7 +9,7 @@
 						"modelComponentType": "location",
 						"id": "room1",
 						"x": 240,
-						"y": -120,
+						"y": -70,
 						"type": "tkb:room",
 						"label": "Room 1"
 					},
@@ -17,7 +17,7 @@
 						"modelComponentType": "location",
 						"id": "room2",
 						"x": 240,
-						"y": 120,
+						"y": 70,
 						"type": "tkb:room",
 						"label": "Room 2"
 					},

@@ -141,7 +141,7 @@ const PredicateEditor = React.createClass({
 		return (
 			<div className='predicate-editor language'>
 				<div className='predicates'>
-					predicates:
+					<h3>Predicates</h3>
 					<ul>
 						{props.predicates.map(this.renderPredicate)}
 					</ul>
