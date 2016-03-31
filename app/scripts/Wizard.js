@@ -116,7 +116,9 @@ const Wizard = React.createClass({
 		/>;
 	},
 
-	renderImport: function(props) {
+	renderImport: function() {
+		const props = this.props;
+
 		return <div>
 			<h2 className='title'>Import</h2>
 			<input
@@ -131,6 +133,15 @@ const Wizard = React.createClass({
 				className='btn btn-default btn-xs'>
 				Load model XML file
 			</button>
+
+			<br/>
+			<br/>
+			<div className='pattern-lib'>
+				<Library
+					items={props.modelPatterns}
+					key={'locations-patterns'}
+					title='patterns' />
+			</div>
 		</div>;
 	},
 
@@ -138,13 +149,8 @@ const Wizard = React.createClass({
 		const items = props.componentsLib.filter(componentTypesFilter(['location']));
 		return <div>
 			<h2 className='title'>Locations</h2>
-			<div id='pattern-lib'>
-				<Library
-					items={props.modelPatterns}
-					key={'locations-patterns'}
-					title='patterns' />
-			</div>
-			<div id='component-lib'>
+
+			<div className='component-lib'>
 				<Library
 					key={'locations-components'}
 					items={items}
@@ -157,7 +163,7 @@ const Wizard = React.createClass({
 		const items = props.componentsLib.filter(componentTypesFilter(['item', 'data']));
 		return <div>
 			<h2 className='title'>Assets</h2>
-			<div id='component-lib'>
+			<div className='component-lib'>
 				<Library
 					key={'assets-components'}
 					items={items}
@@ -170,12 +176,12 @@ const Wizard = React.createClass({
 		const items = props.componentsLib.filter(componentTypesFilter(['actor']));
 		return <div>
 			<h2 className='title'>Actors</h2>
-			{/*<div id='pattern-lib'>
+			{/*<div className='pattern-lib'>
 				<Library
 					key={'actors-patterns'}
 					title='patterns' />
 			</div>*/}
-			<div id='component-lib'>
+			<div className='component-lib'>
 				<Library
 					key={'actors-components'}
 					items={items}

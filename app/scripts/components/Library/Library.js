@@ -38,6 +38,13 @@ const Library = React.createClass({
 		};
 	},
 
+	componentWillUpdate: function(nextProps, nextState) {
+		const shouldUpdate = (this.props.items.length !== nextProps.items.length);
+		if (shouldUpdate) {
+			this.setState({ itemsFiltered: nextProps.items });
+		}
+	},
+
 	renderFilterItem: function(item) {
 		const props = this.props;
 		const checked = R.contains(item, props.modelComponentTypesFilter);
