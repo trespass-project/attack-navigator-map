@@ -1,20 +1,18 @@
 .edge-group
 	.edge
-		opacity: 0.5
-		stroke-width: 4
-		stroke: black
+		stroke-width: 5
+		stroke: $edgeStroke
 		fill: none
 
 		&:hover, &.preview
-			stroke: $highlightColor
-			stroke-width: 5
+			stroke: $edgeStrokeSelected
 		&.selected
-			stroke: $selectedStroke
-			stroke-width: 5
+			stroke: $edgeStrokeSelected
 
 	.label
 		font-size: 14px
 		font-family: $font
+		font-weight: 500
 		fill: white
 		opacity: 1
 		text-anchor: middle

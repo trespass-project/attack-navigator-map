@@ -1,18 +1,18 @@
 .group-group
-	$selectedFill: orange
-
 	.group
-		fill: white
-		opacity: 0.25
+		fill: $groupFill
+		stroke-width: 0
 
 	.group.selected
-		fill: $selectedFill
+		fill: $groupFillSelected
+		stroke-width: 3
+		stroke: $groupStrokeSelected
 
 	.label
 		font-size: $baseFontSize
 		font-family: $font
 		// fill: white
-		fill: $trespass_red
+		fill: $groupLabelColor
 		// opacity: 0.33
 		text-anchor: middle
 		alignment-baseline: middle

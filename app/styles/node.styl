@@ -8,15 +8,14 @@
 	cursor: pointer
 
 	.node
-		fill: $highlightColor
+		fill: $nodeFill
 		opacity: 1
 		stroke: black
 		stroke-width: 0px
 		&.hover
-			// stroke-width: 1.5px
-			fill: $selectedFill
+			fill: $nodeFillSelected
 		&.selected
-			fill: $selectedFill
+			fill: $nodeFillSelected
 
 	.port-group
 		.port
@@ -39,4 +38,4 @@
 		font-size: $baseFontSize
 		font-family: $font
 	.icon
-		font-size: 22px
+		font-size: 28px

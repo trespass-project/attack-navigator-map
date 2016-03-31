@@ -40,6 +40,7 @@ const GraphMixin = {
 
 		let bounds = null;
 		const extraPadding = 5;
+		const extraPaddingBottom = 20 - extraPadding;
 		const s = (context.theme.node.size * 0.5) + (2 * extraPadding);
 
 		if (group.nodeIds.length === 0) {
@@ -56,7 +57,7 @@ const GraphMixin = {
 			bounds.minX -= s;
 			bounds.minY -= s;
 			bounds.maxX += s;
-			bounds.maxY += s;
+			bounds.maxY += (s + extraPaddingBottom);
 		}
 
 		return <Group
@@ -79,11 +80,15 @@ const GraphMixin = {
 	renderEdge: function(edge, index, collection, isPreview) {
 		const props = this.props;
 		const context = this.context;
+		const showEdgeLabels = (props.isMinimap)
+			? false
+			: props.showEdgeLabels;
 		return <Edge
 			key={index}
 			theme={context.theme}
 			graph={props.graph}
 			edge={edge}
+			showEdgeLabels={showEdgeLabels}
 			isSelected={edge.id === props.selectedId}
 			isPreview={isPreview} />;
 	},

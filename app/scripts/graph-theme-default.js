@@ -15,7 +15,7 @@ module.exports = {
 		//
 	},
 	port: {
-		size: 16,
+		size: 18,
 	},
 	edge: {
 		//

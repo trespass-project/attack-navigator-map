@@ -112,7 +112,7 @@ const Edge = React.createClass({
 			onClick={this._onClick}
 			className='label'
 			x={center.x}
-			y={center.y}>{label}</text>;
+			y={center.y + 10}>{label}</text>;
 	},
 
 	_onClick: function(event) {

@@ -81,7 +81,7 @@ const Node = React.createClass({
 			ref='label'
 			className='label'
 			x='0'
-			y={10+context.theme.node.size*0.5}>
+			y={12 + context.theme.node.size*0.5}>
 			{label}
 		</text>;
 	},
