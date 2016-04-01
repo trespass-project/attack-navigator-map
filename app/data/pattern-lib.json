@@ -90,6 +90,37 @@
 			"value": {
 				"nodes": [
 					{
+						"modelComponentType": "location",
+						"id": "RoomInternal",
+						"type": "tkb:room",
+						"label": "RoomInternal"
+					},
+					{
+						"modelComponentType": "location",
+						"id": "RoomDatacenter",
+						"type": "tkb:room",
+						"label": "RoomDatacenter"
+					}
+				],
+				"edges": [],
+				"groups": [
+					{
+						"label": "Cloud rooms",
+						"id": "cloud-rooms",
+						"nodeIds": ["RoomInternal", "RoomDatacenter"]
+					}
+				]
+			},
+			"label": "Cloud rooms"
+		},
+
+
+		{
+			"type": "template",
+			"isFragment": true,
+			"value": {
+				"nodes": [
+					{
 						"modelComponentType": "item",
 						"id": "vm1",
 						"x": 300,
