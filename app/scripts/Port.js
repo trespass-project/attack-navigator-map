@@ -91,7 +91,6 @@ const Port = React.createClass({
 				to: props.hoverNodeId
 			};
 			context.dispatch( actionCreators.addEdge(newEdge) );
-			context.dispatch( actionCreators.select(newEdge.id, 'edge') );
 		}
 		context.dispatch( actionCreators.setPreviewEdge(null) );
 		context.dispatch( actionCreators.setDragNode(null) );

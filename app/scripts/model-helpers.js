@@ -583,8 +583,9 @@ function removeNode(graph, nodeId, cb=noop) {
 
 const addEdge = // TODO: test
 module.exports.addEdge =
-function addEdge(graph, _edge) {
+function addEdge(graph, _edge, cb=noop) {
 	const edge = duplicateEdge(_edge);
+	cb(edge.id);
 	return update(
 		graph,
 		{ edges: { [edge.id]: { $set: edge } } }

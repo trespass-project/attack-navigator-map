@@ -284,6 +284,7 @@ function importFragment(fragment, xy) {
 };
 
 
+const select =
 module.exports.select =
 function select(componentId, graphComponentType) {
 	return {
@@ -668,9 +669,19 @@ function downloadZippedScenario() {
 const addEdge =
 module.exports.addEdge =
 function addEdge(edge) {
-	return {
-		type: constants.ACTION_addEdge,
-		edge
+	return (dispatch, getState) => {
+		let edgeId;
+		dispatch({
+			type: constants.ACTION_addEdge,
+			edge,
+			cb: (_edgeId) => {
+				edgeId = _edgeId;
+			}
+		});
+		console.log(edgeId);
+		dispatch(
+			select(edgeId, 'edge')
+		);
 	};
 };
 

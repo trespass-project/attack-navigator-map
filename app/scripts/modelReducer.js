@@ -172,14 +172,14 @@ function reducer(state=initialState, action) {
 		}
 
 		case constants.ACTION_addEdge: {
-			const {edge} = action;
+			const {edge, cb} = action;
 
 			if (edge.from === edge.to) {
 				console.warn('edge.from and edge.to cannot be the same');
 				return state;
 			}
 
-			const newGraph = modelHelpers.addEdge(state.graph, edge);
+			const newGraph = modelHelpers.addEdge(state.graph, edge, cb);
 			return mergeWithState({ graph: newGraph });
 		}
 
