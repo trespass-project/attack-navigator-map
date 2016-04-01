@@ -875,7 +875,7 @@ function monitorTaskStatus(taskUrl, _callbacks={}) {
 
 							case 'done':
 								clearInterval(intervalId);
-								console.log('done', taskStatusData);
+								callbacks.onToolChainEnd(taskStatusData);
 								break;
 
 							default:
@@ -914,7 +914,6 @@ function kbRunToolchain(toolChainId, modelId, attackerProfileId, callbacks={}) {
 			return res.json();
 		})
 		.then((data) => {
-			// TODO: do s.th.
 			// console.log(data);
 			monitorTaskStatus(data.task_url, callbacks);
 		});
@@ -965,6 +964,50 @@ function setTaskStatusCategorized(taskStatusDataCategorized) {
 		type: constants.ACTION_setTaskStatusCategorized,
 		taskStatusCategorized: taskStatusDataCategorized
 	};
+};
+
+
+const retrieveAnalysisResults =
+module.exports.retrieveAnalysisResults =
+function retrieveAnalysisResults(taskStatusData) {
+	console.log(taskStatusData);
+
+	const analysisTools = ['A.T. Analyzer', 'A.T. Evaluator'];
+	const tools = taskStatusData.tool_status
+		.filter(toolStatus => R.contains(toolStatus.name, analysisTools));
+	console.log(tools);
+
+	const promises = tools
+		.map((tool) => {
+			const params = _.merge(
+				{ method: 'get' },
+				// api.requestOptions.fetch.acceptJSON,
+				api.requestOptions.fetch.crossDomain
+			);
+			return fetch(tool.result_file_url, params)
+				.then((res) => {
+					return res.blob();
+				})
+				.then((blob) => {
+					return {
+						name: tool.name,
+						blob,
+					};
+				});
+		});
+
+	return Promise.all(promises)
+		.catch((err) => {
+			console.error(err.stack);
+		})
+		.then((items) => {
+			console.log(items);
+			return items
+				.reduce((acc, item) => {
+					acc[item.name] = item;
+					return acc;
+				}, {});
+		});
 };
 
 
@@ -1039,9 +1082,40 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 					// onToolChainStart: () => {
 					// 	console.log('onToolChainStart');
 					// },
-					// onToolChainEnd: () => {
-					// 	console.log('onToolChainEnd');
-					// },
+					onToolChainEnd: (taskStatusData) => {
+						console.log('done', taskStatusData);
+						retrieveAnalysisResults(taskStatusData)
+							.then(result => {
+								R.values(result)
+									.forEach((item) => {
+										const blob = item.blob;
+										// console.log(item.name, blob.type);
+										const reader = new FileReader();
+
+										function textHandler(e) {
+											const content = e.target.result;
+										}
+
+										function zipHandler(e) {
+											const zip = new JSZip(e.target.result);
+											console.log(zip);
+											R.values(zip.files)
+												.forEach((file) => {
+													// console.log(file.name);
+													const content = file.asText();
+												});
+										}
+
+										if (blob.type === 'text/plain') {
+											reader.onload = textHandler;
+											reader.readAsText(blob);
+										} else if (blob.type === 'application/x-zip-compressed') {
+											reader.onload = zipHandler;
+											reader.readAsArrayBuffer(blob);
+										}
+									});
+							});
+					},
 					// onToolStart: (toolId) => {
 					// 	console.log('onToolStart', toolId);
 					// },
