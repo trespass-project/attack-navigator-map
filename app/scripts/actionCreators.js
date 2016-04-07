@@ -902,6 +902,16 @@ function setAnalysisRunning(yesno) {
 };
 
 
+const setAnalysisResults =
+module.exports.setAnalysisResults =
+function setAnalysisResults(analysisResults) {
+	return {
+		type: constants.ACTION_setAnalysisResults,
+		analysisResults
+	};
+};
+
+
 function handleError(err) {
 	alert(err);
 	console.error(err.stack);
@@ -970,12 +980,9 @@ function setTaskStatusCategorized(taskStatusDataCategorized) {
 const retrieveAnalysisResults =
 module.exports.retrieveAnalysisResults =
 function retrieveAnalysisResults(taskStatusData) {
-	console.log(taskStatusData);
-
 	const analysisTools = ['A.T. Analyzer', 'A.T. Evaluator'];
 	const tools = taskStatusData.tool_status
 		.filter(toolStatus => R.contains(toolStatus.name, analysisTools));
-	console.log(tools);
 
 	const promises = tools
 		.map((tool) => {
@@ -1086,33 +1093,55 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 						console.log('done', taskStatusData);
 						retrieveAnalysisResults(taskStatusData)
 							.then(result => {
-								R.values(result)
-									.forEach((item) => {
-										const blob = item.blob;
-										// console.log(item.name, blob.type);
-										const reader = new FileReader();
+								const promises = R.values(result)
+									.map((item) => {
+										return new Promise((resolve, reject) => {
+											function done(contents) {
+												resolve({ [item.name]: contents });
+											}
 
-										function textHandler(e) {
-											const content = e.target.result;
-										}
+											function textHandler(e) {
+												const content = e.target.result;
+												done([content]);
+											}
 
-										function zipHandler(e) {
-											const zip = new JSZip(e.target.result);
-											console.log(zip);
-											R.values(zip.files)
-												.forEach((file) => {
-													// console.log(file.name);
-													const content = file.asText();
-												});
-										}
+											function zipHandler(e) {
+												const zip = new JSZip(e.target.result);
+												// console.log(zip);
+												const re = new RegExp('^ata_output_nr', 'i');
 
-										if (blob.type === 'text/plain') {
-											reader.onload = textHandler;
-											reader.readAsText(blob);
-										} else if (blob.type === 'application/x-zip-compressed') {
-											reader.onload = zipHandler;
-											reader.readAsArrayBuffer(blob);
-										}
+												const contents = R.values(zip.files)
+													.filter((file) => {
+														// console.log(file.name);
+														return re.test(file.name);
+													})
+													.map((file) => {
+														const content = file.asText();
+														return content;
+													});
+												done(contents);
+											}
+
+											const blob = item.blob;
+											const reader = new FileReader();
+											if (blob.type === 'text/plain') {
+												reader.onload = textHandler;
+												reader.readAsText(blob);
+											} else if (blob.type === 'application/x-zip-compressed') {
+												reader.onload = zipHandler;
+												reader.readAsArrayBuffer(blob);
+											}
+										});
+									});
+
+								Promise.all(promises)
+									.then((results) => {
+										const analysisResults = results
+											.reduce((acc, item) => {
+												return _.assign(acc, item);
+											}, {});
+										console.log(analysisResults);
+										dispatch(setAnalysisResults(analysisResults));
 									});
 							});
 					},

@@ -607,6 +607,7 @@ const Wizard = React.createClass({
 		return <ToolChainOverlay
 			toolChain={props.toolChains[props.toolChainId]}
 			taskStatusCategorized={props.taskStatusCategorized}
+			analysisResults={props.analysisResults}
 			onClose={onClose}
 		/>;
 	},

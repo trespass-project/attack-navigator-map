@@ -54,13 +54,14 @@ const initialState = {
 	attackerProfile: null,
 	attackerGoalType: null,
 	attackerGoal: null,
-	attackerProfit: 500/*undefined*/,
+	attackerProfit: undefined,
 	attackerActorId: null,
 
 	toolChainIds: [],
 	toolChains: {},
-	toolChainId: 1/*null*/,
+	toolChainId: null,
 	analysisRunning: false,
+	analysisResults: null,
 	taskStatusCategorized: undefined,
 
 	relationTypes: [],
@@ -241,10 +242,20 @@ function reducer(state=initialState, action) {
 				analysisRunning: true,
 			});
 
-		case constants.ACTION_setAnalysisRunning:
+		case constants.ACTION_setAnalysisResults:
 			return mergeWithState({
-				analysisRunning: action.yesno,
+				analysisResults: action.analysisResults,
 			});
+
+		case constants.ACTION_setAnalysisRunning: {
+			const update = {
+				analysisRunning: action.yesno,
+			};
+			if (action.yesno) {
+				update.analysisResults = null;
+			}
+			return mergeWithState(update);
+		}
 
 		case constants.ACTION_setTaskStatusCategorized:
 			return mergeWithState({

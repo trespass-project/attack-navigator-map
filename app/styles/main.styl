@@ -186,3 +186,127 @@ svg.graph
 	ul
 		font-size: 14px
 		font-weight: 500
+
+
+
+
+// body {
+//     overflow-y: hidden;
+//     overflow-x: hidden;
+// 	margin: 0 0;
+//     font-family: 'Source Sans Pro', sans-serif;
+// }
+.content {
+    display: flex;
+	flex-direction: row;
+	// width: 100vw;
+}
+
+.navigation {
+    padding-left: 10px;
+    padding-right: 10px;
+    width: 25vw;
+    background-color: #f0f0f0;
+    // height: 100vh;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+}
+#nav-title {
+    font-size: 1.5em;
+    font-weight: 500;
+}
+
+#analyzer-list {
+
+}
+#analyzer-list table {
+    font-size: 1.25em;
+    width: 100%;
+}
+
+#analyzer-list thead {
+    font-style: italic;
+}
+
+#analyzer-list {
+    margin: 10px;
+}
+
+#analyzer-list tbody tr {
+    background-color: lightgray;
+/*    color: whitesmoke;*/
+}
+
+#analyzer-list .bar {
+	pointer-events: none;
+}
+
+#analyzer-list td {
+/*    padding-left: 10px;*/
+    height: 1px;
+    width: 50%;
+    padding-right: 2px;
+}
+
+#eval-chart {
+}
+
+#eval-chart .axis line,
+.axis path {
+    shape-rendering: crispEdges;
+    stroke: gray;
+    fill: none;
+}
+
+#eval-chart .axis {
+    fill: gray;
+}
+
+#eval-chart .axis-label {
+    fill: gray;
+}
+#eval-chart circle {
+    fill: black;
+}
+#eval-chart .connect-line {
+    stroke: #00091f;
+    stroke-width: 2;
+    fill: none;
+}
+#eval-chart .node {
+    cursor: pointer;
+}
+#eval-chart .node circle {
+    fill: #fff;
+    stroke: steelblue;
+    stroke-width: 3px;
+}
+#eval-chart .node text {
+    font: 12px sans-serif;
+}
+#eval-chart .link {
+    fill: none;
+    stroke: #ccc;
+    stroke-width: 2px;
+}
+
+/* Tree */
+.node circle {
+	fill: #fff;
+	stroke: gray;
+	stroke-width: 3px;
+}
+.node text {
+	font-size: 12px;
+}
+.link {
+	fill: none;
+	stroke: #ccc;
+	stroke-width: 2px;
+}
+
+#tree {
+	display: block;
+	width: 75vw;
+}

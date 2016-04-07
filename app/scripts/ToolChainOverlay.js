@@ -4,12 +4,16 @@ const R = require('ramda');
 const React = require('react');
 const classnames = require('classnames');
 const Loader = require('react-loader');
+import AnalyticsComponent from './AnalysisVisualization/AnalyticsComponent.js';
+
+console.log(AnalyticsComponent);
 
 
 const ToolChainOverlay = React.createClass({
 	propTypes: {
 		toolChain: React.PropTypes.object.isRequired,
 		taskStatusCategorized: React.PropTypes.object/*.isRequired*/,
+		analysisResults: React.PropTypes.object/*.isRequired*/,
 	},
 
 	// getDefaultProps: function() {
@@ -73,8 +77,10 @@ const ToolChainOverlay = React.createClass({
 			taskStatusCategorized.current || []
 		);
 
-		return <div id='task-overlay'>
-			<div>{/* TODO: display / link to intermediate results */}
+		const resultsReady = !!props.analysisResults;
+
+		return <div id='task-overlay' style={{ overflowY: 'auto', overflowX: 'hidden' }}>
+			<div>
 				{(!toolChain)
 					? 'Tool chain not found.'
 					: this.renderTools(taskStatusCategorized)
@@ -87,6 +93,17 @@ const ToolChainOverlay = React.createClass({
 							className='btn btn-primary'
 							onClick={this.onClose}
 						>Close</button>
+					</div>
+					: null
+				}
+
+				{resultsReady
+					? <div style={{ width: '100vw', position: 'absolute', left: 0 }}>
+						<hr/>
+						<AnalyticsComponent
+							ataInput={props.analysisResults['A.T. Analyzer']}
+							ateInput={props.analysisResults['A.T. Evaluator'][0]}
+						/>
 					</div>
 					: null
 				}
