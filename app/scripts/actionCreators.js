@@ -678,7 +678,7 @@ function addEdge(edge) {
 				edgeId = _edgeId;
 			}
 		});
-		console.log(edgeId);
+		// console.log(edgeId);
 		dispatch(
 			select(edgeId, 'edge')
 		);
@@ -913,8 +913,8 @@ function setAnalysisResults(analysisResults) {
 
 
 function handleError(err) {
-	alert(err);
 	console.error(err.stack);
+	alert(err);
 }
 
 
@@ -1355,6 +1355,7 @@ function loadComponentTypes() {
 			api.requestOptions.jquery.crossDomain
 		);
 
+		// TODO: move to trespass.js / fetch
 		const req = $.ajax(params);
 		Q(req)
 			.then((types) => {

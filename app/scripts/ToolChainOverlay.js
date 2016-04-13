@@ -6,8 +6,6 @@ const classnames = require('classnames');
 const Loader = require('react-loader');
 import AnalyticsComponent from './AnalysisVisualization/AnalyticsComponent.js';
 
-console.log(AnalyticsComponent);
-
 
 const ToolChainOverlay = React.createClass({
 	propTypes: {
