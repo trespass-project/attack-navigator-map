@@ -281,6 +281,27 @@
 				]
 			},
 			"label": "Cloud actors"
+		},
+
+
+		{
+			"type": "pattern",
+			"isFragment": true,
+			"value": {
+				"nodes": [
+					{
+						"modelComponentType": "item",
+						"type": "tkb:laptop",
+						"tkb:os": "tkb:os_ms_win",
+						"tkb:name": "Laptop",
+						"label": "Laptop",
+						"id": "laptop"
+					}
+				],
+				"edges": [],
+				"groups": []
+			},
+			"label": "Laptop"
 		}
 	]
 }
