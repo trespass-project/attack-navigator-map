@@ -537,16 +537,17 @@ function modelFromGraph(graph, metadata={}, anmData={}) {
 		});
 
 	// predicates
-	const predicatesMap = (graph.predicates || [])
+	const predicatesMap = R.values(graph.predicates || {})
 		.reduce((acc, item) => {
-			if (!acc[item.id]) {
-				acc[item.id] = {
-					id: item.id,
+			const predId = item.type;
+			if (!acc[predId]) {
+				acc[predId] = {
+					id: predId,
 					arity: item.arity,
 					value: [],
 				}
 			}
-			acc[item.id].value.push( item.value.join(' ') );
+			acc[predId].value = [...acc[predId].value, item.value.join(' ')];
 			return acc;
 		}, {});
 	R.values(predicatesMap)
@@ -554,14 +555,13 @@ function modelFromGraph(graph, metadata={}, anmData={}) {
 			trespass.model.addPredicate(model, R.omit(keysToOmit, item));
 		});
 
-	(graph.policies || [])
+	R.values(graph.policies || {})
 		.forEach((item) => {
 			trespass.model.addPolicy(model, R.omit(keysToOmit, item));
 		});
 
-	(graph.processes || [])
+	R.values(graph.processes || {})
 		.forEach((item) => {
-			console.log(item);
 			trespass.model.addProcess(model, R.omit(keysToOmit, item));
 		});
 
