@@ -276,6 +276,14 @@ function combineFragments(fragments) {
 const importFragment =
 module.exports.importFragment =
 function importFragment(graph, fragment, atXY=origin, cb=noop) {
+	// prepare predicates
+	fragment.predicates = (fragment.predicates || [])
+		.map((predicate) => {
+			predicate.type = predicate.id;
+			predicate.id = helpers.makeId('predicate');
+			return predicate;
+		});
+
 	// TODO:
 	R.keys(fragment)
 		.forEach((key) => {
@@ -451,20 +459,6 @@ function graphFromModel(model) {
 			result[collectionName] = model.system[collectionName];
 			return result;
 		}, {});
-
-	// predicates
-	neitherNodeNorEdge.predicates = neitherNodeNorEdge.predicates
-		.reduce((result, predicate) => {
-			predicate.value
-				.forEach((value) => {
-					result.push({
-						id: predicate.id,
-						value,
-						arity: predicate.arity,
-					});
-				});
-			return result;
-		}, []);
 
 	// TODO: do s.th. with model.system.anm_data
 	if (model.system.anm_data) {
