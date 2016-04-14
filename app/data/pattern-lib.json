@@ -253,7 +253,7 @@
 					{
 						"modelComponentType": "actor",
 						"type": "tkb:actor",
-						"tkb:actor_type": "tkb:actor_employee_trained",
+						"tkb:actor_type": "tkb:actor_employee_it",
 						"label": "Sydney",
 						"id": "Sydney"
 					},
@@ -267,7 +267,7 @@
 					{
 						"modelComponentType": "actor",
 						"type": "tkb:actor",
-						"tkb:actor_type": "tkb:actor_employee",
+						"tkb:actor_type": "tkb:actor_employee_trained",
 						"label": "Ethan",
 						"id": "Ethan"
 					}

@@ -336,7 +336,7 @@ function layoutGraphByType(_graph) {
 					rowCounter = 0;
 					colCounter++;
 				}
-				node.label = node.id;
+				node.label = node.name || node.id;
 				node.modelComponentType = collectionNamesSingular[collectionName];
 				node.x = xOffset + colCounter * spacing;
 				node.y = yOffset + rowCounter * spacing + ((isShifted) ? 0 : 20);
