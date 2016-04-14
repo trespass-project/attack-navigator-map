@@ -19,12 +19,13 @@ const initialState = {
 		nodes: {},
 		edges: {},
 		groups: {},
-	},
 
-	// other
-	predicates: [],
-	policies: [],
-	// ...
+		// other
+		predicates: {},
+		policies: {},
+		processes: {},
+		// ...
+	},
 };
 
 
@@ -122,12 +123,10 @@ function reducer(state=initialState, action) {
 		// 	return state; // noop
 
 		case constants.ACTION_loadXML_DONE: {
-			const {graph, other, metadata} = action.result;
 			return _.merge(
 				{},
 				initialState,
-				{ graph, metadata },
-				other
+				action.result
 			);
 		}
 

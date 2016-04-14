@@ -441,6 +441,9 @@ describe(f1('model-helpers.js'), () => {
 				'group-2': { id: 'group-2' },
 				'group-3': { id: 'group-3' },
 			},
+			policies: {
+				'policy-1': { id: 'policy-1' },
+			},
 		};
 		const combinedFragement = modelHelpers.combineFragments([fragment1, fragment2]);
 
@@ -456,6 +459,10 @@ describe(f1('model-helpers.js'), () => {
 			assert(combinedFragement.nodes['edge-1'] === fragment1.nodes['edge-1']);
 			assert(combinedFragement.nodes['edge-2'] === fragment2.nodes['edge-2']);
 			assert(combinedFragement.nodes['group-2'] === fragment2.nodes['group-2']);
+		});
+
+		it(f3('should merge everything — not only nodes, groups, and edges'), () => {
+			assert(R.keys(combinedFragement.policies).length === 1);
 		});
 	});
 
@@ -947,16 +954,19 @@ describe(f1('model-helpers.js'), () => {
 		model = trespass.model.addPolicy(model, {
 			id: 'policy'
 		});
-		const {graph, other} = modelHelpers.graphFromModel(model);
+
+		const {graph} = modelHelpers.graphFromModel(model);
+		const edges = R.values(graph.edges);
+		const nodes = R.values(graph.nodes);
+		const processes = R.values(graph.processes);
+		const policies = R.values(graph.policies);
+		const predicates = R.values(graph.predicates);
 
 		it(f3('should produce hash-maps, not arrays'), () => {
 			assert(!_.isArray(graph.edges));
 			assert(!_.isArray(graph.nodes));
 			assert(!_.isArray(graph.groups));
 		});
-
-		const edges = R.values(graph.edges);
-		const nodes = R.values(graph.nodes);
 
 		it(f3('should create edges'), () => {
 			assert(edges.length === 1);
@@ -969,11 +979,9 @@ describe(f1('model-helpers.js'), () => {
 			assert(nodes[0].id === 'location');
 		});
 
-		it(f3('should put predicates, policies, etc. into `other`'), () => {
-			assert(other.policies.length === 1);
-			// assert(other.predicates.length === 1);
+		it(f3('should contain predicates, policies, etc.'), () => {
+			assert(policies.length === 1);
 		});
-
 		// TODO: predicates
 	});
 

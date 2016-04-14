@@ -626,8 +626,11 @@ module.exports.downloadModelXML =
 function downloadModelXML() {
 	return (dispatch, getState) => {
 		const state = getState();
-		const other = R.pick(modelHelpers.collectionNames, state.model);
-		const model = modelHelpers.modelFromGraph(state.model.graph, state.model.metadata, other);
+		const model = modelHelpers.modelFromGraph(
+			state.model.graph,
+			state.model.metadata,
+			state.model.anmData
+		);
 		const modelXmlStr = trespassModel.toXML(model);
 		const modelFileName = `${model.system.title.replace(/\s/g, '-')}.xml`;
 		saveAs(getXMLBlob(modelXmlStr), modelFileName);
@@ -640,8 +643,11 @@ module.exports.downloadZippedScenario =
 function downloadZippedScenario() {
 	return (dispatch, getState) => {
 		const state = getState();
-		const other = R.pick(modelHelpers.collectionNames, state.model);
-		const model = modelHelpers.modelFromGraph(state.model.graph, state.model.metadata, other);
+		const model = modelHelpers.modelFromGraph(
+			state.model.graph,
+			state.model.metadata,
+			state.model.anmData
+		);
 		const modelId = model.system.id;
 		const modelXmlStr = trespassModel.toXML(model);
 
@@ -1036,8 +1042,11 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 			throw new Error('missing model id');
 		}
 
-		const other = R.pick(modelHelpers.collectionNames, state.model);
-		const model = modelHelpers.modelFromGraph(state.model.graph, state.model.metadata, other);
+		const model = modelHelpers.modelFromGraph(
+			state.model.graph,
+			state.model.metadata,
+			state.model.anmData
+		);
 		const modelXmlStr = trespassModel.toXML(model);
 
 		const validationErrors = trespass.model.validateModel(model);

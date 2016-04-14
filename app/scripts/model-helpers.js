@@ -132,6 +132,22 @@ function duplicateFragment(_fragment) {
 			return acc;
 		}, {});
 
+	// import fragment policies, predicates, and processes
+	nonGraphCollectionNames
+		.forEach(name => {
+			fragment[name] = (fragment[name] || [])
+				.map(item => {
+					// string replace all old ids with the new ones
+					const s = R.keys(oldToNewNodeId)
+						.reduce((acc, oldId) => {
+							const re = new RegExp(`\"${oldId}\"`, 'g');
+							const newId = oldToNewNodeId[oldId];
+							return acc.replace(re, `"${newId}"`);
+						}, JSON.stringify(item));
+					return JSON.parse(s);
+				});
+		});
+
 	return fragment;
 };
 
@@ -226,17 +242,34 @@ function replaceIdInEdge(mapping, edge) {
 const combineFragments =
 module.exports.combineFragments =
 function combineFragments(fragments) {
+	// update $merge needs objects to have the same structure / keys
+	const allKeys = R.uniq(
+		fragments
+			.reduce((acc, fragment) => {
+				return [...acc, ...R.keys(fragment)];
+			}, [])
+	);
+	const _combined = createFragment();
+	allKeys.forEach(key => {
+		_combined[key] = _combined[key] || {}; // set default value, if missing
+	});
+
 	return fragments
-		.reduce((acc, fragment) => {
+		.reduce((combined, fragment) => {
 			return update(
-				acc,
-				{
-					nodes: { $merge: (fragment.nodes || {}) },
-					edges: { $merge: (fragment.edges || {}) },
-					groups: { $merge: (fragment.groups || {}) },
-				}
+				combined,
+				R.keys(fragment)
+					.reduce((acc, key) => {
+						acc[key] = { $merge: (fragment[key] || {}) };
+						return acc;
+					}, {})
+				// {
+				// 	nodes: { $merge: (fragment.nodes || {}) },
+				// 	edges: { $merge: (fragment.edges || {}) },
+				// 	groups: { $merge: (fragment.groups || {}) },
+				// }
 			);
-		}, createFragment());
+		}, _combined);
 };
 
 
@@ -270,7 +303,10 @@ function importFragment(graph, fragment, atXY=origin, cb=noop) {
 
 	return combineFragments([
 		graph,
-		update(fragment, { nodes: { $apply: offsetNodes } })
+		update(
+			fragment,
+			{ nodes: { $apply: offsetNodes } }
+		)
 	]);
 };
 
@@ -280,7 +316,8 @@ module.exports.XMLModelToGraph =
 function XMLModelToGraph(xmlStr, done) {
 	trespass.model.parse(xmlStr, (err, model) => {
 		if (err) { return done(err); }
-		done(null, graphFromModel(model));
+		const result = graphFromModel(model);
+		done(null, result);
 	});
 };
 
@@ -380,6 +417,7 @@ function graphFromModel(model) {
 		});
 
 	const nonGraphComponents = [...nonGraphCollectionNames, 'edges'];
+	// everything that becomes a node
 	R.without(nonGraphComponents, collectionNames)
 		.forEach((collectionName) => {
 			// TODO: warn or s.th.
@@ -406,14 +444,16 @@ function graphFromModel(model) {
 			graph = update(graph, { nodes: { $merge: coll } });
 		});
 
-	const other = nonGraphCollectionNames
+	graph.edges = helpers.toHashMap('id', edges);
+
+	const neitherNodeNorEdge = nonGraphCollectionNames
 		.reduce((result, collectionName) => {
 			result[collectionName] = model.system[collectionName];
 			return result;
 		}, {});
 
 	// predicates
-	other.predicates = other.predicates
+	neitherNodeNorEdge.predicates = neitherNodeNorEdge.predicates
 		.reduce((result, predicate) => {
 			predicate.value
 				.forEach((value) => {
@@ -426,11 +466,16 @@ function graphFromModel(model) {
 			return result;
 		}, []);
 
-	graph.edges = helpers.toHashMap('id', edges);
+	// TODO: do s.th. with model.system.anm_data
+	if (model.system.anm_data) {
+		console.info('has anm_data');
+		console.log(model.system.anm_data);
+	}
+	const anmData = model.system.anm_data || {};
 
+	graph = _.merge(graph, neitherNodeNorEdge);
 	const metadata = R.pick(trespass.model.knownAttributes.system, model.system);
-
-	return {graph, other, metadata};
+	return {graph, metadata, anmData};
 };
 
 
@@ -443,13 +488,13 @@ function relationConvertsToEdge(relation) {
 
 const modelFromGraph =
 module.exports.modelFromGraph =
-function modelFromGraph(graph, metadata={}, other={}) {
+function modelFromGraph(graph, metadata={}, anmData={}) {
 	if (_.isEmpty(metadata)) {
 		console.warn('metadata missing');
 	}
 
-	if (_.isEmpty(other)) {
-		console.warn('other missing');
+	if (_.isEmpty(anmData)) {
+		console.warn('anmData missing');
 	}
 
 	const model = trespass.model.create();
@@ -498,7 +543,7 @@ function modelFromGraph(graph, metadata={}, other={}) {
 		});
 
 	// predicates
-	const predicatesMap = (other.predicates || [])
+	const predicatesMap = (graph.predicates || [])
 		.reduce((acc, item) => {
 			if (!acc[item.id]) {
 				acc[item.id] = {
@@ -515,12 +560,12 @@ function modelFromGraph(graph, metadata={}, other={}) {
 			trespass.model.addPredicate(model, R.omit(keysToOmit, item));
 		});
 
-	(other.policies || [])
+	(graph.policies || [])
 		.forEach((item) => {
 			trespass.model.addPolicy(model, R.omit(keysToOmit, item));
 		});
 
-	(other.processes || [])
+	(graph.processes || [])
 		.forEach((item) => {
 			console.log(item);
 			trespass.model.addProcess(model, R.omit(keysToOmit, item));

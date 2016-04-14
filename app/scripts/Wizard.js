@@ -214,36 +214,46 @@ const Wizard = React.createClass({
 		</div>;
 	},
 
-	renderConnections: function(props) {
+	renderConnections: function() {
+		const props = this.props;
+		const predicates = R.values(props.graph.predicates || {});
 		return <div>
 			<h2 className='title'>Connections</h2>
 			<PredicateEditor
 				nodes={R.values(props.graph.nodes)}
 				predicatesLib={props.predicatesLib || predicatesLib}
-				predicates={props.predicates || []}
+				predicates={predicates}
 			/>
 		</div>;
 	},
 
 	renderPolicies: function() {
-		const props = this.props;
+		const policies = R.values(this.props.graph.policies || {});
 		return <div>
 			<h2 className='title'>Policies</h2>
-			{(props.policies || [])
+			{policies
 				.map((item) => {
-					return <JSONTree theme={theme} data={R.omit(['modelComponentType'], item)} />;
+					return <JSONTree
+						theme={theme}
+						data={R.omit(['modelComponentType'], item)}
+						key={'policy-'+item.id}
+					/>;
 				})
 			}
 		</div>;
 	},
 
 	renderProcesses: function() {
-		const props = this.props;
+		const processes = R.values(this.props.graph.processes || {});
 		return <div>
 			<h2 className='title'>Processes</h2>
-			{(props.processes || [])
+			{processes
 				.map((item) => {
-					return <JSONTree theme={theme} data={R.omit(['modelComponentType'], item)} />;
+					return <JSONTree
+						theme={theme}
+						data={R.omit(['modelComponentType'], item)}
+						key={'process-'+item.id}
+					/>;
 				})
 			}
 		</div>;
