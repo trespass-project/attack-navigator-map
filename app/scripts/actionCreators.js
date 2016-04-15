@@ -600,12 +600,17 @@ function loadXML(xmlString) {
 
 			result.metadata.id = result.metadata.id || helpers.makeId('model');
 			dispatch(
-				initMap(result.metadata.id)
+				initMap(result.metadata.id, () => {
+					dispatch(
+						importFragment(result.graph)
+					);
+				})
 			);
-			dispatch({
-				type: constants.ACTION_loadXML_DONE,
-				result
-			});
+
+			// dispatch({
+			// 	type: constants.ACTION_loadXML_DONE,
+			// 	result
+			// });
 		});
 	};
 };
