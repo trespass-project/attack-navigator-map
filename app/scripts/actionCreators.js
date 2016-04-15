@@ -621,17 +621,44 @@ function getXMLBlob(xmlStr) {
 };
 
 
+function stateToHumanReadableModelXML(state) {
+	const idReplacementMap = ['nodes', ...modelHelpers.collectionNames]
+		.reduce((acc, collName) => {
+			if (state.model.graph[collName]) {
+				const coll = state.model.graph[collName];
+				R.keys(coll)
+					.forEach(id => {
+						const newId = `${coll[id].modelComponentType}__${(coll[id].label || id).replace(/ +/g)}`;
+						acc[id] = newId;
+					});
+			}
+			return acc;
+		}, {});
+
+	const model = modelHelpers.modelFromGraph(
+		state.model.graph,
+		state.model.metadata,
+		state.model.anmData
+	);
+	let modelXmlStr = trespassModel.toXML(model);
+
+	// HACK: replace all ids with their human-readable versions
+	modelXmlStr = R.keys(idReplacementMap)
+		.reduce((acc, oldId)  => {
+			const re = new RegExp(oldId, 'g');
+			return acc.replace(re, idReplacementMap[oldId]);
+		}, modelXmlStr);
+
+	return {modelXmlStr, model};
+}
+
+
 const downloadModelXML =
 module.exports.downloadModelXML =
 function downloadModelXML() {
 	return (dispatch, getState) => {
 		const state = getState();
-		const model = modelHelpers.modelFromGraph(
-			state.model.graph,
-			state.model.metadata,
-			state.model.anmData
-		);
-		const modelXmlStr = trespassModel.toXML(model);
+		const {modelXmlStr, model} = stateToHumanReadableModelXML(state);
 		const modelFileName = `${model.system.title.replace(/\s/g, '-')}.xml`;
 		saveAs(getXMLBlob(modelXmlStr), modelFileName);
 	};
@@ -1042,12 +1069,10 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 			throw new Error('missing model id');
 		}
 
-		const model = modelHelpers.modelFromGraph(
-			state.model.graph,
-			state.model.metadata,
-			state.model.anmData
-		);
-		const modelXmlStr = trespassModel.toXML(model);
+		// TODO: generate human-readable ids
+		// hack to generate readable ids on export
+
+		const {modelXmlStr, model} = stateToHumanReadableModelXML(state);
 
 		const validationErrors = trespass.model.validateModel(model);
 		if (validationErrors.length) {
