@@ -64,6 +64,7 @@ const constants = {
 	ACTION_addEdge: 'ACTION_addEdge',
 	ACTION_removeEdge: 'ACTION_removeEdge',
 	ACTION_updateComponentProperties: 'ACTION_updateComponentProperties',
+	ACTION_addPredicate: 'ACTION_addPredicate',
 	ACTION_predicateChanged: 'ACTION_predicateChanged',
 	ACTION_attackerProfileChanged: 'ACTION_attackerProfileChanged',
 	ACTION_setAttackerActor: 'ACTION_setAttackerActor',

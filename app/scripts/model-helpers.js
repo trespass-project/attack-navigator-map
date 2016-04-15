@@ -550,10 +550,13 @@ function modelFromGraph(graph, metadata={}, anmData={}) {
 	const predicatesMap = R.values(graph.predicates || {})
 		.reduce((acc, item) => {
 			const predId = item.type;
+			if (!item.arity) {
+				console.warn('predicate has no arity', item);
+			}
 			if (!acc[predId]) {
 				acc[predId] = {
 					id: predId,
-					arity: item.arity,
+					arity: item.arity || 2,
 					value: [],
 				}
 			}
@@ -940,6 +943,18 @@ function updateComponentProperties(graph, graphComponentType, componentId, newPr
 	);
 
 	return g;
+};
+
+
+const addPredicate = // TODO: test
+module.exports.addPredicate =
+function addPredicate(graph, _predicate) {
+	console.log('here');
+	const predicate = _.merge({}, _predicate, { id: helpers.makeId('predicate') });
+	return update(
+		graph,
+		{ predicates: { [predicate.id]: { $set: predicate } } }
+	);
 };
 
 

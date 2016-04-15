@@ -776,6 +776,16 @@ function attackerProfileChanged(profile) {
 };
 
 
+module.exports.addPredicate =
+function addPredicate(predicate) {
+	console.log('action');
+	return {
+		type: constants.ACTION_addPredicate,
+		predicate
+	};
+};
+
+
 const predicateChanged =
 module.exports.predicateChanged =
 function predicateChanged(predicateId, newProperties) {

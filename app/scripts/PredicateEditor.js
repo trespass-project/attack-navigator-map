@@ -15,6 +15,7 @@ const valueAttribute = 'value';
 
 const PredicateEditor = React.createClass({
 	propTypes: {
+		handleCreate: React.PropTypes.func,
 		handleUpdate: React.PropTypes.func,
 		nodes: React.PropTypes.object.isRequired,
 		predicatesLib: React.PropTypes.object.isRequired,
@@ -23,7 +24,8 @@ const PredicateEditor = React.createClass({
 
 	getDefaultProps: function() {
 		return {
-			handleUpdate: () => {}
+			handleCreate: () => {},
+			handleUpdate: () => {},
 		};
 	},
 
@@ -74,10 +76,6 @@ const PredicateEditor = React.createClass({
 		</li>;
 	},
 
-	updatePredicate: function(predicateId, property, value) {
-		this.props.handleUpdate(predicateId, { [property]: value });
-	},
-
 	render: function() {
 		const props = this.props;
 		const subjObjOptions = props.predicates
@@ -102,6 +100,17 @@ const PredicateEditor = React.createClass({
 			<div className='predicate-editor language'>
 				<div className='predicates'>
 					<h3>Predicates</h3>
+					<div className='add-new-container'>
+						add new:
+						<div>
+							<input ref='new-subject' type='text' placeholder='subject placeholder' />
+							<input ref='new-predicate' type='text' placeholder='predicate label' />
+							<input ref='new-object' type='text' placeholder='subject placeholder' />
+						</div>
+						<button onClick={this.addPredicate}>add</button>
+						<hr />
+					</div>
+
 					<ul>
 						{props.predicates
 							.map(pred => {
@@ -110,27 +119,28 @@ const PredicateEditor = React.createClass({
 						)}
 					</ul>
 				</div>
-
-				<div className='add-new-container'>
-					<hr />
-					add new:
-					<div>
-						<input type='text' placeholder='subject placeholder' />
-						<input type='text' placeholder='predicate label' />
-						<input type='text' placeholder='subject placeholder' />
-					</div>
-					<button>add</button>
-				</div>
 			</div>
 		);
 	},
 
-	// handleSelectPreset: function(event) {
-	// 	const preset = helpers.getItemByKey('title', profilePresets, event.target.value);
-	// 	if (!!preset) {
-	// 		this.setState(preset, () => { this.props.handleUpdate(this.state); });
-	// 	}
-	// },
+	addPredicate: function(event) {
+		const subject = this.refs['new-subject'].value;
+		const type = this.refs['new-predicate'].value;
+		const object = this.refs['new-object'].value;
+		const predicate = {
+			type,
+			value: [subject, object],
+		};
+		this.props.handleCreate(predicate);
+
+		this.refs['new-subject'].value = '';
+		this.refs['new-predicate'].value = '';
+		this.refs['new-object'].value = '';
+	},
+
+	updatePredicate: function(predicateId, property, value) {
+		this.props.handleUpdate(predicateId, { [property]: value });
+	},
 });
 
 
