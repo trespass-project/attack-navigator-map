@@ -224,6 +224,22 @@ function reducer(state=initialState, action) {
 			return mergeWithState({	graph: newGraph });
 		}
 
+		case constants.ACTION_addPredicate: {
+			const {predicate} = action;
+			const newGraph = modelHelpers.addPredicate(state.graph, predicate);
+			return mergeWithState({ graph: newGraph });
+		}
+
+		case constants.ACTION_predicateChanged: {
+			const {predicateId, newProperties} = action;
+			const newGraph = modelHelpers.updatePredicate(
+				state.graph,
+				predicateId,
+				newProperties
+			);
+			return mergeWithState({	graph: newGraph });
+		}
+
 		default: {
 			return state;
 		}

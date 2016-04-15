@@ -227,56 +227,64 @@
 						"type": "tkb:actor",
 						"tkb:actor_type": "tkb:actor_employee_it",
 						"label": "Terry",
-						"id": "terry"
+						"id": "Terry"
 					},
 					{
 						"modelComponentType": "actor",
 						"type": "tkb:actor",
 						"tkb:actor_type": "tkb:actor_other",
 						"label": "Cleo",
-						"id": "cleo"
+						"id": "Cleo"
 					},
 					{
 						"modelComponentType": "actor",
 						"type": "tkb:actor",
 						"tkb:actor_type": "tkb:actor_other",
 						"label": "Grey",
-						"id": "grey"
+						"id": "Grey"
 					},
 					{
 						"modelComponentType": "actor",
 						"type": "tkb:actor",
 						"tkb:actor_type": "tkb:actor_management",
-						"label": "Big",
-						"id": "big"
+						"label": "Mr_Big",
+						"id": "Mr_Big"
 					},
 					{
 						"modelComponentType": "actor",
 						"type": "tkb:actor",
 						"tkb:actor_type": "tkb:actor_employee_it",
 						"label": "Sydney",
-						"id": "sydney"
+						"id": "Sydney"
 					},
 					{
 						"modelComponentType": "actor",
 						"type": "tkb:actor",
 						"tkb:actor_type": "tkb:actor_employee",
 						"label": "Finn",
-						"id": "finn"
+						"id": "Finn"
 					},
 					{
 						"modelComponentType": "actor",
 						"type": "tkb:actor",
 						"tkb:actor_type": "tkb:actor_employee_trained",
 						"label": "Ethan",
-						"id": "ethan"
+						"id": "Ethan"
 					}
 				],
 				"edges": [],
 				"groups": [
 					{
 						"label": "Cloud actors",
-						"nodeIds": ["terry", "cleo", "grey", "big", "sydney", "finn", "ethan"]
+						"nodeIds": [
+							"Terry",
+							"Cleo",
+							"Grey",
+							"Mr_Big",
+							"Sydney",
+							"Finn",
+							"Ethan"
+						]
 					}
 				],
 				"predicates": [
@@ -284,8 +292,8 @@
 						"id": "isUidOf",
 						"arity": "2",
 						"value": [
-							["user-terry", "terry"],
-							["user-finn", "finn"]
+							["terry", "Terry"],
+							["finn", "Finn"]
 						]
 					}
 				]

@@ -25,16 +25,20 @@ const nonEdgeRelationTypes =
 module.exports.nonEdgeRelationTypes =
 ['network', 'connects', undefined];
 
+// TODO: clean these up
 const nonGraphCollectionNames =
 module.exports.nonGraphCollectionNames =
 ['predicates', 'policies', 'processes'];
 
 const graphComponentSingular =
-module.exports.graphComponentSingular = {
-	'nodes': 'node',
-	'edges': 'edge',
-	'groups': 'group',
-};
+module.exports.graphComponentSingular = _.merge(
+	{
+		'nodes': 'node',
+		'edges': 'edge',
+		'groups': 'group',
+	},
+	collectionNamesSingular
+);
 
 const graphComponentPlural =
 module.exports.graphComponentPlural =
@@ -546,10 +550,13 @@ function modelFromGraph(graph, metadata={}, anmData={}) {
 	const predicatesMap = R.values(graph.predicates || {})
 		.reduce((acc, item) => {
 			const predId = item.type;
+			if (!item.arity) {
+				console.warn('predicate has no arity', item);
+			}
 			if (!acc[predId]) {
 				acc[predId] = {
 					id: predId,
-					arity: item.arity,
+					arity: item.arity || 2,
 					value: [],
 				}
 			}
@@ -936,4 +943,48 @@ function updateComponentProperties(graph, graphComponentType, componentId, newPr
 	);
 
 	return g;
+};
+
+
+const addPredicate = // TODO: test
+module.exports.addPredicate =
+function addPredicate(graph, _predicate) {
+	console.log('here');
+	const predicate = _.merge({}, _predicate, { id: helpers.makeId('predicate') });
+	return update(
+		graph,
+		{ predicates: { [predicate.id]: { $set: predicate } } }
+	);
+};
+
+
+const updatePredicate =
+module.exports.updatePredicate =
+function updatePredicate(graph, predicateId, newProperties) {
+	const updateProps = R.keys(newProperties)
+		.reduce((acc, key) => {
+			const val = newProperties[key];
+
+			if (key === 'subject') {
+				acc.value[0] = { $set: val };
+			} else if (key === 'object') {
+				acc.value[1] = { $set: val };
+			} else if (key === 'predicate') {
+				acc.type = { $set: val };
+			}
+			return acc;
+		}, { value: {} });
+
+	const graphComponentType = 'predicate';
+	// console.log(graphComponentType, graph, graphComponentPlural);
+	const collectionName = graphComponentPlural[graphComponentType];
+	// console.log(collectionName, graph[collectionName], predicateId);
+	const item = graph[collectionName][predicateId];
+
+	return updateComponentProperties(
+		graph,
+		graphComponentType,
+		predicateId,
+		update(item, updateProps)
+	);
 };

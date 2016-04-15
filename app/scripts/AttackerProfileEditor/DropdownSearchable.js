@@ -35,7 +35,9 @@ const DropdownSearchable = React.createClass({
 		}
 
 		if (item.header) {
-			return <MenuItem header={true} key={index}>{item[props.displayAttribute]}</MenuItem>;
+			return <MenuItem header={true} key={index}>
+				{item[props.displayAttribute]}
+			</MenuItem>;
 		}
 
 		return (
