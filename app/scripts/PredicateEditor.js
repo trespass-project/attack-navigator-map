@@ -33,7 +33,9 @@ const PredicateEditor = React.createClass({
 			|| { id: predicate.type, subjectPlaceholder: '?', objectPlaceholder: '?' };
 		const [subj, obj] = predicate.value;
 
-		return <li key={`${subj}-${predicate.id}-${obj}`}>
+		const updatePredicate = R.partial(this.updatePredicate, [predicate.id]);
+
+		return <li key={`${subj}-${predicate.type}-${obj}`}>
 			<DropdownSearchable
 				name={'subject'}
 				title={subj}
@@ -43,18 +45,18 @@ const PredicateEditor = React.createClass({
 				items={props.nodes}
 				displayAttribute={'label'}
 				valueAttribute={'id'}
-				handleSelection={this.updatePredicate}
+				handleSelection={updatePredicate}
 			/>
 			&nbsp;&nbsp;&nbsp;
 			<DropdownSearchable
-				name={predicateType.label}
-				title={predicateType.label || predicate.label}
+				name={'predicate'}
+				title={predicateType.label}
 				value={predicate.label}
 				searchable={true}
 				items={R.values(props.predicatesLib)}
 				displayAttribute={'label'}
 				valueAttribute={'id'}
-				handleSelection={this.updatePredicate}
+				handleSelection={updatePredicate}
 			/>
 			&nbsp;&nbsp;&nbsp;
 			<DropdownSearchable
@@ -66,14 +68,14 @@ const PredicateEditor = React.createClass({
 				items={props.nodes}
 				displayAttribute={'label'}
 				valueAttribute={'id'}
-				handleSelection={this.updatePredicate}
+				handleSelection={updatePredicate}
 			/>
 			<br />
 		</li>;
 	},
 
-	updatePredicate: function(...args) {
-		console.log(args);
+	updatePredicate: function(predicateId, property, value) {
+		this.props.handleUpdate(predicateId, { [property]: value });
 	},
 
 	render: function() {

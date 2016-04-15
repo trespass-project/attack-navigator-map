@@ -776,6 +776,16 @@ function attackerProfileChanged(profile) {
 };
 
 
+const predicateChanged =
+module.exports.predicateChanged =
+function predicateChanged(predicateId, newProperties) {
+	return {
+		type: constants.ACTION_predicateChanged,
+		predicateId, newProperties
+	};
+};
+
+
 const setAttackerActor =
 module.exports.setAttackerActor =
 function setAttackerActor(actorId) {

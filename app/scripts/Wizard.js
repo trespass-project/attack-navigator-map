@@ -223,8 +223,16 @@ const Wizard = React.createClass({
 				nodes={R.values(props.graph.nodes)}
 				predicatesLib={props.predicatesLib || predicatesLib}
 				predicates={predicates}
+				predicates={predicates}
+				handleUpdate={this.updatePredicate}
 			/>
 		</div>;
+	},
+
+	updatePredicate: function(predicateId, newProperties) {
+		this.context.dispatch(
+			actionCreators.predicateChanged(predicateId, newProperties)
+		);
 	},
 
 	renderPolicies: function() {

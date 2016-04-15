@@ -25,16 +25,20 @@ const nonEdgeRelationTypes =
 module.exports.nonEdgeRelationTypes =
 ['network', 'connects', undefined];
 
+// TODO: clean these up
 const nonGraphCollectionNames =
 module.exports.nonGraphCollectionNames =
 ['predicates', 'policies', 'processes'];
 
 const graphComponentSingular =
-module.exports.graphComponentSingular = {
-	'nodes': 'node',
-	'edges': 'edge',
-	'groups': 'group',
-};
+module.exports.graphComponentSingular = _.merge(
+	{
+		'nodes': 'node',
+		'edges': 'edge',
+		'groups': 'group',
+	},
+	collectionNamesSingular
+);
 
 const graphComponentPlural =
 module.exports.graphComponentPlural =
@@ -936,4 +940,36 @@ function updateComponentProperties(graph, graphComponentType, componentId, newPr
 	);
 
 	return g;
+};
+
+
+const updatePredicate =
+module.exports.updatePredicate =
+function updatePredicate(graph, predicateId, newProperties) {
+	const updateProps = R.keys(newProperties)
+		.reduce((acc, key) => {
+			const val = newProperties[key];
+
+			if (key === 'subject') {
+				acc.value[0] = { $set: val };
+			} else if (key === 'object') {
+				acc.value[1] = { $set: val };
+			} else if (key === 'predicate') {
+				acc.type = { $set: val };
+			}
+			return acc;
+		}, { value: {} });
+
+	const graphComponentType = 'predicate';
+	// console.log(graphComponentType, graph, graphComponentPlural);
+	const collectionName = graphComponentPlural[graphComponentType];
+	// console.log(collectionName, graph[collectionName], predicateId);
+	const item = graph[collectionName][predicateId];
+
+	return updateComponentProperties(
+		graph,
+		graphComponentType,
+		predicateId,
+		update(item, updateProps)
+	);
 };
