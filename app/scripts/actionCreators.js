@@ -1096,6 +1096,7 @@ module.exports.runAnalysis =
 function runAnalysis(toolChainId, downloadScenario=false) {
 	return function(dispatch, getState) {
 		const state = getState();
+		console.log(state.model.graph);
 		const toolChains = state.interface.toolChains;
 		const toolChainData = toolChains[toolChainId];
 
