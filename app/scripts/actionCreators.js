@@ -626,6 +626,15 @@ function getXMLBlob(xmlStr) {
 };
 
 
+function replaceIdsInString(str, idReplacementMap={}) {
+	return R.keys(idReplacementMap)
+		.reduce((acc, oldId)  => {
+			const re = new RegExp(oldId, 'g');
+			return acc.replace(re, idReplacementMap[oldId]);
+		}, str);
+}
+
+
 function stateToHumanReadableModelXML(state) {
 	const idReplacementMap = ['nodes', ...modelHelpers.collectionNames]
 		.reduce((acc, collName) => {
@@ -648,13 +657,23 @@ function stateToHumanReadableModelXML(state) {
 	let modelXmlStr = trespassModel.toXML(model);
 
 	// HACK: replace all ids with their human-readable versions
-	modelXmlStr = R.keys(idReplacementMap)
-		.reduce((acc, oldId)  => {
-			const re = new RegExp(oldId, 'g');
-			return acc.replace(re, idReplacementMap[oldId]);
-		}, modelXmlStr);
+	modelXmlStr = replaceIdsInString(modelXmlStr, idReplacementMap);
 
-	return {modelXmlStr, model};
+	return {modelXmlStr, model, idReplacementMap};
+}
+
+
+function stateToHumanReadableScenarioXML(state, modelId, modelFileName, idReplacementMap={}) {
+	let scenarioXmlStr = generateScenarioXML(
+		modelId,
+		modelFileName,
+		state.interface
+	);
+
+	// HACK: replace all ids with their human-readable versions
+	scenarioXmlStr = replaceIdsInString(scenarioXmlStr, idReplacementMap);
+
+	return scenarioXmlStr;
 }
 
 
@@ -675,22 +694,18 @@ module.exports.downloadZippedScenario =
 function downloadZippedScenario() {
 	return (dispatch, getState) => {
 		const state = getState();
-		const model = modelHelpers.modelFromGraph(
-			state.model.graph,
-			state.model.metadata,
-			state.model.anmData
-		);
+		const {modelXmlStr, model, idReplacementMap} = stateToHumanReadableModelXML(state);
 		const modelId = model.system.id;
-		const modelXmlStr = trespassModel.toXML(model);
 
 		const modelFileName = 'model.xml';
 		const scenarioFileName = 'scenario.xml';
 		const zipFileName = 'scenario.zip';
 
-		const scenarioXmlStr = generateScenarioXML(
+		const scenarioXmlStr = stateToHumanReadableScenarioXML(
+			state,
 			modelId,
 			modelFileName,
-			state.interface
+			idReplacementMap
 		);
 
 		const zipBlob = zipScenario(
@@ -1094,10 +1109,7 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 			throw new Error('missing model id');
 		}
 
-		// TODO: generate human-readable ids
-		// hack to generate readable ids on export
-
-		const {modelXmlStr, model} = stateToHumanReadableModelXML(state);
+		const {modelXmlStr, model, idReplacementMap} = stateToHumanReadableModelXML(state);
 
 		const validationErrors = trespass.model.validateModel(model);
 		if (validationErrors.length) {
@@ -1112,10 +1124,11 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 		const scenarioFileName = 'scenario.xml';
 		const zipFileName = 'scenario.zip';
 
-		const scenarioXmlStr = generateScenarioXML(
+		const scenarioXmlStr = stateToHumanReadableScenarioXML(
+			state,
 			modelId,
 			modelFileName,
-			state.interface
+			idReplacementMap
 		);
 
 		// download
