@@ -278,11 +278,17 @@ module.exports.importFragment =
 function importFragment(graph, fragment, atXY=origin, cb=noop) {
 	// prepare predicates
 	fragment.predicates = (fragment.predicates || [])
-		.map((predicate) => {
-			predicate.type = predicate.id;
-			predicate.id = helpers.makeId('predicate');
-			return predicate;
-		});
+		.reduce((acc, predicate) => {
+			const preds = predicate.value
+				.map(value => {
+					return {
+						id: helpers.makeId('predicate'),
+						type: predicate.id,
+						value,
+					};
+				});
+			return acc.concat(preds);
+		}, []);
 
 	// TODO:
 	R.keys(fragment)

@@ -280,8 +280,14 @@
 					}
 				],
 				"predicates": [
-					{ "id": "isUidOf", "arity": "2", "value": ["user-terry", "terry"] },
-					{ "id": "isUidOf", "arity": "2", "value": ["user-finn", "finn"] }
+					{
+						"id": "isUidOf",
+						"arity": "2",
+						"value": [
+							["user-terry", "terry"],
+							["user-finn", "finn"]
+						]
+					}
 				]
 			},
 			"label": "Cloud actors"
