@@ -276,6 +276,14 @@ function combineFragments(fragments) {
 const importFragment =
 module.exports.importFragment =
 function importFragment(graph, fragment, atXY=origin, cb=noop) {
+	// prepare predicates
+	fragment.predicates = (fragment.predicates || [])
+		.map((predicate) => {
+			predicate.type = predicate.id;
+			predicate.id = helpers.makeId('predicate');
+			return predicate;
+		});
+
 	// TODO:
 	R.keys(fragment)
 		.forEach((key) => {
@@ -452,20 +460,6 @@ function graphFromModel(model) {
 			return result;
 		}, {});
 
-	// predicates
-	neitherNodeNorEdge.predicates = neitherNodeNorEdge.predicates
-		.reduce((result, predicate) => {
-			predicate.value
-				.forEach((value) => {
-					result.push({
-						id: predicate.id,
-						value,
-						arity: predicate.arity,
-					});
-				});
-			return result;
-		}, []);
-
 	// TODO: do s.th. with model.system.anm_data
 	if (model.system.anm_data) {
 		console.info('has anm_data');
@@ -543,16 +537,17 @@ function modelFromGraph(graph, metadata={}, anmData={}) {
 		});
 
 	// predicates
-	const predicatesMap = (graph.predicates || [])
+	const predicatesMap = R.values(graph.predicates || {})
 		.reduce((acc, item) => {
-			if (!acc[item.id]) {
-				acc[item.id] = {
-					id: item.id,
+			const predId = item.type;
+			if (!acc[predId]) {
+				acc[predId] = {
+					id: predId,
 					arity: item.arity,
 					value: [],
 				}
 			}
-			acc[item.id].value.push( item.value.join(' ') );
+			acc[predId].value = [...acc[predId].value, item.value.join(' ')];
 			return acc;
 		}, {});
 	R.values(predicatesMap)
@@ -560,14 +555,13 @@ function modelFromGraph(graph, metadata={}, anmData={}) {
 			trespass.model.addPredicate(model, R.omit(keysToOmit, item));
 		});
 
-	(graph.policies || [])
+	R.values(graph.policies || {})
 		.forEach((item) => {
 			trespass.model.addPolicy(model, R.omit(keysToOmit, item));
 		});
 
-	(graph.processes || [])
+	R.values(graph.processes || {})
 		.forEach((item) => {
-			console.log(item);
 			trespass.model.addProcess(model, R.omit(keysToOmit, item));
 		});
 

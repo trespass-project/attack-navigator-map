@@ -88,8 +88,8 @@ const PredicateEditor = React.createClass({
 
 	renderPredicate: function(predicate) {
 		const props = this.props;
-		const predicateType = props.predicatesLib[predicate.id]
-			|| { id: predicate.id, subjectPlaceholder: '?', objectPlaceholder: '?' };
+		const predicateType = props.predicatesLib[predicate.type]
+			|| { id: predicate.type, subjectPlaceholder: '?', objectPlaceholder: '?' };
 		const [subj, obj] = predicate.value;
 
 		return <li key={`${subj}-${predicate.id}-${obj}`}>
