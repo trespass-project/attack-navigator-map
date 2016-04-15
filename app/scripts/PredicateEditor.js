@@ -78,7 +78,7 @@ const PredicateEditor = React.createClass({
 
 	render: function() {
 		const props = this.props;
-		const subjObjOptions = props.predicates
+		let subjObjOptions = props.predicates
 			.reduce((options, predicate) => {
 				const items = predicate.value
 					.reduce((acc, val) => {
@@ -94,6 +94,7 @@ const PredicateEditor = React.createClass({
 				return options.concat(items);
 			}, [])
 			.concat(R.values(props.nodes));
+		subjObjOptions = R.uniq(subjObjOptions);
 		const subjObjOptionsMap = helpers.toHashMap('id', subjObjOptions);
 
 		return (
