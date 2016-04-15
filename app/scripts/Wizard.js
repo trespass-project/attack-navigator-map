@@ -223,7 +223,6 @@ const Wizard = React.createClass({
 				nodes={R.values(props.graph.nodes)}
 				predicatesLib={props.predicatesLib || predicatesLib}
 				predicates={predicates}
-				predicates={predicates}
 				handleUpdate={this.updatePredicate}
 			/>
 		</div>;
