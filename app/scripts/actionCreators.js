@@ -642,7 +642,7 @@ function stateToHumanReadableModelXML(state) {
 				const coll = state.model.graph[collName];
 				R.keys(coll)
 					.forEach(id => {
-						const newId = `${coll[id].modelComponentType}__${(coll[id].label || id).replace(/ +/g)}`;
+						const newId = `${coll[id].modelComponentType}__${(coll[id].label || id).replace(/ +/g, '-')}`;
 						acc[id] = newId;
 					});
 			}
@@ -1096,6 +1096,7 @@ module.exports.runAnalysis =
 function runAnalysis(toolChainId, downloadScenario=false) {
 	return function(dispatch, getState) {
 		const state = getState();
+		console.log(state.model.graph);
 		const toolChains = state.interface.toolChains;
 		const toolChainData = toolChains[toolChainId];
 
