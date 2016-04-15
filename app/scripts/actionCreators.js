@@ -642,7 +642,7 @@ function stateToHumanReadableModelXML(state) {
 				const coll = state.model.graph[collName];
 				R.keys(coll)
 					.forEach(id => {
-						const newId = `${coll[id].modelComponentType}__${(coll[id].label || id).replace(/ +/g)}`;
+						const newId = `${coll[id].modelComponentType}__${(coll[id].label || id).replace(/ +/g, '-')}`;
 						acc[id] = newId;
 					});
 			}
