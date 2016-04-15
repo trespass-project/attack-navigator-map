@@ -123,11 +123,8 @@ function reducer(state=initialState, action) {
 		// 	return state; // noop
 
 		case constants.ACTION_loadXML_DONE: {
-			return _.merge(
-				{},
-				initialState,
-				action.result
-			);
+			console.error('this should not be called anymore!');
+			return state;
 		}
 
 		case constants.ACTION_addNodeToGroup: {
