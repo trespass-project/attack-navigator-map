@@ -220,7 +220,7 @@ const Wizard = React.createClass({
 		return <div>
 			<h2 className='title'>Connections</h2>
 			<PredicateEditor
-				nodes={R.values(props.graph.nodes)}
+				nodes={props.graph.nodes}
 				predicatesLib={props.predicatesLib || predicatesLib}
 				predicates={predicates}
 				handleUpdate={this.updatePredicate}

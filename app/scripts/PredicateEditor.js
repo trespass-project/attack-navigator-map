@@ -16,7 +16,7 @@ const valueAttribute = 'value';
 const PredicateEditor = React.createClass({
 	propTypes: {
 		handleUpdate: React.PropTypes.func,
-		nodes: React.PropTypes.array.isRequired,
+		nodes: React.PropTypes.object.isRequired,
 		predicatesLib: React.PropTypes.object.isRequired,
 		predicates: React.PropTypes.array.isRequired,
 	},
@@ -27,7 +27,7 @@ const PredicateEditor = React.createClass({
 		};
 	},
 
-	renderPredicate: function(predicate) {
+	renderPredicate: function(predicate, subjObjOptions, subjObjOptionsMap) {
 		const props = this.props;
 		const predicateType = props.predicatesLib[predicate.type]
 			|| { id: predicate.type, subjectPlaceholder: '?', objectPlaceholder: '?' };
@@ -38,11 +38,11 @@ const PredicateEditor = React.createClass({
 		return <li key={`${subj}-${predicate.type}-${obj}`}>
 			<DropdownSearchable
 				name={'subject'}
-				title={subj}
+				title={subjObjOptionsMap[subj].label}
 				value={subj}
 				searchable={true}
 				searchPlaceholder={predicateType.subjectPlaceholder}
-				items={props.nodes}
+				items={subjObjOptions}
 				displayAttribute={'label'}
 				valueAttribute={'id'}
 				handleSelection={updatePredicate}
@@ -61,11 +61,11 @@ const PredicateEditor = React.createClass({
 			&nbsp;&nbsp;&nbsp;
 			<DropdownSearchable
 				name={'object'}
-				title={obj}
+				title={subjObjOptionsMap[obj].label}
 				value={obj}
 				searchable={true}
 				searchPlaceholder={predicateType.objectPlaceholder}
-				items={props.nodes}
+				items={subjObjOptions}
 				displayAttribute={'label'}
 				valueAttribute={'id'}
 				handleSelection={updatePredicate}
@@ -80,13 +80,34 @@ const PredicateEditor = React.createClass({
 
 	render: function() {
 		const props = this.props;
+		const subjObjOptions = props.predicates
+			.reduce((options, predicate) => {
+				const items = predicate.value
+					.reduce((acc, val) => {
+						// often it will be the id of a node ...
+						const node = props.nodes[val];
+						// ... otherwise it's just a name used in the predicate
+						if (!node) {
+							return [...acc, { label: val, id: val }];
+						} else {
+							return acc;
+						}
+					}, []);
+				return options.concat(items);
+			}, [])
+			.concat(R.values(props.nodes));
+		const subjObjOptionsMap = helpers.toHashMap('id', subjObjOptions);
 
 		return (
 			<div className='predicate-editor language'>
 				<div className='predicates'>
 					<h3>Predicates</h3>
 					<ul>
-						{props.predicates.map(this.renderPredicate)}
+						{props.predicates
+							.map(pred => {
+								return this.renderPredicate(pred, subjObjOptions, subjObjOptionsMap);
+							}
+						)}
 					</ul>
 				</div>
 
