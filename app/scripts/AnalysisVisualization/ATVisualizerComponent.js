@@ -243,7 +243,6 @@ export default class ATVisualizerComponent extends React.Component {
 
 			update(d);
 		}
-
 	}
 
 	render() {
