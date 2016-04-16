@@ -5,6 +5,8 @@ import d3 from 'd3';
 import $ from 'jquery';
 import xml2js from 'xml2js';
 
+const noop = () => {};
+
 export default class ATVisualizerComponent extends React.Component {
 	constructor(props) {
 		super(props);
@@ -24,16 +26,18 @@ export default class ATVisualizerComponent extends React.Component {
 	componentDidUpdate() {
 		$('#tree').empty();
 
-		this.processData();
-		this.renderGraph();
+		this.processData(() => {
+			this.renderGraph();
+		});
 	}
 
-	processData() {
+	processData(cb=noop) {
 		let props = this.props;
 		let state = this.state;
 
 		xml2js.parseString(props.input, (err, res) => {
 			state.data = res;
+			cb();
 		});
 	}
 
