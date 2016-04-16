@@ -44,6 +44,7 @@ export default class ATVisualizerComponent extends React.Component {
 		let _this = this;
 
 		let data = state.data;
+		if (!data) return null;
 		let ele = refs.tree;
 
 		let width = $('#tree').width();
