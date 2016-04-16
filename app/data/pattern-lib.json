@@ -407,6 +407,110 @@
 				]
 			},
 			"label": "Laptop"
+		},
+
+
+		{
+			"type": "pattern",
+			"isFragment": true,
+			"value": {
+				"edges": {
+					"id-4JW1F1Bo1W-edge": {
+						"directed": true,
+						"from": "adminpin",
+						"id": "id-4JW1F1Bo1W-edge",
+						"relation": "atLocation",
+						"to": "admincard"
+					},
+					"id-4k7kYkSoJZ-edge": {
+						"directed": true,
+						"from": "userpin",
+						"id": "id-4k7kYkSoJZ-edge",
+						"relation": "atLocation",
+						"to": "usercard"
+					}
+				},
+				"nodes": {
+					"admincard": {
+						"id": "admincard",
+						"label": "admincard",
+						"name": "admincard",
+						"type": "tkb:item",
+						"modelComponentType": "item"
+					},
+					"adminpin": {
+						"id": "adminpin",
+						"label": "pin",
+						"name": "pin",
+						"type": "tkb:data",
+						"modelComponentType": "data",
+						"value": "42"
+					},
+					"usercard": {
+						"id": "usercard",
+						"label": "usercard",
+						"name": "usercard",
+						"type": "tkb:item",
+						"modelComponentType": "item"
+					},
+					"userpin": {
+						"id": "userpin",
+						"label": "pin",
+						"name": "pin",
+						"type": "tkb:data",
+						"modelComponentType": "data",
+						"value": "43"
+					}
+				},
+				"policies": [
+					{
+						"atLocations": [
+							"DoorInternal",
+							"DoorDatacenter"
+						],
+						"credentials": {
+							"credData": {
+								"name": "pin",
+								"variable": "X"
+							},
+							"credItem": {
+								"credData": {
+									"name": "pin",
+									"variable": "X"
+								},
+								"name": "admincard"
+							}
+						},
+						"enabled": {
+							"move": ""
+						},
+						"id": "p_001"
+					},
+					{
+						"atLocations": [
+							"DoorDatacenter"
+						],
+						"credentials": {
+							"credData": {
+								"name": "pin",
+								"variable": "X"
+							},
+							"credItem": {
+								"credData": {
+									"name": "pin",
+									"variable": "X"
+								},
+								"name": "card"
+							}
+						},
+						"enabled": {
+							"move": ""
+						},
+						"id": "p_002"
+					}
+				]
+			},
+			"label": "Cloud cards"
 		}
 	]
 }

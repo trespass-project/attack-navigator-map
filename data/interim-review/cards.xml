@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<system author="ciab-exportAsTML.py" date="2016-03-30T09:14:59.292151"
+	version="0.5" xmlns="https://www.trespass-project.eu/schemas/TREsPASS_model"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="https://www.trespass-project.eu/schemas/TREsPASS_model.xsd">
+	<title>CIAB-created TREsPASS XML model</title>
+	<assets>
+		<data id="adminpin" name="pin" value="42" type="tkb:data">
+			<atLocations>admincard Sydney</atLocations>
+		</data>
+		<data id="userpin" name="pin" value="43" type="tkb:data">
+			<atLocations>usercard Finn</atLocations>
+		</data>
+		<item id="admincard" name="admincard" type="tkb:item">
+			<atLocations>Sydney</atLocations>
+		</item>
+		<item id="usercard" name="usercard" type="tkb:item">
+			<atLocations>Finn</atLocations>
+		</item>
+	</assets>
+	<policies>
+		<policy id="p_001">
+			<credentials>
+				<credItem name="admincard">
+					<credData name="pin"><variable>X</variable></credData>
+				</credItem>
+					<credData name="pin"><variable>X</variable></credData>
+			</credentials>
+			<enabled><move /></enabled>
+			<atLocations>
+				DoorInternal DoorDatacenter
+			</atLocations>
+		</policy>
+		<policy id="p_002">
+			<credentials>
+				<credItem name="card">
+					<credData name="pin"><variable>X</variable></credData>
+				</credItem>
+					<credData name="pin"><variable>X</variable></credData>
+			</credentials>
+			<enabled><move /></enabled>
+			<atLocations>
+				DoorDatacenter
+			</atLocations>
+		</policy>
+	</policies>
+</system>
