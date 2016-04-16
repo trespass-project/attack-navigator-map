@@ -294,7 +294,8 @@ function importFragment(graph, fragment, atXY=origin, cb=noop) {
 			return acc.concat(preds);
 		}, []);
 
-	// TODO:
+	// TODO: remove this at some point
+	// (but the above code relies on this)
 	R.keys(fragment)
 		.forEach((key) => {
 			const item = fragment[key];
@@ -424,7 +425,7 @@ function graphFromModel(model) {
 			});
 		});
 
-	// set model component type
+	// set model component type for each item
 	const nonEdges = R.without(['edges'], collectionNames);
 	nonEdges
 		.forEach((collectionName) => {
@@ -434,9 +435,9 @@ function graphFromModel(model) {
 				});
 		});
 
-	const nonGraphComponents = [...nonGraphCollectionNames, 'edges'];
-	// everything that becomes a node
-	R.without(nonGraphComponents, collectionNames)
+	const nonNodeCollectionNames = [...nonGraphCollectionNames, 'edges'];
+	// everything that becomes a node in the graph
+	R.without(nonNodeCollectionNames, collectionNames)
 		.forEach((collectionName) => {
 			// TODO: warn or s.th.
 			const coll = (_.isArray(model.system[collectionName]))
@@ -464,6 +465,7 @@ function graphFromModel(model) {
 
 	graph.edges = helpers.toHashMap('id', edges);
 
+	// everything that's neither node nor edge
 	const neitherNodeNorEdge = nonGraphCollectionNames
 		.reduce((result, collectionName) => {
 			result[collectionName] = model.system[collectionName];
