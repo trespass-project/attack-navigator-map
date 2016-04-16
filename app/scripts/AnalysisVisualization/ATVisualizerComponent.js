@@ -58,7 +58,8 @@ export default class ATVisualizerComponent extends React.Component {
 
 		let tree = d3.layout.tree()
 			.children(function (d) {
-				return d._node;
+				// return d._node;
+				return d.node;
 			})
 			.size([width, height]);
 
