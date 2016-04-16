@@ -17,7 +17,7 @@ const PredicateEditor = React.createClass({
 	propTypes: {
 		handleCreate: React.PropTypes.func,
 		handleUpdate: React.PropTypes.func,
-		nodes: React.PropTypes.object.isRequired,
+		nodes: React.PropTypes.array.isRequired,
 		predicatesLib: React.PropTypes.object.isRequired,
 		predicates: React.PropTypes.array.isRequired,
 	},
