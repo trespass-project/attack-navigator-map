@@ -1,0 +1,38 @@
+{
+	"atLocations": [
+		"item__laptop"
+	],
+	"credentials": {
+		"credPredicate": [
+			{
+				"name": "isUserIdAt",
+				"value": "item__laptop",
+				"variable": "X"
+			},
+			{
+				"name": "isPasswordOf",
+				"variable": [
+					"X",
+					"Y"
+				]
+			}
+		]
+	},
+	"enabled": {
+		"out": {
+			"loc": "item__laptop",
+			"tuple": {
+				"value": "get",
+				"wildcard": [
+					"",
+					""
+				]
+			},
+			"variable": [
+				"X",
+				"Y"
+			]
+		}
+	},
+	"id": "p_laptop_001"
+}
