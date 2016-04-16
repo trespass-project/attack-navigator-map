@@ -224,6 +224,12 @@ function reducer(state=initialState, action) {
 			return mergeWithState({	graph: newGraph });
 		}
 
+		case constants.ACTION_addProcess: {
+			const {process} = action;
+			const newGraph = modelHelpers.addProcess(state.graph, process);
+			return mergeWithState({ graph: newGraph });
+		}
+
 		case constants.ACTION_addPolicy: {
 			const {policy} = action;
 			const newGraph = modelHelpers.addPolicy(state.graph, policy);

@@ -948,6 +948,20 @@ function updateComponentProperties(graph, graphComponentType, componentId, newPr
 };
 
 
+const addProcess = // TODO: test
+module.exports.addProcess =
+function addProcess(graph, _process) {
+	const process = _.merge({}, _process, {
+		id: helpers.makeId('process'),
+		modelComponentType: 'process',
+	});
+	return update(
+		graph,
+		{ processes: { [process.id]: { $set: process } } }
+	);
+};
+
+
 const addPolicy = // TODO: test
 module.exports.addPolicy =
 function addPolicy(graph, _policy) {

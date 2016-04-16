@@ -791,6 +791,15 @@ function attackerProfileChanged(profile) {
 };
 
 
+module.exports.addProcess =
+function addProcess(process) {
+	return {
+		type: constants.ACTION_addProcess,
+		process
+	};
+};
+
+
 module.exports.addPolicy =
 function addPolicy(policy) {
 	return {

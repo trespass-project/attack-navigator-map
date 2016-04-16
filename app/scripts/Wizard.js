@@ -250,7 +250,7 @@ const Wizard = React.createClass({
 			<div>
 				<div>
 					<textarea
-						style={{ width: '100%', maxWidth: '100%', fontSize: '12px'/*, fontFamily: 'monospace'*/ }}
+						style={{ width: '100%', maxWidth: '100%', fontSize: '12px' }}
 						ref='new-policy'
 						cols='30'
 					></textarea>
@@ -286,10 +286,39 @@ const Wizard = React.createClass({
 		textarea.value = '';
 	},
 
+	addProcess: function(event) {
+		const textarea = this.refs['new-process'];
+		const processJSON = textarea.value;
+		try {
+			const process = JSON.parse(processJSON);
+			this.context.dispatch(
+				actionCreators.addProcess(process)
+			);
+		} catch (e) {
+			alert('Invalid JSON');
+			return;
+		}
+		textarea.value = '';
+	},
+
 	renderProcesses: function() {
 		const processes = R.values(this.props.graph.processes || {});
 		return <div>
 			<h2 className='title'>Processes</h2>
+
+			<hr/>
+			<div>
+				<div>
+					<textarea
+						style={{ width: '100%', maxWidth: '100%', fontSize: '12px' }}
+						ref='new-process'
+						cols='30'
+					></textarea>
+				</div>
+				<button onClick={this.addProcess}>add</button>
+			</div>
+			<hr/>
+
 			{processes
 				.map((item) => {
 					return <JSONTree
