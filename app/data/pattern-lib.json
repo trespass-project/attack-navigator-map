@@ -461,54 +461,7 @@
 						"modelComponentType": "data",
 						"value": "43"
 					}
-				},
-				"policies": [
-					{
-						"atLocations": [
-							"DoorInternal",
-							"DoorDatacenter"
-						],
-						"credentials": {
-							"credData": {
-								"name": "pin",
-								"variable": "X"
-							},
-							"credItem": {
-								"credData": {
-									"name": "pin",
-									"variable": "X"
-								},
-								"name": "admincard"
-							}
-						},
-						"enabled": {
-							"move": ""
-						},
-						"id": "p_001"
-					},
-					{
-						"atLocations": [
-							"DoorDatacenter"
-						],
-						"credentials": {
-							"credData": {
-								"name": "pin",
-								"variable": "X"
-							},
-							"credItem": {
-								"credData": {
-									"name": "pin",
-									"variable": "X"
-								},
-								"name": "card"
-							}
-						},
-						"enabled": {
-							"move": ""
-						},
-						"id": "p_002"
-					}
-				]
+				}
 			},
 			"label": "Cloud cards"
 		}
