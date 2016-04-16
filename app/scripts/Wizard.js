@@ -245,6 +245,20 @@ const Wizard = React.createClass({
 		const policies = R.values(this.props.graph.policies || {});
 		return <div>
 			<h2 className='title'>Policies</h2>
+
+			<hr/>
+			<div>
+				<div>
+					<textarea
+						style={{ width: '100%', maxWidth: '100%', fontSize: '12px'/*, fontFamily: 'monospace'*/ }}
+						ref='new-policy'
+						cols='30'
+					></textarea>
+				</div>
+				<button onClick={this.addPolicy}>add</button>
+			</div>
+			<hr/>
+
 			{policies
 				.map((item) => {
 					return <JSONTree
@@ -255,6 +269,21 @@ const Wizard = React.createClass({
 				})
 			}
 		</div>;
+	},
+
+	addPolicy: function(event) {
+		const textarea = this.refs['new-policy'];
+		const policyJSON = textarea.value;
+		try {
+			const policy = JSON.parse(policyJSON);
+			this.context.dispatch(
+				actionCreators.addPolicy(policy)
+			);
+		} catch (e) {
+			alert('Invalid JSON');
+			return;
+		}
+		textarea.value = '';
 	},
 
 	renderProcesses: function() {

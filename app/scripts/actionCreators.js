@@ -791,9 +791,17 @@ function attackerProfileChanged(profile) {
 };
 
 
+module.exports.addPolicy =
+function addPolicy(policy) {
+	return {
+		type: constants.ACTION_addPolicy,
+		policy
+	};
+};
+
+
 module.exports.addPredicate =
 function addPredicate(predicate) {
-	console.log('action');
 	return {
 		type: constants.ACTION_addPredicate,
 		predicate

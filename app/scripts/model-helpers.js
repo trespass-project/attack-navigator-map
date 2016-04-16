@@ -948,11 +948,27 @@ function updateComponentProperties(graph, graphComponentType, componentId, newPr
 };
 
 
+const addPolicy = // TODO: test
+module.exports.addPolicy =
+function addPolicy(graph, _policy) {
+	const policy = _.merge({}, _policy, {
+		id: helpers.makeId('policy'),
+		modelComponentType: 'policy',
+	});
+	return update(
+		graph,
+		{ policies: { [policy.id]: { $set: policy } } }
+	);
+};
+
+
 const addPredicate = // TODO: test
 module.exports.addPredicate =
 function addPredicate(graph, _predicate) {
-	console.log('here');
-	const predicate = _.merge({}, _predicate, { id: helpers.makeId('predicate') });
+	const predicate = _.merge({}, _predicate, {
+		id: helpers.makeId('predicate'),
+		modelComponentType: 'predicate',
+	});
 	return update(
 		graph,
 		{ predicates: { [predicate.id]: { $set: predicate } } }
