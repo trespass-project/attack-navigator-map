@@ -21,7 +21,7 @@ export default class AnalyticsComponent extends React.Component {
 	}
 
 	updateTree(newTree) {
-		console.log('newTree:' + newTree);
+		// console.log('newTree:' + newTree);
 		this.state.activeTree = newTree;
 		this.forceUpdate();
 	}
