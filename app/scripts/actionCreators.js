@@ -1205,23 +1205,36 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 
 											const blob = item.blob;
 											const reader = new FileReader();
+											// for what we know, zip blob type could be any of these
+											const zipTypes = [
+												'application/zip',
+												'application/x-zip',
+												'application/x-zip-compressed',
+												'application/octet-stream',
+												'multipart/x-zip',
+											];
 											if (blob.type === 'text/plain') {
 												reader.onload = textHandler;
 												reader.readAsText(blob);
-											} else if (blob.type === 'application/x-zip-compressed') {
+											} else if (R.contains(blob.type, zipTypes)) {
 												reader.onload = zipHandler;
 												reader.readAsArrayBuffer(blob);
+											} else {
+												console.warn('unexpected mime type', blob.type);
 											}
 										});
 									});
 
 								Promise.all(promises)
+									.catch(reason => {
+										console.error(reason);
+									})
 									.then((results) => {
 										const analysisResults = results
 											.reduce((acc, item) => {
 												return _.assign(acc, item);
 											}, {});
-										console.log(analysisResults);
+										console.log('analysis results:', analysisResults);
 										dispatch(setAnalysisResults(analysisResults));
 									});
 							});
