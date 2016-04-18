@@ -430,6 +430,17 @@
 						"to": "usercard"
 					}
 				},
+				"groups": [
+					{
+						"label": "Cloud cards",
+						"nodeIds": [
+							"admincard",
+							"adminpin",
+							"usercard",
+							"userpin"
+						]
+					}
+				],
 				"nodes": {
 					"admincard": {
 						"id": "admincard",
@@ -440,8 +451,8 @@
 					},
 					"adminpin": {
 						"id": "adminpin",
-						"label": "pin",
-						"name": "pin",
+						"label": "adminpin",
+						"name": "adminpin",
 						"type": "tkb:data",
 						"modelComponentType": "data",
 						"value": "42"
@@ -455,8 +466,8 @@
 					},
 					"userpin": {
 						"id": "userpin",
-						"label": "pin",
-						"name": "pin",
+						"label": "userpin",
+						"name": "userpin",
 						"type": "tkb:data",
 						"modelComponentType": "data",
 						"value": "43"
