@@ -57,7 +57,7 @@
 		</edge>
 	</edges>
 	<assets>
-		<data id="fileX" name="fileX" value="42">
+		<data id="fileX" name="fileX" type="tkb:file" value="42">
 			<atLocations>entity_vim.VirtualMachine_vm-26</atLocations>
 		</data>
 		<item id="entity_vim.Datastore_datastore-13" name="vsanDatastore"
