@@ -5,12 +5,12 @@
 	],
 	"credentials": {
 		"credData": {
-			"name": "pin",
+			"name": "adminpin",
 			"variable": "X"
 		},
 		"credItem": {
 			"credData": {
-				"name": "pin",
+				"name": "adminpin",
 				"variable": "X"
 			},
 			"name": "admincard"
@@ -29,15 +29,15 @@
 	],
 	"credentials": {
 		"credData": {
-			"name": "pin",
+			"name": "userpin",
 			"variable": "X"
 		},
 		"credItem": {
 			"credData": {
-				"name": "pin",
+				"name": "userpin",
 				"variable": "X"
 			},
-			"name": "card"
+			"name": "usercard"
 		}
 	},
 	"enabled": {
