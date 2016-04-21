@@ -1016,7 +1016,16 @@ describe(f1('model-helpers.js'), () => {
 			edges: helpers.toHashMap('id', edges),
 			// TODO: groups
 		};
-		const model = modelHelpers.modelFromGraph(graph);
+		const metadata = {
+			title: 'test-model',
+			'version': '0.2.1',
+		};
+		const model = modelHelpers.modelFromGraph(graph, metadata);
+
+		it(f3('should include metadata'), () => {
+			assert(model.system.title === metadata.title);
+			assert(model.system.version === metadata.version);
+		});
 
 		it(f3('should create elements'), () => {
 			assert(model.system.items.length === 1);

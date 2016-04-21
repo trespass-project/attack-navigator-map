@@ -503,7 +503,7 @@ function modelFromGraph(graph, metadata={}, anmData={}) {
 		console.warn('anmData missing');
 	}
 
-	const model = trespass.model.create();
+	let model = trespass.model.create();
 
 	// embed entire graph in model
 	model.system.anm_data = JSON.stringify(graph);
@@ -529,7 +529,7 @@ function modelFromGraph(graph, metadata={}, anmData={}) {
 		.forEach((edge) => {
 			const isDirected = !R.contains(edge.relation, nonDirectedRelationTypes);
 			if (relationConvertsToEdge(edge.relation)) {
-				trespass.model.addEdge(model, {
+				model = trespass.model.addEdge(model, {
 					source: edge.from,
 					target: edge.to,
 					directed: /*edge.directed*/ isDirected,
@@ -598,10 +598,11 @@ function modelFromGraph(graph, metadata={}, anmData={}) {
 				if (node.label) {
 					item.name = node.label;
 				}
-				addFn(model, item);
+				model = addFn(model, item);
 			}
 		});
 
+	// console.log(model.system);
 	return model;
 };
 
