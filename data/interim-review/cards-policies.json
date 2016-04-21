@@ -1,0 +1,47 @@
+{
+	"atLocations": [
+		"DoorInternal",
+		"DoorDatacenter"
+	],
+	"credentials": {
+		"credData": {
+			"name": "adminpin",
+			"variable": "X"
+		},
+		"credItem": {
+			"credData": {
+				"name": "adminpin",
+				"variable": "X"
+			},
+			"name": "admincard"
+		}
+	},
+	"enabled": {
+		"move": ""
+	},
+	"id": "p_001"
+}
+
+
+{
+	"atLocations": [
+		"DoorDatacenter"
+	],
+	"credentials": {
+		"credData": {
+			"name": "userpin",
+			"variable": "X"
+		},
+		"credItem": {
+			"credData": {
+				"name": "userpin",
+				"variable": "X"
+			},
+			"name": "usercard"
+		}
+	},
+	"enabled": {
+		"move": ""
+	},
+	"id": "p_002"
+}

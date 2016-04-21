@@ -600,12 +600,17 @@ function loadXML(xmlString) {
 
 			result.metadata.id = result.metadata.id || helpers.makeId('model');
 			dispatch(
-				initMap(result.metadata.id)
+				initMap(result.metadata.id, () => {
+					dispatch(
+						importFragment(result.graph)
+					);
+				})
 			);
-			dispatch({
-				type: constants.ACTION_loadXML_DONE,
-				result
-			});
+
+			// dispatch({
+			// 	type: constants.ACTION_loadXML_DONE,
+			// 	result
+			// });
 		});
 	};
 };
@@ -621,14 +626,63 @@ function getXMLBlob(xmlStr) {
 };
 
 
+function replaceIdsInString(str, idReplacementMap={}) {
+	return R.keys(idReplacementMap)
+		.reduce((acc, oldId)  => {
+			const re = new RegExp(oldId, 'g');
+			return acc.replace(re, idReplacementMap[oldId]);
+		}, str);
+}
+
+
+function stateToHumanReadableModelXML(state) {
+	const idReplacementMap = ['nodes', ...modelHelpers.collectionNames]
+		.reduce((acc, collName) => {
+			if (state.model.graph[collName]) {
+				const coll = state.model.graph[collName];
+				R.keys(coll)
+					.forEach(id => {
+						const newId = `${coll[id].modelComponentType}__${(coll[id].label || id).replace(/ +/g, '-')}`;
+						acc[id] = newId;
+					});
+			}
+			return acc;
+		}, {});
+
+	const model = modelHelpers.modelFromGraph(
+		state.model.graph,
+		state.model.metadata,
+		state.model.anmData
+	);
+	let modelXmlStr = trespassModel.toXML(model);
+
+	// HACK: replace all ids with their human-readable versions
+	modelXmlStr = replaceIdsInString(modelXmlStr, idReplacementMap);
+
+	return {modelXmlStr, model, idReplacementMap};
+}
+
+
+function stateToHumanReadableScenarioXML(state, modelId, modelFileName, idReplacementMap={}) {
+	let scenarioXmlStr = generateScenarioXML(
+		modelId,
+		modelFileName,
+		state.interface
+	);
+
+	// HACK: replace all ids with their human-readable versions
+	scenarioXmlStr = replaceIdsInString(scenarioXmlStr, idReplacementMap);
+
+	return scenarioXmlStr;
+}
+
+
 const downloadModelXML =
 module.exports.downloadModelXML =
 function downloadModelXML() {
 	return (dispatch, getState) => {
 		const state = getState();
-		const other = R.pick(modelHelpers.collectionNames, state.model);
-		const model = modelHelpers.modelFromGraph(state.model.graph, state.model.metadata, other);
-		const modelXmlStr = trespassModel.toXML(model);
+		const {modelXmlStr, model} = stateToHumanReadableModelXML(state);
 		const modelFileName = `${model.system.title.replace(/\s/g, '-')}.xml`;
 		saveAs(getXMLBlob(modelXmlStr), modelFileName);
 	};
@@ -640,19 +694,18 @@ module.exports.downloadZippedScenario =
 function downloadZippedScenario() {
 	return (dispatch, getState) => {
 		const state = getState();
-		const other = R.pick(modelHelpers.collectionNames, state.model);
-		const model = modelHelpers.modelFromGraph(state.model.graph, state.model.metadata, other);
+		const {modelXmlStr, model, idReplacementMap} = stateToHumanReadableModelXML(state);
 		const modelId = model.system.id;
-		const modelXmlStr = trespassModel.toXML(model);
 
 		const modelFileName = 'model.xml';
 		const scenarioFileName = 'scenario.xml';
 		const zipFileName = 'scenario.zip';
 
-		const scenarioXmlStr = generateScenarioXML(
+		const scenarioXmlStr = stateToHumanReadableScenarioXML(
+			state,
 			modelId,
 			modelFileName,
-			state.interface
+			idReplacementMap
 		);
 
 		const zipBlob = zipScenario(
@@ -734,6 +787,43 @@ function attackerProfileChanged(profile) {
 	return {
 		type: constants.ACTION_attackerProfileChanged,
 		profile
+	};
+};
+
+
+module.exports.addProcess =
+function addProcess(process) {
+	return {
+		type: constants.ACTION_addProcess,
+		process
+	};
+};
+
+
+module.exports.addPolicy =
+function addPolicy(policy) {
+	return {
+		type: constants.ACTION_addPolicy,
+		policy
+	};
+};
+
+
+module.exports.addPredicate =
+function addPredicate(predicate) {
+	return {
+		type: constants.ACTION_addPredicate,
+		predicate
+	};
+};
+
+
+const predicateChanged =
+module.exports.predicateChanged =
+function predicateChanged(predicateId, newProperties) {
+	return {
+		type: constants.ACTION_predicateChanged,
+		predicateId, newProperties
 	};
 };
 
@@ -1023,6 +1113,7 @@ module.exports.runAnalysis =
 function runAnalysis(toolChainId, downloadScenario=false) {
 	return function(dispatch, getState) {
 		const state = getState();
+		console.log(state.model.graph);
 		const toolChains = state.interface.toolChains;
 		const toolChainData = toolChains[toolChainId];
 
@@ -1036,9 +1127,7 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 			throw new Error('missing model id');
 		}
 
-		const other = R.pick(modelHelpers.collectionNames, state.model);
-		const model = modelHelpers.modelFromGraph(state.model.graph, state.model.metadata, other);
-		const modelXmlStr = trespassModel.toXML(model);
+		const {modelXmlStr, model, idReplacementMap} = stateToHumanReadableModelXML(state);
 
 		const validationErrors = trespass.model.validateModel(model);
 		if (validationErrors.length) {
@@ -1053,10 +1142,11 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 		const scenarioFileName = 'scenario.xml';
 		const zipFileName = 'scenario.zip';
 
-		const scenarioXmlStr = generateScenarioXML(
+		const scenarioXmlStr = stateToHumanReadableScenarioXML(
+			state,
 			modelId,
 			modelFileName,
-			state.interface
+			idReplacementMap
 		);
 
 		// download

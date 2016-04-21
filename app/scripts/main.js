@@ -71,7 +71,7 @@ let App = React.createClass({
 		// TODO: check if model is empty
 		// if so, delete from knowledgebase
 
-		const msg = 'Are you sure? — All changes will be lost ...';
+		const msg = 'Are you sure?';
 		event.returnValue = msg;
 		return msg;
 	},

@@ -251,7 +251,7 @@ function reducer(state=initialState, action) {
 			const update = {
 				analysisRunning: action.yesno,
 			};
-			if (action.yesno) {
+			if (!action.yesno) {
 				update.analysisResults = null;
 			}
 			return mergeWithState(update);

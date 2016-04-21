@@ -25,16 +25,20 @@ const nonEdgeRelationTypes =
 module.exports.nonEdgeRelationTypes =
 ['network', 'connects', undefined];
 
+// TODO: clean these up
 const nonGraphCollectionNames =
 module.exports.nonGraphCollectionNames =
 ['predicates', 'policies', 'processes'];
 
 const graphComponentSingular =
-module.exports.graphComponentSingular = {
-	'nodes': 'node',
-	'edges': 'edge',
-	'groups': 'group',
-};
+module.exports.graphComponentSingular = _.merge(
+	{
+		'nodes': 'node',
+		'edges': 'edge',
+		'groups': 'group',
+	},
+	collectionNamesSingular
+);
 
 const graphComponentPlural =
 module.exports.graphComponentPlural =
@@ -132,6 +136,22 @@ function duplicateFragment(_fragment) {
 			return acc;
 		}, {});
 
+	// import fragment policies, predicates, and processes
+	nonGraphCollectionNames
+		.forEach(name => {
+			fragment[name] = (fragment[name] || [])
+				.map(item => {
+					// string replace all old ids with the new ones
+					const s = R.keys(oldToNewNodeId)
+						.reduce((acc, oldId) => {
+							const re = new RegExp(`\"${oldId}\"`, 'g');
+							const newId = oldToNewNodeId[oldId];
+							return acc.replace(re, `"${newId}"`);
+						}, JSON.stringify(item));
+					return JSON.parse(s);
+				});
+		});
+
 	return fragment;
 };
 
@@ -226,24 +246,56 @@ function replaceIdInEdge(mapping, edge) {
 const combineFragments =
 module.exports.combineFragments =
 function combineFragments(fragments) {
+	// update $merge needs objects to have the same structure / keys
+	const allKeys = R.uniq(
+		fragments
+			.reduce((acc, fragment) => {
+				return [...acc, ...R.keys(fragment)];
+			}, [])
+	);
+	const _combined = createFragment();
+	allKeys.forEach(key => {
+		_combined[key] = _combined[key] || {}; // set default value, if missing
+	});
+
 	return fragments
-		.reduce((acc, fragment) => {
+		.reduce((combined, fragment) => {
 			return update(
-				acc,
-				{
-					nodes: { $merge: (fragment.nodes || {}) },
-					edges: { $merge: (fragment.edges || {}) },
-					groups: { $merge: (fragment.groups || {}) },
-				}
+				combined,
+				R.keys(fragment)
+					.reduce((acc, key) => {
+						acc[key] = { $merge: (fragment[key] || {}) };
+						return acc;
+					}, {})
+				// {
+				// 	nodes: { $merge: (fragment.nodes || {}) },
+				// 	edges: { $merge: (fragment.edges || {}) },
+				// 	groups: { $merge: (fragment.groups || {}) },
+				// }
 			);
-		}, createFragment());
+		}, _combined);
 };
 
 
 const importFragment =
 module.exports.importFragment =
 function importFragment(graph, fragment, atXY=origin, cb=noop) {
-	// TODO:
+	// prepare predicates
+	fragment.predicates = (fragment.predicates || [])
+		.reduce((acc, predicate) => {
+			const preds = predicate.value
+				.map(value => {
+					return {
+						id: helpers.makeId('predicate'),
+						type: predicate.id,
+						value,
+					};
+				});
+			return acc.concat(preds);
+		}, []);
+
+	// TODO: remove this at some point
+	// (but the above code relies on this)
 	R.keys(fragment)
 		.forEach((key) => {
 			const item = fragment[key];
@@ -270,7 +322,10 @@ function importFragment(graph, fragment, atXY=origin, cb=noop) {
 
 	return combineFragments([
 		graph,
-		update(fragment, { nodes: { $apply: offsetNodes } })
+		update(
+			fragment,
+			{ nodes: { $apply: offsetNodes } }
+		)
 	]);
 };
 
@@ -280,7 +335,8 @@ module.exports.XMLModelToGraph =
 function XMLModelToGraph(xmlStr, done) {
 	trespass.model.parse(xmlStr, (err, model) => {
 		if (err) { return done(err); }
-		done(null, graphFromModel(model));
+		const result = graphFromModel(model);
+		done(null, result);
 	});
 };
 
@@ -369,7 +425,7 @@ function graphFromModel(model) {
 			});
 		});
 
-	// set model component type
+	// set model component type for each item
 	const nonEdges = R.without(['edges'], collectionNames);
 	nonEdges
 		.forEach((collectionName) => {
@@ -379,8 +435,9 @@ function graphFromModel(model) {
 				});
 		});
 
-	const nonGraphComponents = [...nonGraphCollectionNames, 'edges'];
-	R.without(nonGraphComponents, collectionNames)
+	const nonNodeCollectionNames = [...nonGraphCollectionNames, 'edges'];
+	// everything that becomes a node in the graph
+	R.without(nonNodeCollectionNames, collectionNames)
 		.forEach((collectionName) => {
 			// TODO: warn or s.th.
 			const coll = (_.isArray(model.system[collectionName]))
@@ -406,31 +463,25 @@ function graphFromModel(model) {
 			graph = update(graph, { nodes: { $merge: coll } });
 		});
 
-	const other = nonGraphCollectionNames
+	graph.edges = helpers.toHashMap('id', edges);
+
+	// everything that's neither node nor edge
+	const neitherNodeNorEdge = nonGraphCollectionNames
 		.reduce((result, collectionName) => {
 			result[collectionName] = model.system[collectionName];
 			return result;
 		}, {});
 
-	// predicates
-	other.predicates = other.predicates
-		.reduce((result, predicate) => {
-			predicate.value
-				.forEach((value) => {
-					result.push({
-						id: predicate.id,
-						value,
-						arity: predicate.arity,
-					});
-				});
-			return result;
-		}, []);
+	// TODO: do s.th. with model.system.anm_data
+	if (model.system.anm_data) {
+		console.info('has anm_data');
+		console.log(model.system.anm_data);
+	}
+	const anmData = model.system.anm_data || {};
 
-	graph.edges = helpers.toHashMap('id', edges);
-
+	graph = _.merge(graph, neitherNodeNorEdge);
 	const metadata = R.pick(trespass.model.knownAttributes.system, model.system);
-
-	return {graph, other, metadata};
+	return {graph, metadata, anmData};
 };
 
 
@@ -443,13 +494,13 @@ function relationConvertsToEdge(relation) {
 
 const modelFromGraph =
 module.exports.modelFromGraph =
-function modelFromGraph(graph, metadata={}, other={}) {
+function modelFromGraph(graph, metadata={}, anmData={}) {
 	if (_.isEmpty(metadata)) {
 		console.warn('metadata missing');
 	}
 
-	if (_.isEmpty(other)) {
-		console.warn('other missing');
+	if (_.isEmpty(anmData)) {
+		console.warn('anmData missing');
 	}
 
 	const model = trespass.model.create();
@@ -490,7 +541,8 @@ function modelFromGraph(graph, metadata={}, other={}) {
 					if (!fromNode.atLocations) {
 						fromNode.atLocations = [];
 					}
-					fromNode.atLocations = [...fromNode.atLocations, edge.to];
+					// TODO: investigate bug
+					fromNode.atLocations = R.uniq([...fromNode.atLocations, edge.to]);
 				} else {
 					// TODO: what else could there be?
 				}
@@ -498,16 +550,20 @@ function modelFromGraph(graph, metadata={}, other={}) {
 		});
 
 	// predicates
-	const predicatesMap = (other.predicates || [])
+	const predicatesMap = R.values(graph.predicates || {})
 		.reduce((acc, item) => {
-			if (!acc[item.id]) {
-				acc[item.id] = {
-					id: item.id,
-					arity: item.arity,
+			const predId = item.type;
+			if (!item.arity) {
+				console.warn('predicate has no arity', item);
+			}
+			if (!acc[predId]) {
+				acc[predId] = {
+					id: predId,
+					arity: item.arity || 2,
 					value: [],
 				}
 			}
-			acc[item.id].value.push( item.value.join(' ') );
+			acc[predId].value = [...acc[predId].value, item.value.join(' ')];
 			return acc;
 		}, {});
 	R.values(predicatesMap)
@@ -515,14 +571,13 @@ function modelFromGraph(graph, metadata={}, other={}) {
 			trespass.model.addPredicate(model, R.omit(keysToOmit, item));
 		});
 
-	(other.policies || [])
+	R.values(graph.policies || {})
 		.forEach((item) => {
 			trespass.model.addPolicy(model, R.omit(keysToOmit, item));
 		});
 
-	(other.processes || [])
+	R.values(graph.processes || {})
 		.forEach((item) => {
-			console.log(item);
 			trespass.model.addProcess(model, R.omit(keysToOmit, item));
 		});
 
@@ -891,4 +946,78 @@ function updateComponentProperties(graph, graphComponentType, componentId, newPr
 	);
 
 	return g;
+};
+
+
+const addProcess = // TODO: test
+module.exports.addProcess =
+function addProcess(graph, _process) {
+	const process = _.merge({}, _process, {
+		id: helpers.makeId('process'),
+		modelComponentType: 'process',
+	});
+	return update(
+		graph,
+		{ processes: { [process.id]: { $set: process } } }
+	);
+};
+
+
+const addPolicy = // TODO: test
+module.exports.addPolicy =
+function addPolicy(graph, _policy) {
+	const policy = _.merge({}, _policy, {
+		id: helpers.makeId('policy'),
+		modelComponentType: 'policy',
+	});
+	return update(
+		graph,
+		{ policies: { [policy.id]: { $set: policy } } }
+	);
+};
+
+
+const addPredicate = // TODO: test
+module.exports.addPredicate =
+function addPredicate(graph, _predicate) {
+	const predicate = _.merge({}, _predicate, {
+		id: helpers.makeId('predicate'),
+		modelComponentType: 'predicate',
+	});
+	return update(
+		graph,
+		{ predicates: { [predicate.id]: { $set: predicate } } }
+	);
+};
+
+
+const updatePredicate =
+module.exports.updatePredicate =
+function updatePredicate(graph, predicateId, newProperties) {
+	const updateProps = R.keys(newProperties)
+		.reduce((acc, key) => {
+			const val = newProperties[key];
+
+			if (key === 'subject') {
+				acc.value[0] = { $set: val };
+			} else if (key === 'object') {
+				acc.value[1] = { $set: val };
+			} else if (key === 'predicate') {
+				acc.type = { $set: val };
+			}
+			return acc;
+		}, { value: {} });
+
+	const graphComponentType = 'predicate';
+	// console.log(graphComponentType, graph, graphComponentPlural);
+	const collectionName = graphComponentPlural[graphComponentType];
+	// console.log(collectionName, graph[collectionName], predicateId);
+	const item = graph[collectionName][predicateId];
+
+	return updateComponentProperties(
+		graph,
+		graphComponentType,
+		predicateId,
+		update(item, updateProps)
+	);
 };

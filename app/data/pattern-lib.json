@@ -247,8 +247,8 @@
 						"modelComponentType": "actor",
 						"type": "tkb:actor",
 						"tkb:actor_type": "tkb:actor_management",
-						"label": "Big",
-						"id": "Big"
+						"label": "Mr_Big",
+						"id": "Mr_Big"
 					},
 					{
 						"modelComponentType": "actor",
@@ -276,11 +276,205 @@
 				"groups": [
 					{
 						"label": "Cloud actors",
-						"nodeIds": ["Terry", "Cleo", "Grey", "Big", "Sydney", "Finn", "Ethan"]
+						"nodeIds": [
+							"Terry",
+							"Cleo",
+							"Grey",
+							"Mr_Big",
+							"Sydney",
+							"Finn",
+							"Ethan"
+						]
+					}
+				],
+				"predicates": [
+					{
+						"id": "isUidOf",
+						"arity": "2",
+						"value": [
+							["terry", "Terry"],
+							["finn", "Finn"]
+						]
 					}
 				]
 			},
 			"label": "Cloud actors"
+		},
+
+
+		{
+			"type": "pattern",
+			"isFragment": true,
+			"value": {
+				"nodes": [
+					{
+						"modelComponentType": "item",
+						"type": "tkb:laptop",
+						"tkb:os": "tkb:os_ms_win",
+						"tkb:name": "Laptop",
+						"label": "Laptop",
+						"id": "laptop"
+					}
+				],
+				"edges": [],
+				"groups": [],
+				"processes": [
+					{
+					    "actions": {
+					        "in": [
+					            {
+					                "loc": "laptop",
+					                "tuple": {
+					                    "value": "get",
+					                    "variable": [
+					                        "fileName",
+					                        "Uid",
+					                        "Targethost"
+					                    ]
+					                },
+					                "variable": [
+					                    "Uid",
+					                    "Pwd"
+					                ]
+					            },
+					            {
+					                "loc": "laptop",
+					                "variable": [
+					                    "fileName",
+					                    "fileContent"
+					                ]
+					            }
+					        ],
+					        "out": {
+					            "loc": "laptop",
+					            "tuple": {
+					                "variable": [
+					                    "Uid",
+					                    "fileName",
+					                    "fileContent"
+					                ]
+					            },
+					            "variable": "TargetHost"
+					        }
+					    },
+					    "atLocations": [
+					        "laptop"
+					    ],
+					    "id": "pr_laptop_001",
+					    "modelComponentType": "process"
+					}
+				],
+				"policies": [
+					{
+					    "atLocations": [
+					        "laptop"
+					    ],
+					    "credentials": {
+					        "credPredicate": [
+					            {
+					                "name": "isUserIdAt",
+					                "value": "laptop",
+					                "variable": "X"
+					            },
+					            {
+					                "name": "isPasswordOf",
+					                "variable": [
+					                    "X",
+					                    "Y"
+					                ]
+					            }
+					        ]
+					    },
+					    "enabled": {
+					        "out": {
+					            "loc": "laptop",
+					            "tuple": {
+					                "value": "get",
+					                "wildcard": [
+					                    "",
+					                    ""
+					                ]
+					            },
+					            "variable": [
+					                "X",
+					                "Y"
+					            ]
+					        }
+					    },
+					    "id": "p_laptop_001",
+					    "modelComponentType": "policy"
+					}
+				]
+			},
+			"label": "Laptop"
+		},
+
+
+		{
+			"type": "pattern",
+			"isFragment": true,
+			"value": {
+				"edges": {
+					"id-4JW1F1Bo1W-edge": {
+						"directed": true,
+						"from": "adminpin",
+						"id": "id-4JW1F1Bo1W-edge",
+						"relation": "atLocation",
+						"to": "admincard"
+					},
+					"id-4k7kYkSoJZ-edge": {
+						"directed": true,
+						"from": "userpin",
+						"id": "id-4k7kYkSoJZ-edge",
+						"relation": "atLocation",
+						"to": "usercard"
+					}
+				},
+				"groups": [
+					{
+						"label": "Cloud cards",
+						"nodeIds": [
+							"admincard",
+							"adminpin",
+							"usercard",
+							"userpin"
+						]
+					}
+				],
+				"nodes": {
+					"admincard": {
+						"id": "admincard",
+						"label": "admincard",
+						"name": "admincard",
+						"type": "tkb:item",
+						"modelComponentType": "item"
+					},
+					"adminpin": {
+						"id": "adminpin",
+						"label": "adminpin",
+						"name": "adminpin",
+						"type": "tkb:data",
+						"modelComponentType": "data",
+						"value": "42"
+					},
+					"usercard": {
+						"id": "usercard",
+						"label": "usercard",
+						"name": "usercard",
+						"type": "tkb:item",
+						"modelComponentType": "item"
+					},
+					"userpin": {
+						"id": "userpin",
+						"label": "userpin",
+						"name": "userpin",
+						"type": "tkb:data",
+						"modelComponentType": "data",
+						"value": "43"
+					}
+				}
+			},
+			"label": "Cloud cards"
 		}
 	]
 }

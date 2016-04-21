@@ -5,6 +5,8 @@ import d3 from 'd3';
 import $ from 'jquery';
 import xml2js from 'xml2js';
 
+const noop = () => {};
+
 export default class ATVisualizerComponent extends React.Component {
 	constructor(props) {
 		super(props);
@@ -24,16 +26,18 @@ export default class ATVisualizerComponent extends React.Component {
 	componentDidUpdate() {
 		$('#tree').empty();
 
-		this.processData();
-		this.renderGraph();
+		this.processData(() => {
+			this.renderGraph();
+		});
 	}
 
-	processData() {
+	processData(cb=noop) {
 		let props = this.props;
 		let state = this.state;
 
 		xml2js.parseString(props.input, (err, res) => {
 			state.data = res;
+			cb();
 		});
 	}
 
@@ -58,7 +62,8 @@ export default class ATVisualizerComponent extends React.Component {
 
 		let tree = d3.layout.tree()
 			.children(function (d) {
-				return d._node;
+				// return d._node;
+				return d.node;
 			})
 			.size([width, height]);
 
@@ -104,7 +109,6 @@ export default class ATVisualizerComponent extends React.Component {
 		// d3.select(self.frameElement).style('height', '500px');
 
 		function update(source) {
-
 			// Compute the new tree layout.
 			let nodes = tree.nodes(root).reverse();
 			let links = tree.links(nodes);
@@ -135,16 +139,16 @@ export default class ATVisualizerComponent extends React.Component {
 			nodeEnter.append('circle')
 				.attr('r', 1e-6)
 				.style('fill', function (d) {
-					return d._children ? 'lightsteelblue' : '#fff';
+					return d.node ? 'lightsteelblue' : '#fff';
 				});
 
 			nodeEnter.append('text')
 				.attr('x', function (d) {
-					return d.children || d._children ? -13 : 13;
+					return d.children || d.node ? -13 : 13;
 				})
 				.attr('dy', '.35em')
 				.attr('text-anchor', function (d) {
-					return d.children || d._children ? 'end' : 'start';
+					return d.children || d.node ? 'end' : 'start';
 				})
 				.text(function (d) {
 					return d.label;
@@ -162,7 +166,7 @@ export default class ATVisualizerComponent extends React.Component {
 			nodeUpdate.select('circle')
 				.attr('r', 10)
 				.style('fill', function (d) {
-					return d._children ? 'lightsteelblue' : '#fff';
+					return d.node ? 'lightsteelblue' : '#fff';
 				});
 
 			nodeUpdate.select('text')
@@ -244,7 +248,6 @@ export default class ATVisualizerComponent extends React.Component {
 
 			update(d);
 		}
-
 	}
 
 	render() {

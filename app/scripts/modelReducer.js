@@ -19,12 +19,13 @@ const initialState = {
 		nodes: {},
 		edges: {},
 		groups: {},
-	},
 
-	// other
-	predicates: [],
-	policies: [],
-	// ...
+		// other
+		predicates: {},
+		policies: {},
+		processes: {},
+		// ...
+	},
 };
 
 
@@ -122,13 +123,8 @@ function reducer(state=initialState, action) {
 		// 	return state; // noop
 
 		case constants.ACTION_loadXML_DONE: {
-			const {graph, other, metadata} = action.result;
-			return _.merge(
-				{},
-				initialState,
-				{ graph, metadata },
-				other
-			);
+			console.error('this should not be called anymore!');
+			return state;
 		}
 
 		case constants.ACTION_addNodeToGroup: {
@@ -224,6 +220,34 @@ function reducer(state=initialState, action) {
 				componentId,
 				newProperties,
 				(updatedItem) => { cb(state.metadata.id, updatedItem); }
+			);
+			return mergeWithState({	graph: newGraph });
+		}
+
+		case constants.ACTION_addProcess: {
+			const {process} = action;
+			const newGraph = modelHelpers.addProcess(state.graph, process);
+			return mergeWithState({ graph: newGraph });
+		}
+
+		case constants.ACTION_addPolicy: {
+			const {policy} = action;
+			const newGraph = modelHelpers.addPolicy(state.graph, policy);
+			return mergeWithState({ graph: newGraph });
+		}
+
+		case constants.ACTION_addPredicate: {
+			const {predicate} = action;
+			const newGraph = modelHelpers.addPredicate(state.graph, predicate);
+			return mergeWithState({ graph: newGraph });
+		}
+
+		case constants.ACTION_predicateChanged: {
+			const {predicateId, newProperties} = action;
+			const newGraph = modelHelpers.updatePredicate(
+				state.graph,
+				predicateId,
+				newProperties
 			);
 			return mergeWithState({	graph: newGraph });
 		}

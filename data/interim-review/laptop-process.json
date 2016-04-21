@@ -1,0 +1,44 @@
+{
+	"actions": {
+		"in": [
+			{
+				"loc": "item__laptop",
+				"tuple": {
+					"value": "get",
+					"variable": [
+						"fileName",
+						"Uid",
+						"Targethost"
+					]
+				},
+				"variable": [
+					"Uid",
+					"Pwd"
+				]
+			},
+			{
+				"loc": "item__laptop",
+				"variable": [
+					"fileName",
+					"fileContent"
+				]
+			}
+		],
+		"out": {
+			"loc": "item__laptop",
+			"tuple": {
+				"variable": [
+					"Uid",
+					"fileName",
+					"fileContent"
+				]
+			},
+			"variable": "TargetHost"
+		}
+	},
+	"atLocations": [
+		"item__laptop"
+	],
+	"id": "pr_laptop_001",
+	"modelComponentType": "process"
+}

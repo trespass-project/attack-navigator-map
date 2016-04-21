@@ -214,36 +214,118 @@ const Wizard = React.createClass({
 		</div>;
 	},
 
-	renderConnections: function(props) {
+	renderConnections: function() {
+		const props = this.props;
+		const predicates = R.values(props.graph.predicates || {});
 		return <div>
 			<h2 className='title'>Connections</h2>
 			<PredicateEditor
-				nodes={R.values(props.graph.nodes)}
+				nodes={props.graph.nodes}
 				predicatesLib={props.predicatesLib || predicatesLib}
-				predicates={props.predicates || []}
+				predicates={predicates}
+				handleCreate={this.createPredicate}
+				handleUpdate={this.updatePredicate}
 			/>
 		</div>;
 	},
 
+	createPredicate: function(predicate) {
+		this.context.dispatch(
+			actionCreators.addPredicate(predicate)
+		);
+	},
+
+	updatePredicate: function(predicateId, newProperties) {
+		this.context.dispatch(
+			actionCreators.predicateChanged(predicateId, newProperties)
+		);
+	},
+
 	renderPolicies: function() {
-		const props = this.props;
+		const policies = R.values(this.props.graph.policies || {});
 		return <div>
 			<h2 className='title'>Policies</h2>
-			{(props.policies || [])
+
+			<hr/>
+			<div>
+				<div>
+					<textarea
+						style={{ width: '100%', maxWidth: '100%', fontSize: '12px' }}
+						ref='new-policy'
+						cols='30'
+					></textarea>
+				</div>
+				<button onClick={this.addPolicy}>add</button>
+			</div>
+			<hr/>
+
+			{policies
 				.map((item) => {
-					return <JSONTree theme={theme} data={R.omit(['modelComponentType'], item)} />;
+					return <JSONTree
+						theme={theme}
+						data={R.omit(['modelComponentType'], item)}
+						key={'policy-'+item.id}
+					/>;
 				})
 			}
 		</div>;
 	},
 
+	addPolicy: function(event) {
+		const textarea = this.refs['new-policy'];
+		const policyJSON = textarea.value;
+		try {
+			const policy = JSON.parse(policyJSON);
+			this.context.dispatch(
+				actionCreators.addPolicy(policy)
+			);
+		} catch (e) {
+			alert('Invalid JSON');
+			return;
+		}
+		textarea.value = '';
+	},
+
+	addProcess: function(event) {
+		const textarea = this.refs['new-process'];
+		const processJSON = textarea.value;
+		try {
+			const process = JSON.parse(processJSON);
+			this.context.dispatch(
+				actionCreators.addProcess(process)
+			);
+		} catch (e) {
+			alert('Invalid JSON');
+			return;
+		}
+		textarea.value = '';
+	},
+
 	renderProcesses: function() {
-		const props = this.props;
+		const processes = R.values(this.props.graph.processes || {});
 		return <div>
 			<h2 className='title'>Processes</h2>
-			{(props.processes || [])
+
+			<hr/>
+			<div>
+				<div>
+					<textarea
+						style={{ width: '100%', maxWidth: '100%', fontSize: '12px' }}
+						ref='new-process'
+						cols='30'
+					></textarea>
+				</div>
+				<button onClick={this.addProcess}>add</button>
+			</div>
+			<hr/>
+
+			{processes
 				.map((item) => {
-					return <JSONTree theme={theme} data={R.omit(['modelComponentType'], item)} />;
+					return <JSONTree
+						theme={theme}
+						data={R.omit(['modelComponentType'], item)}
+						key={'process-'+item.id}
+					/>;
 				})
 			}
 		</div>;
