@@ -3,9 +3,9 @@
 
 	"env": {
 		"es6": true,
+		"browser": true,
 		"node": true,
-		"jquery": true,
-		"browser": true
+		"mocha": true
 	},
 
 	"plugins": ["react"],
@@ -19,10 +19,18 @@
 	},
 
 	"rules": {
-		"indent": [2, "tab"],
+		"indent": [2, "tab", { 'SwitchCase': 1, 'VariableDeclarator': 1 }],
 		"no-shadow": 1,
-		"no-use-before-define": 0,
+		"arrow-body-style": 1,
+		"no-alert": 0,
 		"no-unused-vars": 1,
-		"no-console": 0
+		"no-console": 0,
+		"no-use-before-define": 0,
+		"comma-dangle": 0,
+		"quote-props": 0,
+		"dot-notation": 0,
+		"spaces-in-parens": 0,
+		"spaced-comment": 0,
+		"max-len": 0
 	}
 }
