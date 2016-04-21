@@ -651,8 +651,7 @@ function stateToHumanReadableModelXML(state) {
 
 	const model = modelHelpers.modelFromGraph(
 		state.model.graph,
-		state.model.metadata,
-		state.model.anmData
+		state.model.metadata
 	);
 	let modelXmlStr = trespassModel.toXML(model);
 
