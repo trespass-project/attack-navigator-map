@@ -407,6 +407,74 @@
 				]
 			},
 			"label": "Laptop"
+		},
+
+
+		{
+			"type": "pattern",
+			"isFragment": true,
+			"value": {
+				"edges": {
+					"id-4JW1F1Bo1W-edge": {
+						"directed": true,
+						"from": "adminpin",
+						"id": "id-4JW1F1Bo1W-edge",
+						"relation": "atLocation",
+						"to": "admincard"
+					},
+					"id-4k7kYkSoJZ-edge": {
+						"directed": true,
+						"from": "userpin",
+						"id": "id-4k7kYkSoJZ-edge",
+						"relation": "atLocation",
+						"to": "usercard"
+					}
+				},
+				"groups": [
+					{
+						"label": "Cloud cards",
+						"nodeIds": [
+							"admincard",
+							"adminpin",
+							"usercard",
+							"userpin"
+						]
+					}
+				],
+				"nodes": {
+					"admincard": {
+						"id": "admincard",
+						"label": "admincard",
+						"name": "admincard",
+						"type": "tkb:item",
+						"modelComponentType": "item"
+					},
+					"adminpin": {
+						"id": "adminpin",
+						"label": "adminpin",
+						"name": "adminpin",
+						"type": "tkb:data",
+						"modelComponentType": "data",
+						"value": "42"
+					},
+					"usercard": {
+						"id": "usercard",
+						"label": "usercard",
+						"name": "usercard",
+						"type": "tkb:item",
+						"modelComponentType": "item"
+					},
+					"userpin": {
+						"id": "userpin",
+						"label": "userpin",
+						"name": "userpin",
+						"type": "tkb:data",
+						"modelComponentType": "data",
+						"value": "43"
+					}
+				}
+			},
+			"label": "Cloud cards"
 		}
 	]
 }

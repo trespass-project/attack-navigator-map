@@ -195,7 +195,7 @@ export default class ATAnalyzerComponent extends React.Component {
 		let state = this.state;
 
 		return <div id = "atanalyzer">
-			<h4>Attack Tree Analyzer< /h4>
+			<h4>Attack Tree Analyzer</h4>
 			<p>Presents the attack paths with highest utility for an attacker profile. </p>
 			<div id = "analyzer-list" ref = "analyzerList"> </div>
 			</div>;

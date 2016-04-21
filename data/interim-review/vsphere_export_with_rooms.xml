@@ -1,0 +1,793 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<system author="ciab-exportAsTML.py" date="2016-03-30T09:14:59.292151"
+	version="0.5" xmlns="https://www.trespass-project.eu/schemas/TREsPASS_model"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="https://www.trespass-project.eu/schemas/TREsPASS_model.xsd">
+	<title>CIAB-created TREsPASS XML model</title>
+	<locations>
+		<location id="RoomDatacenter" />
+		<location id="RoomInternal" />
+	</locations>
+	<edges>
+		<edge directed="false">
+			<source>entity_vim.VirtualMachine_vm-26</source>
+			<target>entity_vim.Network_network-14</target>
+		</edge>
+		<edge directed="false">
+			<source>entity_vim.HostSystem_host-19</source>
+			<target>entity_vim.Network_network-14</target>
+		</edge>
+		<edge directed="false">
+			<source>entity_vim.VirtualMachine_vm-29</source>
+			<target>entity_vim.Network_network-14</target>
+		</edge>
+		<edge directed="false">
+			<source>entity_vim.VirtualMachine_vm-27</source>
+			<target>entity_vim.Network_network-14</target>
+		</edge>
+		<edge directed="false">
+			<source>entity_vim.VirtualMachine_vm-18</source>
+			<target>entity_vim.Network_network-14</target>
+		</edge>
+		<edge directed="false">
+			<source>entity_vim.VirtualMachine_vm-15</source>
+			<target>entity_vim.Network_network-14</target>
+		</edge>
+		<edge directed="false">
+			<source>entity_vim.HostSystem_host-20</source>
+			<target>entity_vim.Network_network-14</target>
+		</edge>
+		<edge directed="false">
+			<source>entity_vim.VirtualMachine_vm-28</source>
+			<target>entity_vim.Network_network-14</target>
+		</edge>
+		<edge directed="false">
+			<source>entity_vim.HostSystem_host-12</source>
+			<target>entity_vim.Network_network-14</target>
+		</edge>
+		<edge directed="false">
+			<source>entity_vim.VirtualMachine_vm-16</source>
+			<target>entity_vim.Network_network-14</target>
+		</edge>
+		<edge directed="false">
+			<source>entity_vim.VirtualMachine_vm-32</source>
+			<target>entity_vim.Network_network-14</target>
+		</edge>
+		<edge directed="false">
+			<source>laptop</source>
+			<target>entity_vim.Network_network-14</target>
+		</edge>
+	</edges>
+	<assets>
+		<data id="fileX" name="fileX" value="42">
+			<atLocations>entity_vim.VirtualMachine_vm-26</atLocations>
+		</data>
+		<item id="entity_vim.Datastore_datastore-13" name="vsanDatastore"
+			type="tkb:vmware-datastore">
+			<atLocations>RoomDatacenter</atLocations>
+		</item>
+		<item id="laptop" name="Laptop" type="tkb:laptop">
+			<atLocations>RoomInternal</atLocations>
+		</item>
+		<item id="entity_vim.VirtualMachine_vm-16" name="viz"
+			type="tkb:vmware-virtualmachine">
+			<atLocations>entity_vim.HostSystem_host-12
+				entity_vim.Datastore_datastore-13</atLocations>
+		</item>
+		<item id="entity_vim.VirtualMachine_vm-15" name="ubuntu-template"
+			type="tkb:vmware-virtualmachine">
+			<atLocations>entity_vim.Datastore_datastore-13
+				entity_vim.HostSystem_host-12</atLocations>
+		</item>
+		<item id="entity_vim.Network_network-14" name="VM Network"
+			type="tkb:vmware-network">
+			<atLocations>RoomDatacenter</atLocations>
+		</item>
+		<item id="entity_vim.VirtualMachine_vm-18" name="vcsa"
+			type="tkb:vmware-virtualmachine">
+			<atLocations>entity_vim.Datastore_datastore-13
+				entity_vim.HostSystem_host-12</atLocations>
+		</item>
+		<item id="entity_vim.VirtualMachine_vm-28" name="vm3"
+			type="tkb:vmware-virtualmachine">
+			<atLocations>entity_vim.HostSystem_host-20
+				entity_vim.Datastore_datastore-13</atLocations>
+		</item>
+		<item id="entity_vim.VirtualMachine_vm-29" name="vm4"
+			type="tkb:vmware-virtualmachine">
+			<atLocations>entity_vim.Datastore_datastore-13
+				entity_vim.HostSystem_host-20</atLocations>
+		</item>
+		<item id="entity_vim.HostSystem_host-12" name="nuc1"
+			type="tkb:vmware-hostsystem">
+			<atLocations>RoomDatacenter entity_vim.Datastore_datastore-13
+			</atLocations>
+		</item>
+		<item id="entity_vim.HostSystem_host-20" name="nuc3"
+			type="tkb:vmware-hostsystem">
+			<atLocations>RoomDatacenter entity_vim.Datastore_datastore-13
+			</atLocations>
+		</item>
+		<item id="entity_vim.VirtualMachine_vm-26" name="vm1"
+			type="tkb:vmware-virtualmachine">
+			<atLocations>entity_vim.Datastore_datastore-13
+				entity_vim.HostSystem_host-19</atLocations>
+		</item>
+		<item id="entity_vim.VirtualMachine_vm-27" name="vm2"
+			type="tkb:vmware-virtualmachine">
+			<atLocations>entity_vim.Datastore_datastore-13
+				entity_vim.HostSystem_host-20</atLocations>
+		</item>
+		<item id="entity_vim.HostSystem_host-19" name="nuc2"
+			type="tkb:vmware-hostsystem">
+			<atLocations>RoomDatacenter entity_vim.Datastore_datastore-13
+			</atLocations>
+		</item>
+		<item id="entity_vim.VirtualMachine_vm-32" name="OpenVAS"
+			type="tkb:vmware-virtualmachine">
+			<atLocations>entity_vim.HostSystem_host-12
+				entity_vim.Datastore_datastore-13</atLocations>
+		</item>
+	</assets>
+	<actors />
+	<policies><!-- policies for all hosts and vms to access via userid/pw -->
+		<policy id="p_laptop_001">
+			<credentials>
+				<credPredicate name="isUserIdAt">
+					<variable>X</variable>
+					<value>laptop</value>
+				</credPredicate>
+				<credPredicate name="isPasswordOf">
+					<variable>X</variable>
+					<variable>Y</variable>
+				</credPredicate>
+			</credentials>
+			<enabled>
+				<out loc="laptop">
+					<variable>X</variable>
+					<variable>Y</variable>
+					<tuple>
+						<value>get</value>
+						<wildcard />
+						<wildcard />
+					</tuple>
+				</out>
+			</enabled>
+			<atLocations>laptop</atLocations>
+		</policy>
+		<policy id="p_entity_vim.VirtualMachine_vm-16_001">
+			<credentials>
+				<credPredicate name="isUserIdAt">
+					<variable>X</variable>
+					<value>entity_vim.VirtualMachine_vm-16</value>
+				</credPredicate>
+				<credPredicate name="isPasswordOf">
+					<variable>X</variable>
+					<variable>Y</variable>
+				</credPredicate>
+			</credentials>
+			<enabled>
+				<out loc="entity_vim.VirtualMachine_vm-16">
+					<variable>X</variable>
+					<variable>Y</variable>
+					<tuple>
+						<value>get</value>
+						<wildcard />
+						<wildcard />
+					</tuple>
+				</out>
+			</enabled>
+			<atLocations>entity_vim.VirtualMachine_vm-16</atLocations>
+		</policy>
+		<policy id="p_entity_vim.VirtualMachine_vm-15_001">
+			<credentials>
+				<credPredicate name="isUserIdAt">
+					<variable>X</variable>
+					<value>entity_vim.VirtualMachine_vm-15</value>
+				</credPredicate>
+				<credPredicate name="isPasswordOf">
+					<variable>X</variable>
+					<variable>Y</variable>
+				</credPredicate>
+			</credentials>
+			<enabled>
+				<out loc="entity_vim.VirtualMachine_vm-15">
+					<variable>X</variable>
+					<variable>Y</variable>
+					<tuple>
+						<value>get</value>
+						<wildcard />
+						<wildcard />
+					</tuple>
+				</out>
+			</enabled>
+			<atLocations>entity_vim.VirtualMachine_vm-15</atLocations>
+		</policy>
+		<policy id="p_entity_vim.VirtualMachine_vm-18_001">
+			<credentials>
+				<credPredicate name="isUserIdAt">
+					<variable>X</variable>
+					<value>entity_vim.VirtualMachine_vm-18</value>
+				</credPredicate>
+				<credPredicate name="isPasswordOf">
+					<variable>X</variable>
+					<variable>Y</variable>
+				</credPredicate>
+			</credentials>
+			<enabled>
+				<out loc="entity_vim.VirtualMachine_vm-18">
+					<variable>X</variable>
+					<variable>Y</variable>
+					<tuple>
+						<value>get</value>
+						<wildcard />
+						<wildcard />
+					</tuple>
+				</out>
+			</enabled>
+			<atLocations>entity_vim.VirtualMachine_vm-18</atLocations>
+		</policy>
+		<policy id="p_entity_vim.VirtualMachine_vm-28_001">
+			<credentials>
+				<credPredicate name="isUserIdAt">
+					<variable>X</variable>
+					<value>entity_vim.VirtualMachine_vm-28</value>
+				</credPredicate>
+				<credPredicate name="isPasswordOf">
+					<variable>X</variable>
+					<variable>Y</variable>
+				</credPredicate>
+			</credentials>
+			<enabled>
+				<out loc="entity_vim.VirtualMachine_vm-28">
+					<variable>X</variable>
+					<variable>Y</variable>
+					<tuple>
+						<value>get</value>
+						<wildcard />
+						<wildcard />
+					</tuple>
+				</out>
+			</enabled>
+			<atLocations>entity_vim.VirtualMachine_vm-28</atLocations>
+		</policy>
+		<policy id="p_entity_vim.VirtualMachine_vm-29_001">
+			<credentials>
+				<credPredicate name="isUserIdAt">
+					<variable>X</variable>
+					<value>entity_vim.VirtualMachine_vm-29</value>
+				</credPredicate>
+				<credPredicate name="isPasswordOf">
+					<variable>X</variable>
+					<variable>Y</variable>
+				</credPredicate>
+			</credentials>
+			<enabled>
+				<out loc="entity_vim.VirtualMachine_vm-29">
+					<variable>X</variable>
+					<variable>Y</variable>
+					<tuple>
+						<value>get</value>
+						<wildcard />
+						<wildcard />
+					</tuple>
+				</out>
+			</enabled>
+			<atLocations>entity_vim.VirtualMachine_vm-29</atLocations>
+		</policy>
+		<policy id="p_entity_vim.HostSystem_host-12_001">
+			<credentials>
+				<credPredicate name="isUserIdAt">
+					<variable>X</variable>
+					<value>entity_vim.HostSystem_host-12</value>
+				</credPredicate>
+				<credPredicate name="isPasswordOf">
+					<variable>X</variable>
+					<variable>Y</variable>
+				</credPredicate>
+			</credentials>
+			<enabled>
+				<out loc="entity_vim.HostSystem_host-12">
+					<variable>X</variable>
+					<variable>Y</variable>
+					<tuple>
+						<value>get</value>
+						<wildcard />
+						<wildcard />
+					</tuple>
+				</out>
+			</enabled>
+			<atLocations>entity_vim.HostSystem_host-12</atLocations>
+		</policy>
+		<policy id="p_entity_vim.HostSystem_host-20_001">
+			<credentials>
+				<credPredicate name="isUserIdAt">
+					<variable>X</variable>
+					<value>entity_vim.HostSystem_host-20</value>
+				</credPredicate>
+				<credPredicate name="isPasswordOf">
+					<variable>X</variable>
+					<variable>Y</variable>
+				</credPredicate>
+			</credentials>
+			<enabled>
+				<out loc="entity_vim.HostSystem_host-20">
+					<variable>X</variable>
+					<variable>Y</variable>
+					<tuple>
+						<value>get</value>
+						<wildcard />
+						<wildcard />
+					</tuple>
+				</out>
+			</enabled>
+			<atLocations>entity_vim.HostSystem_host-20</atLocations>
+		</policy>
+		<policy id="p_entity_vim.VirtualMachine_vm-26_001">
+			<credentials>
+				<credPredicate name="isUserIdAt">
+					<variable>X</variable>
+					<value>entity_vim.VirtualMachine_vm-26</value>
+				</credPredicate>
+				<credPredicate name="isPasswordOf">
+					<variable>X</variable>
+					<variable>Y</variable>
+				</credPredicate>
+			</credentials>
+			<enabled>
+				<out loc="entity_vim.VirtualMachine_vm-26">
+					<variable>X</variable>
+					<variable>Y</variable>
+					<tuple>
+						<value>get</value>
+						<wildcard />
+						<wildcard />
+					</tuple>
+				</out>
+			</enabled>
+			<atLocations>entity_vim.VirtualMachine_vm-26</atLocations>
+		</policy>
+		<policy id="p_entity_vim.VirtualMachine_vm-27_001">
+			<credentials>
+				<credPredicate name="isUserIdAt">
+					<variable>X</variable>
+					<value>entity_vim.VirtualMachine_vm-27</value>
+				</credPredicate>
+				<credPredicate name="isPasswordOf">
+					<variable>X</variable>
+					<variable>Y</variable>
+				</credPredicate>
+			</credentials>
+			<enabled>
+				<out loc="entity_vim.VirtualMachine_vm-27">
+					<variable>X</variable>
+					<variable>Y</variable>
+					<tuple>
+						<value>get</value>
+						<wildcard />
+						<wildcard />
+					</tuple>
+				</out>
+			</enabled>
+			<atLocations>entity_vim.VirtualMachine_vm-27</atLocations>
+		</policy>
+		<policy id="p_entity_vim.HostSystem_host-19_001">
+			<credentials>
+				<credPredicate name="isUserIdAt">
+					<variable>X</variable>
+					<value>entity_vim.HostSystem_host-19</value>
+				</credPredicate>
+				<credPredicate name="isPasswordOf">
+					<variable>X</variable>
+					<variable>Y</variable>
+				</credPredicate>
+			</credentials>
+			<enabled>
+				<out loc="entity_vim.HostSystem_host-19">
+					<variable>X</variable>
+					<variable>Y</variable>
+					<tuple>
+						<value>get</value>
+						<wildcard />
+						<wildcard />
+					</tuple>
+				</out>
+			</enabled>
+			<atLocations>entity_vim.HostSystem_host-19</atLocations>
+		</policy>
+		<policy id="p_entity_vim.VirtualMachine_vm-32_001">
+			<credentials>
+				<credPredicate name="isUserIdAt">
+					<variable>X</variable>
+					<value>entity_vim.VirtualMachine_vm-32</value>
+				</credPredicate>
+				<credPredicate name="isPasswordOf">
+					<variable>X</variable>
+					<variable>Y</variable>
+				</credPredicate>
+			</credentials>
+			<enabled>
+				<out loc="entity_vim.VirtualMachine_vm-32">
+					<variable>X</variable>
+					<variable>Y</variable>
+					<tuple>
+						<value>get</value>
+						<wildcard />
+						<wildcard />
+					</tuple>
+				</out>
+			</enabled>
+			<atLocations>entity_vim.VirtualMachine_vm-32</atLocations>
+		</policy><!-- END: policies for all hosts and vms to access via userid/pw -->
+	</policies>
+	<processes><!-- processes for all hosts and vms to access files -->
+		<process id="pr_laptop_001">
+			<actions>
+				<in loc="laptop">
+					<variable>Uid</variable>
+					<variable>Pwd</variable>
+					<tuple>
+						<value>get</value>
+						<variable>fileName</variable>
+						<variable>Uid</variable>
+						<variable>Targethost</variable>
+					</tuple>
+				</in>
+				<in loc="laptop">
+					<variable>fileName</variable>
+					<variable>fileContent</variable>
+				</in>
+				<out loc="laptop">
+					<variable>TargetHost</variable>
+					<tuple>
+						<variable>Uid</variable>
+						<variable>fileName</variable>
+						<variable>fileContent</variable>
+					</tuple>
+				</out>
+			</actions>
+			<atLocations>laptop</atLocations>
+		</process>
+		<process id="pr_entity_vim.VirtualMachine_vm-16_001">
+			<actions>
+				<in loc="entity_vim.VirtualMachine_vm-16">
+					<variable>Uid</variable>
+					<variable>Pwd</variable>
+					<tuple>
+						<value>get</value>
+						<variable>fileName</variable>
+						<variable>Uid</variable>
+						<variable>Targethost</variable>
+					</tuple>
+				</in>
+				<in loc="entity_vim.VirtualMachine_vm-16">
+					<variable>fileName</variable>
+					<variable>fileContent</variable>
+				</in>
+				<out loc="entity_vim.VirtualMachine_vm-16">
+					<variable>TargetHost</variable>
+					<tuple>
+						<variable>Uid</variable>
+						<variable>fileName</variable>
+						<variable>fileContent</variable>
+					</tuple>
+				</out>
+			</actions>
+			<atLocations>entity_vim.VirtualMachine_vm-16</atLocations>
+		</process>
+		<process id="pr_entity_vim.VirtualMachine_vm-15_001">
+			<actions>
+				<in loc="entity_vim.VirtualMachine_vm-15">
+					<variable>Uid</variable>
+					<variable>Pwd</variable>
+					<tuple>
+						<value>get</value>
+						<variable>fileName</variable>
+						<variable>Uid</variable>
+						<variable>Targethost</variable>
+					</tuple>
+				</in>
+				<in loc="entity_vim.VirtualMachine_vm-15">
+					<variable>fileName</variable>
+					<variable>fileContent</variable>
+				</in>
+				<out loc="entity_vim.VirtualMachine_vm-15">
+					<variable>TargetHost</variable>
+					<tuple>
+						<variable>Uid</variable>
+						<variable>fileName</variable>
+						<variable>fileContent</variable>
+					</tuple>
+				</out>
+			</actions>
+			<atLocations>entity_vim.VirtualMachine_vm-15</atLocations>
+		</process>
+		<process id="pr_entity_vim.VirtualMachine_vm-18_001">
+			<actions>
+				<in loc="entity_vim.VirtualMachine_vm-18">
+					<variable>Uid</variable>
+					<variable>Pwd</variable>
+					<tuple>
+						<value>get</value>
+						<variable>fileName</variable>
+						<variable>Uid</variable>
+						<variable>Targethost</variable>
+					</tuple>
+				</in>
+				<in loc="entity_vim.VirtualMachine_vm-18">
+					<variable>fileName</variable>
+					<variable>fileContent</variable>
+				</in>
+				<out loc="entity_vim.VirtualMachine_vm-18">
+					<variable>TargetHost</variable>
+					<tuple>
+						<variable>Uid</variable>
+						<variable>fileName</variable>
+						<variable>fileContent</variable>
+					</tuple>
+				</out>
+			</actions>
+			<atLocations>entity_vim.VirtualMachine_vm-18</atLocations>
+		</process>
+		<process id="pr_entity_vim.VirtualMachine_vm-28_001">
+			<actions>
+				<in loc="entity_vim.VirtualMachine_vm-28">
+					<variable>Uid</variable>
+					<variable>Pwd</variable>
+					<tuple>
+						<value>get</value>
+						<variable>fileName</variable>
+						<variable>Uid</variable>
+						<variable>Targethost</variable>
+					</tuple>
+				</in>
+				<in loc="entity_vim.VirtualMachine_vm-28">
+					<variable>fileName</variable>
+					<variable>fileContent</variable>
+				</in>
+				<out loc="entity_vim.VirtualMachine_vm-28">
+					<variable>TargetHost</variable>
+					<tuple>
+						<variable>Uid</variable>
+						<variable>fileName</variable>
+						<variable>fileContent</variable>
+					</tuple>
+				</out>
+			</actions>
+			<atLocations>entity_vim.VirtualMachine_vm-28</atLocations>
+		</process>
+		<process id="pr_entity_vim.VirtualMachine_vm-29_001">
+			<actions>
+				<in loc="entity_vim.VirtualMachine_vm-29">
+					<variable>Uid</variable>
+					<variable>Pwd</variable>
+					<tuple>
+						<value>get</value>
+						<variable>fileName</variable>
+						<variable>Uid</variable>
+						<variable>Targethost</variable>
+					</tuple>
+				</in>
+				<in loc="entity_vim.VirtualMachine_vm-29">
+					<variable>fileName</variable>
+					<variable>fileContent</variable>
+				</in>
+				<out loc="entity_vim.VirtualMachine_vm-29">
+					<variable>TargetHost</variable>
+					<tuple>
+						<variable>Uid</variable>
+						<variable>fileName</variable>
+						<variable>fileContent</variable>
+					</tuple>
+				</out>
+			</actions>
+			<atLocations>entity_vim.VirtualMachine_vm-29</atLocations>
+		</process>
+		<process id="pr_entity_vim.HostSystem_host-12_001">
+			<actions>
+				<in loc="entity_vim.HostSystem_host-12">
+					<variable>Uid</variable>
+					<variable>Pwd</variable>
+					<tuple>
+						<value>get</value>
+						<variable>fileName</variable>
+						<variable>Uid</variable>
+						<variable>Targethost</variable>
+					</tuple>
+				</in>
+				<in loc="entity_vim.HostSystem_host-12">
+					<variable>fileName</variable>
+					<variable>fileContent</variable>
+				</in>
+				<out loc="entity_vim.HostSystem_host-12">
+					<variable>TargetHost</variable>
+					<tuple>
+						<variable>Uid</variable>
+						<variable>fileName</variable>
+						<variable>fileContent</variable>
+					</tuple>
+				</out>
+			</actions>
+			<atLocations>entity_vim.HostSystem_host-12</atLocations>
+		</process>
+		<process id="pr_entity_vim.HostSystem_host-20_001">
+			<actions>
+				<in loc="entity_vim.HostSystem_host-20">
+					<variable>Uid</variable>
+					<variable>Pwd</variable>
+					<tuple>
+						<value>get</value>
+						<variable>fileName</variable>
+						<variable>Uid</variable>
+						<variable>Targethost</variable>
+					</tuple>
+				</in>
+				<in loc="entity_vim.HostSystem_host-20">
+					<variable>fileName</variable>
+					<variable>fileContent</variable>
+				</in>
+				<out loc="entity_vim.HostSystem_host-20">
+					<variable>TargetHost</variable>
+					<tuple>
+						<variable>Uid</variable>
+						<variable>fileName</variable>
+						<variable>fileContent</variable>
+					</tuple>
+				</out>
+			</actions>
+			<atLocations>entity_vim.HostSystem_host-20</atLocations>
+		</process>
+		<process id="pr_entity_vim.VirtualMachine_vm-26_001">
+			<actions>
+				<in loc="entity_vim.VirtualMachine_vm-26">
+					<variable>Uid</variable>
+					<variable>Pwd</variable>
+					<tuple>
+						<value>get</value>
+						<variable>fileName</variable>
+						<variable>Uid</variable>
+						<variable>Targethost</variable>
+					</tuple>
+				</in>
+				<in loc="entity_vim.VirtualMachine_vm-26">
+					<variable>fileName</variable>
+					<variable>fileContent</variable>
+				</in>
+				<out loc="entity_vim.VirtualMachine_vm-26">
+					<variable>TargetHost</variable>
+					<tuple>
+						<variable>Uid</variable>
+						<variable>fileName</variable>
+						<variable>fileContent</variable>
+					</tuple>
+				</out>
+			</actions>
+			<atLocations>entity_vim.VirtualMachine_vm-26</atLocations>
+		</process>
+		<process id="pr_entity_vim.VirtualMachine_vm-27_001">
+			<actions>
+				<in loc="entity_vim.VirtualMachine_vm-27">
+					<variable>Uid</variable>
+					<variable>Pwd</variable>
+					<tuple>
+						<value>get</value>
+						<variable>fileName</variable>
+						<variable>Uid</variable>
+						<variable>Targethost</variable>
+					</tuple>
+				</in>
+				<in loc="entity_vim.VirtualMachine_vm-27">
+					<variable>fileName</variable>
+					<variable>fileContent</variable>
+				</in>
+				<out loc="entity_vim.VirtualMachine_vm-27">
+					<variable>TargetHost</variable>
+					<tuple>
+						<variable>Uid</variable>
+						<variable>fileName</variable>
+						<variable>fileContent</variable>
+					</tuple>
+				</out>
+			</actions>
+			<atLocations>entity_vim.VirtualMachine_vm-27</atLocations>
+		</process>
+		<process id="pr_entity_vim.HostSystem_host-19_001">
+			<actions>
+				<in loc="entity_vim.HostSystem_host-19">
+					<variable>Uid</variable>
+					<variable>Pwd</variable>
+					<tuple>
+						<value>get</value>
+						<variable>fileName</variable>
+						<variable>Uid</variable>
+						<variable>Targethost</variable>
+					</tuple>
+				</in>
+				<in loc="entity_vim.HostSystem_host-19">
+					<variable>fileName</variable>
+					<variable>fileContent</variable>
+				</in>
+				<out loc="entity_vim.HostSystem_host-19">
+					<variable>TargetHost</variable>
+					<tuple>
+						<variable>Uid</variable>
+						<variable>fileName</variable>
+						<variable>fileContent</variable>
+					</tuple>
+				</out>
+			</actions>
+			<atLocations>entity_vim.HostSystem_host-19</atLocations>
+		</process>
+		<process id="pr_entity_vim.VirtualMachine_vm-32_001">
+			<actions>
+				<in loc="entity_vim.VirtualMachine_vm-32">
+					<variable>Uid</variable>
+					<variable>Pwd</variable>
+					<tuple>
+						<value>get</value>
+						<variable>fileName</variable>
+						<variable>Uid</variable>
+						<variable>Targethost</variable>
+					</tuple>
+				</in>
+				<in loc="entity_vim.VirtualMachine_vm-32">
+					<variable>fileName</variable>
+					<variable>fileContent</variable>
+				</in>
+				<out loc="entity_vim.VirtualMachine_vm-32">
+					<variable>TargetHost</variable>
+					<tuple>
+						<variable>Uid</variable>
+						<variable>fileName</variable>
+						<variable>fileContent</variable>
+					</tuple>
+				</out>
+			</actions>
+			<atLocations>entity_vim.VirtualMachine_vm-32</atLocations>
+		</process><!-- END: processes for all hosts and vms to access files -->
+	</processes>
+	<predicates>
+		<predicate arity="2" id="isUserIdAt"><!-- example: <value>ethan VM1</value> -->
+			<value> big entity_vim.HostSystem_host-12 </value>
+			<value> big entity_vim.HostSystem_host-19 </value>
+			<value> big entity_vim.HostSystem_host-20 </value>
+			<value> big entity_vim.VirtualMachine_vm-15 </value>
+			<value> big entity_vim.VirtualMachine_vm-16 </value>
+			<value> big entity_vim.VirtualMachine_vm-18 </value>
+			<value> big entity_vim.VirtualMachine_vm-26 </value>
+			<value> big entity_vim.VirtualMachine_vm-27 </value>
+			<value> big entity_vim.VirtualMachine_vm-28 </value>
+			<value> big entity_vim.VirtualMachine_vm-29 </value>
+			<value> big entity_vim.VirtualMachine_vm-32 </value>
+			<value> ethan entity_vim.VirtualMachine_vm-26 </value>
+			<value> sydney entity_vim.HostSystem_host-12 </value>
+			<value> sydney entity_vim.HostSystem_host-19 </value>
+			<value> sydney entity_vim.HostSystem_host-20 </value>
+			<value> sydney entity_vim.VirtualMachine_vm-15 </value>
+			<value> sydney entity_vim.VirtualMachine_vm-16 </value>
+			<value> sydney entity_vim.VirtualMachine_vm-18 </value>
+			<value> sydney entity_vim.VirtualMachine_vm-26 </value>
+			<value> sydney entity_vim.VirtualMachine_vm-27 </value>
+			<value> sydney entity_vim.VirtualMachine_vm-28 </value>
+			<value> sydney entity_vim.VirtualMachine_vm-29 </value>
+			<value> sydney entity_vim.VirtualMachine_vm-32 </value>
+			<value> sydney laptop </value>
+			<value> finn entity_vim.VirtualMachine_vm-28 </value>
+			<value> finn entity_vim.VirtualMachine_vm-29 </value>
+		</predicate>
+		<predicate arity="2" id="isPasswordOf"><!-- example: <value>x007_v ethan</value> -->
+			<value>pw_big big</value>
+			<value>pw_terry terry</value>
+			<value>pw_ethan ethan</value>
+			<value>pw_sydney sydney</value>
+			<value>pw_finn finn</value>
+		</predicate>
+		<predicate arity="2" id="isUidOf"><!-- example: <value>ethan Ethan</value> -->
+			<value>big Mr_Big</value>
+			<value>terry Terry</value>
+			<value>ethan Ethan</value>
+			<value>sydney Sydney</value>
+			<value>finn Finn</value>
+		</predicate>
+	</predicates>
+</system>

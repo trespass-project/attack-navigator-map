@@ -541,7 +541,8 @@ function modelFromGraph(graph, metadata={}, anmData={}) {
 					if (!fromNode.atLocations) {
 						fromNode.atLocations = [];
 					}
-					fromNode.atLocations = [...fromNode.atLocations, edge.to];
+					// TODO: investigate bug
+					fromNode.atLocations = R.uniq([...fromNode.atLocations, edge.to]);
 				} else {
 					// TODO: what else could there be?
 				}
