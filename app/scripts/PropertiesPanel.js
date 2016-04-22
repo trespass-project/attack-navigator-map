@@ -1,17 +1,8 @@
-'use strict';
-
-const $ = require('jquery');
 const React = require('react');
 const R = require('ramda');
-const _ = require('lodash');
 
-const helpers = require('./helpers.js');
 const modelHelpers = require('./model-helpers.js');
 const actionCreators = require('./actionCreators.js');
-const constants = require('./constants.js');
-const fakeApi = require('../../api.js');
-const api = require('trespass.js').api;
-const knowledgebaseApi = api.knowledgebase;
 
 
 const PropertiesPanel = React.createClass({
@@ -91,7 +82,8 @@ const PropertiesPanel = React.createClass({
 										className='form-control'
 										name='label'
 										placeholder='label'
-										value={node.label || ''} />
+										value={node.label || ''}
+									/>
 								</td>
 							</tr>
 							<tr>
@@ -168,11 +160,13 @@ const PropertiesPanel = React.createClass({
 									<select
 										onChange={onChange}
 										name='relation'
-										value={edge.relation || null}>
-										{props.relationTypes.map(function(relation) {
+										value={edge.relation || null}
+									>
+										{props.relationTypes.map((relation) => {
 											return <option
 												key={relation.label}
-												value={relation.value}>
+												value={relation.value}
+											>
 												{relation.label}
 											</option>;
 										})}
@@ -261,7 +255,8 @@ const PropertiesPanel = React.createClass({
 					<label>KB Type: </label>
 				</td>
 				<td>
-					<select className='form-control'
+					<select
+						className='form-control'
 						name='type'
 						key='type'
 						value={selectedItem.type}
@@ -278,11 +273,12 @@ const PropertiesPanel = React.createClass({
 						<td><label>{attr.label}:</label> </td>
 						<td>
 						{(!!attr.values)
-							? <select className='form-control'
+							? <select
+								className='form-control'
 								onChange={onChange}
 								name={attr.id}
 								value={selectedItem[attr.id]}
-								key={attr.id+'-values'}
+								key={`${attr.id}-values`}
 							>
 								<option value=''>— select —</option>
 								{(attr.values || [])
@@ -296,7 +292,8 @@ const PropertiesPanel = React.createClass({
 									})
 								}
 							</select>
-							: <input className='form-control'
+							: <input
+								className='form-control'
 								type='text'
 								onChange={onChange}
 								name={attr.id}

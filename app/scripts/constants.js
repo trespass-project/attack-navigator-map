@@ -1,12 +1,8 @@
-'use strict';
-
 const constants = {
 	GRAPH: 'graph',
 	INTERFACE: 'interface',
 
 	MODEL_LIBRARY: 'model-library',
-	MODEL_PATTERNS_LIBRARY: 'pattern-lib.json',
-	MODEL_RELATIONS_LIBRARY: 'relation-lib.json',
 	MODEL_PREDICATES_LIBRARY: 'predicate-lib.json',
 
 	// dnd drop targets
