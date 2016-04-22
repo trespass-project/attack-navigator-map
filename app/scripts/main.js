@@ -123,7 +123,7 @@ function mapStateToProps(state) {
 	);
 }
 
-App = DragDropContext(HTML5Backend)(App);
+App = DragDropContext(HTML5Backend)(App); // eslint-disable-line new-cap
 App = connect(mapStateToProps)(App);
 
 reactDOM.render(

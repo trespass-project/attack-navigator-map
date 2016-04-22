@@ -1,5 +1,6 @@
 {
-	"extends": "airbnb/base",
+	"parser": "babel-eslint",
+	"extends": ["airbnb"],
 
 	"env": {
 		"es6": true,
@@ -31,6 +32,13 @@
 		"dot-notation": 0,
 		"spaces-in-parens": 0,
 		"spaced-comment": 0,
-		"max-len": 0
+		"max-len": 0,
+
+		"react/wrap-multilines": 0,
+		"react/prefer-stateless-function": 1,
+		"jsx-quotes": [1, "prefer-single"],
+		"react/jsx-indent": [2, "tab"],
+
+		"global-require": 1
 	}
 }
