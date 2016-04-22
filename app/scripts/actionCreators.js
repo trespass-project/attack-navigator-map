@@ -1,5 +1,3 @@
-'use strict';
-
 const isBrowserEnvironment = !require('detect-node');
 const $ = require('jquery');
 const Q = require('q');
@@ -12,19 +10,14 @@ const queryString = require('query-string');
 const trespass = require('trespass.js');
 const trespassModel = trespass.model;
 const api = trespass.api;
-const toolsApi = api.tools;
+// const toolsApi = api.tools;
 const knowledgebaseApi = api.knowledgebase;
 const constants = require('./constants.js');
 const modelHelpers = require('./model-helpers.js');
 const helpers = require('./helpers.js');
 
-// TODO: move API stuff to trespass.js
-const fakeApi = require('../../api.js');
-const serverPort = require('../../api.js').serverPort;
-const serverDomain = require('../../api.js').serverDomain;
-function fakeApiUrl(url) {
-	return `http://${serverDomain}:${serverPort}${url}`;
-}
+const modelPatternLib = require('./pattern-lib.js');
+const relationsLib = require('./relation-lib.js');
 
 
 const noop = () => {};
@@ -1397,23 +1390,10 @@ const loadModelPatterns =
 module.exports.loadModelPatterns =
 function loadModelPatterns() {
 	return (dispatch, getState) => {
-		// dispatch({ type: constants.ACTION_loadModelPatterns });
-
-		const url = fakeApiUrl(fakeApi.api.patterns.url);
-		const params = _.merge(
-			{ url, dataType: 'json' },
-			api.requestOptions.jquery.crossDomain
-		);
-
-		const req = $.ajax(params);
-		Q(req)
-			.then((modelPatterns) => {
-				dispatch({
-					type: constants.ACTION_loadModelPatterns_DONE,
-					modelPatterns: modelPatterns.list
-				});
-			})
-			.catch(handleError);
+		dispatch({
+			type: constants.ACTION_loadModelPatterns_DONE,
+			modelPatterns: modelPatternLib
+		});
 	};
 };
 
@@ -1422,23 +1402,10 @@ const loadRelationTypes =
 module.exports.loadRelationTypes =
 function loadRelationTypes() {
 	return (dispatch, getState) => {
-		// dispatch({ type: constants.ACTION_loadRelationTypes });
-
-		const {serverDomain, serverPort} = fakeApi;
-		const url = `http://${serverDomain}:${serverPort}${fakeApi.api.relations.url}`;
-		const req = $.ajax({
-			url,
-			dataType: 'json',
-		})
-
-		Q(req)
-			.then((data) => {
-				dispatch({
-					type: constants.ACTION_loadRelationTypes_DONE,
-					relationTypes: data.list
-				});
-			})
-			.catch(handleError);
+		dispatch({
+			type: constants.ACTION_loadRelationTypes_DONE,
+			relationTypes: relationsLib
+		});
 	};
 };
 
