@@ -16,7 +16,7 @@
 - __tasks__
 	+ clean up
 		✔ proper babel / eslint setup
-		* get rid of fake api
+		✔ get rid of fake api
 		* all apis use fetch()
 		* all apis go to to trespass.js
 	* find dead code
