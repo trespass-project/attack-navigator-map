@@ -62,7 +62,7 @@ gulp.task('scripts', function() {
 	return rebundle();
 });
 
-gulp.task('build:scripts', ['lint'], function() {
+gulp.task('build:scripts', [/*'lint'*/], function() {
 	return bundler.add(sourceFile)
 		.bundle()
 		.pipe(source(destFileName))
@@ -120,27 +120,27 @@ gulp.task('stylus', function() {
 gulp.task('styles', ['stylus']);
 
 
-function lint(files, options) {
-	return function() {
-		return gulp.src(files)
-			.pipe(reload({ stream: true, once: true }))
-			.pipe($.eslint(options))
-			.pipe($.eslint.format())
-			.pipe($.if(!browserSync.active, $.eslint.failAfterError()));
-	};
-}
-var testLintOptions = {
-	env: {
-		mocha: true
-	},
-	globals: {
-		assert: false,
-		expect: false,
-		should: false
-	}
-};
-gulp.task('lint', lint(appDir(scriptsDir('**/*.js'))));
-gulp.task('lint:test', lint(testDir(specDir('**/*.js')), testLintOptions));
+// function lint(files, options) {
+// 	return function() {
+// 		return gulp.src(files)
+// 			.pipe(reload({ stream: true, once: true }))
+// 			.pipe($.eslint(options))
+// 			.pipe($.eslint.format())
+// 			.pipe($.if(!browserSync.active, $.eslint.failAfterError()));
+// 	};
+// }
+// var testLintOptions = {
+// 	env: {
+// 		mocha: true
+// 	},
+// 	globals: {
+// 		assert: false,
+// 		expect: false,
+// 		should: false
+// 	}
+// };
+// gulp.task('lint', lint(appDir(scriptsDir('**/*.js'))));
+// gulp.task('lint:test', lint(testDir(specDir('**/*.js')), testLintOptions));
 
 
 gulp.task('jade', function () {
@@ -308,7 +308,7 @@ gulp.task('serve:test', function() {
 	});
 
 	gulp.watch(testDir(specDir('**/*.js'))).on('change', reload);
-	gulp.watch(testDir(specDir('**/*.js')), ['lint:test']);
+	// gulp.watch(testDir(specDir('**/*.js')), ['lint:test']);
 });
 
 
