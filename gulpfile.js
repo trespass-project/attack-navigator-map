@@ -198,6 +198,11 @@ gulp.task('fonts', function() {
 		.pipe(gulp.dest(tempDir(fontsDir())))
 		.pipe(gulp.dest(distDir(fontsDir())));
 
+	// source sans
+	gulp.src(appDir(fontsDir('SourceSansPro/**/*')))
+		.pipe(gulp.dest(tempDir(fontsDir('SourceSansPro'))))
+		.pipe(gulp.dest(distDir(fontsDir('SourceSansPro'))));
+
 	// return gulp.src(require('main-bower-files')({
 	// 	filter: '**/*.{ eot,svg,ttf,woff,woff2 }'
 	// }).concat(appDir(fontsDir('**/*'))))
