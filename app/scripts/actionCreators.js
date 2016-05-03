@@ -87,28 +87,54 @@ function kbGetModel(modelId, handleExists, handleMissing) {
 		});
 
 		const url = api.makeUrl(knowledgebaseApi, `model/${modelId}`);
+
 		const params = _.merge(
-			{},
-			api.requestOptions.fetch.acceptJSON,
-			api.requestOptions.fetch.crossDomain
+			{ url },
+			api.requestOptions.jquery.acceptJSON,
+			api.requestOptions.jquery.crossDomain
 		);
-		fetch(url, params)
-			.catch((err) => {
-				console.error(err.stack);
+
+		// const params = _.merge(
+		// 	{},
+		// 	api.requestOptions.fetch.acceptJSON,
+		// 	api.requestOptions.fetch.crossDomain
+		// );
+
+		$.ajax(params)
+			.done((model, textStatus, xhr) => {
+				// handleExists(res, modelId);
+				if (handleExists) {
+					handleExists(null, modelId);
+				}
 			})
-			.then((res) => {
-				if (res.status === 404) {
+			.fail((xhr, textStatus, err) => {
+				if (xhr.status === 404) {
+					console.log(`model ${modelId} does not exist.`);
 					if (handleMissing) {
 						handleMissing(modelId);
 					}
-				} else if (res.status === 200) {
-					if (handleExists) {
-						handleExists(res, modelId);
-					}
 				} else {
-					console.error(`something went wrong: ${res.status}`);
+					console.error(err.stack);
 				}
 			});
+
+		// fetch(url, params)
+		// 	.catch((err) => {
+		// 		console.error(err.stack);
+		// 	})
+		// 	.then((res) => {
+		// 		if (res.status === 404) {
+		// 			if (handleMissing) {
+		// 				handleMissing(modelId);
+		// 			}
+		// 		} else if (res.status === 200) {
+		// 			if (handleExists) {
+		// 				handleExists(res, modelId);
+		// 			}
+		// 		} else {
+		// 			console.error(`something went wrong: ${res.status}`);
+		// 		}
+		// 	});
 	};
 };
 
