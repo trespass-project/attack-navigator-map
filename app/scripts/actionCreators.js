@@ -5,7 +5,7 @@ const R = require('ramda');
 const _ = require('lodash');
 const JSZip = require('jszip');
 const saveAs = require('browser-saveas');
-require('whatwg-fetch');
+// require('whatwg-fetch');
 const queryString = require('query-string');
 const trespass = require('trespass.js');
 const trespassModel = trespass.model;
@@ -88,27 +88,53 @@ function kbGetModel(modelId, handleExists, handleMissing) {
 
 		const url = api.makeUrl(knowledgebaseApi, `model/${modelId}`);
 		const params = _.merge(
-			{},
-			api.requestOptions.fetch.acceptJSON,
-			api.requestOptions.fetch.crossDomain
+			{ url },
+			api.requestOptions.jquery.acceptJSON,
+			api.requestOptions.jquery.crossDomain
 		);
-		fetch(url, params)
-			.catch((err) => {
-				console.error(err.stack);
+
+		// const params = _.merge(
+		// 	{},
+		// 	api.requestOptions.fetch.acceptJSON,
+		// 	api.requestOptions.fetch.crossDomain
+		// );
+
+		$.ajax(params)
+			.done((model, textStatus, xhr) => {
+				// handleExists(res, modelId);
+				if (handleExists) {
+					handleExists(null, modelId);
+				}
 			})
-			.then((res) => {
-				if (res.status === 404) {
+			.fail((xhr, textStatus, err) => {
+				if (xhr.status === 404) {
+					console.log(`model ${modelId} does not exist.`);
 					if (handleMissing) {
 						handleMissing(modelId);
 					}
-				} else if (res.status === 200) {
-					if (handleExists) {
-						handleExists(res, modelId);
-					}
 				} else {
-					console.error(`something went wrong: ${res.status}`);
+					console.error(`something went wrong: ${xhr.status}`);
+					console.error(err.stack);
 				}
 			});
+
+		// fetch(url, params)
+		// 	.catch((err) => {
+		// 		console.error(err.stack);
+		// 	})
+		// 	.then((res) => {
+		// 		if (res.status === 404) {
+		// 			if (handleMissing) {
+		// 				handleMissing(modelId);
+		// 			}
+		// 		} else if (res.status === 200) {
+		// 			if (handleExists) {
+		// 				handleExists(res, modelId);
+		// 			}
+		// 		} else {
+		// 			console.error(`something went wrong: ${res.status}`);
+		// 		}
+		// 	});
 	};
 };
 
@@ -130,20 +156,39 @@ function kbCreateModel(modelId, cb=noop) {
 			modelId
 		});
 
-		knowledgebaseApi.createModel(fetch, modelId)
-			.catch((err) => {
+		// knowledgebaseApi.createModel(fetch, modelId)
+		// 	.catch((err) => {
+		// 		console.error(err.stack);
+		// 	})
+		// 	.then((res) => {
+		// 		if (res.status === 200) {
+		// 			dispatch(
+		// 				kbGetModel(modelId, (res, modelId) => {
+		// 					// TODO: do s.th. with the data
+		// 				})
+		// 			);
+		// 			cb();
+		// 		} else {
+		// 			console.error(`something went wrong: ${res.status}`);
+		// 		};
+		// 	});
+		knowledgebaseApi.createModel($.ajax, modelId)
+			.fail((xhr, textStatus, err) => {
 				console.error(err.stack);
 			})
-			.then((res) => {
-				if (res.status === 200) {
+			.done((data, textStatus, xhr) => {
+				if (xhr.status === 200) {
 					dispatch(
-						kbGetModel(modelId, (res, modelId) => {
-							// TODO: do s.th. with the data
-						})
+						kbGetModel(
+							modelId,
+							(res, modelId) => {
+								// TODO: do s.th. with the data
+							}
+						)
 					);
 					cb();
 				} else {
-					console.error(`something went wrong: ${res.status}`);
+					console.error(`something went wrong: ${xhr.status}`);
 				};
 			});
 	};
@@ -160,24 +205,36 @@ function kbCreateItem(modelId, item) {
 		return;
 	}
 
-	knowledgebaseApi.createItem(fetch, modelId, item)
-		.catch((err) => {
+	// knowledgebaseApi.createItem(fetch, modelId, item)
+	// 	.catch((err) => {
+	// 		console.error(err.stack);
+	// 	})
+	// 	.then((res) => {
+	// 		if (res.status === 200) {
+	// 			// knowledgebaseApi.getItem(fetch, modelId, item.id)
+	// 			// 	.catch((err) => {
+	// 			// 		console.error(err.stack);
+	// 			// 	})
+	// 			// 	.then((res) => {
+	// 			// 		return res.json();
+	// 			// 	})
+	// 			// 	.then((data) => {
+	// 			// 		return console.log(data);
+	// 			// 	});
+	// 		} else {
+	// 			console.error(`something went wrong: ${res.status}`);
+	// 		};
+	// 	});
+
+	knowledgebaseApi.createItem($.ajax, modelId, item)
+		.fail((xhr, textStatus, err) => {
 			console.error(err.stack);
 		})
-		.then((res) => {
-			if (res.status === 200) {
-				// knowledgebaseApi.getItem(fetch, modelId, item.id)
-				// 	.catch((err) => {
-				// 		console.error(err.stack);
-				// 	})
-				// 	.then((res) => {
-				// 		return res.json();
-				// 	})
-				// 	.then((data) => {
-				// 		return console.log(data);
-				// 	});
+		.done((data, textStatus, xhr) => {
+			if (xhr.status === 200) {
+				//
 			} else {
-				console.error(`something went wrong: ${res.status}`);
+				console.error(`something went wrong: ${xhr.status}`);
 			};
 		});
 };
@@ -193,15 +250,26 @@ function kbDeleteItem(modelId, itemId) {
 		return;
 	}
 
-	knowledgebaseApi.deleteItem(fetch, modelId, itemId)
-		.catch((err) => {
+	// knowledgebaseApi.deleteItem(fetch, modelId, itemId)
+	// 	.catch((err) => {
+	// 		console.error(err.stack);
+	// 	})
+	// 	.then((res) => {
+	// 		if (res.status === 200) {
+	// 			// TODO: ?
+	// 		} else {
+	// 			console.error(`something went wrong: ${res.status}`);
+	// 		};
+	// 	});
+	knowledgebaseApi.deleteItem($.ajax, modelId, itemId)
+		.fail((xhr, textStatus, err) => {
 			console.error(err.stack);
 		})
-		.then((res) => {
-			if (res.status === 200) {
+		.done((data, textStatus, xhr) => {
+			if (xhr.status === 200) {
 				// TODO: ?
 			} else {
-				console.error(`something went wrong: ${res.status}`);
+				console.error(`something went wrong: ${xhr.status}`);
 			};
 		});
 };
@@ -876,35 +944,71 @@ function putModelAndScenarioIntoKnowledgebase(modelId, modelData, scenarioData) 
 	const taskFuncs = tasksData
 		.map((item, index) => {
 			const url = `${api.makeUrl(knowledgebaseApi, 'files')}?${item.query}`;
+			// const params = _.merge(
+			// 	{
+			// 		method: 'put',
+			// 		body: item.data
+			// 	},
+			// 	api.requestOptions.fetch.acceptJSON,
+			// 	api.requestOptions.fetch.crossDomain
+			// );
 			const params = _.merge(
 				{
+					url,
 					method: 'put',
-					body: item.data
+					data: item.data,
+					contentType: 'text/xml',
 				},
-				api.requestOptions.fetch.acceptJSON,
-				api.requestOptions.fetch.crossDomain
+				api.requestOptions.jquery.acceptJSON,
+				// api.requestOptions.jquery.contentTypeJSON,
+				api.requestOptions.jquery.crossDomain
 			);
 
 			return () => {
-				return fetch(url, params)
-					.catch((err) => {
-						console.error(err.stack);
-					})
-					.then((res) => {
-						if (res.status === 200) {
-							// console.log('success (200)', url);
-						} else {
-							console.error(`something went wrong (${res.status})`, url);
-						}
-					});
+				console.log(item.query);
+				// return fetch(url, params)
+				// 	.catch((err) => {
+				// 		console.error(err.stack);
+				// 	})
+				// 	.then((res) => {
+				// 		if (res.status === 200) {
+				// 			// console.log('success (200)', url);
+				// 		} else {
+				// 			console.error(`something went wrong (${res.status})`, url);
+				// 		}
+				// 	});
+				return Q($.ajax(params));
+					// .fail((xhr, textStatus, err) => {
+					// 	console.error(err.stack);
+					// })
+					// .catch((err) => {
+					// 	console.error(err.stack);
+					// })
+					// .then((toolChains, textStatus, xhr) => {
+					// 	console.log(arguments);
+					// 	if (xhr.status === 200) {
+					// 		// console.log('success (200)', url);
+					// 	} else {
+					// 		console.error(`something went wrong (${xhr.status})`, url);
+					// 	}
+					// });
 			};
 		});
 
-	const resolved = Promise.resolve();
+	// const resolved = Promise.resolve();
+	const deferred = Q.defer();
 	const promise = taskFuncs
 		.reduce((acc, taskFunc) => {
-			return acc.then(taskFunc);
-		}, resolved);
+			return acc
+				.then(taskFunc)
+				.catch((err) => {
+					console.error(err.stack);
+				});
+		}, deferred.promise /*resolved*/)
+		.catch((err) => {
+			console.error(err.stack);
+		});
+	deferred.resolve();
 
 	return promise;
 };
@@ -916,25 +1020,71 @@ function monitorTaskStatus(taskUrl, _callbacks={}) {
 	});
 
 	const url = taskUrl;
+	// const params = _.merge(
+	// 	api.requestOptions.fetch.acceptJSON,
+	// 	api.requestOptions.fetch.crossDomain
+	// );
 	const params = _.merge(
-		api.requestOptions.fetch.acceptJSON,
-		api.requestOptions.fetch.crossDomain
+		{ url },
+		api.requestOptions.jquery.acceptJSON,
+		api.requestOptions.jquery.contentTypeJSON,
+		api.requestOptions.jquery.crossDomain
 	);
 
 	return new Promise((resolve, reject) => {
 		let intervalId;
 
 		function check() {
-			fetch(url, params)
-				.catch((err) => {
+			// fetch(url, params)
+			// 	.catch((err) => {
+			// 		console.error(err.stack);
+			// 		clearInterval(intervalId);
+			// 		reject(err);
+			// 	})
+			// 	.then((res) => {
+			// 		return res.json();
+			// 	})
+			// 	.then((taskStatusData) => {
+			// 		if (taskStatusData.status) {
+			// 			const taskStatusDataCategorized = helpers.handleStatus(taskStatusData);
+			// 			if (taskStatusDataCategorized.current[0]) {
+			// 				console.warn(taskStatusDataCategorized.current[0].name, taskStatusData.status);
+			// 			}
+			// 			callbacks.onTaskStatus(taskStatusDataCategorized);
+
+			// 			switch (taskStatusData.status) {
+			// 				case 'not started':
+			// 				case 'running':
+			// 					// do nothing
+			// 					break;
+
+			// 				case 'error':
+			// 					clearInterval(intervalId);
+			// 					const errorMessage = taskStatusDataCategorized.current[0]['error-message'];
+			// 					alert(errorMessage);
+			// 					console.error(errorMessage);
+			// 					break;
+
+			// 				case 'done':
+			// 					clearInterval(intervalId);
+			// 					callbacks.onToolChainEnd(taskStatusData);
+			// 					break;
+
+			// 				default:
+			// 					clearInterval(intervalId);
+			// 					reject(new Error(`Unknown status: ${taskStatusData.status}`));
+			// 					break;
+			// 			}
+			// 		}
+			// 	});
+			$.ajax(params)
+				.fail((xhr, textStatus, err) => {
 					console.error(err.stack);
 					clearInterval(intervalId);
 					reject(err);
+					console.error(err.stack);
 				})
-				.then((res) => {
-					return res.json();
-				})
-				.then((taskStatusData) => {
+				.done((taskStatusData, textStatus, xhr) => {
 					if (taskStatusData.status) {
 						const taskStatusDataCategorized = helpers.handleStatus(taskStatusData);
 						if (taskStatusDataCategorized.current[0]) {
@@ -1001,11 +1151,16 @@ function handleError(err) {
 
 
 function kbRunToolchain(toolChainId, modelId, attackerProfileId, callbacks={}) {
-	knowledgebaseApi.runToolChain(fetch, modelId, toolChainId, attackerProfileId, callbacks)
-		.then((res) => {
-			return res.json();
-		})
-		.then((data) => {
+	// knowledgebaseApi.runToolChain(fetch, modelId, toolChainId, attackerProfileId, callbacks)
+	// 	.then((res) => {
+	// 		return res.json();
+	// 	})
+	// 	.then((data) => {
+	// 		// console.log(data);
+	// 		monitorTaskStatus(data.task_url, callbacks);
+	// 	});
+	knowledgebaseApi.runToolChain($.ajax, modelId, toolChainId, attackerProfileId, callbacks)
+		.done((data, textStatus, xhr) => {
 			// console.log(data);
 			monitorTaskStatus(data.task_url, callbacks);
 		});
@@ -1068,16 +1223,33 @@ function retrieveAnalysisResults(taskStatusData) {
 
 	const promises = tools
 		.map((tool) => {
+			// const params = _.merge(
+			// 	{ method: 'get' },
+			// 	// api.requestOptions.fetch.acceptJSON,
+			// 	api.requestOptions.fetch.crossDomain
+			// );
+			// return fetch(tool.result_file_url, params)
+			// 	.then((res) => {
+			// 		return res.blob();
+			// 	})
+			// 	.then((blob) => {
+			// 		return {
+			// 			name: tool.name,
+			// 			blob,
+			// 		};
+			// 	});
 			const params = _.merge(
-				{ method: 'get' },
-				// api.requestOptions.fetch.acceptJSON,
-				api.requestOptions.fetch.crossDomain
+				{
+					url: tool.result_file_url,
+					method: 'get'
+				},
+				// api.requestOptions.jquery.acceptJSON,
+				// api.requestOptions.jquery.contentTypeJSON,
+				api.requestOptions.jquery.crossDomain
 			);
-			return fetch(tool.result_file_url, params)
-				.then((res) => {
-					return res.blob();
-				})
-				.then((blob) => {
+			return $.ajax(params)
+				.done((blob, textStatus, xhr) => {
+					console.dir(blob);
 					return {
 						name: tool.name,
 						blob,
@@ -1301,20 +1473,38 @@ function loadToolChains() {
 
 		const state = getState();
 		const modelId = state.model.metadata.id;
+
 		const url = api.makeUrl(knowledgebaseApi, `toolchain?model_id=${modelId}`);
+		// const params = _.merge(
+		// 	{},
+		// 	api.requestOptions.fetch.acceptJSON,
+		// 	api.requestOptions.fetch.crossDomain
+		// );
+		// fetch(url, params)
+		// 	.catch((err) => {
+		// 		console.error(err.stack);
+		// 	})
+		// 	.then((res) => {
+		// 		return res.json();
+		// 	})
+		// 	.then((toolChains) => {
+		// 		// TODO: do they all begin with treemaker?
+		// 		dispatch({
+		// 			type: constants.ACTION_loadToolChains_DONE,
+		// 			normalizedToolChains: helpers.normalize(toolChains)
+		// 		});
+		// 	});
 		const params = _.merge(
-			{},
-			api.requestOptions.fetch.acceptJSON,
-			api.requestOptions.fetch.crossDomain
+			{ url },
+			api.requestOptions.jquery.crossDomain,
+			api.requestOptions.jquery.acceptJSON,
+			api.requestOptions.jquery.contentTypeJSON
 		);
-		fetch(url, params)
-			.catch((err) => {
+		$.ajax(params)
+			.fail((xhr, textStatus, err) => {
 				console.error(err.stack);
 			})
-			.then((res) => {
-				return res.json();
-			})
-			.then((toolChains) => {
+			.done((toolChains, textStatus, xhr) => {
 				// TODO: do they all begin with treemaker?
 				dispatch({
 					type: constants.ACTION_loadToolChains_DONE,
@@ -1369,7 +1559,9 @@ function loadAttackerProfiles() {
 		const modelId = state.model.metadata.id;
 		const url = api.makeUrl(knowledgebaseApi, `attackerprofile?model_id=${modelId}`);
 		const params = _.merge(
-			{ url, dataType: 'json' },
+			{ url },
+			api.requestOptions.jquery.acceptJSON,
+			api.requestOptions.jquery.contentTypeJSON,
 			api.requestOptions.jquery.crossDomain
 		);
 
