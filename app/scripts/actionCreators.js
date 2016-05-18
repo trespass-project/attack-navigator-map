@@ -959,8 +959,8 @@ function putModelAndScenarioIntoKnowledgebase(modelId, modelData, scenarioData) 
 					data: item.data,
 					contentType: 'text/xml',
 				},
-				api.requestOptions.jquery.acceptJSON,
-				// api.requestOptions.jquery.contentTypeJSON,
+				api.requestOptions.jquery.acceptPlainText,
+				// api.requestOptions.jquery.acceptJSON,
 				api.requestOptions.jquery.crossDomain
 			);
 
@@ -1002,6 +1002,7 @@ function putModelAndScenarioIntoKnowledgebase(modelId, modelData, scenarioData) 
 			return acc
 				.then(taskFunc)
 				.catch((err) => {
+					console.dir(err);
 					console.error(err.stack);
 				});
 		}, deferred.promise /*resolved*/)
