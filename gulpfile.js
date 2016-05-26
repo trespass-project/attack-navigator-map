@@ -39,6 +39,7 @@ var projectName = (pkg.name || path.basename(__dirname));
 var browserify = require('browserify');
 var watchify = require('watchify');
 var babelify = require('babelify');
+var brfs = require('brfs');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 // ———
@@ -47,7 +48,7 @@ var destFileName = 'bundle.js';
 // ———
 var bundler = browserify({
 	entries: [sourceFile],
-	transform: [babelify],
+	transform: [babelify, brfs],
 	debug: true,
 	insertGlobals: true,
 	cache: {},

@@ -13,6 +13,7 @@
     "babel-preset-react": "^6.3.13",
     "babel-register": "^6.3.13",
     "babelify": "^7.2.0",
+    "brfs": "^1.4.3",
     "browser-sync": "^2.9.11",
     "browserify": "^10.2.6",
     "chalk": "^1.1.1",

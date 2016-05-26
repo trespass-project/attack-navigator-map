@@ -11,6 +11,11 @@ const connect = require('react-redux').connect;
 const Provider = require('react-redux').Provider;
 const thunk = require('redux-thunk');
 
+const fs = require('fs');
+const pkg = JSON.parse(fs.readFileSync('./package.json').toString());
+
+const knowledgebaseApi = require('trespass.js').api.knowledgebase;
+
 // const ModelDebugView = require('./components/ModelDebugView/ModelDebugView.js');
 // const MainMenu = require('./MainMenu.js');
 const Wizard = require('./Wizard.js');
@@ -81,6 +86,20 @@ let App = React.createClass({
 		return (
 			<div id='container'>
 				<input type='file' accept='.svg' id='add-file' />
+
+				<div id="meta">
+					ANM {pkg.version}<br />
+					model id: {props.metadata.id || ''}<br />
+					{(props.metadata.id)
+						? <a
+							href={knowledgebaseApi.host+'tkb/files/edit?model_id='+props.metadata.id}
+							target='_blank'
+						>
+							edit knowledgebase files
+						</a>
+						: ''
+					}
+				</div>
 
 				<div id='map-container'>
 					<div id='map'>
