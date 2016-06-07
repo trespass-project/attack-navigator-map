@@ -620,12 +620,12 @@ function selectWizardStep(name) {
 // TODO: autoLayout
 
 
-const loadXMLFile =
-module.exports.loadXMLFile =
-function loadXMLFile(file) {
+const loadModelFile =
+module.exports.loadModelFile =
+function loadModelFile(file) {
 	return (dispatch, getState) => {
 		dispatch({
-			type: constants.ACTION_loadXMLFile,
+			type: constants.ACTION_loadModelFile,
 			file,
 		});
 

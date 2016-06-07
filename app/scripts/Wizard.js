@@ -150,7 +150,7 @@ const Wizard = React.createClass({
 				ref='load-model'
 				type='file'
 				accept='.xml'
-				onChange={this.loadXMLFile} />
+				onChange={this.loadModelFile} />
 
 			<button
 				onClick={this.clickFileButton}
@@ -699,12 +699,12 @@ const Wizard = React.createClass({
 		$(this.refs['load-model']).click();
 	},
 
-	loadXMLFile: function(event) {
+	loadModelFile: function(event) {
 		event.preventDefault();
 		const $fileInput = $(this.refs['load-model']);
 		const file = $fileInput[0].files[0];
 		$fileInput.val(''); // reset, so that we can import the same file again, if needed
-		this.context.dispatch( actionCreators.loadXMLFile(file) );
+		this.context.dispatch( actionCreators.loadModelFile(file) );
 	},
 
 	downloadModelXML: function(event) {
