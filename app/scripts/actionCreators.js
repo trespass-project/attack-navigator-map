@@ -654,8 +654,11 @@ function loadXML(xmlString) {
 			xml: xmlString,
 		});
 
-		modelHelpers.XMLModelToGraph(xmlString, (err, result) => {
-			if (err) { return; }
+		modelHelpers.xmlModelToGraph(xmlString, (err, result) => {
+			if (err) {
+				console.error(err.stack);
+				return;
+			}
 
 			// auto-layout graph
 			result.graph = modelHelpers.layoutGraphByType(result.graph);
