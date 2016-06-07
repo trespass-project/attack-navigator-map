@@ -657,9 +657,12 @@ function loadXML(xmlString) {
 		modelHelpers.XMLModelToGraph(xmlString, (err, result) => {
 			if (err) { return; }
 
+			// auto-layout graph
 			result.graph = modelHelpers.layoutGraphByType(result.graph);
 
+			// use existing model id, or create new one
 			result.metadata.id = result.metadata.id || helpers.makeId('model');
+
 			dispatch(
 				initMap(result.metadata.id, () => {
 					dispatch(
