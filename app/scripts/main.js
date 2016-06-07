@@ -1,5 +1,3 @@
-'use strict';
-
 const React = require('react');
 const reactDOM = require('react-dom');
 const _ = require('lodash');
@@ -13,6 +11,9 @@ const thunk = require('redux-thunk');
 
 const fs = require('fs');
 const pkg = JSON.parse(fs.readFileSync('./package.json').toString());
+
+const modelReducer = require('./modelReducer.js');
+const interfaceReducer = require('./interfaceReducer.js');
 
 const knowledgebaseApi = require('trespass.js').api.knowledgebase;
 
@@ -87,12 +88,12 @@ let App = React.createClass({
 			<div id='container'>
 				<input type='file' accept='.svg' id='add-file' />
 
-				<div id="meta">
+				<div id='meta'>
 					ANM {pkg.version}<br />
 					model id: {props.metadata.id || ''}<br />
 					{(props.metadata.id)
 						? <a
-							href={knowledgebaseApi.host+'tkb/files/edit?model_id='+props.metadata.id}
+							href={`${knowledgebaseApi.host}tkb/files/edit?model_id=${props.metadata.id}`}
 							target='_blank'
 						>
 							edit knowledgebase files
@@ -128,8 +129,8 @@ let App = React.createClass({
 
 
 const reducer = combineReducers({
-	model: require('./modelReducer.js'),
-	interface: require('./interfaceReducer.js'),
+	model: modelReducer,
+	interface: interfaceReducer,
 });
 const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
 const store = createStoreWithMiddleware(reducer);

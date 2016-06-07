@@ -189,7 +189,7 @@ function kbCreateModel(modelId, cb=noop) {
 					cb();
 				} else {
 					console.error(`something went wrong: ${xhr.status}`);
-				};
+				}
 			});
 	};
 };
@@ -235,7 +235,7 @@ function kbCreateItem(modelId, item) {
 				//
 			} else {
 				console.error(`something went wrong: ${xhr.status}`);
-			};
+			}
 		});
 };
 
@@ -270,7 +270,7 @@ function kbDeleteItem(modelId, itemId) {
 				// TODO: ?
 			} else {
 				console.error(`something went wrong: ${xhr.status}`);
-			};
+			}
 		});
 };
 
@@ -338,7 +338,7 @@ function importFragment(fragment, xy) {
 				importedNodes
 					.forEach((node) => {
 						kbCreateItem(modelId, node);
-					})
+					});
 			}
 		});
 	};
@@ -635,7 +635,7 @@ function loadXMLFile(file) {
 
 		// ———
 
-		let reader = new FileReader();
+		const reader = new FileReader();
 		reader.onload = (event) => {
 			const content = event.target.result;
 			dispatch( loadXML(content) );
@@ -689,7 +689,7 @@ function getXMLBlob(xmlStr) {
 
 function replaceIdsInString(str, idReplacementMap={}) {
 	return R.keys(idReplacementMap)
-		.reduce((acc, oldId)  => {
+		.reduce((acc, oldId) => {
 			const re = new RegExp(oldId, 'g');
 			return acc.replace(re, idReplacementMap[oldId]);
 		}, str);
@@ -719,7 +719,7 @@ function stateToHumanReadableModelXML(state) {
 	// HACK: replace all ids with their human-readable versions
 	modelXmlStr = replaceIdsInString(modelXmlStr, idReplacementMap);
 
-	return {modelXmlStr, model, idReplacementMap};
+	return { modelXmlStr, model, idReplacementMap };
 }
 
 
@@ -742,7 +742,7 @@ module.exports.downloadModelXML =
 function downloadModelXML() {
 	return (dispatch, getState) => {
 		const state = getState();
-		const {modelXmlStr, model} = stateToHumanReadableModelXML(state);
+		const { modelXmlStr, model } = stateToHumanReadableModelXML(state);
 		const modelFileName = `${model.system.title.replace(/\s/g, '-')}.xml`;
 		saveAs(getXMLBlob(modelXmlStr), modelFileName);
 	};
@@ -754,7 +754,7 @@ module.exports.downloadZippedScenario =
 function downloadZippedScenario() {
 	return (dispatch, getState) => {
 		const state = getState();
-		const {modelXmlStr, model, idReplacementMap} = stateToHumanReadableModelXML(state);
+		const { modelXmlStr, model, idReplacementMap } = stateToHumanReadableModelXML(state);
 		const modelId = model.system.id;
 
 		const modelFileName = 'model.xml';
@@ -1284,7 +1284,6 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 
 		if (!toolChainData) {
 			throw new Error('Tool chain not found.');
-			return;
 		}
 
 		const modelId = state.model.metadata.id;
@@ -1292,7 +1291,7 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 			throw new Error('missing model id');
 		}
 
-		const {modelXmlStr, model, idReplacementMap} = stateToHumanReadableModelXML(state);
+		const { modelXmlStr, model, idReplacementMap } = stateToHumanReadableModelXML(state);
 
 		const validationErrors = trespass.model.validateModel(model);
 		if (validationErrors.length) {
@@ -1632,7 +1631,7 @@ function loadComponentTypes() {
 										? null
 										: attr['tkb:mvalues']['@list'],
 								}];
-							}, [])
+							}, []);
 						return acc;
 					}, {});
 

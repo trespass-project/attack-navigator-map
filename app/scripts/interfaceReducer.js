@@ -1,5 +1,3 @@
-'use strict';
-
 const $ = require('jquery');
 const R = require('ramda');
 const mergeWith = require('./reducer-utils.js').mergeWith;
@@ -117,7 +115,7 @@ function reducer(state=initialState, action) {
 
 	switch (action.type) {
 		case constants.ACTION_setEditorElem: {
-			const {elem} = action;
+			const { elem } = action;
 			const editorElem = elem;
 			const $editor = $(editorElem);
 			const editorTransformElem = $editor.children('g').first()[0];
@@ -130,7 +128,7 @@ function reducer(state=initialState, action) {
 				};
 			}
 
-			return mergeWithState({editorElem, editorTransformElem, editorElemSize});
+			return mergeWithState({ editorElem, editorTransformElem, editorElemSize });
 		}
 
 		case constants.ACTION_select: {
@@ -154,7 +152,7 @@ function reducer(state=initialState, action) {
 			return mergeWithState({ showEdges: action.yesno });
 
 		case constants.ACTION_setTransformation: {
-			let {scale/*, panX, panY*/} = action.transformation;
+			let { scale/*, panX, panY*/ } = action.transformation;
 
 			let showEdgeLabels = false;
 			const threshold = 0.5;
@@ -181,7 +179,7 @@ function reducer(state=initialState, action) {
 			}
 
 			const mergeThis = Object.assign(
-				{showEdgeLabels, showNodeLabels, showGroupLabels, visibleRect},
+				{ showEdgeLabels, showNodeLabels, showGroupLabels, visibleRect },
 				action.transformation
 			);
 			return mergeWithState(mergeThis);
@@ -288,18 +286,18 @@ function reducer(state=initialState, action) {
 		// 	return state; // noop
 		// }
 		case constants.ACTION_loadComponentTypes_DONE: {
-			const {componentsLib, kbTypeAttributes, modelComponentTypeToKbTypes} = action;
-			return mergeWithState({componentsLib, kbTypeAttributes, modelComponentTypeToKbTypes});
+			const { componentsLib, kbTypeAttributes, modelComponentTypeToKbTypes } = action;
+			return mergeWithState({ componentsLib, kbTypeAttributes, modelComponentTypeToKbTypes });
 		}
 
 		case constants.ACTION_loadModelPatterns_DONE: {
-			const {modelPatterns} = action;
-			return mergeWithState({modelPatterns});
+			const { modelPatterns } = action;
+			return mergeWithState({ modelPatterns });
 		}
 
 		case constants.ACTION_loadRelationTypes_DONE: {
-			const {relationTypes} = action;
-			return mergeWithState({relationTypes});
+			const { relationTypes } = action;
+			return mergeWithState({ relationTypes });
 		}
 
 		default:

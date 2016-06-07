@@ -1,5 +1,3 @@
-'use strict';
-
 const update = require('react-addons-update');
 const _ = require('lodash');
 const R = require('ramda');
@@ -59,7 +57,7 @@ function createFragment(data={}) {
 			groups: {},
 		}
 	);
-}
+};
 
 
 const _duplicate =
@@ -169,7 +167,7 @@ const nodeAsFragmentInclEdges =
 module.exports.nodeAsFragmentInclEdges =
 function nodeAsFragmentInclEdges(node, edges) {
 	const nodeFragment = nodeAsFragment(node);
-	const nodeEdges = getNodeEdges(node, edges)
+	const nodeEdges = getNodeEdges(node, edges);
 	const edgesFragment = createFragment({
 		edges: helpers.toHashMap('id', nodeEdges)
 	});
@@ -190,7 +188,7 @@ const edgeAsFragmentInclNodes =
 module.exports.edgeAsFragmentInclNodes =
 function edgeAsFragmentInclNodes(edge, nodes) {
 	const edgeFragment = edgeAsFragment(edge);
-	const {fromNode, toNode} = getEdgeNodes(edge, nodes);
+	const { fromNode, toNode } = getEdgeNodes(edge, nodes);
 	const nodesFragment = createFragment({
 		nodes: helpers.toHashMap('id', [fromNode, toNode])
 	});
@@ -481,7 +479,7 @@ function graphFromModel(model) {
 
 	graph = _.merge(graph, neitherNodeNorEdge);
 	const metadata = R.pick(trespass.model.knownAttributes.system, model.system);
-	return {graph, metadata, anmData};
+	return { graph, metadata, anmData };
 };
 
 
@@ -619,7 +617,7 @@ function removeNode(graph, nodeId, cb=noop) {
 	const nodeGroups = getNodeGroups(node, graph.groups);
 	const updateGroupsNodeIds = nodeGroups
 		.reduce((acc, group) => {
-			acc[group.id] = { nodeIds: { $set: R.without([nodeId], group.nodeIds) } }
+			acc[group.id] = { nodeIds: { $set: R.without([nodeId], group.nodeIds) } };
 			return acc;
 		}, {});
 	const updateGroups = { groups: updateGroupsNodeIds };
@@ -678,7 +676,7 @@ function moveGroup(graph, groupId, deltaXY) {
 			const coords = {
 				x: node.x + deltaXY.x,
 				y: node.y + deltaXY.y,
-			}
+			};
 			acc[id] = { $merge: coords };
 			return acc;
 		}, {});
@@ -851,7 +849,7 @@ function ungroupNode(graph, nodeId) {
 		.reduce((acc, group) => {
 			if (R.contains(nodeId, group.nodeIds)) {
 				const newNodeIds = R.without([nodeId], group.nodeIds);
-				acc[group.id] = { nodeIds: { $set: newNodeIds } }
+				acc[group.id] = { nodeIds: { $set: newNodeIds } };
 			}
 			return acc;
 		}, {});
