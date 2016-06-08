@@ -481,10 +481,9 @@ function graphFromModel(model) {
 	// use anm data to restore
 	// - groups
 	// - node positions
+	// TODO: if there is NO anm data, should we try to query the kb instead?
 	const anmData = model.system.anm_data || undefined;
 	if (anmData) {
-		// console.info('has anm_data', anmData);
-
 		R.values(anmData.nodes || {})
 			.forEach((anmNode) => {
 				let node = graph.nodes[anmNode.id];
@@ -505,7 +504,6 @@ function graphFromModel(model) {
 							anmNode
 						)
 					);
-					// TODO: or should we explicitely query kb for those attributes?
 				}
 			});
 
