@@ -489,11 +489,24 @@ function graphFromModel(model) {
 			.forEach((anmNode) => {
 				let node = graph.nodes[anmNode.id];
 				if (node) {
+					// TODO: you could also just merge anmNode entirely
+
 					// restore node position
 					node = _.merge(node, {
 						x: anmNode.x,
 						y: anmNode.y,
 					});
+
+					// restore additional kb attributes
+					node = _.merge(
+						node,
+						R.pickBy(
+							(val, key) => { return key.startsWith('tkb:'); },
+							anmNode
+						)
+					);
+					// TODO: or should we explicitely query kb for those attributes?
+
 				}
 			});
 
