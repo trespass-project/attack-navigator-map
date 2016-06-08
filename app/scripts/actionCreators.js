@@ -40,51 +40,77 @@ function handleError(err) {
 // ——————————
 
 
+/**
+ * initialize map
+ * @returns {Promise}
+ */
 const initMap =
 module.exports.initMap =
-function initMap(modelId=undefined, cb=noop) {
+function initMap(modelId=undefined) {
 	return (dispatch, getState) => {
-		const id = modelId || helpers.makeId('model');
-		dispatch({
-			type: constants.ACTION_initMap,
-			modelId: id,
-		});
-
-		// check if model with that id already exists ...
-		dispatch(
-			kbGetModel(
-				id,
-
-				// handleExists
-				(res, modelId) => {
-					// TODO: do s.th. with the data
-					cb();
-				},
-
-				// handleMissing
-				(modelId) => {
-					// ... otherwise create it
-					dispatch( kbCreateModel(modelId, cb) );
-				}
-			)
-		);
+		// create model, if necessary
+		return kbGetModelOrCreate(modelId)
+			.then((modelId) => {
+				// set model id
+				dispatch({
+					type: constants.ACTION_initMap,
+					modelId
+				});
+			})
+			.then(() => {
+				// load model-specific stuff from knowledgebase
+				dispatch( loadComponentTypes() );
+				dispatch( loadAttackerProfiles() );
+				dispatch( loadToolChains() );
+			})
+			.then(() => {
+				// fake api
+				dispatch( loadModelPatterns() );
+				dispatch( loadRelationTypes() );
+			});
 	};
 };
 
 
-const kbGetModel =
-module.exports.kbGetModel =
-function kbGetModel(modelId, handleExists, handleMissing) {
+/**
+ * creates a new model in the knowledgebase
+ * @returns {Promise} - modelId
+ */
+const kbGetModelOrCreate =
+module.exports.kbGetModelOrCreate =
+function kbGetModelOrCreate(modelId) {
 	if (!modelId) {
-		console.error('no model id provided');
-		return;
+		console.warn('no model id provided – creating new one.');
+		return kbCreateModel();
 	}
 
-	return (dispatch, getState) => {
-		dispatch({
-			type: constants.ACTION_kbGetModel,
-			modelId
+	return kbGetModel(modelId)
+		.then((modelId) => {
+			const doesExist = !!modelId;
+			if (doesExist) {
+				return Promise.resolve(modelId);
+			} else {
+				console.warn('model does not exist – creating new one.');
+				return kbCreateModel();
+			}
+		})
+		.catch((err) => {
+			console.error(err);
 		});
+};
+
+
+/**
+ * gets a model from the knowledgebae
+ * @returns {Promise} - modelId or null, if model doesn't exist
+ */
+const kbGetModel =
+module.exports.kbGetModel =
+function kbGetModel(modelId) {
+	return new Promise((resolve, reject) => {
+		if (!modelId) {
+			return reject('no model id provided');
+		}
 
 		const url = api.makeUrl(knowledgebaseApi, `model/${modelId}`);
 		const params = _.merge(
@@ -93,105 +119,44 @@ function kbGetModel(modelId, handleExists, handleMissing) {
 			api.requestOptions.jquery.crossDomain
 		);
 
-		// const params = _.merge(
-		// 	{},
-		// 	api.requestOptions.fetch.acceptJSON,
-		// 	api.requestOptions.fetch.crossDomain
-		// );
-
 		$.ajax(params)
 			.done((model, textStatus, xhr) => {
-				// handleExists(res, modelId);
-				if (handleExists) {
-					handleExists(null, modelId);
-				}
+				resolve(modelId);
 			})
 			.fail((xhr, textStatus, err) => {
 				if (xhr.status === 404) {
-					console.log(`model ${modelId} does not exist.`);
-					if (handleMissing) {
-						handleMissing(modelId);
-					}
+					resolve(null); // model does not exist
 				} else {
-					console.error(`something went wrong: ${xhr.status}`);
-					console.error(err.stack);
+					reject(`something went wrong: ${xhr.status}`);
 				}
 			});
-
-		// fetch(url, params)
-		// 	.catch((err) => {
-		// 		console.error(err.stack);
-		// 	})
-		// 	.then((res) => {
-		// 		if (res.status === 404) {
-		// 			if (handleMissing) {
-		// 				handleMissing(modelId);
-		// 			}
-		// 		} else if (res.status === 200) {
-		// 			if (handleExists) {
-		// 				handleExists(res, modelId);
-		// 			}
-		// 		} else {
-		// 			console.error(`something went wrong: ${res.status}`);
-		// 		}
-		// 	});
-	};
+	});
 };
 
 
+/**
+ * creates a new model in the knowledgebase.
+ * @returns {Promise} - modelId
+ */
 const kbCreateModel =
 module.exports.kbCreateModel =
-function kbCreateModel(modelId, cb=noop) {
-	// TODO: only create model, once model/graph is not empty anymore.
-	// otherwise we might be creatings tons of empty ones ...
+function kbCreateModel() {
+	const modelId = helpers.makeId('model');
 
-	if (!modelId) {
-		console.error('no model id provided');
-		return;
-	}
-
-	return (dispatch, getState) => {
-		dispatch({
-			type: constants.ACTION_kbCreateModel,
-			modelId
-		});
-
-		// knowledgebaseApi.createModel(fetch, modelId)
-		// 	.catch((err) => {
-		// 		console.error(err.stack);
-		// 	})
-		// 	.then((res) => {
-		// 		if (res.status === 200) {
-		// 			dispatch(
-		// 				kbGetModel(modelId, (res, modelId) => {
-		// 					// TODO: do s.th. with the data
-		// 				})
-		// 			);
-		// 			cb();
-		// 		} else {
-		// 			console.error(`something went wrong: ${res.status}`);
-		// 		};
-		// 	});
+	return new Promise((resolve, reject) => {
 		knowledgebaseApi.createModel($.ajax, modelId)
 			.fail((xhr, textStatus, err) => {
-				console.error(err.stack);
+				reject();
 			})
 			.done((data, textStatus, xhr) => {
 				if (xhr.status === 200) {
-					dispatch(
-						kbGetModel(
-							modelId,
-							(res, modelId) => {
-								// TODO: do s.th. with the data
-							}
-						)
-					);
-					cb();
+					resolve(modelId);
 				} else {
 					console.error(`something went wrong: ${xhr.status}`);
+					reject();
 				}
 			});
-	};
+	});
 };
 
 

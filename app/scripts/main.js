@@ -45,18 +45,8 @@ let App = React.createClass({
 	componentDidMount() {
 		const props = this.props;
 
-		props.dispatch(
-			actionCreators.initMap(undefined, () => {
-				// kb api
-				props.dispatch( actionCreators.loadComponentTypes() );
-				props.dispatch( actionCreators.loadAttackerProfiles() );
-				props.dispatch( actionCreators.loadToolChains() );
-			})
-		);
-
-		// fake api
-		props.dispatch( actionCreators.loadModelPatterns() );
-		props.dispatch( actionCreators.loadRelationTypes() );
+		const modelId = undefined;
+		props.dispatch( actionCreators.initMap(modelId) );
 
 		// tools api
 		// props.dispatch( actionCreators.loadToolChains() );
