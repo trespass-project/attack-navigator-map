@@ -1,4 +1,4 @@
-const isBrowserEnvironment = !require('detect-node');
+const isNodeEnvironment = require('detect-node');
 const $ = require('jquery');
 const Q = require('q');
 const R = require('ramda');
@@ -540,7 +540,7 @@ function addNodeToGroup(nodeId, groupId) {
 module.exports.removeNode =
 function removeNode(nodeId) {
 	return (dispatch, getState) => {
-		if (isBrowserEnvironment) {
+		if (!isNodeEnvironment) {
 			// TODO: make kb call
 		}
 
