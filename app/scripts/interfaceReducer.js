@@ -94,7 +94,6 @@ const blacklist = [
 // const whitelist = [
 // 	constants.ACTION_loadModelFile,
 // 	constants.ACTION_loadXML,
-// 	constants.ACTION_loadXML_DONE,
 // 	constants.ACTION_attackerProfileChanged,
 // 	constants.ACTION_setAttackerGoal,
 // 	constants.ACTION_runAnalysis,

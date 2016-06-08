@@ -638,10 +638,6 @@ function loadXML(xmlString) {
 				})
 			);
 
-			// dispatch({
-			// 	type: constants.ACTION_loadXML_DONE,
-			// 	result
-			// });
 		});
 	};
 };

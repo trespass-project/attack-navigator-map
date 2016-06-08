@@ -52,7 +52,6 @@ const constants = {
 	ACTION_downloadZippedScenario: 'ACTION_downloadZippedScenario',
 	ACTION_loadModelFile: 'ACTION_loadModelFile',
 	ACTION_loadXML: 'ACTION_loadXML',
-	ACTION_loadXML_DONE: 'ACTION_loadXML_DONE',
 	// ACTION_updateModel: 'ACTION_updateModel',
 	ACTION_addEdge: 'ACTION_addEdge',
 	ACTION_removeEdge: 'ACTION_removeEdge',
