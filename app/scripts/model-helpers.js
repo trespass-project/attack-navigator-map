@@ -471,11 +471,11 @@ function graphFromModel(model) {
 		}, {});
 
 	// TODO: do s.th. with model.system.anm_data
-	if (model.system.anm_data) {
-		console.info('has anm_data');
-		console.log(model.system.anm_data);
+	const anmData = model.system.anm_data || undefined;
+	if (anmData) {
+		console.info('has anm_data', anmData);
+		console.log('groups', anmData.groups || {});
 	}
-	const anmData = model.system.anm_data || {};
 
 	graph = _.merge(graph, neitherNodeNorEdge);
 	const metadata = R.pick(trespass.model.knownAttributes.system, model.system);

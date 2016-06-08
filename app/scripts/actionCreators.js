@@ -626,11 +626,12 @@ function loadXML(xmlString) {
 
 			dispatch( initMap(result.metadata.id || undefined) )
 				.then(() => {
-					// auto-layout graph
-					const laidOutGraph = modelHelpers.layoutGraphByType(result.graph);
+					const graph = (result.anmData)
+						? result.graph
+						: modelHelpers.layoutGraphByType(result.graph);
 
 					// import
-					dispatch( importFragment(laidOutGraph) );
+					dispatch( importFragment(graph) );
 				});
 		});
 	};
