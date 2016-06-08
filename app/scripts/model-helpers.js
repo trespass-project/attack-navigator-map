@@ -1,5 +1,3 @@
-'use strict';
-
 const update = require('react-addons-update');
 const _ = require('lodash');
 const R = require('ramda');
@@ -59,7 +57,7 @@ function createFragment(data={}) {
 			groups: {},
 		}
 	);
-}
+};
 
 
 const _duplicate =
@@ -169,7 +167,7 @@ const nodeAsFragmentInclEdges =
 module.exports.nodeAsFragmentInclEdges =
 function nodeAsFragmentInclEdges(node, edges) {
 	const nodeFragment = nodeAsFragment(node);
-	const nodeEdges = getNodeEdges(node, edges)
+	const nodeEdges = getNodeEdges(node, edges);
 	const edgesFragment = createFragment({
 		edges: helpers.toHashMap('id', nodeEdges)
 	});
@@ -190,7 +188,7 @@ const edgeAsFragmentInclNodes =
 module.exports.edgeAsFragmentInclNodes =
 function edgeAsFragmentInclNodes(edge, nodes) {
 	const edgeFragment = edgeAsFragment(edge);
-	const {fromNode, toNode} = getEdgeNodes(edge, nodes);
+	const { fromNode, toNode } = getEdgeNodes(edge, nodes);
 	const nodesFragment = createFragment({
 		nodes: helpers.toHashMap('id', [fromNode, toNode])
 	});
@@ -330,13 +328,13 @@ function importFragment(graph, fragment, atXY=origin, cb=noop) {
 };
 
 
-const XMLModelToGraph = // TODO: test
-module.exports.XMLModelToGraph =
-function XMLModelToGraph(xmlStr, done) {
+const xmlModelToGraph = // TODO: test
+module.exports.xmlModelToGraph =
+function xmlModelToGraph(xmlStr, done) {
 	trespass.model.parse(xmlStr, (err, model) => {
 		if (err) { return done(err); }
-		const result = graphFromModel(model);
-		done(null, result);
+		const graph = graphFromModel(model);
+		done(null, graph);
 	});
 };
 
@@ -392,8 +390,6 @@ function layoutGraphByType(_graph) {
 					rowCounter = 0;
 					colCounter++;
 				}
-				node.label = node.name || node.id;
-				node.modelComponentType = collectionNamesSingular[collectionName];
 				node.x = xOffset + colCounter * spacing;
 				node.y = yOffset + rowCounter * spacing + ((isShifted) ? 0 : 20);
 				rowCounter++;
@@ -444,9 +440,12 @@ function graphFromModel(model) {
 				? helpers.toHashMap('id', model.system[collectionName])
 				: model.system[collectionName];
 
-			// convert atLocations to edges:
 			R.values(coll)
 				.forEach((item) => {
+					// set node label:
+					item.label = item.name || item.id;
+
+					// convert atLocations to edges:
 					(item.atLocations || [])
 						.forEach((loc) => {
 							const edge = duplicateEdge({
@@ -472,16 +471,50 @@ function graphFromModel(model) {
 			return result;
 		}, {});
 
-	// TODO: do s.th. with model.system.anm_data
-	if (model.system.anm_data) {
-		console.info('has anm_data');
-		console.log(model.system.anm_data);
-	}
-	const anmData = model.system.anm_data || {};
 
 	graph = _.merge(graph, neitherNodeNorEdge);
-	const metadata = R.pick(trespass.model.knownAttributes.system, model.system);
-	return {graph, metadata, anmData};
+	const metadata = R.pick(
+		trespass.model.knownAttributes.system,
+		model.system
+	);
+
+	// use anm data to restore
+	// - groups
+	// - node positions
+	const anmData = model.system.anm_data || undefined;
+	if (anmData) {
+		// console.info('has anm_data', anmData);
+
+		R.values(anmData.nodes || {})
+			.forEach((anmNode) => {
+				let node = graph.nodes[anmNode.id];
+				if (node) {
+					// TODO: you could also just merge anmNode entirely
+
+					// restore node position
+					node = _.merge(node, {
+						x: anmNode.x,
+						y: anmNode.y,
+					});
+
+					// restore additional kb attributes
+					node = _.merge(
+						node,
+						R.pickBy(
+							(val, key) => { return key.startsWith('tkb:'); },
+							anmNode
+						)
+					);
+					// TODO: or should we explicitely query kb for those attributes?
+
+				}
+			});
+
+		// groups
+		graph.groups = _.merge(graph.groups, anmData.groups);
+	}
+
+	return { graph, metadata, anmData };
 };
 
 
@@ -494,16 +527,12 @@ function relationConvertsToEdge(relation) {
 
 const modelFromGraph =
 module.exports.modelFromGraph =
-function modelFromGraph(graph, metadata={}, anmData={}) {
+function modelFromGraph(graph, metadata={}) {
 	if (_.isEmpty(metadata)) {
 		console.warn('metadata missing');
 	}
 
-	if (_.isEmpty(anmData)) {
-		console.warn('anmData missing');
-	}
-
-	const model = trespass.model.create();
+	let model = trespass.model.create();
 
 	// embed entire graph in model
 	model.system.anm_data = JSON.stringify(graph);
@@ -529,7 +558,7 @@ function modelFromGraph(graph, metadata={}, anmData={}) {
 		.forEach((edge) => {
 			const isDirected = !R.contains(edge.relation, nonDirectedRelationTypes);
 			if (relationConvertsToEdge(edge.relation)) {
-				trespass.model.addEdge(model, {
+				model = trespass.model.addEdge(model, {
 					source: edge.from,
 					target: edge.to,
 					directed: /*edge.directed*/ isDirected,
@@ -598,10 +627,11 @@ function modelFromGraph(graph, metadata={}, anmData={}) {
 				if (node.label) {
 					item.name = node.label;
 				}
-				addFn(model, item);
+				model = addFn(model, item);
 			}
 		});
 
+	// console.log(model.system);
 	return model;
 };
 
@@ -622,7 +652,7 @@ function removeNode(graph, nodeId, cb=noop) {
 	const nodeGroups = getNodeGroups(node, graph.groups);
 	const updateGroupsNodeIds = nodeGroups
 		.reduce((acc, group) => {
-			acc[group.id] = { nodeIds: { $set: R.without([nodeId], group.nodeIds) } }
+			acc[group.id] = { nodeIds: { $set: R.without([nodeId], group.nodeIds) } };
 			return acc;
 		}, {});
 	const updateGroups = { groups: updateGroupsNodeIds };
@@ -681,7 +711,7 @@ function moveGroup(graph, groupId, deltaXY) {
 			const coords = {
 				x: node.x + deltaXY.x,
 				y: node.y + deltaXY.y,
-			}
+			};
 			acc[id] = { $merge: coords };
 			return acc;
 		}, {});
@@ -854,7 +884,7 @@ function ungroupNode(graph, nodeId) {
 		.reduce((acc, group) => {
 			if (R.contains(nodeId, group.nodeIds)) {
 				const newNodeIds = R.without([nodeId], group.nodeIds);
-				acc[group.id] = { nodeIds: { $set: newNodeIds } }
+				acc[group.id] = { nodeIds: { $set: newNodeIds } };
 			}
 			return acc;
 		}, {});

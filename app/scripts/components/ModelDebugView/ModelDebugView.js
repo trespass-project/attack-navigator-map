@@ -25,7 +25,7 @@ const ModelDebugView = React.createClass({
 		const connectDropTarget = this.props.connectDropTarget;
 		return connectDropTarget(
 			<div>
-				{/*<input ref='load-model' type='file' accept='.xml' onChange={this.loadXMLFile} />
+				{/*<input ref='load-model' type='file' accept='.xml' onChange={this.loadModelFile} />
 								<hr/>*/}
 				{/*<br/><br/>
 								<pre className='debug-json'>

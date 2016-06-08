@@ -1,30 +1,23 @@
-'use strict';
-
-const isBrowserEnvironment = !require('detect-node');
+const isNodeEnvironment = require('detect-node');
 const $ = require('jquery');
 const Q = require('q');
 const R = require('ramda');
 const _ = require('lodash');
 const JSZip = require('jszip');
 const saveAs = require('browser-saveas');
-require('whatwg-fetch');
+// require('whatwg-fetch');
 const queryString = require('query-string');
 const trespass = require('trespass.js');
 const trespassModel = trespass.model;
 const api = trespass.api;
-const toolsApi = api.tools;
+// const toolsApi = api.tools;
 const knowledgebaseApi = api.knowledgebase;
 const constants = require('./constants.js');
 const modelHelpers = require('./model-helpers.js');
 const helpers = require('./helpers.js');
 
-// TODO: move API stuff to trespass.js
-const fakeApi = require('../../api.js');
-const serverPort = require('../../api.js').serverPort;
-const serverDomain = require('../../api.js').serverDomain;
-function fakeApiUrl(url) {
-	return `http://${serverDomain}:${serverPort}${url}`;
-}
+const modelPatternLib = require('./pattern-lib.js');
+const relationsLib = require('./relation-lib.js');
 
 
 const noop = () => {};
@@ -47,113 +40,126 @@ function handleError(err) {
 // ——————————
 
 
+/**
+ * initialize map
+ * @returns {Promise}
+ */
 const initMap =
 module.exports.initMap =
-function initMap(modelId=undefined, cb=noop) {
+function initMap(modelId=undefined) {
 	return (dispatch, getState) => {
-		const id = modelId || helpers.makeId('model');
-		dispatch({
-			type: constants.ACTION_initMap,
-			modelId: id,
-		});
+		// create model, if necessary
+		return kbGetModelOrCreate(modelId)
+			.then((modelId) => {
+				// set model id
+				dispatch({
+					type: constants.ACTION_initMap,
+					modelId
+				});
 
-		// check if model with that id already exists ...
-		dispatch(
-			kbGetModel(
-				id,
-
-				// handleExists
-				(res, modelId) => {
-					// TODO: do s.th. with the data
-					cb();
-				},
-
-				// handleMissing
-				(modelId) => {
-					// ... otherwise create it
-					dispatch( kbCreateModel(modelId, cb) );
-				}
-			)
-		);
+				// reset view
+				dispatch( resetTransformation() );
+			})
+			.then(() => {
+				// load model-specific stuff from knowledgebase
+				dispatch( loadComponentTypes() );
+				dispatch( loadAttackerProfiles() );
+				dispatch( loadToolChains() );
+			})
+			.then(() => {
+				// fake api
+				dispatch( loadModelPatterns() );
+				dispatch( loadRelationTypes() );
+			});
 	};
 };
 
 
-const kbGetModel =
-module.exports.kbGetModel =
-function kbGetModel(modelId, handleExists, handleMissing) {
+/**
+ * creates a new model in the knowledgebase
+ * @returns {Promise} - modelId
+ */
+const kbGetModelOrCreate =
+module.exports.kbGetModelOrCreate =
+function kbGetModelOrCreate(modelId) {
 	if (!modelId) {
-		console.error('no model id provided');
-		return;
+		console.warn('no model id provided – creating new one.');
+		return kbCreateModel();
 	}
 
-	return (dispatch, getState) => {
-		dispatch({
-			type: constants.ACTION_kbGetModel,
-			modelId
+	return kbGetModel(modelId)
+		.then((modelId) => {
+			const doesExist = !!modelId;
+			if (doesExist) {
+				return Promise.resolve(modelId);
+			} else {
+				console.warn('model does not exist – creating new one.');
+				return kbCreateModel();
+			}
+		})
+		.catch((err) => {
+			console.error(err);
 		});
+};
+
+
+/**
+ * gets a model from the knowledgebae
+ * @returns {Promise} - modelId or null, if model doesn't exist
+ */
+const kbGetModel =
+module.exports.kbGetModel =
+function kbGetModel(modelId) {
+	return new Promise((resolve, reject) => {
+		if (!modelId) {
+			return reject('no model id provided');
+		}
 
 		const url = api.makeUrl(knowledgebaseApi, `model/${modelId}`);
 		const params = _.merge(
-			{},
-			api.requestOptions.fetch.acceptJSON,
-			api.requestOptions.fetch.crossDomain
+			{ url },
+			api.requestOptions.jquery.acceptJSON,
+			api.requestOptions.jquery.crossDomain
 		);
-		fetch(url, params)
-			.catch((err) => {
-				console.error(err.stack);
+
+		$.ajax(params)
+			.done((model, textStatus, xhr) => {
+				resolve(modelId);
 			})
-			.then((res) => {
-				if (res.status === 404) {
-					if (handleMissing) {
-						handleMissing(modelId);
-					}
-				} else if (res.status === 200) {
-					if (handleExists) {
-						handleExists(res, modelId);
-					}
+			.fail((xhr, textStatus, err) => {
+				if (xhr.status === 404) {
+					resolve(null); // model does not exist
 				} else {
-					console.error(`something went wrong: ${res.status}`);
+					reject(`something went wrong: ${xhr.status}`);
 				}
 			});
-	};
+	});
 };
 
 
+/**
+ * creates a new model in the knowledgebase.
+ * @returns {Promise} - modelId
+ */
 const kbCreateModel =
 module.exports.kbCreateModel =
-function kbCreateModel(modelId, cb=noop) {
-	// TODO: only create model, once model/graph is not empty anymore.
-	// otherwise we might be creatings tons of empty ones ...
+function kbCreateModel() {
+	const modelId = helpers.makeId('model');
 
-	if (!modelId) {
-		console.error('no model id provided');
-		return;
-	}
-
-	return (dispatch, getState) => {
-		dispatch({
-			type: constants.ACTION_kbCreateModel,
-			modelId
-		});
-
-		knowledgebaseApi.createModel(fetch, modelId)
-			.catch((err) => {
-				console.error(err.stack);
+	return new Promise((resolve, reject) => {
+		knowledgebaseApi.createModel($.ajax, modelId)
+			.fail((xhr, textStatus, err) => {
+				reject();
 			})
-			.then((res) => {
-				if (res.status === 200) {
-					dispatch(
-						kbGetModel(modelId, (res, modelId) => {
-							// TODO: do s.th. with the data
-						})
-					);
-					cb();
+			.done((data, textStatus, xhr) => {
+				if (xhr.status === 200) {
+					resolve(modelId);
 				} else {
-					console.error(`something went wrong: ${res.status}`);
-				};
+					console.error(`something went wrong: ${xhr.status}`);
+					reject();
+				}
 			});
-	};
+	});
 };
 
 
@@ -167,25 +173,37 @@ function kbCreateItem(modelId, item) {
 		return;
 	}
 
-	knowledgebaseApi.createItem(fetch, modelId, item)
-		.catch((err) => {
+	// knowledgebaseApi.createItem(fetch, modelId, item)
+	// 	.catch((err) => {
+	// 		console.error(err.stack);
+	// 	})
+	// 	.then((res) => {
+	// 		if (res.status === 200) {
+	// 			// knowledgebaseApi.getItem(fetch, modelId, item.id)
+	// 			// 	.catch((err) => {
+	// 			// 		console.error(err.stack);
+	// 			// 	})
+	// 			// 	.then((res) => {
+	// 			// 		return res.json();
+	// 			// 	})
+	// 			// 	.then((data) => {
+	// 			// 		return console.log(data);
+	// 			// 	});
+	// 		} else {
+	// 			console.error(`something went wrong: ${res.status}`);
+	// 		};
+	// 	});
+
+	knowledgebaseApi.createItem($.ajax, modelId, item)
+		.fail((xhr, textStatus, err) => {
 			console.error(err.stack);
 		})
-		.then((res) => {
-			if (res.status === 200) {
-				// knowledgebaseApi.getItem(fetch, modelId, item.id)
-				// 	.catch((err) => {
-				// 		console.error(err.stack);
-				// 	})
-				// 	.then((res) => {
-				// 		return res.json();
-				// 	})
-				// 	.then((data) => {
-				// 		return console.log(data);
-				// 	});
+		.done((data, textStatus, xhr) => {
+			if (xhr.status === 200) {
+				//
 			} else {
-				console.error(`something went wrong: ${res.status}`);
-			};
+				console.error(`something went wrong: ${xhr.status}`);
+			}
 		});
 };
 
@@ -200,16 +218,27 @@ function kbDeleteItem(modelId, itemId) {
 		return;
 	}
 
-	knowledgebaseApi.deleteItem(fetch, modelId, itemId)
-		.catch((err) => {
+	// knowledgebaseApi.deleteItem(fetch, modelId, itemId)
+	// 	.catch((err) => {
+	// 		console.error(err.stack);
+	// 	})
+	// 	.then((res) => {
+	// 		if (res.status === 200) {
+	// 			// TODO: ?
+	// 		} else {
+	// 			console.error(`something went wrong: ${res.status}`);
+	// 		};
+	// 	});
+	knowledgebaseApi.deleteItem($.ajax, modelId, itemId)
+		.fail((xhr, textStatus, err) => {
 			console.error(err.stack);
 		})
-		.then((res) => {
-			if (res.status === 200) {
+		.done((data, textStatus, xhr) => {
+			if (xhr.status === 200) {
 				// TODO: ?
 			} else {
-				console.error(`something went wrong: ${res.status}`);
-			};
+				console.error(`something went wrong: ${xhr.status}`);
+			}
 		});
 };
 
@@ -277,7 +306,7 @@ function importFragment(fragment, xy) {
 				importedNodes
 					.forEach((node) => {
 						kbCreateItem(modelId, node);
-					})
+					});
 			}
 		});
 	};
@@ -479,7 +508,7 @@ function addNodeToGroup(nodeId, groupId) {
 module.exports.removeNode =
 function removeNode(nodeId) {
 	return (dispatch, getState) => {
-		if (isBrowserEnvironment) {
+		if (!isNodeEnvironment) {
 			// TODO: make kb call
 		}
 
@@ -559,22 +588,18 @@ function selectWizardStep(name) {
 // TODO: autoLayout
 
 
-const loadXMLFile =
-module.exports.loadXMLFile =
-function loadXMLFile(file) {
+const loadModelFile =
+module.exports.loadModelFile =
+function loadModelFile(file) {
 	return (dispatch, getState) => {
 		dispatch({
-			type: constants.ACTION_loadXMLFile,
+			type: constants.ACTION_loadModelFile,
 			file,
 		});
 
-		dispatch(
-			resetTransformation()
-		);
-
 		// ———
 
-		let reader = new FileReader();
+		const reader = new FileReader();
 		reader.onload = (event) => {
 			const content = event.target.result;
 			dispatch( loadXML(content) );
@@ -593,24 +618,21 @@ function loadXML(xmlString) {
 			xml: xmlString,
 		});
 
-		modelHelpers.XMLModelToGraph(xmlString, (err, result) => {
-			if (err) { return; }
+		modelHelpers.xmlModelToGraph(xmlString, (err, result) => {
+			if (err) {
+				console.error(err.stack);
+				return;
+			}
 
-			result.graph = modelHelpers.layoutGraphByType(result.graph);
+			dispatch( initMap(result.metadata.id || undefined) )
+				.then(() => {
+					const graph = (result.anmData)
+						? result.graph
+						: modelHelpers.layoutGraphByType(result.graph);
 
-			result.metadata.id = result.metadata.id || helpers.makeId('model');
-			dispatch(
-				initMap(result.metadata.id, () => {
-					dispatch(
-						importFragment(result.graph)
-					);
-				})
-			);
-
-			// dispatch({
-			// 	type: constants.ACTION_loadXML_DONE,
-			// 	result
-			// });
+					// import
+					dispatch( importFragment(graph) );
+				});
 		});
 	};
 };
@@ -628,7 +650,7 @@ function getXMLBlob(xmlStr) {
 
 function replaceIdsInString(str, idReplacementMap={}) {
 	return R.keys(idReplacementMap)
-		.reduce((acc, oldId)  => {
+		.reduce((acc, oldId) => {
 			const re = new RegExp(oldId, 'g');
 			return acc.replace(re, idReplacementMap[oldId]);
 		}, str);
@@ -651,15 +673,14 @@ function stateToHumanReadableModelXML(state) {
 
 	const model = modelHelpers.modelFromGraph(
 		state.model.graph,
-		state.model.metadata,
-		state.model.anmData
+		state.model.metadata
 	);
 	let modelXmlStr = trespassModel.toXML(model);
 
 	// HACK: replace all ids with their human-readable versions
 	modelXmlStr = replaceIdsInString(modelXmlStr, idReplacementMap);
 
-	return {modelXmlStr, model, idReplacementMap};
+	return { modelXmlStr, model, idReplacementMap };
 }
 
 
@@ -682,7 +703,7 @@ module.exports.downloadModelXML =
 function downloadModelXML() {
 	return (dispatch, getState) => {
 		const state = getState();
-		const {modelXmlStr, model} = stateToHumanReadableModelXML(state);
+		const { modelXmlStr, model } = stateToHumanReadableModelXML(state);
 		const modelFileName = `${model.system.title.replace(/\s/g, '-')}.xml`;
 		saveAs(getXMLBlob(modelXmlStr), modelFileName);
 	};
@@ -694,7 +715,7 @@ module.exports.downloadZippedScenario =
 function downloadZippedScenario() {
 	return (dispatch, getState) => {
 		const state = getState();
-		const {modelXmlStr, model, idReplacementMap} = stateToHumanReadableModelXML(state);
+		const { modelXmlStr, model, idReplacementMap } = stateToHumanReadableModelXML(state);
 		const modelId = model.system.id;
 
 		const modelFileName = 'model.xml';
@@ -884,35 +905,72 @@ function putModelAndScenarioIntoKnowledgebase(modelId, modelData, scenarioData) 
 	const taskFuncs = tasksData
 		.map((item, index) => {
 			const url = `${api.makeUrl(knowledgebaseApi, 'files')}?${item.query}`;
+			// const params = _.merge(
+			// 	{
+			// 		method: 'put',
+			// 		body: item.data
+			// 	},
+			// 	api.requestOptions.fetch.acceptJSON,
+			// 	api.requestOptions.fetch.crossDomain
+			// );
 			const params = _.merge(
 				{
+					url,
 					method: 'put',
-					body: item.data
+					data: item.data,
+					contentType: 'text/xml',
 				},
-				api.requestOptions.fetch.acceptJSON,
-				api.requestOptions.fetch.crossDomain
+				api.requestOptions.jquery.acceptPlainText,
+				// api.requestOptions.jquery.acceptJSON,
+				api.requestOptions.jquery.crossDomain
 			);
 
 			return () => {
-				return fetch(url, params)
-					.catch((err) => {
-						console.error(err.stack);
-					})
-					.then((res) => {
-						if (res.status === 200) {
-							// console.log('success (200)', url);
-						} else {
-							console.error(`something went wrong (${res.status})`, url);
-						}
-					});
+				console.log(item.query);
+				// return fetch(url, params)
+				// 	.catch((err) => {
+				// 		console.error(err.stack);
+				// 	})
+				// 	.then((res) => {
+				// 		if (res.status === 200) {
+				// 			// console.log('success (200)', url);
+				// 		} else {
+				// 			console.error(`something went wrong (${res.status})`, url);
+				// 		}
+				// 	});
+				return Q($.ajax(params));
+					// .fail((xhr, textStatus, err) => {
+					// 	console.error(err.stack);
+					// })
+					// .catch((err) => {
+					// 	console.error(err.stack);
+					// })
+					// .then((toolChains, textStatus, xhr) => {
+					// 	console.log(arguments);
+					// 	if (xhr.status === 200) {
+					// 		// console.log('success (200)', url);
+					// 	} else {
+					// 		console.error(`something went wrong (${xhr.status})`, url);
+					// 	}
+					// });
 			};
 		});
 
-	const resolved = Promise.resolve();
+	// const resolved = Promise.resolve();
+	const deferred = Q.defer();
 	const promise = taskFuncs
 		.reduce((acc, taskFunc) => {
-			return acc.then(taskFunc);
-		}, resolved);
+			return acc
+				.then(taskFunc)
+				.catch((err) => {
+					console.dir(err);
+					console.error(err.stack);
+				});
+		}, deferred.promise /*resolved*/)
+		.catch((err) => {
+			console.error(err.stack);
+		});
+	deferred.resolve();
 
 	return promise;
 };
@@ -924,25 +982,71 @@ function monitorTaskStatus(taskUrl, _callbacks={}) {
 	});
 
 	const url = taskUrl;
+	// const params = _.merge(
+	// 	api.requestOptions.fetch.acceptJSON,
+	// 	api.requestOptions.fetch.crossDomain
+	// );
 	const params = _.merge(
-		api.requestOptions.fetch.acceptJSON,
-		api.requestOptions.fetch.crossDomain
+		{ url },
+		api.requestOptions.jquery.acceptJSON,
+		api.requestOptions.jquery.contentTypeJSON,
+		api.requestOptions.jquery.crossDomain
 	);
 
 	return new Promise((resolve, reject) => {
 		let intervalId;
 
 		function check() {
-			fetch(url, params)
-				.catch((err) => {
+			// fetch(url, params)
+			// 	.catch((err) => {
+			// 		console.error(err.stack);
+			// 		clearInterval(intervalId);
+			// 		reject(err);
+			// 	})
+			// 	.then((res) => {
+			// 		return res.json();
+			// 	})
+			// 	.then((taskStatusData) => {
+			// 		if (taskStatusData.status) {
+			// 			const taskStatusDataCategorized = helpers.handleStatus(taskStatusData);
+			// 			if (taskStatusDataCategorized.current[0]) {
+			// 				console.warn(taskStatusDataCategorized.current[0].name, taskStatusData.status);
+			// 			}
+			// 			callbacks.onTaskStatus(taskStatusDataCategorized);
+
+			// 			switch (taskStatusData.status) {
+			// 				case 'not started':
+			// 				case 'running':
+			// 					// do nothing
+			// 					break;
+
+			// 				case 'error':
+			// 					clearInterval(intervalId);
+			// 					const errorMessage = taskStatusDataCategorized.current[0]['error-message'];
+			// 					alert(errorMessage);
+			// 					console.error(errorMessage);
+			// 					break;
+
+			// 				case 'done':
+			// 					clearInterval(intervalId);
+			// 					callbacks.onToolChainEnd(taskStatusData);
+			// 					break;
+
+			// 				default:
+			// 					clearInterval(intervalId);
+			// 					reject(new Error(`Unknown status: ${taskStatusData.status}`));
+			// 					break;
+			// 			}
+			// 		}
+			// 	});
+			$.ajax(params)
+				.fail((xhr, textStatus, err) => {
 					console.error(err.stack);
 					clearInterval(intervalId);
 					reject(err);
+					console.error(err.stack);
 				})
-				.then((res) => {
-					return res.json();
-				})
-				.then((taskStatusData) => {
+				.done((taskStatusData, textStatus, xhr) => {
 					if (taskStatusData.status) {
 						const taskStatusDataCategorized = helpers.handleStatus(taskStatusData);
 						if (taskStatusDataCategorized.current[0]) {
@@ -1009,11 +1113,16 @@ function handleError(err) {
 
 
 function kbRunToolchain(toolChainId, modelId, attackerProfileId, callbacks={}) {
-	knowledgebaseApi.runToolChain(fetch, modelId, toolChainId, attackerProfileId, callbacks)
-		.then((res) => {
-			return res.json();
-		})
-		.then((data) => {
+	// knowledgebaseApi.runToolChain(fetch, modelId, toolChainId, attackerProfileId, callbacks)
+	// 	.then((res) => {
+	// 		return res.json();
+	// 	})
+	// 	.then((data) => {
+	// 		// console.log(data);
+	// 		monitorTaskStatus(data.task_url, callbacks);
+	// 	});
+	knowledgebaseApi.runToolChain($.ajax, modelId, toolChainId, attackerProfileId, callbacks)
+		.done((data, textStatus, xhr) => {
 			// console.log(data);
 			monitorTaskStatus(data.task_url, callbacks);
 		});
@@ -1076,16 +1185,33 @@ function retrieveAnalysisResults(taskStatusData) {
 
 	const promises = tools
 		.map((tool) => {
+			// const params = _.merge(
+			// 	{ method: 'get' },
+			// 	// api.requestOptions.fetch.acceptJSON,
+			// 	api.requestOptions.fetch.crossDomain
+			// );
+			// return fetch(tool.result_file_url, params)
+			// 	.then((res) => {
+			// 		return res.blob();
+			// 	})
+			// 	.then((blob) => {
+			// 		return {
+			// 			name: tool.name,
+			// 			blob,
+			// 		};
+			// 	});
 			const params = _.merge(
-				{ method: 'get' },
-				// api.requestOptions.fetch.acceptJSON,
-				api.requestOptions.fetch.crossDomain
+				{
+					url: tool.result_file_url,
+					method: 'get'
+				},
+				// api.requestOptions.jquery.acceptJSON,
+				// api.requestOptions.jquery.contentTypeJSON,
+				api.requestOptions.jquery.crossDomain
 			);
-			return fetch(tool.result_file_url, params)
-				.then((res) => {
-					return res.blob();
-				})
-				.then((blob) => {
+			return $.ajax(params)
+				.done((blob, textStatus, xhr) => {
+					console.dir(blob);
 					return {
 						name: tool.name,
 						blob,
@@ -1119,7 +1245,6 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 
 		if (!toolChainData) {
 			throw new Error('Tool chain not found.');
-			return;
 		}
 
 		const modelId = state.model.metadata.id;
@@ -1127,7 +1252,7 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 			throw new Error('missing model id');
 		}
 
-		const {modelXmlStr, model, idReplacementMap} = stateToHumanReadableModelXML(state);
+		const { modelXmlStr, model, idReplacementMap } = stateToHumanReadableModelXML(state);
 
 		const validationErrors = trespass.model.validateModel(model);
 		if (validationErrors.length) {
@@ -1309,20 +1434,38 @@ function loadToolChains() {
 
 		const state = getState();
 		const modelId = state.model.metadata.id;
+
 		const url = api.makeUrl(knowledgebaseApi, `toolchain?model_id=${modelId}`);
+		// const params = _.merge(
+		// 	{},
+		// 	api.requestOptions.fetch.acceptJSON,
+		// 	api.requestOptions.fetch.crossDomain
+		// );
+		// fetch(url, params)
+		// 	.catch((err) => {
+		// 		console.error(err.stack);
+		// 	})
+		// 	.then((res) => {
+		// 		return res.json();
+		// 	})
+		// 	.then((toolChains) => {
+		// 		// TODO: do they all begin with treemaker?
+		// 		dispatch({
+		// 			type: constants.ACTION_loadToolChains_DONE,
+		// 			normalizedToolChains: helpers.normalize(toolChains)
+		// 		});
+		// 	});
 		const params = _.merge(
-			{},
-			api.requestOptions.fetch.acceptJSON,
-			api.requestOptions.fetch.crossDomain
+			{ url },
+			api.requestOptions.jquery.crossDomain,
+			api.requestOptions.jquery.acceptJSON,
+			api.requestOptions.jquery.contentTypeJSON
 		);
-		fetch(url, params)
-			.catch((err) => {
+		$.ajax(params)
+			.fail((xhr, textStatus, err) => {
 				console.error(err.stack);
 			})
-			.then((res) => {
-				return res.json();
-			})
-			.then((toolChains) => {
+			.done((toolChains, textStatus, xhr) => {
 				// TODO: do they all begin with treemaker?
 				dispatch({
 					type: constants.ACTION_loadToolChains_DONE,
@@ -1377,7 +1520,9 @@ function loadAttackerProfiles() {
 		const modelId = state.model.metadata.id;
 		const url = api.makeUrl(knowledgebaseApi, `attackerprofile?model_id=${modelId}`);
 		const params = _.merge(
-			{ url, dataType: 'json' },
+			{ url },
+			api.requestOptions.jquery.acceptJSON,
+			api.requestOptions.jquery.contentTypeJSON,
 			api.requestOptions.jquery.crossDomain
 		);
 
@@ -1398,23 +1543,10 @@ const loadModelPatterns =
 module.exports.loadModelPatterns =
 function loadModelPatterns() {
 	return (dispatch, getState) => {
-		// dispatch({ type: constants.ACTION_loadModelPatterns });
-
-		const url = fakeApiUrl(fakeApi.api.patterns.url);
-		const params = _.merge(
-			{ url, dataType: 'json' },
-			api.requestOptions.jquery.crossDomain
-		);
-
-		const req = $.ajax(params);
-		Q(req)
-			.then((modelPatterns) => {
-				dispatch({
-					type: constants.ACTION_loadModelPatterns_DONE,
-					modelPatterns: modelPatterns.list
-				});
-			})
-			.catch(handleError);
+		dispatch({
+			type: constants.ACTION_loadModelPatterns_DONE,
+			modelPatterns: modelPatternLib
+		});
 	};
 };
 
@@ -1423,23 +1555,10 @@ const loadRelationTypes =
 module.exports.loadRelationTypes =
 function loadRelationTypes() {
 	return (dispatch, getState) => {
-		// dispatch({ type: constants.ACTION_loadRelationTypes });
-
-		const {serverDomain, serverPort} = fakeApi;
-		const url = `http://${serverDomain}:${serverPort}${fakeApi.api.relations.url}`;
-		const req = $.ajax({
-			url,
-			dataType: 'json',
-		})
-
-		Q(req)
-			.then((data) => {
-				dispatch({
-					type: constants.ACTION_loadRelationTypes_DONE,
-					relationTypes: data.list
-				});
-			})
-			.catch(handleError);
+		dispatch({
+			type: constants.ACTION_loadRelationTypes_DONE,
+			relationTypes: relationsLib
+		});
 	};
 };
 
@@ -1473,7 +1592,7 @@ function loadComponentTypes() {
 										? null
 										: attr['tkb:mvalues']['@list'],
 								}];
-							}, [])
+							}, []);
 						return acc;
 					}, {});
 

@@ -1,11 +1,12 @@
 {
-	"extends": "airbnb/base",
+	"parser": "babel-eslint",
+	"extends": ["airbnb"],
 
 	"env": {
 		"es6": true,
+		"browser": true,
 		"node": true,
-		"jquery": true,
-		"browser": true
+		"mocha": true
 	},
 
 	"plugins": ["react"],
@@ -19,10 +20,32 @@
 	},
 
 	"rules": {
-		"indent": [2, "tab"],
+		"indent": [2, "tab", { 'SwitchCase': 1, 'VariableDeclarator': 1 }],
 		"no-shadow": 1,
-		"no-use-before-define": 0,
+		"arrow-body-style": 1,
+		"no-alert": 0,
 		"no-unused-vars": 1,
-		"no-console": 0
+		"no-else-return": 0,
+		"no-console": 0,
+		"no-use-before-define": 0,
+		"comma-dangle": 0,
+		"quote-props": 0,
+		"dot-notation": 0,
+		"spaces-in-parens": 0,
+		"space-infix-ops": 0,
+		"spaced-comment": 0,
+		"max-len": 0,
+		"space-in-parens": 0,
+
+		"no-underscore-dangle": 0,
+
+		"react/wrap-multilines": 0,
+		"react/prefer-stateless-function": 1,
+		"react/prefer-es6-class": 0,
+		"jsx-quotes": [1, "prefer-single"],
+		"react/jsx-indent": [2, "tab"],
+		"react/jsx-indent-props": [2, "tab"],
+
+		"global-require": 1
 	}
 }

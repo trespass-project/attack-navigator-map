@@ -39,6 +39,7 @@ var projectName = (pkg.name || path.basename(__dirname));
 var browserify = require('browserify');
 var watchify = require('watchify');
 var babelify = require('babelify');
+var brfs = require('brfs');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 // ———
@@ -47,7 +48,7 @@ var destFileName = 'bundle.js';
 // ———
 var bundler = browserify({
 	entries: [sourceFile],
-	transform: [babelify],
+	transform: [babelify, brfs],
 	debug: true,
 	insertGlobals: true,
 	cache: {},
@@ -62,7 +63,7 @@ gulp.task('scripts', function() {
 	return rebundle();
 });
 
-gulp.task('build:scripts', ['lint'], function() {
+gulp.task('build:scripts', [/*'lint'*/], function() {
 	return bundler.add(sourceFile)
 		.bundle()
 		.pipe(source(destFileName))
@@ -120,27 +121,27 @@ gulp.task('stylus', function() {
 gulp.task('styles', ['stylus']);
 
 
-function lint(files, options) {
-	return function() {
-		return gulp.src(files)
-			.pipe(reload({ stream: true, once: true }))
-			.pipe($.eslint(options))
-			.pipe($.eslint.format())
-			.pipe($.if(!browserSync.active, $.eslint.failAfterError()));
-	};
-}
-var testLintOptions = {
-	env: {
-		mocha: true
-	},
-	globals: {
-		assert: false,
-		expect: false,
-		should: false
-	}
-};
-gulp.task('lint', lint(appDir(scriptsDir('**/*.js'))));
-gulp.task('lint:test', lint(testDir(specDir('**/*.js')), testLintOptions));
+// function lint(files, options) {
+// 	return function() {
+// 		return gulp.src(files)
+// 			.pipe(reload({ stream: true, once: true }))
+// 			.pipe($.eslint(options))
+// 			.pipe($.eslint.format())
+// 			.pipe($.if(!browserSync.active, $.eslint.failAfterError()));
+// 	};
+// }
+// var testLintOptions = {
+// 	env: {
+// 		mocha: true
+// 	},
+// 	globals: {
+// 		assert: false,
+// 		expect: false,
+// 		should: false
+// 	}
+// };
+// gulp.task('lint', lint(appDir(scriptsDir('**/*.js'))));
+// gulp.task('lint:test', lint(testDir(specDir('**/*.js')), testLintOptions));
 
 
 gulp.task('jade', function () {
@@ -197,6 +198,11 @@ gulp.task('fonts', function() {
 	gulp.src(appDir(iconsDir('icons/*.{eot,svg,ttf,woff,woff2}')))
 		.pipe(gulp.dest(tempDir(fontsDir())))
 		.pipe(gulp.dest(distDir(fontsDir())));
+
+	// source sans
+	gulp.src(appDir(fontsDir('SourceSansPro/**/*')))
+		.pipe(gulp.dest(tempDir(fontsDir('SourceSansPro'))))
+		.pipe(gulp.dest(distDir(fontsDir('SourceSansPro'))));
 
 	// return gulp.src(require('main-bower-files')({
 	// 	filter: '**/*.{ eot,svg,ttf,woff,woff2 }'
@@ -308,7 +314,7 @@ gulp.task('serve:test', function() {
 	});
 
 	gulp.watch(testDir(specDir('**/*.js'))).on('change', reload);
-	gulp.watch(testDir(specDir('**/*.js')), ['lint:test']);
+	// gulp.watch(testDir(specDir('**/*.js')), ['lint:test']);
 });
 
 
