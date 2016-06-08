@@ -489,7 +489,7 @@ function graphFromModel(model) {
 			.forEach((anmNode) => {
 				let node = graph.nodes[anmNode.id];
 				if (node) {
-					// TODO: you could also just merge anmNode entirely
+					// TODO: you could also just merge `anmNode` entirely
 
 					// restore node position
 					node = _.merge(node, {
@@ -506,7 +506,6 @@ function graphFromModel(model) {
 						)
 					);
 					// TODO: or should we explicitely query kb for those attributes?
-
 				}
 			});
 
