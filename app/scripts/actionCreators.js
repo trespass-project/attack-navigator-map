@@ -56,6 +56,9 @@ function initMap(modelId=undefined) {
 					type: constants.ACTION_initMap,
 					modelId
 				});
+
+				// reset view
+				dispatch( resetTransformation() );
 			})
 			.then(() => {
 				// load model-specific stuff from knowledgebase
@@ -593,10 +596,6 @@ function loadModelFile(file) {
 			type: constants.ACTION_loadModelFile,
 			file,
 		});
-
-		dispatch(
-			resetTransformation()
-		);
 
 		// ———
 
