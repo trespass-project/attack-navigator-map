@@ -1210,14 +1210,24 @@ function retrieveAnalysisResults(taskStatusData) {
 				// api.requestOptions.jquery.contentTypeJSON,
 				api.requestOptions.jquery.crossDomain
 			);
-			return $.ajax(params)
-				.done((blob, textStatus, xhr) => {
-					console.dir(blob);
-					return {
-						name: tool.name,
-						blob,
-					};
-				});
+
+			return new Promise((resolve, reject) => {
+				$.ajax(params)
+					.done((blob, textStatus, xhr) => {
+						// jquery doesn't return blobs (fetch does)
+						console.log(tool);
+						const type = (tool.name === 'A.T. Analyzer')
+							? 'application/zip'
+							: 'text/plain';
+						const realBlob = new Blob([blob], { type });
+
+						resolve({
+							name: tool.name,
+							blob: realBlob,
+						});
+					})
+					.fail(reject);
+			});
 		});
 
 	return Promise.all(promises)
