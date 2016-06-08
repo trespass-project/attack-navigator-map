@@ -485,9 +485,20 @@ function graphFromModel(model) {
 	if (anmData) {
 		// console.info('has anm_data', anmData);
 
+		R.values(anmData.nodes || {})
+			.forEach((anmNode) => {
+				let node = graph.nodes[anmNode.id];
+				if (node) {
+					// restore node position
+					node = _.merge(node, {
+						x: anmNode.x,
+						y: anmNode.y,
+					});
+				}
+			});
+
 		// groups
 		graph.groups = _.merge(graph.groups, anmData.groups);
-		console.log(graph.groups);
 	}
 
 	return { graph, metadata, anmData };
