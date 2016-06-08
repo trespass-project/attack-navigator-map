@@ -333,8 +333,8 @@ module.exports.xmlModelToGraph =
 function xmlModelToGraph(xmlStr, done) {
 	trespass.model.parse(xmlStr, (err, model) => {
 		if (err) { return done(err); }
-		const result = graphFromModel(model);
-		done(null, result);
+		const graph = graphFromModel(model);
+		done(null, graph);
 	});
 };
 
