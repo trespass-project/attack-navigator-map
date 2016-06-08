@@ -390,7 +390,6 @@ function layoutGraphByType(_graph) {
 					rowCounter = 0;
 					colCounter++;
 				}
-				node.label = node.name || node.id;
 				node.modelComponentType = collectionNamesSingular[collectionName];
 				node.x = xOffset + colCounter * spacing;
 				node.y = yOffset + rowCounter * spacing + ((isShifted) ? 0 : 20);
@@ -442,9 +441,12 @@ function graphFromModel(model) {
 				? helpers.toHashMap('id', model.system[collectionName])
 				: model.system[collectionName];
 
-			// convert atLocations to edges:
 			R.values(coll)
 				.forEach((item) => {
+					// set node label:
+					item.label = item.name || item.id;
+
+					// convert atLocations to edges:
 					(item.atLocations || [])
 						.forEach((loc) => {
 							const edge = duplicateEdge({
