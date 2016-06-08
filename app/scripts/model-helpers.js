@@ -390,7 +390,6 @@ function layoutGraphByType(_graph) {
 					rowCounter = 0;
 					colCounter++;
 				}
-				node.modelComponentType = collectionNamesSingular[collectionName];
 				node.x = xOffset + colCounter * spacing;
 				node.y = yOffset + rowCounter * spacing + ((isShifted) ? 0 : 20);
 				rowCounter++;
