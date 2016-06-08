@@ -630,14 +630,10 @@ function loadXML(xmlString) {
 			// use existing model id, or create new one
 			result.metadata.id = result.metadata.id || helpers.makeId('model');
 
-			dispatch(
-				initMap(result.metadata.id, () => {
-					dispatch(
-						importFragment(result.graph)
-					);
-				})
-			);
-
+			dispatch( initMap(result.metadata.id) )
+				.then(() => {
+					dispatch( importFragment(result.graph) );
+				});
 		});
 	};
 };
