@@ -328,13 +328,13 @@ function importFragment(graph, fragment, atXY=origin, cb=noop) {
 };
 
 
-const XMLModelToGraph = // TODO: test
-module.exports.XMLModelToGraph =
-function XMLModelToGraph(xmlStr, done) {
+const xmlModelToGraph = // TODO: test
+module.exports.xmlModelToGraph =
+function xmlModelToGraph(xmlStr, done) {
 	trespass.model.parse(xmlStr, (err, model) => {
 		if (err) { return done(err); }
-		const result = graphFromModel(model);
-		done(null, result);
+		const graph = graphFromModel(model);
+		done(null, graph);
 	});
 };
 
@@ -390,8 +390,6 @@ function layoutGraphByType(_graph) {
 					rowCounter = 0;
 					colCounter++;
 				}
-				node.label = node.name || node.id;
-				node.modelComponentType = collectionNamesSingular[collectionName];
 				node.x = xOffset + colCounter * spacing;
 				node.y = yOffset + rowCounter * spacing + ((isShifted) ? 0 : 20);
 				rowCounter++;
@@ -442,9 +440,12 @@ function graphFromModel(model) {
 				? helpers.toHashMap('id', model.system[collectionName])
 				: model.system[collectionName];
 
-			// convert atLocations to edges:
 			R.values(coll)
 				.forEach((item) => {
+					// set node label:
+					item.label = item.name || item.id;
+
+					// convert atLocations to edges:
 					(item.atLocations || [])
 						.forEach((loc) => {
 							const edge = duplicateEdge({
@@ -470,15 +471,49 @@ function graphFromModel(model) {
 			return result;
 		}, {});
 
-	// TODO: do s.th. with model.system.anm_data
-	if (model.system.anm_data) {
-		console.info('has anm_data');
-		console.log(model.system.anm_data);
-	}
-	const anmData = model.system.anm_data || {};
 
 	graph = _.merge(graph, neitherNodeNorEdge);
-	const metadata = R.pick(trespass.model.knownAttributes.system, model.system);
+	const metadata = R.pick(
+		trespass.model.knownAttributes.system,
+		model.system
+	);
+
+	// use anm data to restore
+	// - groups
+	// - node positions
+	const anmData = model.system.anm_data || undefined;
+	if (anmData) {
+		// console.info('has anm_data', anmData);
+
+		R.values(anmData.nodes || {})
+			.forEach((anmNode) => {
+				let node = graph.nodes[anmNode.id];
+				if (node) {
+					// TODO: you could also just merge anmNode entirely
+
+					// restore node position
+					node = _.merge(node, {
+						x: anmNode.x,
+						y: anmNode.y,
+					});
+
+					// restore additional kb attributes
+					node = _.merge(
+						node,
+						R.pickBy(
+							(val, key) => { return key.startsWith('tkb:'); },
+							anmNode
+						)
+					);
+					// TODO: or should we explicitely query kb for those attributes?
+
+				}
+			});
+
+		// groups
+		graph.groups = _.merge(graph.groups, anmData.groups);
+	}
+
 	return { graph, metadata, anmData };
 };
 

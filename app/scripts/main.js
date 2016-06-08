@@ -34,7 +34,7 @@ let App = React.createClass({
 		dispatch: React.PropTypes.func,
 	},
 
-	getChildContext: function() {
+	getChildContext() {
 		const props = this.props;
 		return {
 			theme: props.theme,
@@ -42,21 +42,11 @@ let App = React.createClass({
 		};
 	},
 
-	componentDidMount: function() {
+	componentDidMount() {
 		const props = this.props;
 
-		props.dispatch(
-			actionCreators.initMap(undefined, () => {
-				// kb api
-				props.dispatch( actionCreators.loadComponentTypes() );
-				props.dispatch( actionCreators.loadAttackerProfiles() );
-				props.dispatch( actionCreators.loadToolChains() );
-			})
-		);
-
-		// fake api
-		props.dispatch( actionCreators.loadModelPatterns() );
-		props.dispatch( actionCreators.loadRelationTypes() );
+		const modelId = undefined;
+		props.dispatch( actionCreators.initMap(modelId) );
 
 		// tools api
 		// props.dispatch( actionCreators.loadToolChains() );
@@ -67,11 +57,11 @@ let App = React.createClass({
 		window.addEventListener('beforeunload', this.handleBeforeUnload);
 	},
 
-	componentWillUnmount: function() {
+	componentWillUnmount() {
 		window.removeEventListener('beforeunload', this.handleBeforeUnload);
 	},
 
-	handleBeforeUnload: function(event) {
+	handleBeforeUnload(event) {
 		event.preventDefault();
 
 		// TODO: check if model is empty
@@ -82,7 +72,7 @@ let App = React.createClass({
 		return msg;
 	},
 
-	render: function() {
+	render() {
 		const props = this.props;
 		return (
 			<div id='container'>

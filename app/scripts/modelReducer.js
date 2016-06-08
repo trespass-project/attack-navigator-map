@@ -117,11 +117,6 @@ function reducer(state=initialState, action) {
 		// case constants.ACTION_loadXML:
 		// 	return state; // noop
 
-		case constants.ACTION_loadXML_DONE: {
-			console.error('this should not be called anymore!');
-			return state;
-		}
-
 		case constants.ACTION_addNodeToGroup: {
 			const { nodeId, groupId } = action;
 			const newGraph = modelHelpers.addNodeToGroup(state.graph, nodeId, groupId);

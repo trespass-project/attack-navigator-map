@@ -13,9 +13,6 @@ const constants = {
 	DND_SOURCE_FRAGMENT: 'fragment',
 
 	// ——— action types ————
-	ACTION_kbGetModel: 'ACTION_kbGetModel',
-	ACTION_kbCreateModel: 'ACTION_kbCreateModel',
-
 	ACTION_initMap: 'ACTION_initMap',
 	ACTION_setEditorElem: 'ACTION_setEditorElem',
 	ACTION_select: 'ACTION_select',
@@ -53,9 +50,8 @@ const constants = {
 	ACTION_importFragment: 'ACTION_importFragment',
 	ACTION_downloadModelXML: 'ACTION_downloadModelXML',
 	ACTION_downloadZippedScenario: 'ACTION_downloadZippedScenario',
-	ACTION_loadXMLFile: 'ACTION_loadXMLFile',
+	ACTION_loadModelFile: 'ACTION_loadModelFile',
 	ACTION_loadXML: 'ACTION_loadXML',
-	ACTION_loadXML_DONE: 'ACTION_loadXML_DONE',
 	// ACTION_updateModel: 'ACTION_updateModel',
 	ACTION_addEdge: 'ACTION_addEdge',
 	ACTION_removeEdge: 'ACTION_removeEdge',
