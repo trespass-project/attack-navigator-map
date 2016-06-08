@@ -471,15 +471,25 @@ function graphFromModel(model) {
 			return result;
 		}, {});
 
-	// TODO: do s.th. with model.system.anm_data
-	const anmData = model.system.anm_data || undefined;
-	if (anmData) {
-		console.info('has anm_data', anmData);
-		console.log('groups', anmData.groups || {});
-	}
 
 	graph = _.merge(graph, neitherNodeNorEdge);
-	const metadata = R.pick(trespass.model.knownAttributes.system, model.system);
+	const metadata = R.pick(
+		trespass.model.knownAttributes.system,
+		model.system
+	);
+
+	// use anm data to restore
+	// - groups
+	// - node positions
+	const anmData = model.system.anm_data || undefined;
+	if (anmData) {
+		// console.info('has anm_data', anmData);
+
+		// groups
+		graph.groups = _.merge(graph.groups, anmData.groups);
+		console.log(graph.groups);
+	}
+
 	return { graph, metadata, anmData };
 };
 
