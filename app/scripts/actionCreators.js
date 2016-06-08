@@ -624,15 +624,13 @@ function loadXML(xmlString) {
 				return;
 			}
 
-			// auto-layout graph
-			result.graph = modelHelpers.layoutGraphByType(result.graph);
-
-			// use existing model id, or create new one
-			result.metadata.id = result.metadata.id || helpers.makeId('model');
-
-			dispatch( initMap(result.metadata.id) )
+			dispatch( initMap(result.metadata.id || undefined) )
 				.then(() => {
-					dispatch( importFragment(result.graph) );
+					// auto-layout graph
+					const laidOutGraph = modelHelpers.layoutGraphByType(result.graph);
+
+					// import
+					dispatch( importFragment(laidOutGraph) );
 				});
 		});
 	};
