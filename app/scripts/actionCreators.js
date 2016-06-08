@@ -81,20 +81,20 @@ function initMap(modelId=undefined) {
  */
 const kbGetModelOrCreate =
 module.exports.kbGetModelOrCreate =
-function kbGetModelOrCreate(modelId) {
-	if (!modelId) {
+function kbGetModelOrCreate(_modelId) {
+	if (!_modelId) {
 		console.warn('no model id provided – creating new one.');
 		return kbCreateModel();
 	}
 
-	return kbGetModel(modelId)
+	return kbGetModel(_modelId)
 		.then((modelId) => {
 			const doesExist = !!modelId;
 			if (doesExist) {
 				return Promise.resolve(modelId);
 			} else {
-				console.warn('model does not exist – creating new one.');
-				return kbCreateModel();
+				console.warn('model does not exist – creating new one with same id.');
+				return kbCreateModel(_modelId);
 			}
 		})
 		.catch((err) => {
@@ -139,12 +139,13 @@ function kbGetModel(modelId) {
 
 /**
  * creates a new model in the knowledgebase.
+ * @param {string} desiredModelId
  * @returns {Promise} - modelId
  */
 const kbCreateModel =
 module.exports.kbCreateModel =
-function kbCreateModel() {
-	const modelId = helpers.makeId('model');
+function kbCreateModel(desiredModelId=undefined) {
+	const modelId = desiredModelId || helpers.makeId('model');
 
 	return new Promise((resolve, reject) => {
 		knowledgebaseApi.createModel($.ajax, modelId)
