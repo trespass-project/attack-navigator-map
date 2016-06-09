@@ -5,6 +5,7 @@ const utils = require('../../utils.js');
 const React = require('react');
 
 const LibraryItem = require('./LibraryItem.js');
+const UsageHint = require('../../UsageHint.js');
 
 
 const Library = React.createClass({
@@ -99,6 +100,11 @@ const Library = React.createClass({
 					</div>
 				</div>
 				{this.renderFilter()}
+
+				<UsageHint>
+					drag and drop items from list onto the map
+				</UsageHint>
+
 				<div className='results'>
 					<ul className='list-group'>
 						{itemsFiltered.map(this.renderListItem)}
