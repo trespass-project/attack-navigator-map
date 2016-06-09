@@ -1,9 +1,6 @@
-'use strict';
-
 const $ = require('jquery');
 const _ = require('lodash');
 const R = require('ramda');
-const Q = require('q');
 const utils = require('../../utils.js');
 const React = require('react');
 
@@ -21,7 +18,7 @@ const Library = React.createClass({
 		// modelComponentTypesFilter: React.PropTypes.array.isRequired,
 	},
 
-	getDefaultProps: function() {
+	getDefaultProps() {
 		return {
 			renderItem: this.renderListItem,
 
@@ -31,21 +28,21 @@ const Library = React.createClass({
 		};
 	},
 
-	getInitialState: function() {
+	getInitialState() {
 		return {
 			searchQuery: '',
 			itemsFiltered: this.props.items || [],
 		};
 	},
 
-	componentWillUpdate: function(nextProps, nextState) {
+	componentWillUpdate(nextProps, nextState) {
 		const shouldUpdate = (this.props.items.length !== nextProps.items.length);
 		if (shouldUpdate) {
 			this.setState({ itemsFiltered: nextProps.items });
 		}
 	},
 
-	renderFilterItem: function(item) {
+	renderFilterItem(item) {
 		const props = this.props;
 		const checked = R.contains(item, props.modelComponentTypesFilter);
 		return (
@@ -55,7 +52,7 @@ const Library = React.createClass({
 		);
 	},
 
-	renderFilter: function() {
+	renderFilter() {
 		const props = this.props;
 
 		if (!props.showFilter) { return null; }
@@ -65,7 +62,7 @@ const Library = React.createClass({
 		</form>;
 	},
 
-	renderListItem: function(item, index) {
+	renderListItem(item, index) {
 		const props = this.props;
 		let onClick = null;
 		if (_.isFunction(props.onClick)) {
@@ -85,7 +82,7 @@ const Library = React.createClass({
 		);
 	},
 
-	render: function() {
+	render() {
 		const props = this.props;
 		const state = this.state;
 		const itemsFiltered = state.itemsFiltered;
@@ -111,25 +108,25 @@ const Library = React.createClass({
 		);
 	},
 
-	// 	onSubmit: function(event) {
+	// 	onSubmit(event) {
 	// 		event.preventDefault();
 	// 	},
 
-	// 	filterType: function(event) {
+	// 	filterType(event) {
 	// 		libraryActions.filterByType(event.target.value, event.target.checked);
 	// 	},
 
-	clearSearch: function() {
+	clearSearch() {
 		$(this.refs['searchInput']).val('');
 		this._search('');
 	},
 
-	search: function(event) {
+	search(event) {
 		const val = $(this.refs['searchInput']).val();
 		this._search(val);
 	},
 
-	_search: function(query) {
+	_search(query) {
 		const list = this.props.items;
 		this.setState({
 			itemsFiltered: utils.filterList(

@@ -1,5 +1,3 @@
-'use strict';
-
 const $ = require('jquery');
 const R = require('ramda');
 const React = require('react');
@@ -9,7 +7,7 @@ const helpers = require('./helpers.js');
 
 const GraphMinimap = require('./GraphMinimap.js');
 const PropertiesPanel = require('./PropertiesPanel.js');
-const GraphOutline = require('./GraphOutline.js');
+// const GraphOutline = require('./GraphOutline.js');
 const Library = require('./components/Library/Library.js');
 
 const OverlayTrigger = require('react-bootstrap').OverlayTrigger;
