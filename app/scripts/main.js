@@ -20,6 +20,7 @@ const knowledgebaseApi = require('trespass.js').api.knowledgebase;
 // const ModelDebugView = require('./components/ModelDebugView/ModelDebugView.js');
 // const MainMenu = require('./MainMenu.js');
 const Wizard = require('./Wizard.js');
+const UsageHint = require('./UsageHint.js');
 
 const GraphEditor = require('./GraphEditor.js');
 const actionCreators = require('./actionCreators.js');
@@ -82,14 +83,24 @@ let App = React.createClass({
 					ANM {pkg.version}<br />
 					model id: {props.metadata.id || ''}<br />
 					{(props.metadata.id)
-						? <a
-							href={`${knowledgebaseApi.host}tkb/files/edit?model_id=${props.metadata.id}`}
-							target='_blank'
-						>
-							edit knowledgebase files
-						</a>
+						? <div>
+							<a
+								href={`${knowledgebaseApi.host}tkb/files/edit?model_id=${props.metadata.id}`}
+								target='_blank'
+							>
+								edit knowledgebase files
+							</a>
+						</div>
 						: ''
 					}
+					<UsageHint>
+						<a
+							href='https://gitlab.com/freder/anm-feedback/issues'
+							target='_blank'
+						>
+							report bug / give feedback
+						</a>
+					</UsageHint>
 				</div>
 
 				<div id='map-container'>
