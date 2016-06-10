@@ -42,14 +42,27 @@ function reducer(state=initialState, action) {
 
 	switch (action.type) {
 		case constants.ACTION_initMap: {
-			const { modelId } = action;
+			const { modelId, metadata } = action;
+
+			let title = undefined;
+			if (metadata && metadata.title) {
+				title = metadata.title;
+			}
+			if (!title) {
+				title = prompt('Map title');
+			}
 
 			// - clone initial state
 			// - set model id
 			const newState = _.merge(
 				{},
 				initialState,
-				{ metadata: { id: modelId } }
+				{
+					metadata: {
+						id: modelId,
+						title,
+					}
+				}
 			);
 			return newState;
 		}
