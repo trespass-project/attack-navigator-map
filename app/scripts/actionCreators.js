@@ -40,6 +40,21 @@ function handleError(err) {
 // ——————————
 
 
+const getRecentFiles =
+module.exports.getRecentFiles =
+function getRecentFiles() {
+	return (dispatch, getState) => {
+		return knowledgebaseApi.listModels($.ajax)
+			.done((models, textStatus, xhr) => {
+				dispatch({
+					type: constants.ACTION_getRecentFiles,
+					models
+				});
+			});
+	};
+};
+
+
 /**
  * initialize map
  * @returns {Promise}

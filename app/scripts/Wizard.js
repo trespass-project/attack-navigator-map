@@ -153,6 +153,7 @@ const Wizard = React.createClass({
 			>
 				Create new map
 			</button>
+
 			<br />
 			<br />
 
@@ -174,7 +175,22 @@ const Wizard = React.createClass({
 			</button>
 
 			<br />
+			<br />
+
+			<UsageHint>... or here</UsageHint>
+			<h2 className='title'>Recent models</h2>
+			<div>
+				<ul>
+					{props.recentModels
+						.map((model) => {
+							return <li key={model['date-created']}>{model.title} {model['date-modified']}</li>;
+						})
+					}
+				</ul>
+			</div>
+
 			<hr />
+			<br />
 
 			<div className='pattern-lib'>
 				<Library
