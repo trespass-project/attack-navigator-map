@@ -5,7 +5,7 @@
     "bootstrap-sass": "~3.3.6",
     "bootstrap-stylus": "~4.0.5",
     "Font-Awesome-Stylus": "^4.5.0",
-    "jquery": "~2.2.0",
+    "jquery": "~3.0.0",
     "modernizr": "^2.8.3",
     "selectize": "~0.12.1"
   }
