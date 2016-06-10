@@ -1,6 +1,5 @@
 const isNodeEnvironment = require('detect-node');
 const $ = require('jquery');
-const Q = require('q');
 const R = require('ramda');
 const _ = require('lodash');
 const JSZip = require('jszip');
@@ -941,7 +940,7 @@ function putModelAndScenarioIntoKnowledgebase(modelId, modelData, scenarioData) 
 				// 			console.error(`something went wrong (${res.status})`, url);
 				// 		}
 				// 	});
-				return Q($.ajax(params));
+				return $.ajax(params);
 					// .fail((xhr, textStatus, err) => {
 					// 	console.error(err.stack);
 					// })
@@ -959,21 +958,14 @@ function putModelAndScenarioIntoKnowledgebase(modelId, modelData, scenarioData) 
 			};
 		});
 
-	// const resolved = Promise.resolve();
-	const deferred = Q.defer();
 	const promise = taskFuncs
 		.reduce((acc, taskFunc) => {
-			return acc
-				.then(taskFunc)
-				.catch((err) => {
-					console.dir(err);
-					console.error(err.stack);
-				});
-		}, deferred.promise /*resolved*/)
+			return acc.then(taskFunc);
+		}, Promise.resolve())
 		.catch((err) => {
+			console.dir(err);
 			console.error(err.stack);
 		});
-	deferred.resolve();
 
 	return promise;
 };
@@ -1533,8 +1525,7 @@ function loadAttackerProfiles() {
 			api.requestOptions.jquery.crossDomain
 		);
 
-		const req = $.ajax(params);
-		Q(req)
+		$.ajax(params)
 			.then((attackerProfiles) => {
 				dispatch({
 					type: constants.ACTION_loadAttackerProfiles_DONE,
@@ -1585,8 +1576,7 @@ function loadComponentTypes() {
 		);
 
 		// TODO: move to trespass.js / fetch
-		const req = $.ajax(params);
-		Q(req)
+		$.ajax(params)
 			.then((types) => {
 				const kbTypeAttributes = types
 					.reduce((acc, type) => {
@@ -1640,21 +1630,3 @@ function loadComponentTypes() {
 			.catch(handleError);
 	};
 };
-
-
-// ——————————
-/*
-module.exports.openDir =
-function openDir(dirName) {
-	return (dispatch, getState) => {
-		Q().then(() => {
-				const action = {
-					type: constants.OPEN_DIR,
-					selectedSubdir: dirName,
-				};
-				dispatch(action);
-			})
-			.catch(handleError);
-	};
-};
-*/
