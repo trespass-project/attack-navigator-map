@@ -145,7 +145,7 @@ const Wizard = React.createClass({
 		const props = this.props;
 
 		return <div>
-			<UsageHint>start here</UsageHint>
+			<UsageHint>start here ...</UsageHint>
 			<h2 className='title'>New</h2>
 			<button
 				onClick={this.clickCreateNew}
@@ -156,6 +156,7 @@ const Wizard = React.createClass({
 			<br />
 			<br />
 
+			<UsageHint>... or here</UsageHint>
 			<h2 className='title'>Import</h2>
 			<input
 				style={{ display: 'none' }}
