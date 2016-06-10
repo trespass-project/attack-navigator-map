@@ -377,6 +377,7 @@ const Wizard = React.createClass({
 			{this.renderAttackerActor()}
 			<hr />
 
+			<UsageHint>only presets work, currently</UsageHint>
 			<h2 className='title'>Attacker profile</h2>
 			<AttackerProfileEditor
 				profile={props.attackerProfile}

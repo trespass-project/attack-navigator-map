@@ -37,13 +37,8 @@ const AttackerProfileEditorLanguage = React.createClass({
 	getDefaultProps: function() {
 		return {
 			// profilePresets: {},
+			profile: {},
 			handleUpdate: () => {}
-		};
-	},
-
-	getInitialState: function() {
-		return {
-			[profileIdAttribute]: '' // selected preset title
 		};
 	},
 
@@ -66,11 +61,11 @@ const AttackerProfileEditorLanguage = React.createClass({
 		});
 	},
 
-	renderItem: function(item, index) {
-		const state = this.state;
+	renderProfileParameterItem: function(item, index) {
+		const props = this.props;
 
 		const valueEquals = R.propEq(valueAttribute);
-		const value = state[item.name];
+		const value = props.profile[item.name];
 		const option = R.find(valueEquals(value))(item.options);
 
 		// set default label, if there is no value
@@ -147,7 +142,8 @@ const AttackerProfileEditorLanguage = React.createClass({
 					<select
 						name='presets'
 						onChange={this.handleSelectPreset}
-						value={this.state[profileIdAttribute]}>
+						value={props.profile[profileIdAttribute]}
+					>
 						<option value=''>— none —</option>
 						{R.values(props.profilePresets).map(this.renderPresetOption)}
 					</select>
@@ -164,7 +160,7 @@ const AttackerProfileEditorLanguage = React.createClass({
 				<div>
 					<span><b>The attacker's</b></span>
 					<ul>
-						{profileOptions.map(this.renderItem)}
+						{profileOptions.map(this.renderProfileParameterItem)}
 					</ul>
 				</div>
 			</div>
