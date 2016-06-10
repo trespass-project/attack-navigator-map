@@ -49,7 +49,7 @@ const initialState = {
 	// this should not be here
 	attackerProfileIds: [],
 	attackerProfiles: {},
-	attackerProfile: null,
+	attackerProfile: undefined,
 	attackerGoalType: null,
 	attackerGoal: null,
 	attackerProfit: undefined,
