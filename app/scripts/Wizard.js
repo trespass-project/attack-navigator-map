@@ -65,11 +65,11 @@ const Tab = React.createClass({
 		handleClick: React.PropTypes.func.isRequired,
 	},
 
-	// getDefaultProps: function() {
+	// getDefaultProps() {
 	// 	return {};
 	// },
 
-	render: function() {
+	render() {
 		const props = this.props;
 		const isSelected = (props.selectedSection === props.name);
 		// const imgSrc = (isSelected)
@@ -103,11 +103,11 @@ const Wizard = React.createClass({
 	propTypes: {
 	},
 
-	// getDefaultProps: function() {
+	// getDefaultProps() {
 	// 	return {};
 	// },
 
-	renderMinimap: function(props) {
+	renderMinimap(props) {
 		return <GraphMinimap
 			id='minimap'
 			graph={props.graph}
@@ -116,7 +116,7 @@ const Wizard = React.createClass({
 		/>;
 	},
 
-	renderOutline: function(props) {
+	renderOutline(props) {
 		return null; // TODO: implement some sort of debug view
 		// return <div>
 		// 	<h3 className='title'>outline</h3>
@@ -124,7 +124,7 @@ const Wizard = React.createClass({
 		// </div>;
 	},
 
-	renderProperties: function(props) {
+	renderProperties(props) {
 		return <PropertiesPanel
 			id='propspanel'
 			key={`propspanel-${((props.selectedId)
@@ -140,7 +140,7 @@ const Wizard = React.createClass({
 		/>;
 	},
 
-	renderImport: function() {
+	renderImport() {
 		const props = this.props;
 
 		return <div>
@@ -172,7 +172,7 @@ const Wizard = React.createClass({
 		</div>;
 	},
 
-	renderLocations: function(props) {
+	renderLocations(props) {
 		const items = props.componentsLib.filter(componentTypesFilter(['location']));
 		return <div>
 			<h2 className='title'>Locations</h2>
@@ -187,7 +187,7 @@ const Wizard = React.createClass({
 		</div>;
 	},
 
-	renderAssets: function(props) {
+	renderAssets(props) {
 		const items = props.componentsLib.filter(componentTypesFilter(['item', 'data']));
 		return <div>
 			<h2 className='title'>Assets</h2>
@@ -201,7 +201,7 @@ const Wizard = React.createClass({
 		</div>;
 	},
 
-	renderActors: function(props) {
+	renderActors(props) {
 		const items = props.componentsLib.filter(componentTypesFilter(['actor']));
 		return <div>
 			<h2 className='title'>Actors</h2>
@@ -220,7 +220,7 @@ const Wizard = React.createClass({
 		</div>;
 	},
 
-	renderConnections: function() {
+	renderConnections() {
 		const props = this.props;
 		const predicates = R.values(props.graph.predicates || {});
 		return <div>
@@ -235,19 +235,19 @@ const Wizard = React.createClass({
 		</div>;
 	},
 
-	createPredicate: function(predicate) {
+	createPredicate(predicate) {
 		this.context.dispatch(
 			actionCreators.addPredicate(predicate)
 		);
 	},
 
-	updatePredicate: function(predicateId, newProperties) {
+	updatePredicate(predicateId, newProperties) {
 		this.context.dispatch(
 			actionCreators.predicateChanged(predicateId, newProperties)
 		);
 	},
 
-	renderPolicies: function() {
+	renderPolicies() {
 		const policies = R.values(this.props.graph.policies || {});
 		return <div>
 			<h2 className='title'>Policies</h2>
@@ -277,7 +277,7 @@ const Wizard = React.createClass({
 		</div>;
 	},
 
-	addPolicy: function(event) {
+	addPolicy(event) {
 		const textarea = this.refs['new-policy'];
 		const policyJSON = textarea.value;
 		try {
@@ -292,7 +292,7 @@ const Wizard = React.createClass({
 		textarea.value = '';
 	},
 
-	addProcess: function(event) {
+	addProcess(event) {
 		const textarea = this.refs['new-process'];
 		const processJSON = textarea.value;
 		try {
@@ -307,7 +307,7 @@ const Wizard = React.createClass({
 		textarea.value = '';
 	},
 
-	renderProcesses: function() {
+	renderProcesses() {
 		const processes = R.values(this.props.graph.processes || {});
 		return <div>
 			<h2 className='title'>Processes</h2>
@@ -337,7 +337,7 @@ const Wizard = React.createClass({
 		</div>;
 	},
 
-	renderAttackerActor: function() {
+	renderAttackerActor() {
 		const props = this.props;
 		const actors = R.values(props.graph.nodes)
 			.filter((item) => {
@@ -358,7 +358,7 @@ const Wizard = React.createClass({
 		</div>;
 	},
 
-	renderAttackerProfile: function(props) {
+	renderAttackerProfile(props) {
 		return <div>
 			{this.renderAttackerActor()}
 			<hr />
@@ -372,16 +372,16 @@ const Wizard = React.createClass({
 		</div>;
 	},
 
-	handleAttackerProfileUpdate: function(profile) {
+	handleAttackerProfileUpdate(profile) {
 		this.context.dispatch( actionCreators.attackerProfileChanged(profile) );
 	},
 
-	handleAttackerProfitUpdate: function(event) {
+	handleAttackerProfitUpdate(event) {
 		const profit = event.target.value;
 		this.context.dispatch( actionCreators.setAttackerProfit(profit) );
 	},
 
-	renderAttackerGoal: function() {
+	renderAttackerGoal() {
 		const props = this.props;
 
 		const goalValue = (!!props.attackerGoal && !!props.attackerGoalType)
@@ -415,7 +415,7 @@ const Wizard = React.createClass({
 		</div>;
 	},
 
-	renderToolChainSelection: function() {
+	renderToolChainSelection() {
 		const props = this.props;
 
 		return <div>
@@ -440,7 +440,7 @@ const Wizard = React.createClass({
 		</div>;
 	},
 
-	renderDownloadButtons: function(isReadyToDownload=false) {
+	renderDownloadButtons(isReadyToDownload=false) {
 		return <div>
 			<button
 				onClick={this.downloadModelXML}
@@ -459,7 +459,7 @@ const Wizard = React.createClass({
 		</div>;
 	},
 
-	renderRunAnalysis: function(props) {
+	renderRunAnalysis(props) {
 		function pushIfFalsey(acc, item) {
 			if (!item.value) {
 				acc = [...acc, item.message];
@@ -538,7 +538,7 @@ const Wizard = React.createClass({
 		</div>;
 	},
 
-	renderOption: function(item) {
+	renderOption(item) {
 		return <option
 			key={item.id}
 			value={item.id}
@@ -547,7 +547,7 @@ const Wizard = React.createClass({
 		</option>;
 	},
 
-	render: function() {
+	render() {
 		const props = this.props;
 		const wizardSelectedSection = props.wizardSelectedSection;
 
@@ -653,14 +653,14 @@ const Wizard = React.createClass({
 		);
 	},
 
-	setAttackerActor: function(event) {
+	setAttackerActor(event) {
 		const actorId = event.target.value;
 		this.context.dispatch(
 			actionCreators.setAttackerActor(actorId)
 		);
 	},
 
-	setAttackerGoal: function(event) {
+	setAttackerGoal(event) {
 		const assetId = event.target.value;
 		const goalType = 'assetGoal';
 		const goalData = {
@@ -673,7 +673,7 @@ const Wizard = React.createClass({
 		);
 	},
 
-	setSelectedToolChain: function(event) {
+	setSelectedToolChain(event) {
 		// watch out: (numeric) value comes back as string
 		const toolChainId = parseInt(this.refs.toolchain.value, 10);
 
@@ -682,7 +682,7 @@ const Wizard = React.createClass({
 		);
 	},
 
-	runAnalysis: function() {
+	runAnalysis() {
 		const dlScenarioCheckbox = this.refs['checkbox-dl-scenario'];
 		this.context.dispatch(
 			actionCreators.runAnalysis(
@@ -692,7 +692,7 @@ const Wizard = React.createClass({
 		);
 	},
 
-	renderToolChainOverlay: function() {
+	renderToolChainOverlay() {
 		const props = this.props;
 		const context = this.context;
 
@@ -719,7 +719,7 @@ const Wizard = React.createClass({
 		$(this.refs['load-model']).click();
 	},
 
-	loadModelFile: function(event) {
+	loadModelFile(event) {
 		event.preventDefault();
 		const $fileInput = $(this.refs['load-model']);
 		const file = $fileInput[0].files[0];
@@ -727,12 +727,12 @@ const Wizard = React.createClass({
 		this.context.dispatch( actionCreators.loadModelFile(file) );
 	},
 
-	downloadModelXML: function(event) {
+	downloadModelXML(event) {
 		event.preventDefault();
 		this.context.dispatch( actionCreators.downloadModelXML() );
 	},
 
-	downloadZippedScenario: function(event) {
+	downloadZippedScenario(event) {
 		event.preventDefault();
 		this.context.dispatch( actionCreators.downloadZippedScenario() );
 	},
