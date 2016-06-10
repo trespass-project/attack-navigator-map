@@ -1,5 +1,3 @@
-'use strict';
-
 const React = require('react');
 const R = require('ramda');
 const _ = require('lodash');
@@ -24,9 +22,25 @@ const GraphMixin = {
 		isMinimap: React.PropTypes.bool.isRequired,
 		minZoom: React.PropTypes.number,
 		maxZoom: React.PropTypes.number,
+
+		hoverGroup: React.PropTypes.object,
+		selectedId: React.PropTypes.string,
+		showEdgeLabels: React.PropTypes.bool,
+		hoverNodeId: React.PropTypes.string,
+		visibleRect: React.PropTypes.object,
+		constantScale: React.PropTypes.number,
+		showEdges: React.PropTypes.bool,
+		previewEdge: React.PropTypes.object,
+		scale: React.PropTypes.number,
+		panX: React.PropTypes.number,
+		panY: React.PropTypes.number,
+		pannable: React.PropTypes.bool,
+		panning: React.PropTypes.bool,
+		id: React.PropTypes.string,
+		connectDropTarget: React.PropTypes.func,
 	},
 
-	getDefaultProps: function() {
+	getDefaultProps() {
 		return {
 			minZoom: 0.2,
 			maxZoom: 5.0,
@@ -34,7 +48,7 @@ const GraphMixin = {
 		};
 	},
 
-	renderGroup: function(group) {
+	renderGroup(group) {
 		const props = this.props;
 		const context = this.context;
 
@@ -73,11 +87,11 @@ const GraphMixin = {
 		/>;
 	},
 
-	renderPreviewEdge: function(edge, index, collection) {
+	renderPreviewEdge(edge, index, collection) {
 		return this.renderEdge(edge, index, collection, true);
 	},
 
-	renderEdge: function(edge, index, collection, isPreview) {
+	renderEdge(edge, index, collection, isPreview) {
 		const props = this.props;
 		const context = this.context;
 		const showEdgeLabels = (props.isMinimap)
@@ -90,10 +104,11 @@ const GraphMixin = {
 			edge={edge}
 			showEdgeLabels={showEdgeLabels}
 			isSelected={edge.id === props.selectedId}
-			isPreview={isPreview} />;
+			isPreview={isPreview}
+		/>;
 	},
 
-	renderNode: function(node, index) {
+	renderNode(node, index) {
 		const props = this.props;
 		return <Node
 			{...this.props}
@@ -102,10 +117,11 @@ const GraphMixin = {
 			isSelected={node.id === props.selectedId}
 			x={node.x}
 			y={node.y}
-			node={node} />;
+			node={node}
+		/>;
 	},
 
-	renderBgImage: function(group, index) {
+	renderBgImage(group, index) {
 		return <BackgroundImage
 			{...this.props}
 			key={index}
@@ -113,10 +129,11 @@ const GraphMixin = {
 			groupCenterOffsetX={group._bgImage.groupCenterOffsetX}
 			groupCenterOffsetY={group._bgImage.groupCenterOffsetY}
 			width={group._bgImage.width || 500}
-			height={group._bgImage.height || 500} />;
+			height={group._bgImage.height || 500}
+		/>;
 	},
 
-	renderVisibleRect: function() {
+	renderVisibleRect() {
 		const props = this.props;
 		const context = this.context;
 		if (props.isMinimap && props.visibleRect) {
@@ -135,11 +152,11 @@ const GraphMixin = {
 		}
 	},
 
-	stopProp: function(event) {
+	stopProp(event) {
 		event.stopPropagation();
 	},
 
-	_renderMap: function() {
+	_renderMap() {
 		const props = this.props;
 		const graph = props.graph;
 
@@ -147,7 +164,7 @@ const GraphMixin = {
 			/* prevent event propagation from map up to svg elem */
 			<g ref='map-group' onClick={this.stopProp}>
 				{R.values(graph.groups)
-					.filter(function(group) {
+					.filter((group) => {
 						return !!group._bgImage;
 					})
 					.map(this.renderBgImage)
@@ -173,10 +190,8 @@ const GraphMixin = {
 		);
 	},
 
-	_render: function() {
+	_render() {
 		const props = this.props;
-		const graph = props.graph;
-
 
 		const scale = ((props.isMinimap)
 			? props.constantScale
@@ -222,13 +237,16 @@ const GraphMixin = {
 						transform={`matrix(${scale}, 0, 0, ${scale}, ${panX}, ${panY})`}>
 						{this._renderMap()}
 					</g>
-					{(props.editable) ? <ContextMenu {...this.props} /> : null}
+					{(props.editable)
+						? <ContextMenu {...this.props} />
+						: null
+					}
 				</svg>
 			</div>
 		);
 	},
 
-	render: function() {
+	render() {
 		const props = this.props;
 		const connectDropTarget = props.connectDropTarget || _.identity;
 		return connectDropTarget(this._render());
