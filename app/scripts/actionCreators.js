@@ -46,7 +46,7 @@ function handleError(err) {
  */
 const initMap =
 module.exports.initMap =
-function initMap(modelId=undefined) {
+function initMap(modelId=undefined, metadata=undefined) {
 	return (dispatch, getState) => {
 		// create model, if necessary
 		return kbGetModelOrCreate(modelId)
@@ -54,7 +54,8 @@ function initMap(modelId=undefined) {
 				// set model id
 				dispatch({
 					type: constants.ACTION_initMap,
-					modelId
+					modelId,
+					metadata,
 				});
 
 				// reset view
@@ -625,7 +626,7 @@ function loadXML(xmlString) {
 				return;
 			}
 
-			dispatch( initMap(result.metadata.id || undefined) )
+			dispatch( initMap(result.metadata.id || undefined, result.metadata) )
 				.then(() => {
 					const graph = (result.anmData)
 						? result.graph

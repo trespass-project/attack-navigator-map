@@ -71,7 +71,7 @@
     "react-addons-perf": "^0.14.7",
     "react-addons-pure-render-mixin": "^0.14.7",
     "react-addons-update": "^0.14.7",
-    "react-bootstrap": "^0.28.3",
+    "react-bootstrap": "^0.29.4",
     "react-dnd": "^2.1.2",
     "react-dnd-html5-backend": "^2.1.2",
     "react-dom": "^0.14.7",
@@ -89,6 +89,6 @@
     "xml2js": "^0.4.16"
   },
   "name": "attack-navigator-map",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "private": false
 }

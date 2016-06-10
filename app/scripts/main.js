@@ -20,6 +20,7 @@ const knowledgebaseApi = require('trespass.js').api.knowledgebase;
 // const ModelDebugView = require('./components/ModelDebugView/ModelDebugView.js');
 // const MainMenu = require('./MainMenu.js');
 const Wizard = require('./Wizard.js');
+const UsageHint = require('./UsageHint.js');
 
 const GraphEditor = require('./GraphEditor.js');
 const actionCreators = require('./actionCreators.js');
@@ -45,11 +46,7 @@ let App = React.createClass({
 	componentDidMount() {
 		const props = this.props;
 
-		const modelId = undefined;
-		props.dispatch( actionCreators.initMap(modelId) );
-
-		// tools api
-		// props.dispatch( actionCreators.loadToolChains() );
+		props.dispatch( actionCreators.resetTransformation() );
 
 		const editorElem = document.querySelector('#editor > svg');
 		props.dispatch( actionCreators.setEditorElem(editorElem) );
@@ -79,17 +76,37 @@ let App = React.createClass({
 				<input type='file' accept='.svg' id='add-file' />
 
 				<div id='meta'>
-					ANM {pkg.version}<br />
-					model id: {props.metadata.id || ''}<br />
 					{(props.metadata.id)
-						? <a
-							href={`${knowledgebaseApi.host}tkb/files/edit?model_id=${props.metadata.id}`}
-							target='_blank'
-						>
-							edit knowledgebase files
-						</a>
+						? <div>
+							<div>model id: {props.metadata.id}</div>
+							<div>title: {props.metadata.title}</div>
+						</div>
+						: <UsageHint>no model — create new one, or import model file</UsageHint>
+					}
+
+					{(props.metadata.id)
+						? <div>
+							<a
+								href={`${knowledgebaseApi.host}tkb/files/edit?model_id=${props.metadata.id}`}
+								target='_blank'
+							>
+								edit knowledgebase files
+							</a>
+						</div>
 						: ''
 					}
+
+					<div>———</div>
+					ANM {pkg.version}<br />
+
+					<UsageHint>
+						<a
+							href='https://gitlab.com/freder/anm-feedback/issues'
+							target='_blank'
+						>
+							report bug / give feedback
+						</a>
+					</UsageHint>
 				</div>
 
 				<div id='map-container'>
