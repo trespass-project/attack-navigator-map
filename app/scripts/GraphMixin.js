@@ -180,7 +180,8 @@ const GraphMixin = {
 
 		const scale = ((props.isMinimap)
 			? props.constantScale
-			: props.scale);
+			: props.scale)
+			|| 1; // fixes error due to `constantScale` being NaN
 		let panX = (props.isMinimap)
 			? (props.panX * props.constantScale)
 			: props.panX;
