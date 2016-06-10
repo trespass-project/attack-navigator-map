@@ -177,9 +177,16 @@ const GraphMixin = {
 		const props = this.props;
 		const graph = props.graph;
 
-		const scale = (props.isMinimap) ? props.constantScale : props.scale;
-		let panX = (props.isMinimap) ? (props.panX * props.constantScale) : props.panX;
-		let panY = (props.isMinimap) ? (props.panY * props.constantScale) : props.panY;
+
+		const scale = ((props.isMinimap)
+			? props.constantScale
+			: props.scale);
+		let panX = (props.isMinimap)
+			? (props.panX * props.constantScale)
+			: props.panX;
+		let panY = (props.isMinimap)
+			? (props.panY * props.constantScale)
+			: props.panY;
 
 		if (props.isMinimap) {
 			// TODO: s.th. goes wrong here when map is empty
@@ -209,8 +216,9 @@ const GraphMixin = {
 					onWheel={this._onWheel || helpers.noop}
 					onClick={this._onClick || helpers.noop}
 				>
-					<g ref='panZoom'
-					   transform={`matrix(${scale}, 0, 0, ${scale}, ${panX}, ${panY})`}>
+					<g
+						ref='panZoom'
+						transform={`matrix(${scale}, 0, 0, ${scale}, ${panX}, ${panY})`}>
 						{this._renderMap()}
 					</g>
 					{(props.editable) ? <ContextMenu {...this.props} /> : null}
