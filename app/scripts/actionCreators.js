@@ -35,6 +35,7 @@ const retryRate = 1000;
 function handleError(err) {
 	if (err.statusText === 'abort') { return; }
 	console.error(err.stack);
+	alert(err);
 }
 
 // ——————————
@@ -1106,12 +1107,6 @@ function setAnalysisResults(analysisResults) {
 		analysisResults
 	};
 };
-
-
-function handleError(err) {
-	console.error(err.stack);
-	alert(err);
-}
 
 
 function kbRunToolchain(toolChainId, modelId, attackerProfileId, callbacks={}) {
