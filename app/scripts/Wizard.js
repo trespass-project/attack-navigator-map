@@ -7,6 +7,7 @@ const helpers = require('./helpers.js');
 
 const GraphMinimap = require('./GraphMinimap.js');
 const PropertiesPanel = require('./PropertiesPanel.js');
+const UsageHint = require('./UsageHint.js');
 // const GraphOutline = require('./GraphOutline.js');
 const Library = require('./components/Library/Library.js');
 
@@ -144,6 +145,17 @@ const Wizard = React.createClass({
 		const props = this.props;
 
 		return <div>
+			<UsageHint>start here</UsageHint>
+			<h2 className='title'>New</h2>
+			<button
+				onClick={this.clickCreateNew}
+				className='btn btn-default btn-xs'
+			>
+				Create new map
+			</button>
+			<br />
+			<br />
+
 			<h2 className='title'>Import</h2>
 			<input
 				style={{ display: 'none' }}
@@ -161,7 +173,8 @@ const Wizard = React.createClass({
 			</button>
 
 			<br />
-			<br />
+			<hr />
+
 			<div className='pattern-lib'>
 				<Library
 					items={props.modelPatterns}
@@ -714,7 +727,12 @@ const Wizard = React.createClass({
 		/>;
 	},
 
-	clickFileButton: function(event) {
+	clickCreateNew(event) {
+		event.preventDefault();
+		this.context.dispatch( actionCreators.initMap(undefined) );
+	},
+
+	clickFileButton(event) {
 		event.preventDefault();
 		$(this.refs['load-model']).click();
 	},

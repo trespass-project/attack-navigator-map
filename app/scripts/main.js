@@ -46,11 +46,7 @@ let App = React.createClass({
 	componentDidMount() {
 		const props = this.props;
 
-		const modelId = undefined;
-		props.dispatch( actionCreators.initMap(modelId) );
-
-		// tools api
-		// props.dispatch( actionCreators.loadToolChains() );
+		props.dispatch( actionCreators.resetTransformation() );
 
 		const editorElem = document.querySelector('#editor > svg');
 		props.dispatch( actionCreators.setEditorElem(editorElem) );
@@ -80,8 +76,11 @@ let App = React.createClass({
 				<input type='file' accept='.svg' id='add-file' />
 
 				<div id='meta'>
-					ANM {pkg.version}<br />
-					model id: {props.metadata.id || ''}<br />
+					{(props.metadata.id)
+						? <div>model id: {props.metadata.id}</div>
+						: <UsageHint>no model — create new one, or import model file</UsageHint>
+					}
+
 					{(props.metadata.id)
 						? <div>
 							<a
@@ -93,6 +92,10 @@ let App = React.createClass({
 						</div>
 						: ''
 					}
+
+					<div>———</div>
+					ANM {pkg.version}<br />
+
 					<UsageHint>
 						<a
 							href='https://gitlab.com/freder/anm-feedback/issues'
