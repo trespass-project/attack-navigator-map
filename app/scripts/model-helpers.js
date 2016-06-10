@@ -474,7 +474,7 @@ function graphFromModel(model) {
 
 	graph = _.merge(graph, neitherNodeNorEdge);
 	const metadata = R.pick(
-		trespass.model.knownAttributes.system,
+		['title', ...trespass.model.knownAttributes.system],
 		model.system
 	);
 

@@ -7,6 +7,7 @@ const helpers = require('./helpers.js');
 
 const GraphMinimap = require('./GraphMinimap.js');
 const PropertiesPanel = require('./PropertiesPanel.js');
+const UsageHint = require('./UsageHint.js');
 // const GraphOutline = require('./GraphOutline.js');
 const Library = require('./components/Library/Library.js');
 
@@ -65,11 +66,11 @@ const Tab = React.createClass({
 		handleClick: React.PropTypes.func.isRequired,
 	},
 
-	// getDefaultProps: function() {
+	// getDefaultProps() {
 	// 	return {};
 	// },
 
-	render: function() {
+	render() {
 		const props = this.props;
 		const isSelected = (props.selectedSection === props.name);
 		// const imgSrc = (isSelected)
@@ -79,12 +80,14 @@ const Tab = React.createClass({
 
 		return <OverlayTrigger
 			placement='left'
-			overlay={<Tooltip id={props.name}>{props.tooltip}</Tooltip>}>
+			overlay={<Tooltip id={props.name}>{props.tooltip}</Tooltip>}
+		>
 			<div
 				className={classnames('step-icon',
 					{ selected: isSelected })
 				}
-				onClick={props.handleClick} >
+				onClick={props.handleClick}
+			>
 				<img src={imgSrc} />
 			</div>
 		</OverlayTrigger>;
@@ -101,11 +104,11 @@ const Wizard = React.createClass({
 	propTypes: {
 	},
 
-	// getDefaultProps: function() {
+	// getDefaultProps() {
 	// 	return {};
 	// },
 
-	renderMinimap: function(props) {
+	renderMinimap(props) {
 		return <GraphMinimap
 			id='minimap'
 			graph={props.graph}
@@ -114,7 +117,7 @@ const Wizard = React.createClass({
 		/>;
 	},
 
-	renderOutline: function(props) {
+	renderOutline(props) {
 		return null; // TODO: implement some sort of debug view
 		// return <div>
 		// 	<h3 className='title'>outline</h3>
@@ -122,7 +125,7 @@ const Wizard = React.createClass({
 		// </div>;
 	},
 
-	renderProperties: function(props) {
+	renderProperties(props) {
 		return <PropertiesPanel
 			id='propspanel'
 			key={`propspanel-${((props.selectedId)
@@ -138,36 +141,51 @@ const Wizard = React.createClass({
 		/>;
 	},
 
-	renderImport: function() {
+	renderImport() {
 		const props = this.props;
 
 		return <div>
+			<UsageHint>start here</UsageHint>
+			<h2 className='title'>New</h2>
+			<button
+				onClick={this.clickCreateNew}
+				className='btn btn-default btn-xs'
+			>
+				Create new map
+			</button>
+			<br />
+			<br />
+
 			<h2 className='title'>Import</h2>
 			<input
 				style={{ display: 'none' }}
 				ref='load-model'
 				type='file'
 				accept='.xml'
-				onChange={this.loadModelFile} />
+				onChange={this.loadModelFile}
+			/>
 
 			<button
 				onClick={this.clickFileButton}
-				className='btn btn-default btn-xs'>
+				className='btn btn-default btn-xs'
+			>
 				Load model XML file
 			</button>
 
-			<br/>
-			<br/>
+			<br />
+			<hr />
+
 			<div className='pattern-lib'>
 				<Library
 					items={props.modelPatterns}
 					key={'locations-patterns'}
-					title='patterns' />
+					title='patterns'
+				/>
 			</div>
 		</div>;
 	},
 
-	renderLocations: function(props) {
+	renderLocations(props) {
 		const items = props.componentsLib.filter(componentTypesFilter(['location']));
 		return <div>
 			<h2 className='title'>Locations</h2>
@@ -176,12 +194,13 @@ const Wizard = React.createClass({
 				<Library
 					key={'locations-components'}
 					items={items}
-					title='components' />
+					title='components'
+				/>
 			</div>
 		</div>;
 	},
 
-	renderAssets: function(props) {
+	renderAssets(props) {
 		const items = props.componentsLib.filter(componentTypesFilter(['item', 'data']));
 		return <div>
 			<h2 className='title'>Assets</h2>
@@ -189,12 +208,13 @@ const Wizard = React.createClass({
 				<Library
 					key={'assets-components'}
 					items={items}
-					title='components' />
+					title='components'
+				/>
 			</div>
 		</div>;
 	},
 
-	renderActors: function(props) {
+	renderActors(props) {
 		const items = props.componentsLib.filter(componentTypesFilter(['actor']));
 		return <div>
 			<h2 className='title'>Actors</h2>
@@ -207,12 +227,13 @@ const Wizard = React.createClass({
 				<Library
 					key={'actors-components'}
 					items={items}
-					title='components' />
+					title='components'
+				/>
 			</div>
 		</div>;
 	},
 
-	renderConnections: function() {
+	renderConnections() {
 		const props = this.props;
 		const predicates = R.values(props.graph.predicates || {});
 		return <div>
@@ -227,24 +248,24 @@ const Wizard = React.createClass({
 		</div>;
 	},
 
-	createPredicate: function(predicate) {
+	createPredicate(predicate) {
 		this.context.dispatch(
 			actionCreators.addPredicate(predicate)
 		);
 	},
 
-	updatePredicate: function(predicateId, newProperties) {
+	updatePredicate(predicateId, newProperties) {
 		this.context.dispatch(
 			actionCreators.predicateChanged(predicateId, newProperties)
 		);
 	},
 
-	renderPolicies: function() {
+	renderPolicies() {
 		const policies = R.values(this.props.graph.policies || {});
 		return <div>
 			<h2 className='title'>Policies</h2>
 
-			<hr/>
+			<hr />
 			<div>
 				<div>
 					<textarea
@@ -255,21 +276,21 @@ const Wizard = React.createClass({
 				</div>
 				<button onClick={this.addPolicy}>add</button>
 			</div>
-			<hr/>
+			<hr />
 
 			{policies
 				.map((item) => {
 					return <JSONTree
 						theme={theme}
 						data={R.omit(['modelComponentType'], item)}
-						key={'policy-'+item.id}
+						key={`policy-${item.id}`}
 					/>;
 				})
 			}
 		</div>;
 	},
 
-	addPolicy: function(event) {
+	addPolicy(event) {
 		const textarea = this.refs['new-policy'];
 		const policyJSON = textarea.value;
 		try {
@@ -284,7 +305,7 @@ const Wizard = React.createClass({
 		textarea.value = '';
 	},
 
-	addProcess: function(event) {
+	addProcess(event) {
 		const textarea = this.refs['new-process'];
 		const processJSON = textarea.value;
 		try {
@@ -299,12 +320,12 @@ const Wizard = React.createClass({
 		textarea.value = '';
 	},
 
-	renderProcesses: function() {
+	renderProcesses() {
 		const processes = R.values(this.props.graph.processes || {});
 		return <div>
 			<h2 className='title'>Processes</h2>
 
-			<hr/>
+			<hr />
 			<div>
 				<div>
 					<textarea
@@ -315,7 +336,7 @@ const Wizard = React.createClass({
 				</div>
 				<button onClick={this.addProcess}>add</button>
 			</div>
-			<hr/>
+			<hr />
 
 			{processes
 				.map((item) => {
@@ -329,7 +350,7 @@ const Wizard = React.createClass({
 		</div>;
 	},
 
-	renderAttackerActor: function() {
+	renderAttackerActor() {
 		const props = this.props;
 		const actors = R.values(props.graph.nodes)
 			.filter((item) => {
@@ -350,10 +371,10 @@ const Wizard = React.createClass({
 		</div>;
 	},
 
-	renderAttackerProfile: function(props) {
+	renderAttackerProfile(props) {
 		return <div>
 			{this.renderAttackerActor()}
-			<hr/>
+			<hr />
 
 			<h2 className='title'>Attacker profile</h2>
 			<AttackerProfileEditor
@@ -364,16 +385,16 @@ const Wizard = React.createClass({
 		</div>;
 	},
 
-	handleAttackerProfileUpdate: function(profile) {
+	handleAttackerProfileUpdate(profile) {
 		this.context.dispatch( actionCreators.attackerProfileChanged(profile) );
 	},
 
-	handleAttackerProfitUpdate: function(event) {
+	handleAttackerProfitUpdate(event) {
 		const profit = event.target.value;
 		this.context.dispatch( actionCreators.setAttackerProfit(profit) );
 	},
 
-	renderAttackerGoal: function() {
+	renderAttackerGoal() {
 		const props = this.props;
 
 		const goalValue = (!!props.attackerGoal && !!props.attackerGoalType)
@@ -395,7 +416,7 @@ const Wizard = React.createClass({
 					.map(this.renderOption)
 				}
 			</select>
-			<br/>
+			<br />
 			<input
 				type='number'
 				className='form-control'
@@ -407,20 +428,23 @@ const Wizard = React.createClass({
 		</div>;
 	},
 
-	renderToolChainSelection: function() {
+	renderToolChainSelection() {
 		const props = this.props;
 
 		return <div>
 			<h3>Tool chains</h3>
-			<select ref='toolchain'
+			<select
+				ref='toolchain'
 				onChange={this.setSelectedToolChain}
-				value={props.toolChainId}>
+				value={props.toolChainId}
+			>
 				<option value=''>— select tool chain —</option>
 				{R.values(props.toolChains)
 					.map((chain) => {
 						return <option
 							key={chain.id}
-							value={chain.id}>
+							value={chain.id}
+						>
 							{chain.name}
 						</option>;
 					})
@@ -429,24 +453,26 @@ const Wizard = React.createClass({
 		</div>;
 	},
 
-	renderDownloadButtons: function(isReadyToDownload=false) {
+	renderDownloadButtons(isReadyToDownload=false) {
 		return <div>
 			<button
 				onClick={this.downloadModelXML}
-				className='btn btn-default btn-xs'>
+				className='btn btn-default btn-xs'
+			>
 				Save current model as XML
 			</button>
-			<br/>
+			<br />
 			<button
 				onClick={this.downloadZippedScenario}
 				disabled={!isReadyToDownload}
-				className='btn btn-default btn-xs'>
+				className='btn btn-default btn-xs'
+			>
 				Save model and scenario as ZIP
 			</button>
 		</div>;
 	},
 
-	renderRunAnalysis: function(props) {
+	renderRunAnalysis(props) {
 		function pushIfFalsey(acc, item) {
 			if (!item.value) {
 				acc = [...acc, item.message];
@@ -481,13 +507,13 @@ const Wizard = React.createClass({
 
 		return <div>
 			<h2 className='title'>Run analysis</h2>
-			<hr/>
+			<hr />
 			{this.renderAttackerGoal()}
-			<hr/>
+			<hr />
 			{this.renderToolChainSelection()}
-			<hr/>
+			<hr />
 			{this.renderDownloadButtons(isReadyToDownload)}
-			<hr/>
+			<hr />
 
 			<div>
 				<ul>
@@ -525,7 +551,7 @@ const Wizard = React.createClass({
 		</div>;
 	},
 
-	renderOption: function(item) {
+	renderOption(item) {
 		return <option
 			key={item.id}
 			value={item.id}
@@ -534,7 +560,7 @@ const Wizard = React.createClass({
 		</option>;
 	},
 
-	render: function() {
+	render() {
 		const props = this.props;
 		const wizardSelectedSection = props.wizardSelectedSection;
 
@@ -563,59 +589,68 @@ const Wizard = React.createClass({
 				{this.renderMinimap(props)}
 				{this.renderOutline(props)}
 				{this.renderProperties(props)}
-				<hr/>
+				<hr />
 
 				<div id='wizard-container'>
 					<div id='steps-container'>
-						<Tab name='import'
+						<Tab
+							name='import'
 							selectedSection={wizardSelectedSection}
 							icon='images/icons/import-01.svg'
 							tooltip='Import model'
 							handleClick={R.partial(this.selectWizardStep, ['import'])}
 						/>
-						<Tab name='locations'
+						<Tab
+							name='locations'
 							selectedSection={wizardSelectedSection}
 							icon='images/icons/location-01.svg'
 							tooltip='Locations'
 							handleClick={R.partial(this.selectWizardStep, ['locations'])}
 						/>
-						<Tab name='assets'
+						<Tab
+							name='assets'
 							selectedSection={wizardSelectedSection}
 							icon='images/icons/assets-01.svg'
 							tooltip='Assets'
 							handleClick={R.partial(this.selectWizardStep, ['assets'])}
 						/>
-						<Tab name='actors'
+						<Tab
+							name='actors'
 							selectedSection={wizardSelectedSection}
 							icon='images/icons/actors-01.svg'
 							tooltip='Actors'
 							handleClick={R.partial(this.selectWizardStep, ['actors'])}
 						/>
-						<Tab name='connections'
+						<Tab
+							name='connections'
 							selectedSection={wizardSelectedSection}
 							icon='images/icons/edges-01.svg'
 							tooltip='Connections'
 							handleClick={R.partial(this.selectWizardStep, ['connections'])}
 						/>
-						<Tab name='policies'
+						<Tab
+							name='policies'
 							selectedSection={wizardSelectedSection}
 							icon='images/icons/policies-01.svg'
 							tooltip='Policies'
 							handleClick={R.partial(this.selectWizardStep, ['policies'])}
 						/>
-						<Tab name='processes'
+						<Tab
+							name='processes'
 							selectedSection={wizardSelectedSection}
 							icon='images/icons/connections-01.svg'
 							tooltip='Processes'
 							handleClick={R.partial(this.selectWizardStep, ['processes'])}
 						/>
-						<Tab name='attackerprofile'
+						<Tab
+							name='attackerprofile'
 							selectedSection={wizardSelectedSection}
 							icon='images/icons/attacker_profile-01.svg'
 							tooltip='Attacker profile'
 							handleClick={R.partial(this.selectWizardStep, ['attackerprofile'])}
 						/>
-						<Tab name='runanalysis'
+						<Tab
+							name='runanalysis'
 							selectedSection={wizardSelectedSection}
 							icon='images/icons/run-01.svg'
 							tooltip='Run analysis'
@@ -631,14 +666,14 @@ const Wizard = React.createClass({
 		);
 	},
 
-	setAttackerActor: function(event) {
+	setAttackerActor(event) {
 		const actorId = event.target.value;
 		this.context.dispatch(
 			actionCreators.setAttackerActor(actorId)
 		);
 	},
 
-	setAttackerGoal: function(event) {
+	setAttackerGoal(event) {
 		const assetId = event.target.value;
 		const goalType = 'assetGoal';
 		const goalData = {
@@ -651,7 +686,7 @@ const Wizard = React.createClass({
 		);
 	},
 
-	setSelectedToolChain: function(event) {
+	setSelectedToolChain(event) {
 		// watch out: (numeric) value comes back as string
 		const toolChainId = parseInt(this.refs.toolchain.value, 10);
 
@@ -660,7 +695,7 @@ const Wizard = React.createClass({
 		);
 	},
 
-	runAnalysis: function() {
+	runAnalysis() {
 		const dlScenarioCheckbox = this.refs['checkbox-dl-scenario'];
 		this.context.dispatch(
 			actionCreators.runAnalysis(
@@ -670,7 +705,7 @@ const Wizard = React.createClass({
 		);
 	},
 
-	renderToolChainOverlay: function() {
+	renderToolChainOverlay() {
 		const props = this.props;
 		const context = this.context;
 
@@ -692,12 +727,17 @@ const Wizard = React.createClass({
 		/>;
 	},
 
-	clickFileButton: function(event) {
+	clickCreateNew(event) {
+		event.preventDefault();
+		this.context.dispatch( actionCreators.initMap(undefined) );
+	},
+
+	clickFileButton(event) {
 		event.preventDefault();
 		$(this.refs['load-model']).click();
 	},
 
-	loadModelFile: function(event) {
+	loadModelFile(event) {
 		event.preventDefault();
 		const $fileInput = $(this.refs['load-model']);
 		const file = $fileInput[0].files[0];
@@ -705,12 +745,12 @@ const Wizard = React.createClass({
 		this.context.dispatch( actionCreators.loadModelFile(file) );
 	},
 
-	downloadModelXML: function(event) {
+	downloadModelXML(event) {
 		event.preventDefault();
 		this.context.dispatch( actionCreators.downloadModelXML() );
 	},
 
-	downloadZippedScenario: function(event) {
+	downloadZippedScenario(event) {
 		event.preventDefault();
 		this.context.dispatch( actionCreators.downloadZippedScenario() );
 	},
