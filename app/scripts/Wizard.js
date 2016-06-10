@@ -79,12 +79,14 @@ const Tab = React.createClass({
 
 		return <OverlayTrigger
 			placement='left'
-			overlay={<Tooltip id={props.name}>{props.tooltip}</Tooltip>}>
+			overlay={<Tooltip id={props.name}>{props.tooltip}</Tooltip>}
+		>
 			<div
 				className={classnames('step-icon',
 					{ selected: isSelected })
 				}
-				onClick={props.handleClick} >
+				onClick={props.handleClick}
+			>
 				<img src={imgSrc} />
 			</div>
 		</OverlayTrigger>;
@@ -148,21 +150,24 @@ const Wizard = React.createClass({
 				ref='load-model'
 				type='file'
 				accept='.xml'
-				onChange={this.loadModelFile} />
+				onChange={this.loadModelFile}
+			/>
 
 			<button
 				onClick={this.clickFileButton}
-				className='btn btn-default btn-xs'>
+				className='btn btn-default btn-xs'
+			>
 				Load model XML file
 			</button>
 
-			<br/>
-			<br/>
+			<br />
+			<br />
 			<div className='pattern-lib'>
 				<Library
 					items={props.modelPatterns}
 					key={'locations-patterns'}
-					title='patterns' />
+					title='patterns'
+				/>
 			</div>
 		</div>;
 	},
@@ -176,7 +181,8 @@ const Wizard = React.createClass({
 				<Library
 					key={'locations-components'}
 					items={items}
-					title='components' />
+					title='components'
+				/>
 			</div>
 		</div>;
 	},
@@ -189,7 +195,8 @@ const Wizard = React.createClass({
 				<Library
 					key={'assets-components'}
 					items={items}
-					title='components' />
+					title='components'
+				/>
 			</div>
 		</div>;
 	},
@@ -207,7 +214,8 @@ const Wizard = React.createClass({
 				<Library
 					key={'actors-components'}
 					items={items}
-					title='components' />
+					title='components'
+				/>
 			</div>
 		</div>;
 	},
@@ -244,7 +252,7 @@ const Wizard = React.createClass({
 		return <div>
 			<h2 className='title'>Policies</h2>
 
-			<hr/>
+			<hr />
 			<div>
 				<div>
 					<textarea
@@ -255,14 +263,14 @@ const Wizard = React.createClass({
 				</div>
 				<button onClick={this.addPolicy}>add</button>
 			</div>
-			<hr/>
+			<hr />
 
 			{policies
 				.map((item) => {
 					return <JSONTree
 						theme={theme}
 						data={R.omit(['modelComponentType'], item)}
-						key={'policy-'+item.id}
+						key={`policy-${item.id}`}
 					/>;
 				})
 			}
@@ -304,7 +312,7 @@ const Wizard = React.createClass({
 		return <div>
 			<h2 className='title'>Processes</h2>
 
-			<hr/>
+			<hr />
 			<div>
 				<div>
 					<textarea
@@ -315,7 +323,7 @@ const Wizard = React.createClass({
 				</div>
 				<button onClick={this.addProcess}>add</button>
 			</div>
-			<hr/>
+			<hr />
 
 			{processes
 				.map((item) => {
@@ -353,7 +361,7 @@ const Wizard = React.createClass({
 	renderAttackerProfile: function(props) {
 		return <div>
 			{this.renderAttackerActor()}
-			<hr/>
+			<hr />
 
 			<h2 className='title'>Attacker profile</h2>
 			<AttackerProfileEditor
@@ -395,7 +403,7 @@ const Wizard = React.createClass({
 					.map(this.renderOption)
 				}
 			</select>
-			<br/>
+			<br />
 			<input
 				type='number'
 				className='form-control'
@@ -412,15 +420,18 @@ const Wizard = React.createClass({
 
 		return <div>
 			<h3>Tool chains</h3>
-			<select ref='toolchain'
+			<select
+				ref='toolchain'
 				onChange={this.setSelectedToolChain}
-				value={props.toolChainId}>
+				value={props.toolChainId}
+			>
 				<option value=''>— select tool chain —</option>
 				{R.values(props.toolChains)
 					.map((chain) => {
 						return <option
 							key={chain.id}
-							value={chain.id}>
+							value={chain.id}
+						>
 							{chain.name}
 						</option>;
 					})
@@ -433,14 +444,16 @@ const Wizard = React.createClass({
 		return <div>
 			<button
 				onClick={this.downloadModelXML}
-				className='btn btn-default btn-xs'>
+				className='btn btn-default btn-xs'
+			>
 				Save current model as XML
 			</button>
-			<br/>
+			<br />
 			<button
 				onClick={this.downloadZippedScenario}
 				disabled={!isReadyToDownload}
-				className='btn btn-default btn-xs'>
+				className='btn btn-default btn-xs'
+			>
 				Save model and scenario as ZIP
 			</button>
 		</div>;
@@ -481,13 +494,13 @@ const Wizard = React.createClass({
 
 		return <div>
 			<h2 className='title'>Run analysis</h2>
-			<hr/>
+			<hr />
 			{this.renderAttackerGoal()}
-			<hr/>
+			<hr />
 			{this.renderToolChainSelection()}
-			<hr/>
+			<hr />
 			{this.renderDownloadButtons(isReadyToDownload)}
-			<hr/>
+			<hr />
 
 			<div>
 				<ul>
@@ -563,59 +576,68 @@ const Wizard = React.createClass({
 				{this.renderMinimap(props)}
 				{this.renderOutline(props)}
 				{this.renderProperties(props)}
-				<hr/>
+				<hr />
 
 				<div id='wizard-container'>
 					<div id='steps-container'>
-						<Tab name='import'
+						<Tab
+							name='import'
 							selectedSection={wizardSelectedSection}
 							icon='images/icons/import-01.svg'
 							tooltip='Import model'
 							handleClick={R.partial(this.selectWizardStep, ['import'])}
 						/>
-						<Tab name='locations'
+						<Tab
+							name='locations'
 							selectedSection={wizardSelectedSection}
 							icon='images/icons/location-01.svg'
 							tooltip='Locations'
 							handleClick={R.partial(this.selectWizardStep, ['locations'])}
 						/>
-						<Tab name='assets'
+						<Tab
+							name='assets'
 							selectedSection={wizardSelectedSection}
 							icon='images/icons/assets-01.svg'
 							tooltip='Assets'
 							handleClick={R.partial(this.selectWizardStep, ['assets'])}
 						/>
-						<Tab name='actors'
+						<Tab
+							name='actors'
 							selectedSection={wizardSelectedSection}
 							icon='images/icons/actors-01.svg'
 							tooltip='Actors'
 							handleClick={R.partial(this.selectWizardStep, ['actors'])}
 						/>
-						<Tab name='connections'
+						<Tab
+							name='connections'
 							selectedSection={wizardSelectedSection}
 							icon='images/icons/edges-01.svg'
 							tooltip='Connections'
 							handleClick={R.partial(this.selectWizardStep, ['connections'])}
 						/>
-						<Tab name='policies'
+						<Tab
+							name='policies'
 							selectedSection={wizardSelectedSection}
 							icon='images/icons/policies-01.svg'
 							tooltip='Policies'
 							handleClick={R.partial(this.selectWizardStep, ['policies'])}
 						/>
-						<Tab name='processes'
+						<Tab
+							name='processes'
 							selectedSection={wizardSelectedSection}
 							icon='images/icons/connections-01.svg'
 							tooltip='Processes'
 							handleClick={R.partial(this.selectWizardStep, ['processes'])}
 						/>
-						<Tab name='attackerprofile'
+						<Tab
+							name='attackerprofile'
 							selectedSection={wizardSelectedSection}
 							icon='images/icons/attacker_profile-01.svg'
 							tooltip='Attacker profile'
 							handleClick={R.partial(this.selectWizardStep, ['attackerprofile'])}
 						/>
-						<Tab name='runanalysis'
+						<Tab
+							name='runanalysis'
 							selectedSection={wizardSelectedSection}
 							icon='images/icons/run-01.svg'
 							tooltip='Run analysis'
