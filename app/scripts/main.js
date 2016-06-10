@@ -77,7 +77,10 @@ let App = React.createClass({
 
 				<div id='meta'>
 					{(props.metadata.id)
-						? <div>model id: {props.metadata.id}</div>
+						? <div>
+							<div>model id: {props.metadata.id}</div>
+							<div>title: {props.metadata.title}</div>
+						</div>
 						: <UsageHint>no model — create new one, or import model file</UsageHint>
 					}
 

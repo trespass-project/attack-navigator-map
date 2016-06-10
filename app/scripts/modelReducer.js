@@ -8,6 +8,8 @@ const constants = require('./constants.js');
 const initialState = {
 	metadata: {
 		id: null,
+		title: 'Untitled',
+		// TODO: version?
 	},
 
 	graph: {
