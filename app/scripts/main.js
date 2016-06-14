@@ -47,15 +47,18 @@ let App = React.createClass({
 		const props = this.props;
 
 		props.dispatch( actionCreators.resetTransformation() );
+		props.dispatch( actionCreators.getRecentFiles() );
 
 		const editorElem = document.querySelector('#editor > svg');
 		props.dispatch( actionCreators.setEditorElem(editorElem) );
 
 		window.addEventListener('beforeunload', this.handleBeforeUnload);
+		window.addEventListener('keydown', this.saveHandler);
 	},
 
 	componentWillUnmount() {
 		window.removeEventListener('beforeunload', this.handleBeforeUnload);
+		window.removeEventListener('keydown', this.saveHandler);
 	},
 
 	handleBeforeUnload(event) {
@@ -67,6 +70,14 @@ let App = React.createClass({
 		const msg = 'Are you sure?';
 		event.returnValue = msg;
 		return msg;
+	},
+
+	saveHandler(event) {
+		// if control or command key is pressed and the s key is pressed
+		if ((event.ctrlKey || event.metaKey) && event.keyCode === 83) {
+			event.preventDefault();
+			this.props.dispatch( actionCreators.saveModelToKb() );
+		}
 	},
 
 	render() {
@@ -81,7 +92,7 @@ let App = React.createClass({
 							<div>model id: {props.metadata.id}</div>
 							<div>title: {props.metadata.title}</div>
 						</div>
-						: <UsageHint>no model — create new one, or import model file</UsageHint>
+						: ''
 					}
 
 					{(props.metadata.id)
@@ -96,7 +107,7 @@ let App = React.createClass({
 						: ''
 					}
 
-					<div>———</div>
+					<hr style={{ marginTop: 5, marginBottom: 5 }} />
 					ANM {pkg.version}<br />
 
 					<UsageHint>

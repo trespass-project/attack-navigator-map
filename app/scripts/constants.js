@@ -13,6 +13,7 @@ const constants = {
 	DND_SOURCE_FRAGMENT: 'fragment',
 
 	// ——— action types ————
+	ACTION_getRecentFiles: 'ACTION_getRecentFiles',
 	ACTION_initMap: 'ACTION_initMap',
 	ACTION_setEditorElem: 'ACTION_setEditorElem',
 	ACTION_select: 'ACTION_select',

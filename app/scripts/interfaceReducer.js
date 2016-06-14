@@ -1,5 +1,6 @@
 const $ = require('jquery');
 const R = require('ramda');
+const moment = require('moment');
 const mergeWith = require('./reducer-utils.js').mergeWith;
 const omitType = require('./reducer-utils.js').omitType;
 const constants = require('./constants.js');
@@ -45,6 +46,8 @@ const initialState = {
 	wizardSelectedSection: 'import',
 
 	// ——————————
+
+	recentModels: [],
 
 	// this should not be here
 	attackerProfileIds: [],
@@ -128,6 +131,26 @@ function reducer(state=initialState, action) {
 			}
 
 			return mergeWithState({ editorElem, editorTransformElem, editorElemSize });
+		}
+
+		case constants.ACTION_getRecentFiles: {
+			let { models } = action;
+			models
+				.forEach((model) => {
+					delete model['epoch-created'];
+					delete model['epoch-modified'];
+					model['date-created'] = moment(model['date-created'])
+						.format('YYYY-MM-DD HH:mm');
+					model['date-modified'] = moment(model['date-modified'])
+						.format('YYYY-MM-DD HH:mm');
+				});
+			models = R.sort(
+				// sort newest first
+				(a, b) => b['date-modified'].localeCompare(a['date-modified'], 'en-us'),
+				models
+			);
+
+			return mergeWithState({ recentModels: R.take(5, models) });
 		}
 
 		case constants.ACTION_select: {

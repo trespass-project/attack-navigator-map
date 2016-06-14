@@ -1,6 +1,5 @@
 const isNodeEnvironment = require('detect-node');
 const $ = require('jquery');
-const Q = require('q');
 const R = require('ramda');
 const _ = require('lodash');
 const JSZip = require('jszip');
@@ -35,9 +34,25 @@ const retryRate = 1000;
 function handleError(err) {
 	if (err.statusText === 'abort') { return; }
 	console.error(err.stack);
+	alert(err);
 }
 
 // ——————————
+
+
+const getRecentFiles =
+module.exports.getRecentFiles =
+function getRecentFiles() {
+	return (dispatch, getState) => {
+		return knowledgebaseApi.listModels($.ajax)
+			.done((models, textStatus, xhr) => {
+				dispatch({
+					type: constants.ACTION_getRecentFiles,
+					models
+				});
+			});
+	};
+};
 
 
 /**
@@ -50,13 +65,18 @@ function initMap(modelId=undefined, metadata=undefined) {
 	return (dispatch, getState) => {
 		// create model, if necessary
 		return kbGetModelOrCreate(modelId)
-			.then((modelId) => {
+			.then(({ modelId, isNew=false }) => {
 				// set model id
 				dispatch({
 					type: constants.ACTION_initMap,
 					modelId,
 					metadata,
 				});
+
+				// save new model
+				if (isNew) {
+					dispatch( saveModelToKb() );
+				}
 
 				// reset view
 				dispatch( resetTransformation() );
@@ -78,7 +98,7 @@ function initMap(modelId=undefined, metadata=undefined) {
 
 /**
  * creates a new model in the knowledgebase
- * @returns {Promise} - modelId
+ * @returns {Promise} - { modelId, isNew }
  */
 const kbGetModelOrCreate =
 module.exports.kbGetModelOrCreate =
@@ -92,7 +112,8 @@ function kbGetModelOrCreate(_modelId) {
 		.then((modelId) => {
 			const doesExist = !!modelId;
 			if (doesExist) {
-				return Promise.resolve(modelId);
+				const isNew = false;
+				return Promise.resolve({ modelId, isNew });
 			} else {
 				console.warn('model does not exist – creating new one with same id.');
 				return kbCreateModel(_modelId);
@@ -141,7 +162,7 @@ function kbGetModel(modelId) {
 /**
  * creates a new model in the knowledgebase.
  * @param {string} desiredModelId
- * @returns {Promise} - modelId
+ * @returns {Promise} - { modelId, isNew }
  */
 const kbCreateModel =
 module.exports.kbCreateModel =
@@ -155,7 +176,8 @@ function kbCreateModel(desiredModelId=undefined) {
 			})
 			.done((data, textStatus, xhr) => {
 				if (xhr.status === 200) {
-					resolve(modelId);
+					const isNew = true;
+					resolve({ modelId, isNew });
 				} else {
 					console.error(`something went wrong: ${xhr.status}`);
 					reject();
@@ -242,6 +264,96 @@ function kbDeleteItem(modelId, itemId) {
 				console.error(`something went wrong: ${xhr.status}`);
 			}
 		});
+};
+
+
+const loadModelFromKb =
+module.exports.loadModelFromKb =
+function loadModelFromKb(modelId) {
+	return (dispatch, getState) => {
+		return kbGetModelFile(modelId)
+			.then((modelXML) => {
+				// console.log(modelXML);
+				dispatch( loadXML(modelXML) );
+			})
+			.catch((jqXHR) => {
+				if (jqXHR.status === 404) {
+					console.error('no model file found');
+					alert('no model file found');
+					return;
+				}
+				console.error(jqXHR.statusText);
+				alert(jqXHR.statusText);
+			});
+	};
+};
+
+
+const kbGetModelFile =
+module.exports.kbGetModelFile =
+function kbGetModelFile(modelId) {
+	const query = queryString.stringify({
+		model_id: modelId,
+		filename: 'model.xml',
+	});
+	const url = `${api.makeUrl(knowledgebaseApi, 'files')}?${query}`;
+	const params = _.merge(
+		{
+			url,
+			contentType: 'text/xml',
+		},
+		api.requestOptions.jquery.acceptPlainText,
+		api.requestOptions.jquery.crossDomain
+	);
+	return $.ajax(params);
+};
+
+
+const saveModelToKb =
+module.exports.saveModelToKb =
+function saveModelToKb() {
+	return (dispatch, getState) => {
+		const state = getState();
+		const modelId = state.model.metadata.id;
+		const model = modelHelpers.modelFromGraph(
+			state.model.graph,
+			state.model.metadata
+		);
+		const modelXmlStr = trespassModel.toXML(model);
+
+		return kbSaveModelFile(modelId, modelXmlStr)
+			.then(() => {
+				console.info('model sent');
+			})
+			.catch((jqXHR) => {
+				console.error(jqXHR.statusText);
+				alert(jqXHR.statusText);
+			});
+	};
+};
+
+
+// TODO: refactor `putModelAndScenarioIntoKnowledgebase()`
+const kbSaveModelFile =
+module.exports.kbSaveModelFile =
+function kbSaveModelFile(modelId, modelXmlStr) {
+	const query = queryString.stringify({
+		model_id: modelId,
+		filename: 'model.xml',
+		filetype: 'model_file',
+	});
+	const url = `${api.makeUrl(knowledgebaseApi, 'files')}?${query}`;
+	const params = _.merge(
+		{
+			url,
+			data: modelXmlStr,
+			method: 'put',
+			contentType: 'text/xml',
+		},
+		api.requestOptions.jquery.acceptPlainText,
+		api.requestOptions.jquery.crossDomain
+	);
+	return $.ajax(params);
 };
 
 
@@ -940,7 +1052,7 @@ function putModelAndScenarioIntoKnowledgebase(modelId, modelData, scenarioData) 
 				// 			console.error(`something went wrong (${res.status})`, url);
 				// 		}
 				// 	});
-				return Q($.ajax(params));
+				return $.ajax(params);
 					// .fail((xhr, textStatus, err) => {
 					// 	console.error(err.stack);
 					// })
@@ -958,21 +1070,14 @@ function putModelAndScenarioIntoKnowledgebase(modelId, modelData, scenarioData) 
 			};
 		});
 
-	// const resolved = Promise.resolve();
-	const deferred = Q.defer();
 	const promise = taskFuncs
 		.reduce((acc, taskFunc) => {
-			return acc
-				.then(taskFunc)
-				.catch((err) => {
-					console.dir(err);
-					console.error(err.stack);
-				});
-		}, deferred.promise /*resolved*/)
+			return acc.then(taskFunc);
+		}, Promise.resolve())
 		.catch((err) => {
+			console.dir(err);
 			console.error(err.stack);
 		});
-	deferred.resolve();
 
 	return promise;
 };
@@ -1106,12 +1211,6 @@ function setAnalysisResults(analysisResults) {
 		analysisResults
 	};
 };
-
-
-function handleError(err) {
-	console.error(err.stack);
-	alert(err);
-}
 
 
 function kbRunToolchain(toolChainId, modelId, attackerProfileId, callbacks={}) {
@@ -1538,8 +1637,7 @@ function loadAttackerProfiles() {
 			api.requestOptions.jquery.crossDomain
 		);
 
-		const req = $.ajax(params);
-		Q(req)
+		$.ajax(params)
 			.then((attackerProfiles) => {
 				dispatch({
 					type: constants.ACTION_loadAttackerProfiles_DONE,
@@ -1590,8 +1688,7 @@ function loadComponentTypes() {
 		);
 
 		// TODO: move to trespass.js / fetch
-		const req = $.ajax(params);
-		Q(req)
+		$.ajax(params)
 			.then((types) => {
 				const kbTypeAttributes = types
 					.reduce((acc, type) => {
@@ -1645,21 +1742,3 @@ function loadComponentTypes() {
 			.catch(handleError);
 	};
 };
-
-
-// ——————————
-/*
-module.exports.openDir =
-function openDir(dirName) {
-	return (dispatch, getState) => {
-		Q().then(() => {
-				const action = {
-					type: constants.OPEN_DIR,
-					selectedSubdir: dirName,
-				};
-				dispatch(action);
-			})
-			.catch(handleError);
-	};
-};
-*/
