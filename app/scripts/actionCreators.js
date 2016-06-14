@@ -260,6 +260,49 @@ function kbDeleteItem(modelId, itemId) {
 };
 
 
+const loadModelFromKb =
+module.exports.loadModelFromKb =
+function loadModelFromKb(modelId) {
+	return (dispatch, getState) => {
+		return kbGetModelFile(modelId)
+			.then((modelXML) => {
+				// console.log(modelXML);
+				dispatch( loadXML(modelXML) );
+			})
+			.catch((jqXHR) => {
+				if (jqXHR.status === 404) {
+					console.error('no model file found');
+					alert('no model file found');
+					return;
+				}
+				console.error(jqXHR.statusText);
+				alert(jqXHR.statusText);
+			});
+	};
+};
+
+
+const kbGetModelFile =
+module.exports.kbGetModelFile =
+function kbGetModelFile(modelId) {
+	const query = queryString.stringify({
+		model_id: modelId,
+		filename: 'model.xml',
+	});
+	const url = `${api.makeUrl(knowledgebaseApi, 'files')}?${query}`;
+	const params = _.merge(
+		{
+			url,
+			contentType: 'text/xml',
+		},
+		api.requestOptions.jquery.acceptPlainText,
+		api.requestOptions.jquery.crossDomain
+	);
+
+	return $.ajax(params);
+};
+
+
 module.exports.setEditorElem =
 function setEditorElem(elem) {
 	return {
