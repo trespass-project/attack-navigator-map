@@ -6,7 +6,7 @@ const UsageHint = React.createClass({
 	render() {
 		return <div className='usage-hint'>
 			<Alert bsStyle='info'>
-				<strong>→</strong> {this.props.children}
+				{this.props.children}
 			</Alert>
 		</div>;
 	},

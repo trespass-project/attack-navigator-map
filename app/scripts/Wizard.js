@@ -153,10 +153,11 @@ const Wizard = React.createClass({
 			>
 				Create new map
 			</button>
+
 			<br />
 			<br />
 
-			<UsageHint>... or here</UsageHint>
+			<UsageHint>... or here ...</UsageHint>
 			<h2 className='title'>Import</h2>
 			<input
 				style={{ display: 'none' }}
@@ -174,7 +175,32 @@ const Wizard = React.createClass({
 			</button>
 
 			<br />
+			<br />
+
+			<UsageHint>... or here</UsageHint>
+			<h2 className='title'>Recent models</h2>
+			<div className='recent-models'>
+				<ul>
+					{props.recentModels
+						.map((model) => {
+							return <li key={model['date-created']}>
+								<span className='title'>
+									<a
+										href='#'
+										onClick={R.partial(this.loadModelFromKb, [model.model_id])}
+									>
+										{model.title}
+									</a>
+								</span>
+								<span className='date'>{model['date-modified']}</span>
+							</li>;
+						})
+					}
+				</ul>
+			</div>
+
 			<hr />
+			<br />
 
 			<div className='pattern-lib'>
 				<Library
@@ -745,6 +771,11 @@ const Wizard = React.createClass({
 		const file = $fileInput[0].files[0];
 		$fileInput.val(''); // reset, so that we can import the same file again, if needed
 		this.context.dispatch( actionCreators.loadModelFile(file) );
+	},
+
+	loadModelFromKb(modelId, event) {
+		event.preventDefault();
+		this.context.dispatch( actionCreators.loadModelFromKb(modelId) );
 	},
 
 	downloadModelXML(event) {
