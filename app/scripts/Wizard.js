@@ -157,7 +157,7 @@ const Wizard = React.createClass({
 			<br />
 			<br />
 
-			<UsageHint>... or here</UsageHint>
+			<UsageHint>... or here ...</UsageHint>
 			<h2 className='title'>Import</h2>
 			<input
 				style={{ display: 'none' }}

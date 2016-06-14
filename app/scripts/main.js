@@ -82,7 +82,7 @@ let App = React.createClass({
 							<div>model id: {props.metadata.id}</div>
 							<div>title: {props.metadata.title}</div>
 						</div>
-						: <UsageHint>no model — create new one, or import model file</UsageHint>
+						: ''
 					}
 
 					{(props.metadata.id)
@@ -97,7 +97,7 @@ let App = React.createClass({
 						: ''
 					}
 
-					<div>———</div>
+					<hr style={{ marginTop: 5, marginBottom: 5 }} />
 					ANM {pkg.version}<br />
 
 					<UsageHint>
