@@ -53,10 +53,12 @@ let App = React.createClass({
 		props.dispatch( actionCreators.setEditorElem(editorElem) );
 
 		window.addEventListener('beforeunload', this.handleBeforeUnload);
+		window.addEventListener('keydown', this.saveHandler);
 	},
 
 	componentWillUnmount() {
 		window.removeEventListener('beforeunload', this.handleBeforeUnload);
+		window.removeEventListener('keydown', this.saveHandler);
 	},
 
 	handleBeforeUnload(event) {
@@ -68,6 +70,14 @@ let App = React.createClass({
 		const msg = 'Are you sure?';
 		event.returnValue = msg;
 		return msg;
+	},
+
+	saveHandler(event) {
+		// if control or command key is pressed and the s key is pressed
+		if ((event.ctrlKey || event.metaKey) && event.keyCode === 83) {
+			event.preventDefault();
+			this.props.dispatch( actionCreators.saveModelToKb() );
+		}
 	},
 
 	render() {

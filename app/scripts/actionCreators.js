@@ -65,13 +65,18 @@ function initMap(modelId=undefined, metadata=undefined) {
 	return (dispatch, getState) => {
 		// create model, if necessary
 		return kbGetModelOrCreate(modelId)
-			.then((modelId) => {
+			.then(({ modelId, isNew=false }) => {
 				// set model id
 				dispatch({
 					type: constants.ACTION_initMap,
 					modelId,
 					metadata,
 				});
+
+				// save new model
+				if (isNew) {
+					dispatch( saveModelToKb() );
+				}
 
 				// reset view
 				dispatch( resetTransformation() );
@@ -93,7 +98,7 @@ function initMap(modelId=undefined, metadata=undefined) {
 
 /**
  * creates a new model in the knowledgebase
- * @returns {Promise} - modelId
+ * @returns {Promise} - { modelId, isNew }
  */
 const kbGetModelOrCreate =
 module.exports.kbGetModelOrCreate =
@@ -107,7 +112,8 @@ function kbGetModelOrCreate(_modelId) {
 		.then((modelId) => {
 			const doesExist = !!modelId;
 			if (doesExist) {
-				return Promise.resolve(modelId);
+				const isNew = false;
+				return Promise.resolve({ modelId, isNew });
 			} else {
 				console.warn('model does not exist – creating new one with same id.');
 				return kbCreateModel(_modelId);
@@ -156,7 +162,7 @@ function kbGetModel(modelId) {
 /**
  * creates a new model in the knowledgebase.
  * @param {string} desiredModelId
- * @returns {Promise} - modelId
+ * @returns {Promise} - { modelId, isNew }
  */
 const kbCreateModel =
 module.exports.kbCreateModel =
@@ -170,7 +176,8 @@ function kbCreateModel(desiredModelId=undefined) {
 			})
 			.done((data, textStatus, xhr) => {
 				if (xhr.status === 200) {
-					resolve(modelId);
+					const isNew = true;
+					resolve({ modelId, isNew });
 				} else {
 					console.error(`something went wrong: ${xhr.status}`);
 					reject();
@@ -298,7 +305,54 @@ function kbGetModelFile(modelId) {
 		api.requestOptions.jquery.acceptPlainText,
 		api.requestOptions.jquery.crossDomain
 	);
+	return $.ajax(params);
+};
 
+
+const saveModelToKb =
+module.exports.saveModelToKb =
+function saveModelToKb() {
+	return (dispatch, getState) => {
+		const state = getState();
+		const modelId = state.model.metadata.id;
+		const model = modelHelpers.modelFromGraph(
+			state.model.graph,
+			state.model.metadata
+		);
+		const modelXmlStr = trespassModel.toXML(model);
+
+		return kbSaveModelFile(modelId, modelXmlStr)
+			.then(() => {
+				console.info('model sent');
+			})
+			.catch((jqXHR) => {
+				console.error(jqXHR.statusText);
+				alert(jqXHR.statusText);
+			});
+	};
+};
+
+
+// TODO: refactor `putModelAndScenarioIntoKnowledgebase()`
+const kbSaveModelFile =
+module.exports.kbSaveModelFile =
+function kbSaveModelFile(modelId, modelXmlStr) {
+	const query = queryString.stringify({
+		model_id: modelId,
+		filename: 'model.xml',
+		filetype: 'model_file',
+	});
+	const url = `${api.makeUrl(knowledgebaseApi, 'files')}?${query}`;
+	const params = _.merge(
+		{
+			url,
+			data: modelXmlStr,
+			method: 'put',
+			contentType: 'text/xml',
+		},
+		api.requestOptions.jquery.acceptPlainText,
+		api.requestOptions.jquery.crossDomain
+	);
 	return $.ajax(params);
 };
 
