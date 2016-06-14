@@ -295,7 +295,6 @@ function kbGetModelFile(modelId) {
 	const query = queryString.stringify({
 		model_id: modelId,
 		filename: 'model.xml',
-		filetype: 'text/xml',
 	});
 	const url = `${api.makeUrl(knowledgebaseApi, 'files')}?${query}`;
 	const params = _.merge(
@@ -341,7 +340,7 @@ function kbSaveModelFile(modelId, modelXmlStr) {
 	const query = queryString.stringify({
 		model_id: modelId,
 		filename: 'model.xml',
-		filetype: 'text/xml',
+		filetype: 'model_file',
 	});
 	const url = `${api.makeUrl(knowledgebaseApi, 'files')}?${query}`;
 	const params = _.merge(
