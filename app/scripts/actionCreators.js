@@ -82,16 +82,24 @@ function initMap(modelId=undefined, metadata=undefined) {
 				dispatch( resetTransformation() );
 			})
 			.then(() => {
-				// load model-specific stuff from knowledgebase
-				dispatch( loadComponentTypes() );
-				dispatch( loadAttackerProfiles() );
-				dispatch( loadToolChains() );
-			})
-			.then(() => {
-				// fake api
-				dispatch( loadModelPatterns() );
-				dispatch( loadRelationTypes() );
+				dispatch( fetchKbData() );
 			});
+	};
+};
+
+
+const fetchKbData =
+module.exports.fetchKbData =
+function fetchKbData() {
+	return (dispatch, getState) => {
+		// load model-specific stuff from knowledgebase
+		dispatch( loadComponentTypes() );
+		dispatch( loadAttackerProfiles() );
+		dispatch( loadToolChains() );
+
+		// fake api
+		dispatch( loadModelPatterns() );
+		dispatch( loadRelationTypes() );
 	};
 };
 
