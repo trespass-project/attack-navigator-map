@@ -80,6 +80,11 @@ let App = React.createClass({
 		}
 	},
 
+	fetchKbData(event) {
+		event.preventDefault();
+		this.props.dispatch( actionCreators.fetchKbData() );
+	},
+
 	render() {
 		const props = this.props;
 		return (
@@ -102,6 +107,13 @@ let App = React.createClass({
 								target='_blank'
 							>
 								edit knowledgebase files
+							</a>
+							<br />
+							<a
+								href='#'
+								onClick={this.fetchKbData}
+							>
+								re-fetch knowledgebase data
 							</a>
 						</div>
 						: ''
