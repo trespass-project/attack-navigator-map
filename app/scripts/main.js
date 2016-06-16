@@ -121,6 +121,14 @@ let App = React.createClass({
 
 					<hr style={{ marginTop: 5, marginBottom: 5 }} />
 					ANM {pkg.version}<br />
+					<UsageHint>
+						<a
+							target='_blank'
+							href='https://docs.google.com/document/d/1Qp8nJgdvDespq1Q5zQcAT1SSTKK23m2XKMUKKmoKYQU/edit?usp=sharing'
+						>
+							manual
+						</a>
+					</UsageHint>
 
 					<UsageHint>
 						<a
