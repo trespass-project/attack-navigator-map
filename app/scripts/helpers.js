@@ -1,5 +1,3 @@
-'use strict';
-
 const R = require('ramda');
 const $ = require('jquery');
 const reactDOM = require('react-dom');
@@ -56,17 +54,19 @@ const getItemById = module.exports.getItemById = R.partial(getItemByKey, ['id'])
 const getNodesBBox = module.exports.getNodesBBox =
 function getNodesBBox(nodes) {
 	const bounds = nodes.reduce(
-		function(_bounds, node) {
+		(_bounds, node) => {
 			_bounds.minX = Math.min(_bounds.minX, node.x);
 			_bounds.minY = Math.min(_bounds.minY, node.y);
 			_bounds.maxX = Math.max(_bounds.maxX, node.x);
 			_bounds.maxY = Math.max(_bounds.maxY, node.y);
 			return _bounds;
 		},
-		{ minX: Infinity,
-		  minY: Infinity,
-		  maxX: -Infinity,
-		  maxY: -Infinity }
+		{
+			minX: Infinity,
+			minY: Infinity,
+			maxX: -Infinity,
+			maxY: -Infinity
+		}
 	);
 
 	if (nodes.length === 0) {
@@ -132,29 +132,29 @@ function isRectInsideRect(r1, r2) {
 	// when r1 (width or height) is bigger than r2,
 	// or r1 is completely overlapping r2
 
-	const r1_xPlusWidth = r1.x + r1.width;
-	const r1_yPlusHeight = r1.y + r1.height;
-	const r2_xPlusWidth = r2.x + r2.width;
-	const r2_yPlusHeight = r2.y + r2.height;
+	const r1XPlusWidth = r1.x + r1.width;
+	const r1YPlusHeight = r1.y + r1.height;
+	const r2XPlusWidth = r2.x + r2.width;
+	const r2YPlusHeight = r2.y + r2.height;
 
 	const insideX =
-		isBetween(r1.x, r2.x, r2_xPlusWidth) ||
-		isBetween(r1_xPlusWidth, r2.x, r2_xPlusWidth) ||
+		isBetween(r1.x, r2.x, r2XPlusWidth) ||
+		isBetween(r1XPlusWidth, r2.x, r2XPlusWidth) ||
 		(
 			(r1.width > r2.width) &&
 			(
-				isBetween(r2.x, r1.x, r1_xPlusWidth) ||
-				isBetween(r2_xPlusWidth, r1.x, r1_xPlusWidth)
+				isBetween(r2.x, r1.x, r1XPlusWidth) ||
+				isBetween(r2XPlusWidth, r1.x, r1XPlusWidth)
 			)
 		);
 	const insideY =
-		isBetween(r1.y, r2.y, r2_yPlusHeight) ||
-		isBetween(r1_yPlusHeight, r2.y, r2_yPlusHeight) ||
+		isBetween(r1.y, r2.y, r2YPlusHeight) ||
+		isBetween(r1YPlusHeight, r2.y, r2YPlusHeight) ||
 		(
 			(r1.height > r2.height) &&
 			(
-				isBetween(r2.y, r1.y, r1_yPlusHeight) ||
-				isBetween(r2_yPlusHeight, r1.y, r1_yPlusHeight)
+				isBetween(r2.y, r1.y, r1YPlusHeight) ||
+				isBetween(r2YPlusHeight, r1.y, r1YPlusHeight)
 			)
 		);
 
@@ -235,11 +235,11 @@ function coordsRelativeToElem(elem, xy) {
 const getTransformToElement = module.exports.getTransformToElement =
 function getTransformToElement(element, target) {
 	try {
-    	var mTargetInverse = target.getScreenCTM().inverse();
+		const mTargetInverse = target.getScreenCTM().inverse();
+		return mTargetInverse.multiply(element.getScreenCTM());
 	} catch (e) {
-		throw "'target' CTM is not invertible.";
+		throw new Error("'target' CTM is not invertible.");
 	}
-	return mTargetInverse.multiply(element.getScreenCTM());
 };
 
 
