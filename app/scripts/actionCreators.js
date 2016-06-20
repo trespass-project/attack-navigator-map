@@ -4,7 +4,6 @@ const R = require('ramda');
 const _ = require('lodash');
 const JSZip = require('jszip');
 const saveAs = require('browser-saveas');
-// require('whatwg-fetch');
 const queryString = require('query-string');
 const trespass = require('trespass.js');
 const trespassModel = trespass.model;
@@ -64,7 +63,7 @@ module.exports.initMap =
 function initMap(modelId=undefined, metadata=undefined) {
 	return (dispatch, getState) => {
 		// create model, if necessary
-		return kbGetModelOrCreate(modelId)
+		return getModelOrCreate(modelId)
 			.then(({ modelId, isNew=false }) => {
 				// set model id
 				dispatch({
@@ -77,7 +76,8 @@ function initMap(modelId=undefined, metadata=undefined) {
 				if (isNew) {
 					dispatch( saveModelToKb() );
 				}
-
+			})
+			.then(() => {
 				// reset view
 				dispatch( resetTransformation() );
 			})
@@ -108,169 +108,28 @@ function fetchKbData() {
  * creates a new model in the knowledgebase
  * @returns {Promise} - { modelId, isNew }
  */
-const kbGetModelOrCreate =
-module.exports.kbGetModelOrCreate =
-function kbGetModelOrCreate(_modelId) {
+const getModelOrCreate =
+module.exports.getModelOrCreate =
+function getModelOrCreate(_modelId) {
 	if (!_modelId) {
-		console.warn('no model id provided – creating new one.');
-		return kbCreateModel();
+		const modelId = helpers.makeId('model');
+		console.warn(`no model id provided – creating new one: ${modelId}`);
+		return knowledgebaseApi.createModel($.ajax, modelId);
 	}
 
-	return kbGetModel(_modelId)
+	return knowledgebaseApi.getModel($.ajax, _modelId)
 		.then((modelId) => {
 			const doesExist = !!modelId;
 			if (doesExist) {
 				const isNew = false;
 				return Promise.resolve({ modelId, isNew });
 			} else {
-				console.warn('model does not exist – creating new one with same id.');
-				return kbCreateModel(_modelId);
+				console.warn(`model does not exist – creating new one with same id: ${_modelId}`);
+				return knowledgebaseApi.createModel($.ajax, _modelId);
 			}
 		})
 		.catch((err) => {
-			console.error(err);
-		});
-};
-
-
-/**
- * gets a model from the knowledgebae
- * @returns {Promise} - modelId or null, if model doesn't exist
- */
-const kbGetModel =
-module.exports.kbGetModel =
-function kbGetModel(modelId) {
-	return new Promise((resolve, reject) => {
-		if (!modelId) {
-			return reject('no model id provided');
-		}
-
-		const url = api.makeUrl(knowledgebaseApi, `model/${modelId}`);
-		const params = _.merge(
-			{ url },
-			api.requestOptions.jquery.acceptJSON,
-			api.requestOptions.jquery.crossDomain
-		);
-
-		$.ajax(params)
-			.done((model, textStatus, xhr) => {
-				resolve(modelId);
-			})
-			.fail((xhr, textStatus, err) => {
-				if (xhr.status === 404) {
-					resolve(null); // model does not exist
-				} else {
-					reject(`something went wrong: ${xhr.status}`);
-				}
-			});
-	});
-};
-
-
-/**
- * creates a new model in the knowledgebase.
- * @param {string} desiredModelId
- * @returns {Promise} - { modelId, isNew }
- */
-const kbCreateModel =
-module.exports.kbCreateModel =
-function kbCreateModel(desiredModelId=undefined) {
-	const modelId = desiredModelId || helpers.makeId('model');
-
-	return new Promise((resolve, reject) => {
-		knowledgebaseApi.createModel($.ajax, modelId)
-			.fail((xhr, textStatus, err) => {
-				reject();
-			})
-			.done((data, textStatus, xhr) => {
-				if (xhr.status === 200) {
-					const isNew = true;
-					resolve({ modelId, isNew });
-				} else {
-					console.error(`something went wrong: ${xhr.status}`);
-					reject();
-				}
-			});
-	});
-};
-
-
-const kbCreateItem =
-module.exports.kbCreateItem =
-function kbCreateItem(modelId, item) {
-	// console.log('creating', item);
-
-	if (!modelId) {
-		console.error('no model id provided');
-		return;
-	}
-
-	// knowledgebaseApi.createItem(fetch, modelId, item)
-	// 	.catch((err) => {
-	// 		console.error(err.stack);
-	// 	})
-	// 	.then((res) => {
-	// 		if (res.status === 200) {
-	// 			// knowledgebaseApi.getItem(fetch, modelId, item.id)
-	// 			// 	.catch((err) => {
-	// 			// 		console.error(err.stack);
-	// 			// 	})
-	// 			// 	.then((res) => {
-	// 			// 		return res.json();
-	// 			// 	})
-	// 			// 	.then((data) => {
-	// 			// 		return console.log(data);
-	// 			// 	});
-	// 		} else {
-	// 			console.error(`something went wrong: ${res.status}`);
-	// 		};
-	// 	});
-
-	knowledgebaseApi.createItem($.ajax, modelId, item)
-		.fail((xhr, textStatus, err) => {
 			console.error(err.stack);
-		})
-		.done((data, textStatus, xhr) => {
-			if (xhr.status === 200) {
-				//
-			} else {
-				console.error(`something went wrong: ${xhr.status}`);
-			}
-		});
-};
-
-
-const kbDeleteItem =
-module.exports.kbDeleteItem =
-function kbDeleteItem(modelId, itemId) {
-	// console.log('deleting', itemId);
-
-	if (!modelId) {
-		console.error('no model id provided');
-		return;
-	}
-
-	// knowledgebaseApi.deleteItem(fetch, modelId, itemId)
-	// 	.catch((err) => {
-	// 		console.error(err.stack);
-	// 	})
-	// 	.then((res) => {
-	// 		if (res.status === 200) {
-	// 			// TODO: ?
-	// 		} else {
-	// 			console.error(`something went wrong: ${res.status}`);
-	// 		};
-	// 	});
-	knowledgebaseApi.deleteItem($.ajax, modelId, itemId)
-		.fail((xhr, textStatus, err) => {
-			console.error(err.stack);
-		})
-		.done((data, textStatus, xhr) => {
-			if (xhr.status === 200) {
-				// TODO: ?
-			} else {
-				console.error(`something went wrong: ${xhr.status}`);
-			}
 		});
 };
 
@@ -279,41 +138,22 @@ const loadModelFromKb =
 module.exports.loadModelFromKb =
 function loadModelFromKb(modelId) {
 	return (dispatch, getState) => {
-		return kbGetModelFile(modelId)
+		return knowledgebaseApi.getModelFile($.ajax, modelId)
 			.then((modelXML) => {
 				// console.log(modelXML);
 				dispatch( loadXML(modelXML) );
 			})
 			.catch((jqXHR) => {
 				if (jqXHR.status === 404) {
-					console.error('no model file found');
-					alert('no model file found');
+					const message = 'no model file found';
+					console.error(message);
+					alert(message);
 					return;
 				}
 				console.error(jqXHR.statusText);
 				alert(jqXHR.statusText);
 			});
 	};
-};
-
-
-const kbGetModelFile =
-module.exports.kbGetModelFile =
-function kbGetModelFile(modelId) {
-	const query = queryString.stringify({
-		model_id: modelId,
-		filename: 'model.xml',
-	});
-	const url = `${api.makeUrl(knowledgebaseApi, 'files')}?${query}`;
-	const params = _.merge(
-		{
-			url,
-			contentType: 'text/xml',
-		},
-		api.requestOptions.jquery.acceptPlainText,
-		api.requestOptions.jquery.crossDomain
-	);
-	return $.ajax(params);
 };
 
 
@@ -329,7 +169,7 @@ function saveModelToKb() {
 		);
 		const modelXmlStr = trespassModel.toXML(model);
 
-		return kbSaveModelFile(modelId, modelXmlStr)
+		return knowledgebaseApi.saveModelFile($.ajax, modelId, modelXmlStr)
 			.then(() => {
 				console.info('model sent');
 			})
@@ -341,28 +181,7 @@ function saveModelToKb() {
 };
 
 
-// TODO: refactor `putModelAndScenarioIntoKnowledgebase()`
-const kbSaveModelFile =
-module.exports.kbSaveModelFile =
-function kbSaveModelFile(modelId, modelXmlStr) {
-	const query = queryString.stringify({
-		model_id: modelId,
-		filename: 'model.xml',
-		filetype: 'model_file',
-	});
-	const url = `${api.makeUrl(knowledgebaseApi, 'files')}?${query}`;
-	const params = _.merge(
-		{
-			url,
-			data: modelXmlStr,
-			method: 'put',
-			contentType: 'text/xml',
-		},
-		api.requestOptions.jquery.acceptPlainText,
-		api.requestOptions.jquery.crossDomain
-	);
-	return $.ajax(params);
-};
+// TODO: refactor `putModelAndScenarioIntoKnowledgebase()` to use `saveModelFile()`
 
 
 module.exports.setEditorElem =
@@ -427,7 +246,7 @@ function importFragment(fragment, xy) {
 			cb: (modelId, importedNodes) => {
 				importedNodes
 					.forEach((node) => {
-						kbCreateItem(modelId, node);
+						knowledgebaseApi.createItem($.ajax, modelId, node);
 					});
 			}
 		});
@@ -637,7 +456,9 @@ function removeNode(nodeId) {
 		dispatch({
 			type: constants.ACTION_removeNode,
 			nodeId,
-			cb: kbDeleteItem
+			cb: (modelId, itemId) => {
+				knowledgebaseApi.deleteItem($.ajax, modelId, itemId);
+			}
 		});
 	};
 };
@@ -908,7 +729,9 @@ function removeGroup(groupId, removeNodes=false) {
 	return {
 		type: constants.ACTION_removeGroup,
 		groupId, removeNodes,
-		cb: kbDeleteItem
+		cb: (modelId, itemId) => {
+			knowledgebaseApi.deleteItem($.ajax, modelId, itemId);
+		}
 	};
 };
 
@@ -919,7 +742,9 @@ function updateComponentProperties(componentId, graphComponentType, newPropertie
 	return {
 		type: constants.ACTION_updateComponentProperties,
 		componentId, graphComponentType, newProperties,
-		cb: kbCreateItem
+		cb: (modelId, item) => {
+			knowledgebaseApi.createItem($.ajax, modelId, item);
+		}
 	};
 };
 
@@ -1027,14 +852,6 @@ function putModelAndScenarioIntoKnowledgebase(modelId, modelData, scenarioData) 
 	const taskFuncs = tasksData
 		.map((item, index) => {
 			const url = `${api.makeUrl(knowledgebaseApi, 'files')}?${item.query}`;
-			// const params = _.merge(
-			// 	{
-			// 		method: 'put',
-			// 		body: item.data
-			// 	},
-			// 	api.requestOptions.fetch.acceptJSON,
-			// 	api.requestOptions.fetch.crossDomain
-			// );
 			const params = _.merge(
 				{
 					url,
@@ -1049,32 +866,7 @@ function putModelAndScenarioIntoKnowledgebase(modelId, modelData, scenarioData) 
 
 			return () => {
 				console.log(item.query);
-				// return fetch(url, params)
-				// 	.catch((err) => {
-				// 		console.error(err.stack);
-				// 	})
-				// 	.then((res) => {
-				// 		if (res.status === 200) {
-				// 			// console.log('success (200)', url);
-				// 		} else {
-				// 			console.error(`something went wrong (${res.status})`, url);
-				// 		}
-				// 	});
 				return $.ajax(params);
-					// .fail((xhr, textStatus, err) => {
-					// 	console.error(err.stack);
-					// })
-					// .catch((err) => {
-					// 	console.error(err.stack);
-					// })
-					// .then((toolChains, textStatus, xhr) => {
-					// 	console.log(arguments);
-					// 	if (xhr.status === 200) {
-					// 		// console.log('success (200)', url);
-					// 	} else {
-					// 		console.error(`something went wrong (${xhr.status})`, url);
-					// 	}
-					// });
 			};
 		});
 
@@ -1097,10 +889,6 @@ function monitorTaskStatus(taskUrl, _callbacks={}) {
 	});
 
 	const url = taskUrl;
-	// const params = _.merge(
-	// 	api.requestOptions.fetch.acceptJSON,
-	// 	api.requestOptions.fetch.crossDomain
-	// );
 	const params = _.merge(
 		{ url },
 		api.requestOptions.jquery.acceptJSON,
@@ -1222,14 +1010,6 @@ function setAnalysisResults(analysisResults) {
 
 
 function kbRunToolchain(toolChainId, modelId, attackerProfileId, callbacks={}) {
-	// knowledgebaseApi.runToolChain(fetch, modelId, toolChainId, attackerProfileId, callbacks)
-	// 	.then((res) => {
-	// 		return res.json();
-	// 	})
-	// 	.then((data) => {
-	// 		// console.log(data);
-	// 		monitorTaskStatus(data.task_url, callbacks);
-	// 	});
 	knowledgebaseApi.runToolChain($.ajax, modelId, toolChainId, attackerProfileId, callbacks)
 		.done((data, textStatus, xhr) => {
 			// console.log(data);
@@ -1294,21 +1074,6 @@ function retrieveAnalysisResults(taskStatusData) {
 
 	const promises = tools
 		.map((tool) => {
-			// const params = _.merge(
-			// 	{ method: 'get' },
-			// 	// api.requestOptions.fetch.acceptJSON,
-			// 	api.requestOptions.fetch.crossDomain
-			// );
-			// return fetch(tool.result_file_url, params)
-			// 	.then((res) => {
-			// 		return res.blob();
-			// 	})
-			// 	.then((blob) => {
-			// 		return {
-			// 			name: tool.name,
-			// 			blob,
-			// 		};
-			// 	});
 			const params = _.merge(
 				{
 					url: tool.result_file_url,
@@ -1554,33 +1319,7 @@ function loadToolChains() {
 		const state = getState();
 		const modelId = state.model.metadata.id;
 
-		const url = api.makeUrl(knowledgebaseApi, `toolchain?model_id=${modelId}`);
-		// const params = _.merge(
-		// 	{},
-		// 	api.requestOptions.fetch.acceptJSON,
-		// 	api.requestOptions.fetch.crossDomain
-		// );
-		// fetch(url, params)
-		// 	.catch((err) => {
-		// 		console.error(err.stack);
-		// 	})
-		// 	.then((res) => {
-		// 		return res.json();
-		// 	})
-		// 	.then((toolChains) => {
-		// 		// TODO: do they all begin with treemaker?
-		// 		dispatch({
-		// 			type: constants.ACTION_loadToolChains_DONE,
-		// 			normalizedToolChains: helpers.normalize(toolChains)
-		// 		});
-		// 	});
-		const params = _.merge(
-			{ url },
-			api.requestOptions.jquery.crossDomain,
-			api.requestOptions.jquery.acceptJSON,
-			api.requestOptions.jquery.contentTypeJSON
-		);
-		$.ajax(params)
+		knowledgebaseApi.getToolChains($.ajax, modelId)
 			.fail((xhr, textStatus, err) => {
 				console.error(err.stack);
 			})
@@ -1595,40 +1334,6 @@ function loadToolChains() {
 };
 
 
-// const loadToolChains =
-// module.exports.loadToolChains =
-// function loadToolChains() {
-// 	return (dispatch, getState) => {
-// 		// dispatch({ type: constants.ACTION_loadToolChains });
-
-// 		const params = _.merge(
-// 			{
-// 				dataType: 'json',
-// 				url: api.makeUrl(toolsApi, 'secured/tool-chain'),
-// 				// data: data,
-// 			},
-// 			api.requestOptions.jquery.crossDomain,
-// 			api.requestOptions.jquery.withCredentials
-// 		);
-// 		const req = $.ajax(params);
-// 		Q(req)
-// 			.then((chains) => {
-// 				// only get those chains that begin with treemaker
-// 				const treemakerName = 'Treemaker'; // TODO: don't hardcode
-// 				const toolChains = chains
-// 					.filter((toolChain) => {
-// 						return toolChain.tools[0].name === treemakerName;
-// 					});
-// 				dispatch({
-// 					type: constants.ACTION_loadToolChains_DONE,
-// 					normalizedToolChains: helpers.normalize(toolChains)
-// 				});
-// 			})
-// 			.catch(handleError);
-// 	};
-// };
-
-
 const loadAttackerProfiles =
 module.exports.loadAttackerProfiles =
 function loadAttackerProfiles() {
@@ -1637,15 +1342,8 @@ function loadAttackerProfiles() {
 
 		const state = getState();
 		const modelId = state.model.metadata.id;
-		const url = api.makeUrl(knowledgebaseApi, `attackerprofile?model_id=${modelId}`);
-		const params = _.merge(
-			{ url },
-			api.requestOptions.jquery.acceptJSON,
-			api.requestOptions.jquery.contentTypeJSON,
-			api.requestOptions.jquery.crossDomain
-		);
 
-		$.ajax(params)
+		knowledgebaseApi.getAttackerProfiles($.ajax, modelId)
 			.then((attackerProfiles) => {
 				dispatch({
 					type: constants.ACTION_loadAttackerProfiles_DONE,

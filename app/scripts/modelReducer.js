@@ -49,7 +49,10 @@ function reducer(state=initialState, action) {
 				title = metadata.title;
 			}
 			if (!title) {
-				title = prompt('Map title');
+				title = prompt('Enter map title');
+				if (_.isString(title) && title.trim() === '') {
+					title = undefined;
+				}
 			}
 
 			// - clone initial state
