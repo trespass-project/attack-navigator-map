@@ -4,7 +4,6 @@ const R = require('ramda');
 const _ = require('lodash');
 const JSZip = require('jszip');
 const saveAs = require('browser-saveas');
-// require('whatwg-fetch');
 const queryString = require('query-string');
 const trespass = require('trespass.js');
 const trespassModel = trespass.model;
@@ -205,27 +204,6 @@ function kbCreateItem(modelId, item) {
 		return;
 	}
 
-	// knowledgebaseApi.createItem(fetch, modelId, item)
-	// 	.catch((err) => {
-	// 		console.error(err.stack);
-	// 	})
-	// 	.then((res) => {
-	// 		if (res.status === 200) {
-	// 			// knowledgebaseApi.getItem(fetch, modelId, item.id)
-	// 			// 	.catch((err) => {
-	// 			// 		console.error(err.stack);
-	// 			// 	})
-	// 			// 	.then((res) => {
-	// 			// 		return res.json();
-	// 			// 	})
-	// 			// 	.then((data) => {
-	// 			// 		return console.log(data);
-	// 			// 	});
-	// 		} else {
-	// 			console.error(`something went wrong: ${res.status}`);
-	// 		};
-	// 	});
-
 	knowledgebaseApi.createItem($.ajax, modelId, item)
 		.fail((xhr, textStatus, err) => {
 			console.error(err.stack);
@@ -250,17 +228,6 @@ function kbDeleteItem(modelId, itemId) {
 		return;
 	}
 
-	// knowledgebaseApi.deleteItem(fetch, modelId, itemId)
-	// 	.catch((err) => {
-	// 		console.error(err.stack);
-	// 	})
-	// 	.then((res) => {
-	// 		if (res.status === 200) {
-	// 			// TODO: ?
-	// 		} else {
-	// 			console.error(`something went wrong: ${res.status}`);
-	// 		};
-	// 	});
 	knowledgebaseApi.deleteItem($.ajax, modelId, itemId)
 		.fail((xhr, textStatus, err) => {
 			console.error(err.stack);
@@ -1027,14 +994,6 @@ function putModelAndScenarioIntoKnowledgebase(modelId, modelData, scenarioData) 
 	const taskFuncs = tasksData
 		.map((item, index) => {
 			const url = `${api.makeUrl(knowledgebaseApi, 'files')}?${item.query}`;
-			// const params = _.merge(
-			// 	{
-			// 		method: 'put',
-			// 		body: item.data
-			// 	},
-			// 	api.requestOptions.fetch.acceptJSON,
-			// 	api.requestOptions.fetch.crossDomain
-			// );
 			const params = _.merge(
 				{
 					url,
@@ -1049,32 +1008,7 @@ function putModelAndScenarioIntoKnowledgebase(modelId, modelData, scenarioData) 
 
 			return () => {
 				console.log(item.query);
-				// return fetch(url, params)
-				// 	.catch((err) => {
-				// 		console.error(err.stack);
-				// 	})
-				// 	.then((res) => {
-				// 		if (res.status === 200) {
-				// 			// console.log('success (200)', url);
-				// 		} else {
-				// 			console.error(`something went wrong (${res.status})`, url);
-				// 		}
-				// 	});
 				return $.ajax(params);
-					// .fail((xhr, textStatus, err) => {
-					// 	console.error(err.stack);
-					// })
-					// .catch((err) => {
-					// 	console.error(err.stack);
-					// })
-					// .then((toolChains, textStatus, xhr) => {
-					// 	console.log(arguments);
-					// 	if (xhr.status === 200) {
-					// 		// console.log('success (200)', url);
-					// 	} else {
-					// 		console.error(`something went wrong (${xhr.status})`, url);
-					// 	}
-					// });
 			};
 		});
 
@@ -1097,10 +1031,6 @@ function monitorTaskStatus(taskUrl, _callbacks={}) {
 	});
 
 	const url = taskUrl;
-	// const params = _.merge(
-	// 	api.requestOptions.fetch.acceptJSON,
-	// 	api.requestOptions.fetch.crossDomain
-	// );
 	const params = _.merge(
 		{ url },
 		api.requestOptions.jquery.acceptJSON,
@@ -1222,14 +1152,6 @@ function setAnalysisResults(analysisResults) {
 
 
 function kbRunToolchain(toolChainId, modelId, attackerProfileId, callbacks={}) {
-	// knowledgebaseApi.runToolChain(fetch, modelId, toolChainId, attackerProfileId, callbacks)
-	// 	.then((res) => {
-	// 		return res.json();
-	// 	})
-	// 	.then((data) => {
-	// 		// console.log(data);
-	// 		monitorTaskStatus(data.task_url, callbacks);
-	// 	});
 	knowledgebaseApi.runToolChain($.ajax, modelId, toolChainId, attackerProfileId, callbacks)
 		.done((data, textStatus, xhr) => {
 			// console.log(data);
@@ -1294,21 +1216,6 @@ function retrieveAnalysisResults(taskStatusData) {
 
 	const promises = tools
 		.map((tool) => {
-			// const params = _.merge(
-			// 	{ method: 'get' },
-			// 	// api.requestOptions.fetch.acceptJSON,
-			// 	api.requestOptions.fetch.crossDomain
-			// );
-			// return fetch(tool.result_file_url, params)
-			// 	.then((res) => {
-			// 		return res.blob();
-			// 	})
-			// 	.then((blob) => {
-			// 		return {
-			// 			name: tool.name,
-			// 			blob,
-			// 		};
-			// 	});
 			const params = _.merge(
 				{
 					url: tool.result_file_url,
@@ -1555,25 +1462,6 @@ function loadToolChains() {
 		const modelId = state.model.metadata.id;
 
 		const url = api.makeUrl(knowledgebaseApi, `toolchain?model_id=${modelId}`);
-		// const params = _.merge(
-		// 	{},
-		// 	api.requestOptions.fetch.acceptJSON,
-		// 	api.requestOptions.fetch.crossDomain
-		// );
-		// fetch(url, params)
-		// 	.catch((err) => {
-		// 		console.error(err.stack);
-		// 	})
-		// 	.then((res) => {
-		// 		return res.json();
-		// 	})
-		// 	.then((toolChains) => {
-		// 		// TODO: do they all begin with treemaker?
-		// 		dispatch({
-		// 			type: constants.ACTION_loadToolChains_DONE,
-		// 			normalizedToolChains: helpers.normalize(toolChains)
-		// 		});
-		// 	});
 		const params = _.merge(
 			{ url },
 			api.requestOptions.jquery.crossDomain,
@@ -1593,40 +1481,6 @@ function loadToolChains() {
 			});
 	};
 };
-
-
-// const loadToolChains =
-// module.exports.loadToolChains =
-// function loadToolChains() {
-// 	return (dispatch, getState) => {
-// 		// dispatch({ type: constants.ACTION_loadToolChains });
-
-// 		const params = _.merge(
-// 			{
-// 				dataType: 'json',
-// 				url: api.makeUrl(toolsApi, 'secured/tool-chain'),
-// 				// data: data,
-// 			},
-// 			api.requestOptions.jquery.crossDomain,
-// 			api.requestOptions.jquery.withCredentials
-// 		);
-// 		const req = $.ajax(params);
-// 		Q(req)
-// 			.then((chains) => {
-// 				// only get those chains that begin with treemaker
-// 				const treemakerName = 'Treemaker'; // TODO: don't hardcode
-// 				const toolChains = chains
-// 					.filter((toolChain) => {
-// 						return toolChain.tools[0].name === treemakerName;
-// 					});
-// 				dispatch({
-// 					type: constants.ACTION_loadToolChains_DONE,
-// 					normalizedToolChains: helpers.normalize(toolChains)
-// 				});
-// 			})
-// 			.catch(handleError);
-// 	};
-// };
 
 
 const loadAttackerProfiles =
