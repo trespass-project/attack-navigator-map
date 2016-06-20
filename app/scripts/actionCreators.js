@@ -593,15 +593,6 @@ function getXMLBlob(xmlStr) {
 };
 
 
-function replaceIdsInString(str, idReplacementMap={}) {
-	return R.keys(idReplacementMap)
-		.reduce((acc, oldId) => {
-			const re = new RegExp(oldId, 'g');
-			return acc.replace(re, idReplacementMap[oldId]);
-		}, str);
-}
-
-
 function stateToHumanReadableModelXML(state) {
 	const idReplacementMap = ['nodes', ...modelHelpers.collectionNames]
 		.reduce((acc, collName) => {
@@ -623,7 +614,7 @@ function stateToHumanReadableModelXML(state) {
 	let modelXmlStr = trespassModel.toXML(model);
 
 	// HACK: replace all ids with their human-readable versions
-	modelXmlStr = replaceIdsInString(modelXmlStr, idReplacementMap);
+	modelXmlStr = helpers.replaceIdsInString(modelXmlStr, idReplacementMap);
 
 	return { modelXmlStr, model, idReplacementMap };
 }
@@ -637,7 +628,7 @@ function stateToHumanReadableScenarioXML(state, modelId, modelFileName, idReplac
 	);
 
 	// HACK: replace all ids with their human-readable versions
-	scenarioXmlStr = replaceIdsInString(scenarioXmlStr, idReplacementMap);
+	scenarioXmlStr = helpers.replaceIdsInString(scenarioXmlStr, idReplacementMap);
 
 	return scenarioXmlStr;
 }
