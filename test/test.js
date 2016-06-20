@@ -23,7 +23,6 @@ const modelHelpers = require('../app/scripts/model-helpers.js');
 
 
 describe(f1('helpers.js'), () => {
-
 	describe(f2('toHashMap()'), () => {
 		const list = [
 			{ id: 'item-1' },
@@ -236,7 +235,6 @@ describe(f1('helpers.js'), () => {
 
 
 describe(f1('model-helpers.js'), () => {
-
 	describe(f2('getNodeGroups()'), () => {
 		const node = { id: 'node-id' };
 		const groups = {
@@ -348,21 +346,21 @@ describe(f1('model-helpers.js'), () => {
 	describe(f2('replaceIdInEdge()'), () => {
 		it(f3('should stay the same'), () => {
 			const mapping = {};
-			const edge = { from: 'a', to: 'b' }
+			const edge = { from: 'a', to: 'b' };
 			const newEdge = modelHelpers.replaceIdInEdge(mapping, edge);
 			assert(newEdge.from === edge.from);
 		});
 
 		it(f3('should work with `from`'), () => {
 			const mapping = { 'a': 'something' };
-			const edge = { from: 'a', to: 'b' }
+			const edge = { from: 'a', to: 'b' };
 			const newEdge = modelHelpers.replaceIdInEdge(mapping, edge);
 			assert(newEdge.from === 'something');
 		});
 
 		it(f3('should work with `to`'), () => {
 			const mapping = { 'b': 'something' };
-			const edge = { from: 'a', to: 'b' }
+			const edge = { from: 'a', to: 'b' };
 			const newEdge = modelHelpers.replaceIdInEdge(mapping, edge);
 			assert(newEdge.to === 'something');
 		});
@@ -804,7 +802,7 @@ describe(f1('model-helpers.js'), () => {
 		it(f3('should give cloned nodes a new id'), () => {
 			newGroups[1].nodeIds
 				.forEach((nodeId) => {
-					assert(!R.contains(nodeId, newGroups[0].nodeIds))
+					assert(!R.contains(nodeId, newGroups[0].nodeIds));
 				});
 		});
 
@@ -955,7 +953,7 @@ describe(f1('model-helpers.js'), () => {
 			id: 'policy'
 		});
 
-		const {graph} = modelHelpers.graphFromModel(model);
+		const { graph } = modelHelpers.graphFromModel(model);
 		const edges = R.values(graph.edges);
 		const nodes = R.values(graph.nodes);
 		const processes = R.values(graph.processes);
@@ -1056,11 +1054,7 @@ describe(f1('model-helpers.js'), () => {
 
 
 
-
-
-
 describe(f1('helpers.js'), () => {
-
 	describe(f2('handleStatus()'), () => {
 		const taskStatusData = {
 			tool_status: [
@@ -1081,5 +1075,4 @@ describe(f1('helpers.js'), () => {
 			assert(categorized.pending.length === 2);
 		});
 	});
-
 });
