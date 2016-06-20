@@ -1,5 +1,6 @@
 const $ = require('jquery');
 const R = require('ramda');
+const _ = require('lodash');
 const React = require('react');
 const classnames = require('classnames');
 const actionCreators = require('./actionCreators.js');
@@ -183,7 +184,7 @@ const Wizard = React.createClass({
 				<ul>
 					{props.recentModels
 						.map((model) => {
-							return <li key={model['date-created']}>
+							return <li key={model.model_id}>
 								<span className='title'>
 									<a
 										href='#'
@@ -544,6 +545,10 @@ const Wizard = React.createClass({
 			<hr />
 
 			<div>
+				{(_.isEmpty(otherWarnings) || _.isEmpty(missingForAnalysis))
+					? null
+					: <h3>Problems</h3>
+				}
 				<ul>
 					{otherWarnings
 						.map(item => <li key={item}>{item}</li>)
@@ -556,12 +561,14 @@ const Wizard = React.createClass({
 				</ul>
 			</div>
 
-			<div style={{
-				display: 'flex',
-				flexDirection: 'column',
-				alignItems: 'center',
-				justifyContent: 'center',
-			}}>
+			<div
+				style={{
+					display: 'flex',
+					flexDirection: 'column',
+					alignItems: 'center',
+					justifyContent: 'center',
+				}}
+			>
 				{/*<div>
 					<input type='checkbox' name='checkbox-dl-scenario' ref='checkbox-dl-scenario' />&nbsp;
 					<label style={{ fontWeight: 'normal' }} htmlFor='checkbox-dl-scenario'>
@@ -625,7 +632,7 @@ const Wizard = React.createClass({
 							name='import'
 							selectedSection={wizardSelectedSection}
 							icon='images/icons/import-01.svg'
-							tooltip='Import model'
+							tooltip='Import / create model'
 							handleClick={R.partial(this.selectWizardStep, ['import'])}
 						/>
 						<Tab
