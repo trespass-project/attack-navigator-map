@@ -74,15 +74,15 @@ function initMap(modelId=undefined, metadata=undefined) {
 
 				// save new model
 				if (isNew) {
-					dispatch( saveModelToKb() );
+					dispatch( saveModelToKb() )
+						.then(() => {
+							dispatch( fetchKbData() );
+						});
 				}
 			})
 			.then(() => {
 				// reset view
 				dispatch( resetTransformation() );
-			})
-			.then(() => {
-				dispatch( fetchKbData() );
 			});
 	};
 };
@@ -96,6 +96,8 @@ function fetchKbData() {
 		dispatch( loadComponentTypes() );
 		dispatch( loadAttackerProfiles() );
 		dispatch( loadToolChains() );
+
+		dispatch( getRecentFiles() );
 
 		// fake api
 		dispatch( loadModelPatterns() );

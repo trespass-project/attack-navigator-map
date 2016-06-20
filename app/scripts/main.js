@@ -46,7 +46,6 @@ let App = React.createClass({
 	componentDidMount() {
 		const props = this.props;
 
-		props.dispatch( actionCreators.resetTransformation() );
 		props.dispatch( actionCreators.getRecentFiles() );
 
 		const editorElem = document.querySelector('#editor > svg');
