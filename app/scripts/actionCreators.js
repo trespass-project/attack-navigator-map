@@ -77,11 +77,15 @@ function initMap(modelId=undefined, metadata=undefined) {
 					metadata,
 				});
 
+				// get data in any case
+				dispatch( fetchKbData() );
+
 				// save new model
 				if (isNew) {
 					dispatch( saveModelToKb() )
 						.then(() => {
-							dispatch( fetchKbData() );
+							// make sure new model shows up in recent files
+							dispatch( getRecentFiles() );
 						});
 				}
 			})
@@ -105,6 +109,7 @@ function fetchKbData() {
 		dispatch( getRecentFiles() );
 
 		// fake api
+		// TODO: should use kb
 		dispatch( loadModelPatterns() );
 		dispatch( loadRelationTypes() );
 	};
