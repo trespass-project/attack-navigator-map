@@ -951,8 +951,28 @@ function setTaskStatusCategorized(taskStatusDataCategorized) {
 const retrieveAnalysisResults =
 module.exports.retrieveAnalysisResults =
 function retrieveAnalysisResults(taskStatusData) {
+	// a $.ajax()-compatible function that returns blobs
+	const binaryAjax =
+	module.exports.binaryAjax =
+	function binaryAjax(params) {
+		return new Promise((resolve, reject) => {
+			const req = new XMLHttpRequest();
+			req.responseType = 'blob';
+			req.open(params.method || 'GET', params.url, true);
+
+			req.onload = (event) => {
+				const blob = req.response;
+				resolve(blob);
+			};
+
+			req.onerror = reject;
+
+			req.send();
+		});
+	};
+
 	const analysisToolNames = ['A.T. Analyzer', 'A.T. Evaluator'];
-	knowledgebaseApi.getAnalysisResults($.ajax, taskStatusData, analysisToolNames)
+	return knowledgebaseApi.getAnalysisResults(binaryAjax, taskStatusData, analysisToolNames)
 		.catch((err) => {
 			console.error(err.stack);
 		})
@@ -970,7 +990,7 @@ function retrieveAnalysisResults(taskStatusData) {
 const runAnalysis =
 module.exports.runAnalysis =
 function runAnalysis(toolChainId, downloadScenario=false) {
-	return function(dispatch, getState) {
+	return (dispatch, getState) => {
 		const state = getState();
 		console.log(state.model.graph);
 		const toolChains = state.interface.toolChains;
@@ -1043,6 +1063,70 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 				console.error(err.stack);
 			})
 			.then(() => {
+				function prepareResult(item) {
+					return new Promise((resolve, reject) => {
+						function done(contents) {
+							resolve({ [item.name]: contents });
+						}
+
+						function textHandler(e) {
+							const content = e.target.result;
+							done([content]);
+						}
+
+						function zipHandler(blob) {
+							JSZip.loadAsync(blob)
+								.then((zip) => {
+									// console.log(zip);
+
+									const re = new RegExp('^ata_output_nr', 'i');
+
+									const promises = R.values(zip.files)
+										.filter((file) => {
+											console.log(file.name, file);
+											return re.test(file.name);
+										})
+										.map((file) => {
+											return file.async('string').then((content) => {
+												return content;
+											});
+										});
+
+									return Promise.all(promises)
+										.then((contents) => {
+											done(contents);
+										});
+								})
+								.catch((err) => {
+									console.error(err.stack || err);
+								});
+						}
+
+						const blob = item.blob;
+						console.log(item.name, blob);
+
+						const reader = new FileReader();
+						// for what we know, zip blob type could be any of these
+						const zipTypes = [
+							'application/zip',
+							'application/x-zip',
+							'application/x-zip-compressed',
+							'application/octet-stream',
+							'multipart/x-zip',
+						];
+						if (blob.type === 'text/plain') {
+							reader.onload = textHandler;
+							reader.readAsText(blob);
+						} else if (R.contains(blob.type, zipTypes)) {
+							// reader.onload = zipHandler;
+							// reader.readAsArrayBuffer(blob);
+							zipHandler(blob);
+						} else {
+							console.warn('unexpected mime type', blob.type);
+						}
+					});
+				}
+
 				const callbacks = {
 					// onToolChainStart: () => {
 					// 	console.log('onToolChainStart');
@@ -1050,69 +1134,23 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 					onToolChainEnd: (taskStatusData) => {
 						console.log('done', taskStatusData);
 						retrieveAnalysisResults(taskStatusData)
-							.then(result => {
-								function done(contents) {
-									resolve({ [item.name]: contents });
-								}
-
-								function textHandler(e) {
-									const content = e.target.result;
-									done([content]);
-								}
-
-								function zipHandler(e) {
-									const zip = new JSZip(e.target.result);
-									// console.log(zip);
-									const re = new RegExp('^ata_output_nr', 'i');
-
-									const contents = R.values(zip.files)
-										.filter((file) => {
-											// console.log(file.name);
-											return re.test(file.name);
-										})
-										.map((file) => {
-											const content = file.asText();
-											return content;
-										});
-									done(contents);
-								}
-
-								const promises = R.values(result)
-									.map((item) => {
-										return new Promise((resolve, reject) => {
-											const blob = item.blob;
-											const reader = new FileReader();
-											// for what we know, zip blob type could be any of these
-											const zipTypes = [
-												'application/zip',
-												'application/x-zip',
-												'application/x-zip-compressed',
-												'application/octet-stream',
-												'multipart/x-zip',
-											];
-											if (blob.type === 'text/plain') {
-												reader.onload = textHandler;
-												reader.readAsText(blob);
-											} else if (R.contains(blob.type, zipTypes)) {
-												reader.onload = zipHandler;
-												reader.readAsArrayBuffer(blob);
-											} else {
-												console.warn('unexpected mime type', blob.type);
-											}
-										});
-									});
+							.then(analysisResults => {
+								console.log('analysisResults', analysisResults);
+								const promises = R.values(analysisResults)
+									.map(prepareResult);
 
 								Promise.all(promises)
-									.catch((reason) => {
-										console.error(reason);
+									.catch((err) => {
+										console.error(err);
 									})
-									.then((results) => {
-										const analysisResults = results
+									.then((_results) => {
+										console.log('results', _results);
+										const results = _results
 											.reduce((acc, item) => {
 												return _.assign(acc, item);
 											}, {});
-										console.log('analysis results:', analysisResults);
-										dispatch( setAnalysisResults(analysisResults) );
+										console.log('analysis results:', results);
+										dispatch( setAnalysisResults(results) );
 									});
 							});
 					},
