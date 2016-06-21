@@ -46,7 +46,6 @@
     "moment": "^2.10.3",
     "node-notifier": "^4.2.3",
     "opn": "^1.0.1",
-    "url-join": "0.0.1",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.6.0",
