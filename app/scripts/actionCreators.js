@@ -44,6 +44,11 @@ module.exports.getRecentFiles =
 function getRecentFiles() {
 	return (dispatch, getState) => {
 		return knowledgebaseApi.listModels($.ajax)
+			.fail((xhr, textStatus, err) => {
+				if (xhr.status === 0) {
+					alert('The knowledgebase doesn\'t appear to be running.');
+				}
+			})
 			.done((models, textStatus, xhr) => {
 				dispatch({
 					type: constants.ACTION_getRecentFiles,
