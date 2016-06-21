@@ -897,15 +897,6 @@ function setAnalysisResults(analysisResults) {
 };
 
 
-function kbRunToolchain(toolChainId, modelId, attackerProfileId, callbacks={}) {
-	knowledgebaseApi.runToolChain($.ajax, modelId, toolChainId, attackerProfileId, callbacks)
-		.done((data, textStatus, xhr) => {
-			// console.log(data);
-			monitorTaskStatus(data.task_url, callbacks);
-		});
-}
-
-
 const generateScenarioXML =
 module.exports.generateScenarioXML =
 function generateScenarioXML(
@@ -1056,35 +1047,35 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 						console.log('done', taskStatusData);
 						retrieveAnalysisResults(taskStatusData)
 							.then(result => {
+								function done(contents) {
+									resolve({ [item.name]: contents });
+								}
+
+								function textHandler(e) {
+									const content = e.target.result;
+									done([content]);
+								}
+
+								function zipHandler(e) {
+									const zip = new JSZip(e.target.result);
+									// console.log(zip);
+									const re = new RegExp('^ata_output_nr', 'i');
+
+									const contents = R.values(zip.files)
+										.filter((file) => {
+											// console.log(file.name);
+											return re.test(file.name);
+										})
+										.map((file) => {
+											const content = file.asText();
+											return content;
+										});
+									done(contents);
+								}
+
 								const promises = R.values(result)
 									.map((item) => {
 										return new Promise((resolve, reject) => {
-											function done(contents) {
-												resolve({ [item.name]: contents });
-											}
-
-											function textHandler(e) {
-												const content = e.target.result;
-												done([content]);
-											}
-
-											function zipHandler(e) {
-												const zip = new JSZip(e.target.result);
-												// console.log(zip);
-												const re = new RegExp('^ata_output_nr', 'i');
-
-												const contents = R.values(zip.files)
-													.filter((file) => {
-														// console.log(file.name);
-														return re.test(file.name);
-													})
-													.map((file) => {
-														const content = file.asText();
-														return content;
-													});
-												done(contents);
-											}
-
 											const blob = item.blob;
 											const reader = new FileReader();
 											// for what we know, zip blob type could be any of these
@@ -1108,7 +1099,7 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 									});
 
 								Promise.all(promises)
-									.catch(reason => {
+									.catch((reason) => {
 										console.error(reason);
 									})
 									.then((results) => {
@@ -1117,7 +1108,7 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 												return _.assign(acc, item);
 											}, {});
 										console.log('analysis results:', analysisResults);
-										dispatch(setAnalysisResults(analysisResults));
+										dispatch( setAnalysisResults(analysisResults) );
 									});
 							});
 					},
@@ -1134,7 +1125,17 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 						);
 					},
 				};
-				kbRunToolchain(toolChainId, modelId, state.interface.attackerProfile.id, callbacks);
+
+				knowledgebaseApi.runToolChain(
+					$.ajax,
+					modelId,
+					toolChainId,
+					state.interface.attackerProfile.id,
+					callbacks || {}
+				)
+					.done((data, textStatus, xhr) => {
+						monitorTaskStatus(data.task_url, callbacks);
+					});
 			});
 
 		dispatch({
