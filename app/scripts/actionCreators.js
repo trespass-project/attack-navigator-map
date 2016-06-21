@@ -4,7 +4,6 @@ const R = require('ramda');
 const _ = require('lodash');
 const JSZip = require('jszip');
 const saveAs = require('browser-saveas');
-const queryString = require('query-string');
 const trespass = require('trespass.js');
 const trespassModel = trespass.model;
 const api = trespass.api;
