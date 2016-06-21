@@ -1053,7 +1053,6 @@ describe(f1('model-helpers.js'), () => {
 });
 
 
-
 describe(f1('helpers.js'), () => {
 	describe(f2('handleStatus()'), () => {
 		const taskStatusData = {
@@ -1073,6 +1072,31 @@ describe(f1('helpers.js'), () => {
 			assert(categorized.completed.length === 3);
 			assert(categorized.current.length === 2);
 			assert(categorized.pending.length === 2);
+		});
+	});
+
+
+	describe(f2('replaceIdsInString()'), () => {
+		const s = 'id-1, id-2, id-1, id-3';
+
+		it(f3('should replace ids'), () => {
+			const idReplacementMap = {
+				'id-1': 'one',
+				'id-2': 'two',
+				'id-3': 'three',
+			};
+			const result = helpers.replaceIdsInString(s, idReplacementMap);
+			assert(result === 'one, two, one, three');
+		});
+
+		it(f3('ids should remain unique'), () => {
+			const idReplacementMap = {
+				'id-1': 'bla',
+				'id-2': 'bla',
+				'id-3': 'bla',
+			};
+			const result = helpers.replaceIdsInString(s, idReplacementMap);
+			assert(result === 'bla, bla-2, bla, bla-3');
 		});
 	});
 });

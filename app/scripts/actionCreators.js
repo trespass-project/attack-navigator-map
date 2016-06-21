@@ -44,6 +44,11 @@ module.exports.getRecentFiles =
 function getRecentFiles() {
 	return (dispatch, getState) => {
 		return knowledgebaseApi.listModels($.ajax)
+			.fail((xhr, textStatus, err) => {
+				if (xhr.status === 0) {
+					alert('The knowledgebase doesn\'t appear to be running.');
+				}
+			})
 			.done((models, textStatus, xhr) => {
 				dispatch({
 					type: constants.ACTION_getRecentFiles,
@@ -72,17 +77,21 @@ function initMap(modelId=undefined, metadata=undefined) {
 					metadata,
 				});
 
+				// get data in any case
+				dispatch( fetchKbData() );
+
 				// save new model
 				if (isNew) {
-					dispatch( saveModelToKb() );
+					dispatch( saveModelToKb() )
+						.then(() => {
+							// make sure new model shows up in recent files
+							dispatch( getRecentFiles() );
+						});
 				}
 			})
 			.then(() => {
 				// reset view
 				dispatch( resetTransformation() );
-			})
-			.then(() => {
-				dispatch( fetchKbData() );
 			});
 	};
 };
@@ -97,7 +106,10 @@ function fetchKbData() {
 		dispatch( loadAttackerProfiles() );
 		dispatch( loadToolChains() );
 
+		dispatch( getRecentFiles() );
+
 		// fake api
+		// TODO: should use kb
 		dispatch( loadModelPatterns() );
 		dispatch( loadRelationTypes() );
 	};
@@ -179,9 +191,6 @@ function saveModelToKb() {
 			});
 	};
 };
-
-
-// TODO: refactor `putModelAndScenarioIntoKnowledgebase()` to use `saveModelFile()`
 
 
 module.exports.setEditorElem =
@@ -591,15 +600,6 @@ function getXMLBlob(xmlStr) {
 };
 
 
-function replaceIdsInString(str, idReplacementMap={}) {
-	return R.keys(idReplacementMap)
-		.reduce((acc, oldId) => {
-			const re = new RegExp(oldId, 'g');
-			return acc.replace(re, idReplacementMap[oldId]);
-		}, str);
-}
-
-
 function stateToHumanReadableModelXML(state) {
 	const idReplacementMap = ['nodes', ...modelHelpers.collectionNames]
 		.reduce((acc, collName) => {
@@ -621,7 +621,7 @@ function stateToHumanReadableModelXML(state) {
 	let modelXmlStr = trespassModel.toXML(model);
 
 	// HACK: replace all ids with their human-readable versions
-	modelXmlStr = replaceIdsInString(modelXmlStr, idReplacementMap);
+	modelXmlStr = helpers.replaceIdsInString(modelXmlStr, idReplacementMap);
 
 	return { modelXmlStr, model, idReplacementMap };
 }
@@ -635,7 +635,7 @@ function stateToHumanReadableScenarioXML(state, modelId, modelFileName, idReplac
 	);
 
 	// HACK: replace all ids with their human-readable versions
-	scenarioXmlStr = replaceIdsInString(scenarioXmlStr, idReplacementMap);
+	scenarioXmlStr = helpers.replaceIdsInString(scenarioXmlStr, idReplacementMap);
 
 	return scenarioXmlStr;
 }
@@ -827,127 +827,20 @@ function setAttackerProfit(profit) {
 };
 
 
-const putModelAndScenarioIntoKnowledgebase =
-module.exports.putModelAndScenarioIntoKnowledgebase =
-function putModelAndScenarioIntoKnowledgebase(modelId, modelData, scenarioData) {
-	const tasksData = [
-		{
-			data: modelData.fileContent,
-			query: queryString.stringify({
-				model_id: modelId,
-				filename: modelData.fileName,
-				filetype: modelData.fileType,
-			})
-		},
-		{
-			data: scenarioData.fileContent,
-			query: queryString.stringify({
-				model_id: modelId,
-				filename: scenarioData.fileName,
-				filetype: scenarioData.fileType,
-			})
-		}
-	];
-
-	const taskFuncs = tasksData
-		.map((item, index) => {
-			const url = `${api.makeUrl(knowledgebaseApi, 'files')}?${item.query}`;
-			const params = _.merge(
-				{
-					url,
-					method: 'put',
-					data: item.data,
-					contentType: 'text/xml',
-				},
-				api.requestOptions.jquery.acceptPlainText,
-				// api.requestOptions.jquery.acceptJSON,
-				api.requestOptions.jquery.crossDomain
-			);
-
-			return () => {
-				console.log(item.query);
-				return $.ajax(params);
-			};
-		});
-
-	const promise = taskFuncs
-		.reduce((acc, taskFunc) => {
-			return acc.then(taskFunc);
-		}, Promise.resolve())
-		.catch((err) => {
-			console.dir(err);
-			console.error(err.stack);
-		});
-
-	return promise;
-};
-
-
 function monitorTaskStatus(taskUrl, _callbacks={}) {
 	const callbacks = _.defaults(_callbacks, {
 		onTaskStatus: noop,
 	});
 
-	const url = taskUrl;
-	const params = _.merge(
-		{ url },
-		api.requestOptions.jquery.acceptJSON,
-		api.requestOptions.jquery.contentTypeJSON,
-		api.requestOptions.jquery.crossDomain
-	);
-
 	return new Promise((resolve, reject) => {
 		let intervalId;
 
 		function check() {
-			// fetch(url, params)
-			// 	.catch((err) => {
-			// 		console.error(err.stack);
-			// 		clearInterval(intervalId);
-			// 		reject(err);
-			// 	})
-			// 	.then((res) => {
-			// 		return res.json();
-			// 	})
-			// 	.then((taskStatusData) => {
-			// 		if (taskStatusData.status) {
-			// 			const taskStatusDataCategorized = helpers.handleStatus(taskStatusData);
-			// 			if (taskStatusDataCategorized.current[0]) {
-			// 				console.warn(taskStatusDataCategorized.current[0].name, taskStatusData.status);
-			// 			}
-			// 			callbacks.onTaskStatus(taskStatusDataCategorized);
-
-			// 			switch (taskStatusData.status) {
-			// 				case 'not started':
-			// 				case 'running':
-			// 					// do nothing
-			// 					break;
-
-			// 				case 'error':
-			// 					clearInterval(intervalId);
-			// 					const errorMessage = taskStatusDataCategorized.current[0]['error-message'];
-			// 					alert(errorMessage);
-			// 					console.error(errorMessage);
-			// 					break;
-
-			// 				case 'done':
-			// 					clearInterval(intervalId);
-			// 					callbacks.onToolChainEnd(taskStatusData);
-			// 					break;
-
-			// 				default:
-			// 					clearInterval(intervalId);
-			// 					reject(new Error(`Unknown status: ${taskStatusData.status}`));
-			// 					break;
-			// 			}
-			// 		}
-			// 	});
-			$.ajax(params)
+			knowledgebaseApi.getTaskStatus($.ajax, taskUrl)
 				.fail((xhr, textStatus, err) => {
-					console.error(err.stack);
 					clearInterval(intervalId);
-					reject(err);
 					console.error(err.stack);
+					reject(err);
 				})
 				.done((taskStatusData, textStatus, xhr) => {
 					if (taskStatusData.status) {
@@ -1009,15 +902,6 @@ function setAnalysisResults(analysisResults) {
 };
 
 
-function kbRunToolchain(toolChainId, modelId, attackerProfileId, callbacks={}) {
-	knowledgebaseApi.runToolChain($.ajax, modelId, toolChainId, attackerProfileId, callbacks)
-		.done((data, textStatus, xhr) => {
-			// console.log(data);
-			monitorTaskStatus(data.task_url, callbacks);
-		});
-}
-
-
 const generateScenarioXML =
 module.exports.generateScenarioXML =
 function generateScenarioXML(
@@ -1068,47 +952,13 @@ function setTaskStatusCategorized(taskStatusDataCategorized) {
 const retrieveAnalysisResults =
 module.exports.retrieveAnalysisResults =
 function retrieveAnalysisResults(taskStatusData) {
-	const analysisTools = ['A.T. Analyzer', 'A.T. Evaluator'];
-	const tools = taskStatusData.tool_status
-		.filter(toolStatus => R.contains(toolStatus.name, analysisTools));
-
-	const promises = tools
-		.map((tool) => {
-			const params = _.merge(
-				{
-					url: tool.result_file_url,
-					method: 'get'
-				},
-				// api.requestOptions.jquery.acceptJSON,
-				// api.requestOptions.jquery.contentTypeJSON,
-				api.requestOptions.jquery.crossDomain
-			);
-
-			return new Promise((resolve, reject) => {
-				$.ajax(params)
-					.done((blob, textStatus, xhr) => {
-						// jquery doesn't return blobs (fetch does)
-						console.log(tool);
-						const type = (tool.name === 'A.T. Analyzer')
-							? 'application/zip'
-							: 'text/plain';
-						const realBlob = new Blob([blob], { type });
-
-						resolve({
-							name: tool.name,
-							blob: realBlob,
-						});
-					})
-					.fail(reject);
-			});
-		});
-
-	return Promise.all(promises)
+	const analysisToolNames = ['A.T. Analyzer', 'A.T. Evaluator'];
+	knowledgebaseApi.getAnalysisResults($.ajax, taskStatusData, analysisToolNames)
 		.catch((err) => {
 			console.error(err.stack);
 		})
 		.then((items) => {
-			console.log(items);
+			console.log(items); // [{ name, blob }]
 			return items
 				.reduce((acc, item) => {
 					acc[item.name] = item;
@@ -1170,19 +1020,29 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 		}
 
 		// upload to knowledgebase
-		putModelAndScenarioIntoKnowledgebase(
-			modelId,
-			{
-				fileType: 'model_file',
-				fileName: modelFileName,
-				fileContent: modelXmlStr
-			},
-			{
-				fileType: 'scenario_file',
-				fileName: scenarioFileName,
-				fileContent: scenarioXmlStr
-			}
-		)
+		Promise.resolve()
+			.then(() => {
+				return knowledgebaseApi.putFile(
+					$.ajax,
+					modelId,
+					modelXmlStr,
+					modelFileName,
+					'model_file'
+				);
+			})
+			.then(() => {
+				return knowledgebaseApi.putFile(
+					$.ajax,
+					modelId,
+					scenarioXmlStr,
+					scenarioFileName,
+					'scenario_file'
+				);
+			})
+			.catch((err) => {
+				console.dir(err);
+				console.error(err.stack);
+			})
 			.then(() => {
 				const callbacks = {
 					// onToolChainStart: () => {
@@ -1192,35 +1052,35 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 						console.log('done', taskStatusData);
 						retrieveAnalysisResults(taskStatusData)
 							.then(result => {
+								function done(contents) {
+									resolve({ [item.name]: contents });
+								}
+
+								function textHandler(e) {
+									const content = e.target.result;
+									done([content]);
+								}
+
+								function zipHandler(e) {
+									const zip = new JSZip(e.target.result);
+									// console.log(zip);
+									const re = new RegExp('^ata_output_nr', 'i');
+
+									const contents = R.values(zip.files)
+										.filter((file) => {
+											// console.log(file.name);
+											return re.test(file.name);
+										})
+										.map((file) => {
+											const content = file.asText();
+											return content;
+										});
+									done(contents);
+								}
+
 								const promises = R.values(result)
 									.map((item) => {
 										return new Promise((resolve, reject) => {
-											function done(contents) {
-												resolve({ [item.name]: contents });
-											}
-
-											function textHandler(e) {
-												const content = e.target.result;
-												done([content]);
-											}
-
-											function zipHandler(e) {
-												const zip = new JSZip(e.target.result);
-												// console.log(zip);
-												const re = new RegExp('^ata_output_nr', 'i');
-
-												const contents = R.values(zip.files)
-													.filter((file) => {
-														// console.log(file.name);
-														return re.test(file.name);
-													})
-													.map((file) => {
-														const content = file.asText();
-														return content;
-													});
-												done(contents);
-											}
-
 											const blob = item.blob;
 											const reader = new FileReader();
 											// for what we know, zip blob type could be any of these
@@ -1244,7 +1104,7 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 									});
 
 								Promise.all(promises)
-									.catch(reason => {
+									.catch((reason) => {
 										console.error(reason);
 									})
 									.then((results) => {
@@ -1253,7 +1113,7 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 												return _.assign(acc, item);
 											}, {});
 										console.log('analysis results:', analysisResults);
-										dispatch(setAnalysisResults(analysisResults));
+										dispatch( setAnalysisResults(analysisResults) );
 									});
 							});
 					},
@@ -1270,37 +1130,18 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 						);
 					},
 				};
-				kbRunToolchain(toolChainId, modelId, state.interface.attackerProfile.id, callbacks);
-			});
 
-		// // start tool chain
-		// const formData = new FormData();
-		// formData.append('file', blob, zipFileName);
-		// const params = {
-		// 	method: 'post',
-		// 	body: formData
-		// };
-		// const callbacks = {
-		// 	// onToolChainStart: () => {},
-		// 	// onToolChainEnd: () => {},
-		// 	onToolStart: (toolData) => {
-		// 		console.log('————————————————————');
-		// 		console.log(toolData.name);
-		// 	},
-		// 	// onToolEnd: (toolData) => {
-		// 	// 	console.log('onToolEnd', toolData.name);
-		// 	// },
-		// 	onTaskStatus: (taskStatusData) => {
-		// 		console.log('  ', taskStatusData.status);
-		// 	},
-		// }
-		// toolsApi.runToolChain(fetch, toolChainData, callbacks, params)
-		// 	.then((data) => {
-		// 		console.log('->', data);
-		// 	})
-		// 	.catch((err) => {
-		// 		console.error(err.stack);
-		// 	});
+				knowledgebaseApi.runToolChain(
+					$.ajax,
+					modelId,
+					toolChainId,
+					state.interface.attackerProfile.id,
+					callbacks || {}
+				)
+					.done((data, textStatus, xhr) => {
+						monitorTaskStatus(data.task_url, callbacks);
+					});
+			});
 
 		dispatch({
 			type: constants.ACTION_runAnalysis,
@@ -1387,14 +1228,8 @@ function loadComponentTypes() {
 
 		const state = getState();
 		const modelId = state.model.metadata.id;
-		const url = api.makeUrl(knowledgebaseApi, `type?model_id=${modelId}`);
-		const params = _.merge(
-			{ url, dataType: 'json' },
-			api.requestOptions.jquery.crossDomain
-		);
 
-		// TODO: move to trespass.js / fetch
-		$.ajax(params)
+		knowledgebaseApi.getTypes($.ajax, modelId)
 			.then((types) => {
 				const kbTypeAttributes = types
 					.reduce((acc, type) => {
