@@ -602,14 +602,12 @@ function getXMLBlob(xmlStr) {
 function stateToHumanReadableModelXML(state) {
 	const idReplacementMap = ['nodes', ...modelHelpers.collectionNames]
 		.reduce((acc, collName) => {
-			if (state.model.graph[collName]) {
-				const coll = state.model.graph[collName];
-				R.keys(coll)
-					.forEach(id => {
-						const newId = `${coll[id].modelComponentType}__${(coll[id].label || id).replace(/ +/g, '-')}`;
-						acc[id] = newId;
-					});
-			}
+			const coll = state.model.graph[collName] || {};
+			R.values(coll)
+				.forEach(item => {
+					const newId = helpers.makeHumanReadable(item);
+					acc[item.id] = newId;
+				});
 			return acc;
 		}, {});
 

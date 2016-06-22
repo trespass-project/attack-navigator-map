@@ -309,3 +309,10 @@ function replaceIdsInString(str, idReplacementMap={}) {
 			return acc.replace(re, `${substitute}${suffix}`);
 		}, str);
 };
+
+
+const makeHumanReadable =
+module.exports.makeHumanReadable =
+function makeHumanReadable(item) {
+	return `${item.modelComponentType}__${(item.label || item.id).replace(/ +/g, '-')}`;
+};

@@ -266,4 +266,25 @@ describe(common.f1('helpers.js'), () => {
 			assert(result === 'bla, bla-2, bla, bla-3');
 		});
 	});
+
+
+	describe(common.f2('makeHumanReadable()'), () => {
+		it(common.f3('should work'), () => {
+			const item = {
+				modelComponentType: 'actor',
+				label: 'attacker person',
+			};
+			const humanized = helpers.makeHumanReadable(item);
+			assert(humanized === 'actor__attacker-person');
+		});
+
+		it(common.f3('should use `id` as fallback'), () => {
+			const item = {
+				modelComponentType: 'actor',
+				id: '1234',
+			};
+			const humanized = helpers.makeHumanReadable(item);
+			assert(humanized === 'actor__1234');
+		});
+	});
 });
