@@ -58,13 +58,14 @@ const ContextMenu = React.createClass({
 				<g transform={translate}>
 					<text dy='-6' className='icon fa' dangerouslySetInnerHTML={iconHTML} />
 					<text dy='7' className='label'>
-						{labelLines.map(function(line) {
-							const lineHTML = { __html: (line || '') };
+						{labelLines.map((line) => {
 							return <tspan
 								key={`label-${line}-${index}`}
 								x='0'
 								dy='1.1em'
-								dangerouslySetInnerHTML={lineHTML} />;
+							>
+								{line || ''}
+							</tspan>;
 						})}
 					</text>
 				</g>
