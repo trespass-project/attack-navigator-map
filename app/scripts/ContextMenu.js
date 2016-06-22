@@ -1,9 +1,6 @@
-'use strict';
-
 const React = require('react');
 const d3 = require('d3');
 const classnames = require('classnames');
-const sf = require('sf');
 const helpers = require('./helpers.js');
 
 
@@ -34,37 +31,38 @@ const ContextMenu = React.createClass({
 
 		const inbetweenAngle = fromAngle + 0.5 * (toAngle - fromAngle);
 		const inbetweenRadius = innerRadius + 0.5 * (outerRadius - innerRadius);
-		let center = {
+		const center = {
 			x: Math.cos(inbetweenAngle) * inbetweenRadius,
 			y: Math.sin(inbetweenAngle) * inbetweenRadius,
 		};
-		let translate = sf('translate({0},{1})', center.x, center.y);
+		const translate = `translate(${center.x},${center.y})`;
 
 		let iconHTML = { __html: (item.icon || '').trim() };
-		let labelLines = item.label.split('\n')
-			.map(function(line) {
-				return line.trim();
-			});
 
-		let groupClasses = classnames({ 'destructive': item.destructive });
+		const labelLines = item.label.split('\n')
+			.map(line => line.trim());
+
+		const groupClasses = classnames({ 'destructive': item.destructive });
 
 		return (
 			<g key={`piece-${index}`} className={groupClasses}>
 				<path
 					className='menu-item'
 					d={d}
-					onClick={item.action}>
+					onClick={item.action}
+				>
 				</path>
 				<g transform={translate}>
 					<text dy='-6' className='icon fa' dangerouslySetInnerHTML={iconHTML} />
 					<text dy='7' className='label'>
-						{labelLines.map(function(line) {
-							const lineHTML = { __html: (line || '') };
+						{labelLines.map((line) => {
 							return <tspan
 								key={`label-${line}-${index}`}
 								x='0'
 								dy='1.1em'
-								dangerouslySetInnerHTML={lineHTML} />;
+							>
+								{line || ''}
+							</tspan>;
 						})}
 					</text>
 				</g>
