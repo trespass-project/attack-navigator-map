@@ -896,10 +896,18 @@ function generateScenarioXML(
 const zipScenario =
 module.exports.zipScenario =
 function zipScenario(modelXmlStr, modelFileName, scenarioXmlStr, scenarioFileName) {
-	const zip = new JSZip();
-	zip.file(modelFileName, modelXmlStr);
-	zip.file(scenarioFileName, scenarioXmlStr);
-	return zip.generate({ type: 'blob' });
+	return new Promise((resolve, reject) => {
+		const zip = new JSZip();
+		zip.file(modelFileName, modelXmlStr);
+		zip.file(scenarioFileName, scenarioXmlStr);
+		zip.generateAsync({ type: 'blob' })
+			.then(resolve)
+			.catch((err) => {
+				const message = 'zipping failed';
+				console.error(message, err.trace);
+				reject(new Error(message));
+			});
+	});
 };
 
 
@@ -1030,13 +1038,15 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 
 				// download
 				if (downloadScenario) {
-					const zipBlob = zipScenario(
+					zipScenario(
 						modelXmlStr,
 						modelFileName,
 						scenarioXmlStr,
 						scenarioFileName
-					);
-					saveAs(zipBlob, zipFileName);
+					)
+						.then((zipBlob) => {
+							saveAs(zipBlob, zipFileName);
+						});
 				}
 
 				// upload to knowledgebase
