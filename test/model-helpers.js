@@ -876,27 +876,27 @@ describe(common.f1('model-helpers.js'), () => {
 				},
 			},
 		};
-		const newGraph = modelHelpers.humanizeModelIds(graph/*, (oldId, item) => {
-			console.log(oldId, item.id);
-		}*/);
+		const { newGraph/*, idReplacementMap*/ } = modelHelpers.humanizeModelIds(graph);
+
+		// TODO: revisit this for policies, processes, etc.
 
 		it(common.f3('should work'), () => {
 			assert(
 				newGraph.nodes['node__label']
 				&& newGraph.nodes['node__label'].was === 'id'
 			);
-			assert(
-				newGraph.edges['edge__label']
-				&& newGraph.edges['edge__label'].was === 'edge1'
-			);
-			assert(
-				newGraph.policies['policy__label']
-				&& newGraph.policies['policy__label'].was === 'policy1'
-			);
-			assert(
-				newGraph.groups['group__label']
-				&& newGraph.groups['group__label'].was === 'group1'
-			);
+			// assert(
+			// 	newGraph.policies['policy__label']
+			// 	&& newGraph.policies['policy__label'].was === 'policy1'
+			// );
+			// assert(
+			// 	newGraph.edges['edge__label']
+			// 	&& newGraph.edges['edge__label'].was === 'edge1'
+			// );
+			// assert(
+			// 	newGraph.groups['group__label']
+			// 	&& newGraph.groups['group__label'].was === 'group1'
+			// );
 		});
 
 		it(common.f3('should make sure new labels remain unique'), () => {
@@ -904,12 +904,12 @@ describe(common.f1('model-helpers.js'), () => {
 		});
 
 		it(common.f3('should rename ids in edges'), () => {
-			assert(newGraph.edges['edge__label'].from === 'node__label');
-			assert(newGraph.edges['edge__label'].to === 'node__label-2');
+			assert(newGraph.edges['edge1'].from === 'node__label');
+			assert(newGraph.edges['edge1'].to === 'node__label-2');
 		});
 
 		it(common.f3('should rename ids in groups'), () => {
-			assert(R.equals(newGraph.groups['group__label'].nodeIds, ['node__label', 'node__label-2']));
+			assert(R.equals(newGraph.groups['group1'].nodeIds, ['node__label', 'node__label-2']));
 		});
 	});
 });

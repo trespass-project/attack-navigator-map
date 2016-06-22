@@ -66,6 +66,7 @@ const constants = {
 	ACTION_setAttackerGoal: 'ACTION_setAttackerGoal',
 	ACTION_setAttackerProfit: 'ACTION_setAttackerProfit',
 	ACTION_runAnalysis: 'ACTION_runAnalysis',
+	ACTION_humanizeModelIds: 'ACTION_humanizeModelIds',
 	ACTION_setAnalysisRunning: 'ACTION_setAnalysisRunning',
 	ACTION_setAnalysisResults: 'ACTION_setAnalysisResults',
 	ACTION_setTaskStatusCategorized: 'ACTION_setTaskStatusCategorized',

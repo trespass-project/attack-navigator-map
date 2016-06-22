@@ -248,7 +248,7 @@ module.exports.humanizeModelIds =
 function humanizeModelIds(graph, itemCb=noop) {
 	// build a map from current id to new one
 	const substituteCounter = {};
-	const idReplacementMap = ['nodes', 'groups', ...collectionNames]
+	const idReplacementMap = ['nodes'/*, ...R.without(['edges'], collectionNames)*/]
 		.reduce((acc, collName) => {
 			const coll = graph[collName] || {};
 			return R.values(coll)
@@ -278,24 +278,35 @@ function humanizeModelIds(graph, itemCb=noop) {
 			newGraph[collectionName] = R.values(graph[collectionName])
 				.reduce((coll, item) => {
 					const oldId = item.id;
-					const newId = idReplacementMap[oldId];
-					let newItem = _.merge({}, item, { id: newId });
+					const newId = idReplacementMap[oldId] || oldId;
 
-					if (collectionName === 'edges') {
-						newItem = replaceIdInEdge(idReplacementMap, newItem);
-					} else if (collectionName === 'groups') {
-						newItem = replaceIdInGroup(idReplacementMap, newItem);
+					let newItem;
+					switch (collectionName) {
+						case 'edges': {
+							newItem = replaceIdInEdge(idReplacementMap, _.merge({}, item));
+							break;
+						}
+
+						case 'groups': {
+							newItem = replaceIdInGroup(idReplacementMap, _.merge({}, item));
+							break;
+						}
+
+						default: {
+							newItem = _.merge({}, item, { id: newId });
+							itemCb(oldId, newItem);
+							break;
+						}
 					}
 
 					coll[newId] = newItem;
-					itemCb(oldId, newItem);
 					return coll;
 				}, {});
 
 			return newGraph;
 		}, {});
 
-	return newGraph;
+	return { newGraph, idReplacementMap };
 };
 
 
