@@ -286,26 +286,8 @@ function handleStatus(taskStatusData) {
 };
 
 
-const replaceIdsInString =
-module.exports.replaceIdsInString =
-function replaceIdsInString(str, idReplacementMap={}) {
-	const substituteCounter = {};
-	return R.keys(idReplacementMap)
-		.reduce((acc, oldId) => {
-			const re = new RegExp(oldId, 'g');
-			const substitute = idReplacementMap[oldId];
-			if (!substituteCounter[substitute]) {
-				substituteCounter[substitute] = 1;
-			} else {
-				substituteCounter[substitute]++;
-			}
-
-			// if same substitute is used more than once,
-			// this ensures results are still unique
-			const suffix = (substituteCounter[substitute] > 1)
-				? `-${substituteCounter[substitute]}`
-				: '';
-
-			return acc.replace(re, `${substitute}${suffix}`);
-		}, str);
+const makeHumanReadable =
+module.exports.makeHumanReadable =
+function makeHumanReadable(item) {
+	return `${item.modelComponentType}__${(item.label || item.id).replace(/ +/g, '-')}`;
 };
