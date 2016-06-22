@@ -1,9 +1,6 @@
-'use strict';
-
 const React = require('react');
 const d3 = require('d3');
 const classnames = require('classnames');
-const sf = require('sf');
 const helpers = require('./helpers.js');
 
 
