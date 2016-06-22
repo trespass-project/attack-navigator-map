@@ -1,5 +1,3 @@
-'use strict';
-
 const $ = require('jquery');
 const React = require('react');
 const helpers = require('./helpers.js');
@@ -57,8 +55,7 @@ const SchleppMixin = {
 	componentWillUnmount: function() {
 		const elem = helpers.getElemByRef(this, 'dragRoot');
 		const $elem = $(elem);
-		$elem
-			.off('mousedown');
+		$elem.off('mousedown');
 	}
 };
 

@@ -52,9 +52,7 @@ React.createClass({
 	handleBeforeUnload(event) {
 		event.preventDefault();
 
-		// TODO: check if model is empty
-		// if so, delete from knowledgebase
-
+		// TODO: ask if user wants to save
 		const msg = 'Are you sure?';
 		event.returnValue = msg;
 		return msg;
