@@ -826,4 +826,90 @@ describe(common.f1('model-helpers.js'), () => {
 
 		// TODO: more
 	});
+
+
+	describe(common.f2('humanizeModelIds()'), () => {
+		const graph = {
+			nodes: {
+				'id': {
+					modelComponentType: 'node',
+					id: 'id',
+					label: 'label',
+					was: 'id',
+				},
+
+				'id-dup': {
+					modelComponentType: 'node',
+					id: 'id-dup',
+					label: 'label',
+					was: 'id-dup',
+				},
+			},
+
+			policies: {
+				'policy1': {
+					modelComponentType: 'policy',
+					id: 'policy1',
+					label: 'label',
+					was: 'policy1',
+				},
+			},
+
+			edges: {
+				'edge1': {
+					modelComponentType: 'edge',
+					id: 'edge1',
+					label: 'label',
+					was: 'edge1',
+					from: 'id',
+					to: 'id-dup',
+				},
+			},
+
+			groups: {
+				'group1': {
+					modelComponentType: 'group',
+					id: 'group1',
+					label: 'label',
+					was: 'group1',
+					nodeIds: ['id', 'id-dup']
+				},
+			},
+		};
+		const newGraph = modelHelpers.humanizeModelIds(graph/*, (oldId, item) => {
+			console.log(oldId, item.id);
+		}*/);
+
+		it(common.f3('should work'), () => {
+			assert(
+				newGraph.nodes['node__label']
+				&& newGraph.nodes['node__label'].was === 'id'
+			);
+			assert(
+				newGraph.edges['edge__label']
+				&& newGraph.edges['edge__label'].was === 'edge1'
+			);
+			assert(
+				newGraph.policies['policy__label']
+				&& newGraph.policies['policy__label'].was === 'policy1'
+			);
+			assert(
+				newGraph.groups['group__label']
+				&& newGraph.groups['group__label'].was === 'group1'
+			);
+		});
+
+		it(common.f3('should make sure new labels remain unique'), () => {
+			assert(newGraph.nodes['node__label-2'].was === 'id-dup');
+		});
+
+		it(common.f3('should rename ids in edges'), () => {
+			assert(newGraph.edges['edge__label'].from === 'node__label');
+			assert(newGraph.edges['edge__label'].to === 'node__label-2');
+		});
+
+		it(common.f3('should rename ids in groups'), () => {
+			assert(R.equals(newGraph.groups['group__label'].nodeIds, ['node__label', 'node__label-2']));
+		});
+	});
 });

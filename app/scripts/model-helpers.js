@@ -240,6 +240,64 @@ function replaceIdInEdge(mapping, edge) {
 	return edge;
 };
 
+/*
+ * replace all ids in graph with human-readable versions
+ */
+const humanizeModelIds =
+module.exports.humanizeModelIds =
+function humanizeModelIds(graph, itemCb=noop) {
+	// build a map from current id to new one
+	const substituteCounter = {};
+	const idReplacementMap = ['nodes', 'groups', ...collectionNames]
+		.reduce((acc, collName) => {
+			const coll = graph[collName] || {};
+			return R.values(coll)
+				.reduce((acc, item) => {
+					const substitute = helpers.makeHumanReadable(item);
+					if (!substituteCounter[substitute]) {
+						substituteCounter[substitute] = 1;
+					} else {
+						substituteCounter[substitute]++;
+					}
+					// if same substitute is used more than once,
+					// this ensures results are still unique
+					const suffix = (substituteCounter[substitute] > 1)
+						? `-${substituteCounter[substitute]}`
+						: '';
+
+					const oldId = item.id;
+					const newId = `${substitute}${suffix}`;
+					acc[oldId] = newId;
+
+					return acc;
+				}, acc);
+		}, {});
+
+	const newGraph = R.keys(graph)
+		.reduce((newGraph, collectionName) => {
+			newGraph[collectionName] = R.values(graph[collectionName])
+				.reduce((coll, item) => {
+					const oldId = item.id;
+					const newId = idReplacementMap[oldId];
+					let newItem = _.merge({}, item, { id: newId });
+
+					if (collectionName === 'edges') {
+						newItem = replaceIdInEdge(idReplacementMap, newItem);
+					} else if (collectionName === 'groups') {
+						newItem = replaceIdInGroup(idReplacementMap, newItem);
+					}
+
+					coll[newId] = newItem;
+					itemCb(oldId, newItem);
+					return coll;
+				}, {});
+
+			return newGraph;
+		}, {});
+
+	return newGraph;
+};
+
 
 const combineFragments =
 module.exports.combineFragments =
