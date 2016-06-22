@@ -1,5 +1,3 @@
-'use strict';
-
 const React = require('react');
 const reactDOM = require('react-dom');
 const SchleppMixin = require('./SchleppMixin.js');
@@ -25,7 +23,8 @@ const ResizeElem = React.createClass({
 			cy={props.y + halfSize}
 			r={halfSize}
 			style={{ opacity: 1 }}
-			fill='white' />;
+			fill='white'
+		/>;
 	},
 
 	_onDragMove: function(event) {
@@ -34,8 +33,10 @@ const ResizeElem = React.createClass({
 		const modelXYEvent = helpers.unTransformFromTo(
 			props.editorElem,
 			props.editorTransformElem,
-			{ x: event.clientX,
-			  y: event.clientY }
+			{
+				x: event.clientX,
+				y: event.clientY
+			}
 		);
 
 		const w = modelXYEvent.x - props.imgX;
@@ -87,7 +88,7 @@ const Group = React.createClass({
 		if (!props.showImages || !props.showGroups) { return null; }
 
 		// TODO: DRY
-		let bounds = helpers.getGroupBBox(props.graph.nodes, props.group);
+		const bounds = helpers.getGroupBBox(props.graph.nodes, props.group);
 		const halfNodeSize = context.theme.node.size * 0.5;
 		bounds.minX -= halfNodeSize;
 		bounds.minY -= halfNodeSize;
@@ -104,14 +105,22 @@ const Group = React.createClass({
 		const height = props.height;
 		const aspectRatio = width / height;
 
-		const img = `<image class="background-image" xlink:href="${props.group._bgImage.url}" x="0" y="0" height="${height}" width="${width}"/>`;
-
 		return (
 			<g transform={`translate(${x}, ${y})`}
 				onContextMenu={this._onContextMenu}
 				onMouseEnter={this._onMouseOver}
-				onMouseLeave={this._onMouseOut}>
-				<g dangerouslySetInnerHTML={{ __html: img }}></g>
+				onMouseLeave={this._onMouseOut}
+			>
+				<g>
+					<image
+						className='background-image'
+						xlinkHref={props.group._bgImage.url}
+						x='0'
+						y='0'
+						height={height}
+						width={width}
+					/>
+				</g>
 				{this.renderResizeElem(x, y, aspectRatio)}
 			</g>
 		);
@@ -168,8 +177,10 @@ const Group = React.createClass({
 		this.modelXYEventOrigin = helpers.unTransformFromTo(
 			props.editorElem,
 			props.editorTransformElem,
-			{ x: event.clientX,
-			  y: event.clientY }
+			{
+				x: event.clientX,
+				y: event.clientY
+			}
 		);
 	},
 
