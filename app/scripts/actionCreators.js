@@ -17,6 +17,11 @@ const modelPatternLib = require('./pattern-lib.js');
 const relationsLib = require('./relation-lib.js');
 
 
+const modelFileName = 'model.xml';
+const scenarioFileName = 'scenario.xml';
+const zipFileName = 'scenario.zip';
+
+
 const noop = () => {};
 const retryRate = 1000;
 
@@ -599,44 +604,13 @@ function getXMLBlob(xmlStr) {
 };
 
 
-function stateToHumanReadableModelXML(state) {
-	const idReplacementMap = ['nodes', ...modelHelpers.collectionNames]
-		.reduce((acc, collName) => {
-			if (state.model.graph[collName]) {
-				const coll = state.model.graph[collName];
-				R.keys(coll)
-					.forEach(id => {
-						const newId = `${coll[id].modelComponentType}__${(coll[id].label || id).replace(/ +/g, '-')}`;
-						acc[id] = newId;
-					});
-			}
-			return acc;
-		}, {});
-
+function stateToModelXML(state) {
 	const model = modelHelpers.modelFromGraph(
 		state.model.graph,
 		state.model.metadata
 	);
-	let modelXmlStr = trespassModel.toXML(model);
-
-	// HACK: replace all ids with their human-readable versions
-	modelXmlStr = helpers.replaceIdsInString(modelXmlStr, idReplacementMap);
-
-	return { modelXmlStr, model, idReplacementMap };
-}
-
-
-function stateToHumanReadableScenarioXML(state, modelId, modelFileName, idReplacementMap={}) {
-	let scenarioXmlStr = generateScenarioXML(
-		modelId,
-		modelFileName,
-		state.interface
-	);
-
-	// HACK: replace all ids with their human-readable versions
-	scenarioXmlStr = helpers.replaceIdsInString(scenarioXmlStr, idReplacementMap);
-
-	return scenarioXmlStr;
+	const modelXmlStr = trespassModel.toXML(model);
+	return { modelXmlStr, model };
 }
 
 
@@ -644,10 +618,13 @@ const downloadModelXML =
 module.exports.downloadModelXML =
 function downloadModelXML() {
 	return (dispatch, getState) => {
-		const state = getState();
-		const { modelXmlStr, model } = stateToHumanReadableModelXML(state);
-		const modelFileName = `${model.system.title.replace(/\s/g, '-')}.xml`;
-		saveAs(getXMLBlob(modelXmlStr), modelFileName);
+		dispatch( humanizeModelIds() )
+			.then(() => {
+				const state = getState();
+				const { modelXmlStr, model } = stateToModelXML(state);
+				const modelFileName = `${model.system.title.replace(/\s/g, '-')}.xml`;
+				saveAs(getXMLBlob(modelXmlStr), modelFileName);
+			});
 	};
 };
 
@@ -656,28 +633,26 @@ const downloadZippedScenario =
 module.exports.downloadZippedScenario =
 function downloadZippedScenario() {
 	return (dispatch, getState) => {
-		const state = getState();
-		const { modelXmlStr, model, idReplacementMap } = stateToHumanReadableModelXML(state);
-		const modelId = model.system.id;
+		dispatch( humanizeModelIds() )
+			.then(() => {
+				const state = getState();
+				const { modelXmlStr, model } = stateToModelXML(state);
+				const modelId = model.system.id;
 
-		const modelFileName = 'model.xml';
-		const scenarioFileName = 'scenario.xml';
-		const zipFileName = 'scenario.zip';
+				const scenarioXmlStr = generateScenarioXML(
+					modelId,
+					modelFileName,
+					state.interface
+				);
 
-		const scenarioXmlStr = stateToHumanReadableScenarioXML(
-			state,
-			modelId,
-			modelFileName,
-			idReplacementMap
-		);
-
-		const zipBlob = zipScenario(
-			modelXmlStr,
-			modelFileName,
-			scenarioXmlStr,
-			scenarioFileName
-		);
-		saveAs(zipBlob, zipFileName);
+				const zipBlob = zipScenario(
+					modelXmlStr,
+					modelFileName,
+					scenarioXmlStr,
+					scenarioFileName
+				);
+				saveAs(zipBlob, zipFileName);
+			});
 	};
 };
 
@@ -921,10 +896,18 @@ function generateScenarioXML(
 const zipScenario =
 module.exports.zipScenario =
 function zipScenario(modelXmlStr, modelFileName, scenarioXmlStr, scenarioFileName) {
-	const zip = new JSZip();
-	zip.file(modelFileName, modelXmlStr);
-	zip.file(scenarioFileName, scenarioXmlStr);
-	return zip.generate({ type: 'blob' });
+	return new Promise((resolve, reject) => {
+		const zip = new JSZip();
+		zip.file(modelFileName, modelXmlStr);
+		zip.file(scenarioFileName, scenarioXmlStr);
+		zip.generateAsync({ type: 'blob' })
+			.then(resolve)
+			.catch((err) => {
+				const message = 'zipping failed';
+				console.error(message, err.trace);
+				reject(new Error(message));
+			});
+	});
 };
 
 
@@ -987,12 +970,38 @@ function retrieveAnalysisResults(taskStatusData) {
 };
 
 
+const humanizeModelIds =
+module.exports.humanizeModelIds =
+function humanizeModelIds() {
+	return (dispatch, getState) => {
+		let promises;
+		dispatch({
+			type: constants.ACTION_humanizeModelIds,
+			// itemCb,
+			done: (idReplacementMap) => {
+				// update ids in kb
+				promises = R.toPairs(idReplacementMap)
+					.map((pair) => {
+						return knowledgebaseApi.renameItemId(
+							$.ajax,
+							getState().model.metadata.id,
+							pair[0],
+							pair[1]
+						);
+					});
+			}
+		});
+		// dispatch is synchronous
+		return Promise.all(promises);
+	};
+};
+
+
 const runAnalysis =
 module.exports.runAnalysis =
 function runAnalysis(toolChainId, downloadScenario=false) {
 	return (dispatch, getState) => {
 		const state = getState();
-		console.log(state.model.graph);
 		const toolChains = state.interface.toolChains;
 		const toolChainData = toolChains[toolChainId];
 
@@ -1005,62 +1014,65 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 			throw new Error('missing model id');
 		}
 
-		const { modelXmlStr, model, idReplacementMap } = stateToHumanReadableModelXML(state);
-
-		const validationErrors = trespass.model.validateModel(model);
-		if (validationErrors.length) {
-			alert([
-				'Model validation failed:',
-				...(validationErrors.map(R.prop('message')))
-			].join('\n'));
-			return;
-		}
-
-		const modelFileName = 'model.xml';
-		const scenarioFileName = 'scenario.xml';
-		const zipFileName = 'scenario.zip';
-
-		const scenarioXmlStr = stateToHumanReadableScenarioXML(
-			state,
-			modelId,
-			modelFileName,
-			idReplacementMap
-		);
-
-		// download
-		if (downloadScenario) {
-			const zipBlob = zipScenario(
-				modelXmlStr,
-				modelFileName,
-				scenarioXmlStr,
-				scenarioFileName
-			);
-			saveAs(zipBlob, zipFileName);
-		}
-
-		// upload to knowledgebase
-		Promise.resolve()
+		// humanize ids
+		dispatch( humanizeModelIds() )
 			.then(() => {
-				return knowledgebaseApi.putFile(
-					$.ajax,
+				const state = getState();
+
+				const { modelXmlStr, model } = stateToModelXML(state);
+
+				const validationErrors = trespass.model.validateModel(model);
+				if (validationErrors.length) {
+					alert([
+						'Model validation failed:',
+						...(validationErrors.map(R.prop('message')))
+					].join('\n'));
+					return Promise.reject();
+				}
+
+				const scenarioXmlStr = generateScenarioXML(
 					modelId,
-					modelXmlStr,
 					modelFileName,
-					'model_file'
+					state.interface
 				);
-			})
-			.then(() => {
-				return knowledgebaseApi.putFile(
-					$.ajax,
-					modelId,
-					scenarioXmlStr,
-					scenarioFileName,
-					'scenario_file'
-				);
-			})
-			.catch((err) => {
-				console.dir(err);
-				console.error(err.stack);
+
+				// download
+				if (downloadScenario) {
+					zipScenario(
+						modelXmlStr,
+						modelFileName,
+						scenarioXmlStr,
+						scenarioFileName
+					)
+						.then((zipBlob) => {
+							saveAs(zipBlob, zipFileName);
+						});
+				}
+
+				// upload to knowledgebase
+				return Promise.resolve()
+					.then(() => {
+						return knowledgebaseApi.putFile(
+							$.ajax,
+							modelId,
+							modelXmlStr,
+							modelFileName,
+							'model_file'
+						);
+					})
+					.then(() => {
+						return knowledgebaseApi.putFile(
+							$.ajax,
+							modelId,
+							scenarioXmlStr,
+							scenarioFileName,
+							'scenario_file'
+						);
+					})
+					.catch((err) => {
+						console.dir(err);
+						console.error(err.stack);
+					});
 			})
 			.then(() => {
 				function prepareResult(item) {
@@ -1087,9 +1099,10 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 											return re.test(file.name);
 										})
 										.map((file) => {
-											return file.async('string').then((content) => {
-												return content;
-											});
+											return file.async('string')
+												.then((content) => {
+													return content;
+												});
 										});
 
 									return Promise.all(promises)

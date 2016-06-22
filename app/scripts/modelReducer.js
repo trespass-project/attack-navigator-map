@@ -135,6 +135,13 @@ function reducer(state=initialState, action) {
 		// case constants.ACTION_loadXML:
 		// 	return state; // noop
 
+		case constants.ACTION_humanizeModelIds: {
+			const { done } = action;
+			const { newGraph, idReplacementMap } = modelHelpers.humanizeModelIds(state.graph);
+			done(idReplacementMap);
+			return mergeWithState({ graph: newGraph });
+		}
+
 		case constants.ACTION_addNodeToGroup: {
 			const { nodeId, groupId } = action;
 			const newGraph = modelHelpers.addNodeToGroup(state.graph, nodeId, groupId);
