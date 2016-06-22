@@ -97,11 +97,27 @@ const PropertiesPanel = React.createClass({
 										onChange={onChange}
 										name='modelComponentType'
 										className='form-control'
-										value={node.modelComponentType}>
+										value={node.modelComponentType}
+									>
 										{this.renderTypeOptions()}
 									</select>
 								</td>
 							</tr>
+							{(node.modelComponentType === 'data')
+								? <tr>
+									<td><label>value:</label></td>
+									<td>
+										<input
+											onChange={onChange}
+											name='value'
+											type='text'
+											className='form-control'
+											value={node.value || ''}
+										/>
+									</td>
+								</tr>
+								: null
+							}
 							<tr>
 								<td><label>groups:</label></td>
 								<td><span>{groupNames}</span></td>
