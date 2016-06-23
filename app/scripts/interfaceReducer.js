@@ -74,6 +74,17 @@ const initialState = {
 };
 
 
+const anmDataPickFromState =
+module.exports.anmDataPickFromState = [
+	'attackerProfile',
+	'attackerGoalType',
+	'attackerGoal',
+	'attackerProfit',
+	'attackerActorId',
+	'toolChainId',
+];
+
+
 const blacklist = [
 	constants.ACTION_setEditorElem,
 	constants.ACTION_setMouseOverEditor,
@@ -104,7 +115,7 @@ const blacklist = [
 // ];
 
 
-module.exports =
+module.exports.reducer =
 function reducer(state=initialState, action) {
 	const mergeWithState = R.partial(mergeWith, [state]);
 
@@ -131,6 +142,12 @@ function reducer(state=initialState, action) {
 			}
 
 			return mergeWithState({ editorElem, editorTransformElem, editorElemSize });
+		}
+
+		case constants.ACTION_initMap: {
+			console.log(action.anmData);
+			const { anmData={} } = action;
+			return mergeWithState(anmData.interface || {});
 		}
 
 		case constants.ACTION_getRecentFiles: {

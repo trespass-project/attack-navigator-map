@@ -69,7 +69,7 @@ function getRecentFiles() {
  */
 const initMap =
 module.exports.initMap =
-function initMap(modelId=undefined, metadata=undefined) {
+function initMap(modelId=undefined, metadata=undefined, anmData={}) {
 	return (dispatch, getState) => {
 		// create model, if necessary
 		return getModelOrCreate(modelId)
@@ -79,6 +79,7 @@ function initMap(modelId=undefined, metadata=undefined) {
 					type: constants.ACTION_initMap,
 					modelId,
 					metadata,
+					anmData
 				});
 
 				// get data in any case
@@ -181,7 +182,8 @@ function saveModelToKb() {
 		const modelId = state.model.metadata.id;
 		const model = modelHelpers.modelFromGraph(
 			state.model.graph,
-			state.model.metadata
+			state.model.metadata,
+			state
 		);
 		const modelXmlStr = trespassModel.toXML(model);
 
@@ -580,7 +582,13 @@ function loadXML(xmlString) {
 				return;
 			}
 
-			dispatch( initMap(result.metadata.id || undefined, result.metadata) )
+			dispatch(
+				initMap(
+					result.metadata.id || undefined,
+					result.metadata,
+					result.anmData
+				)
+			)
 				.then(() => {
 					const graph = (result.anmData)
 						? result.graph
@@ -607,7 +615,8 @@ function getXMLBlob(xmlStr) {
 function stateToModelXML(state) {
 	const model = modelHelpers.modelFromGraph(
 		state.model.graph,
-		state.model.metadata
+		state.model.metadata,
+		state
 	);
 	const modelXmlStr = trespassModel.toXML(model);
 	return { modelXmlStr, model };
@@ -977,7 +986,6 @@ function humanizeModelIds() {
 		let promises;
 		dispatch({
 			type: constants.ACTION_humanizeModelIds,
-			// itemCb,
 			done: (idReplacementMap) => {
 				// update ids in kb
 				promises = R.toPairs(idReplacementMap)

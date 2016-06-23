@@ -33,7 +33,7 @@ const initialState = {
 // );
 
 
-module.exports =
+module.exports.reducer =
 function reducer(state=initialState, action) {
 	const mergeWithState = R.partial(mergeWith, [state]);
 

@@ -732,9 +732,9 @@ describe(common.f1('model-helpers.js'), () => {
 		const { graph } = modelHelpers.graphFromModel(model);
 		const edges = R.values(graph.edges);
 		const nodes = R.values(graph.nodes);
-		const processes = R.values(graph.processes);
+		// const processes = R.values(graph.processes);
 		const policies = R.values(graph.policies);
-		const predicates = R.values(graph.predicates);
+		// const predicates = R.values(graph.predicates);
 
 		it(common.f3('should produce hash-maps, not arrays'), () => {
 			assert(!_.isArray(graph.edges));
@@ -794,11 +794,22 @@ describe(common.f1('model-helpers.js'), () => {
 			title: 'test-model',
 			'version': '0.2.1',
 		};
-		const model = modelHelpers.modelFromGraph(graph, metadata);
+		const state = {
+			interface: {
+				attackerGoal: '1234'
+			}
+		};
+		const model = modelHelpers.modelFromGraph(graph, metadata, state);
 
 		it(common.f3('should include metadata'), () => {
 			assert(model.system.title === metadata.title);
 			assert(model.system.version === metadata.version);
+		});
+
+		it(common.f3('should include anm_data'), () => {
+			assert(!_.isEmpty(model.system.anm_data));
+			const anmData = JSON.parse(model.system.anm_data);
+			assert(anmData.interface.attackerGoal === state.interface.attackerGoal);
 		});
 
 		it(common.f3('should create elements'), () => {

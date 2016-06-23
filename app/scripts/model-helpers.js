@@ -5,6 +5,7 @@ const properCase = require('mout/string/properCase');
 const trespass = require('trespass.js');
 const helpers = require('./helpers.js');
 const constants = require('./constants.js');
+const interfaceReducer = require('./interfaceReducer.js');
 
 
 const collectionNames =
@@ -402,8 +403,7 @@ module.exports.xmlModelToGraph =
 function xmlModelToGraph(xmlStr, done) {
 	trespass.model.parse(xmlStr, (err, model) => {
 		if (err) { return done(err); }
-		const graph = graphFromModel(model);
-		done(null, graph);
+		done(null, graphFromModel(model));
 	});
 };
 
@@ -552,8 +552,9 @@ function graphFromModel(model) {
 	// - node positions
 	// TODO: if there is NO anm data, should we try to query the kb instead?
 	const anmData = model.system.anm_data || undefined;
-	if (anmData) {
-		R.values(anmData.nodes || {})
+	// TODO: anmData.interface
+	if (anmData && anmData.graph) {
+		R.values(anmData.graph.nodes || {})
 			.forEach((anmNode) => {
 				let node = graph.nodes[anmNode.id];
 				if (node) {
@@ -577,7 +578,7 @@ function graphFromModel(model) {
 			});
 
 		// groups
-		graph.groups = _.merge(graph.groups, anmData.groups);
+		graph.groups = _.merge(graph.groups, anmData.graph.groups);
 	}
 
 	return { graph, metadata, anmData };
@@ -593,7 +594,7 @@ function relationConvertsToEdge(relation) {
 
 const modelFromGraph =
 module.exports.modelFromGraph =
-function modelFromGraph(graph, metadata={}) {
+function modelFromGraph(graph, metadata={}, state={}) {
 	if (_.isEmpty(metadata)) {
 		console.warn('metadata missing');
 	}
@@ -601,7 +602,12 @@ function modelFromGraph(graph, metadata={}) {
 	let model = trespass.model.create();
 
 	// embed entire graph in model
-	model.system.anm_data = JSON.stringify(graph);
+	// + part of interface state
+	const interfaceState = (state.interface || {});
+	model.system.anm_data = JSON.stringify({
+		interface: R.pick(interfaceReducer.anmDataPickFromState, interfaceState),
+		graph,
+	});
 
 	// include metadata
 	model.system = _.merge(
