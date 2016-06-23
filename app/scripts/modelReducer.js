@@ -124,6 +124,13 @@ function reducer(state=initialState, action) {
 			return mergeWithState({ graph: newGraph });
 		}
 
+		case constants.ACTION_mergeFragment: {
+			const { fragment } = action;
+			const newGraph = modelHelpers.combineFragments([state.graph, fragment]);
+			console.log(fragment, newGraph);
+			return mergeWithState({ graph: newGraph });
+		}
+
 		// case constants.ACTION_updateModel: {
 		// 	const model = modelFromGraph(state.graph);
 		// 	if (!model) { // debounced

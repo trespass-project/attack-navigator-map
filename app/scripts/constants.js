@@ -49,6 +49,7 @@ const constants = {
 	ACTION_setPannable: 'ACTION_setPannable',
 	ACTION_selectWizardStep: 'ACTION_selectWizardStep',
 	ACTION_importFragment: 'ACTION_importFragment',
+	ACTION_mergeFragment: 'ACTION_mergeFragment',
 	ACTION_downloadModelXML: 'ACTION_downloadModelXML',
 	ACTION_downloadZippedScenario: 'ACTION_downloadZippedScenario',
 	ACTION_loadModelFile: 'ACTION_loadModelFile',

@@ -259,11 +259,24 @@ function importFragment(fragment, xy) {
 			fragment,
 			xy,
 			cb: (modelId, importedNodes) => {
+				// update kb
 				importedNodes
 					.forEach((node) => {
 						knowledgebaseApi.createItem($.ajax, modelId, node);
 					});
 			}
+		});
+	};
+};
+
+
+const mergeFragment =
+module.exports.mergeFragment =
+function mergeFragment(fragment) {
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_mergeFragment,
+			fragment,
 		});
 	};
 };
@@ -590,12 +603,16 @@ function loadXML(xmlString) {
 				)
 			)
 				.then(() => {
-					const graph = (result.anmData)
-						? result.graph
-						: modelHelpers.layoutGraphByType(result.graph);
-
 					// import
-					dispatch( importFragment(graph) );
+					// `importFragment()` clones fragment entirely (all new ids)
+					// `mergeFragment()` add everything "as is"
+					if (result.anmData) {
+						const fragment = result.graph;
+						dispatch( mergeFragment(fragment) );
+					} else {
+						const fragment = modelHelpers.layoutGraphByType(result.graph);
+						dispatch( importFragment(fragment) );
+					}
 				});
 		});
 	};

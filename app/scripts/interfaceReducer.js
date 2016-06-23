@@ -174,7 +174,6 @@ function reducer(state=initialState, action) {
 		}
 
 		case constants.ACTION_initMap: {
-			console.log(action.anmData);
 			const { anmData={} } = action;
 			return mergeWithState(anmData.interface || {});
 		}
