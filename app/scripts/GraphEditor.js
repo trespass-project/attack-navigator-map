@@ -1,5 +1,3 @@
-'use strict';
-
 const React = require('react');
 const reactDOM = require('react-dom');
 const mout = require('mout');
@@ -7,6 +5,7 @@ const mout = require('mout');
 const GraphMixin = require('./GraphMixin.js');
 const SchleppManagerMixin = require('./SchleppManagerMixin.js');
 const SchleppMixin = require('./SchleppMixin.js');
+
 const helpers = require('./helpers.js');
 const constants = require('./constants.js');
 const icons = require('./icons.js');
@@ -91,8 +90,10 @@ let GraphEditor = React.createClass({
 		// event position, relative to svg elem
 		const editorXY = helpers.coordsRelativeToElem(
 			props.editorElem,
-			{ x: event.clientX,
-			  y: event.clientY }
+			{
+				x: event.clientX,
+				y: event.clientY
+			}
 		);
 
 		// zoom and pan transform-origin equivalent
