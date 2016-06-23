@@ -9,6 +9,12 @@ const helpers = require('./helpers.js');
 const theme = require('./graph-theme-default.js');
 
 
+const ValidationLayer = require('./ValidationLayer.js');
+const layers = [
+	ValidationLayer,
+];
+
+
 const initialState = {
 	drag: null,
 	dragNodeId: null,
@@ -72,6 +78,11 @@ const initialState = {
 	modelComponentTypeToKbTypes: [],
 
 	modelPatterns: [], // pre-made fragments
+
+	// ——————————
+
+	// activeLayers: [],
+	activeLayers: layers,
 };
 
 
