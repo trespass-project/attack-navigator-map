@@ -161,8 +161,10 @@ const GraphMixin = {
 		const graph = props.graph;
 
 		return (
-			/* prevent event propagation from map up to svg elem */
-			<g ref='map-group' onClick={this.stopProp}>
+			<g
+				ref='map-group'
+				onClick={this.stopProp} /* prevent event propagation from map up to svg elem */
+			>
 				{R.values(graph.groups)
 					.filter((group) => {
 						return !!group._bgImage;
@@ -172,6 +174,14 @@ const GraphMixin = {
 				{R.values(graph.groups)
 					.map(this.renderGroup)
 				}
+
+				{(!props.isMinimap && props.activeLayers.length)
+					? props.activeLayers
+						.map(R.prop('Component'))
+						.map((Component) => <Component {...props} />)
+					: null
+				}
+
 				{(props.showEdges)
 					? R.values(graph.edges)
 						.map(this.renderEdge)
