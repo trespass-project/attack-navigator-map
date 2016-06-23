@@ -69,7 +69,7 @@ function getRecentFiles() {
  */
 const initMap =
 module.exports.initMap =
-function initMap(modelId=undefined, metadata=undefined) {
+function initMap(modelId=undefined, metadata=undefined, anmData={}) {
 	return (dispatch, getState) => {
 		// create model, if necessary
 		return getModelOrCreate(modelId)
@@ -79,6 +79,7 @@ function initMap(modelId=undefined, metadata=undefined) {
 					type: constants.ACTION_initMap,
 					modelId,
 					metadata,
+					anmData
 				});
 
 				// get data in any case
@@ -181,7 +182,8 @@ function saveModelToKb() {
 		const modelId = state.model.metadata.id;
 		const model = modelHelpers.modelFromGraph(
 			state.model.graph,
-			state.model.metadata
+			state.model.metadata,
+			state
 		);
 		const modelXmlStr = trespassModel.toXML(model);
 
@@ -257,11 +259,24 @@ function importFragment(fragment, xy) {
 			fragment,
 			xy,
 			cb: (modelId, importedNodes) => {
+				// update kb
 				importedNodes
 					.forEach((node) => {
 						knowledgebaseApi.createItem($.ajax, modelId, node);
 					});
 			}
+		});
+	};
+};
+
+
+const mergeFragment =
+module.exports.mergeFragment =
+function mergeFragment(fragment) {
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_mergeFragment,
+			fragment,
 		});
 	};
 };
@@ -580,14 +595,24 @@ function loadXML(xmlString) {
 				return;
 			}
 
-			dispatch( initMap(result.metadata.id || undefined, result.metadata) )
+			dispatch(
+				initMap(
+					result.metadata.id || undefined,
+					result.metadata,
+					result.anmData
+				)
+			)
 				.then(() => {
-					const graph = (result.anmData)
-						? result.graph
-						: modelHelpers.layoutGraphByType(result.graph);
-
 					// import
-					dispatch( importFragment(graph) );
+					// `importFragment()` clones fragment entirely (all new ids)
+					// `mergeFragment()` add everything "as is"
+					if (result.anmData) {
+						const fragment = result.graph;
+						dispatch( mergeFragment(fragment) );
+					} else {
+						const fragment = modelHelpers.layoutGraphByType(result.graph);
+						dispatch( importFragment(fragment) );
+					}
 				});
 		});
 	};
@@ -607,7 +632,8 @@ function getXMLBlob(xmlStr) {
 function stateToModelXML(state) {
 	const model = modelHelpers.modelFromGraph(
 		state.model.graph,
-		state.model.metadata
+		state.model.metadata,
+		state
 	);
 	const modelXmlStr = trespassModel.toXML(model);
 	return { modelXmlStr, model };
@@ -974,11 +1000,12 @@ const humanizeModelIds =
 module.exports.humanizeModelIds =
 function humanizeModelIds() {
 	return (dispatch, getState) => {
+		let idReplacementMap;
 		let promises;
 		dispatch({
 			type: constants.ACTION_humanizeModelIds,
-			// itemCb,
-			done: (idReplacementMap) => {
+			done: (_idReplacementMap) => {
+				idReplacementMap = _idReplacementMap;
 				// update ids in kb
 				promises = R.toPairs(idReplacementMap)
 					.map((pair) => {
@@ -992,6 +1019,10 @@ function humanizeModelIds() {
 			}
 		});
 		// dispatch is synchronous
+		dispatch({
+			type: constants.ACTION_humanizeModelIds_updateInterfaceState,
+			idReplacementMap
+		});
 		return Promise.all(promises);
 	};
 };
