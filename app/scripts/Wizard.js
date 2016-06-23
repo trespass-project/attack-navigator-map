@@ -388,7 +388,7 @@ const Wizard = React.createClass({
 		return <div>
 			<h3>Select attacker</h3>
 			<select
-				value={props.attackerActorId}
+				value={props.attackerActorId || ''}
 				onChange={this.setAttackerActor}
 			>
 				<option value=''>— select attacker —</option>

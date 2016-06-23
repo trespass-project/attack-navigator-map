@@ -17,8 +17,8 @@ const DragDropContext = require('react-dnd').DragDropContext;
 
 function configureStore(initialState) {
 	const combinedReducers = combineReducers({
-		model: modelReducer,
-		interface: interfaceReducer,
+		model: modelReducer.reducer,
+		interface: interfaceReducer.reducer,
 	});
 
 	const store = createStore(

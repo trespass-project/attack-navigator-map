@@ -33,7 +33,7 @@ const initialState = {
 // );
 
 
-module.exports =
+module.exports.reducer =
 function reducer(state=initialState, action) {
 	const mergeWithState = R.partial(mergeWith, [state]);
 
@@ -121,6 +121,13 @@ function reducer(state=initialState, action) {
 				xy,
 				(importedNodesMap) => { cb(state.metadata.id, R.values(importedNodesMap)); }
 			);
+			return mergeWithState({ graph: newGraph });
+		}
+
+		case constants.ACTION_mergeFragment: {
+			const { fragment } = action;
+			const newGraph = modelHelpers.combineFragments([state.graph, fragment]);
+			console.log(fragment, newGraph);
 			return mergeWithState({ graph: newGraph });
 		}
 
