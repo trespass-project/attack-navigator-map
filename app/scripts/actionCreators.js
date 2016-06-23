@@ -983,10 +983,12 @@ const humanizeModelIds =
 module.exports.humanizeModelIds =
 function humanizeModelIds() {
 	return (dispatch, getState) => {
+		let idReplacementMap;
 		let promises;
 		dispatch({
 			type: constants.ACTION_humanizeModelIds,
-			done: (idReplacementMap) => {
+			done: (_idReplacementMap) => {
+				idReplacementMap = _idReplacementMap;
 				// update ids in kb
 				promises = R.toPairs(idReplacementMap)
 					.map((pair) => {
@@ -1000,6 +1002,10 @@ function humanizeModelIds() {
 			}
 		});
 		// dispatch is synchronous
+		dispatch({
+			type: constants.ACTION_humanizeModelIds_updateInterfaceState,
+			idReplacementMap
+		});
 		return Promise.all(promises);
 	};
 };

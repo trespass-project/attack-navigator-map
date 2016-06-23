@@ -1,3 +1,4 @@
+const update = require('react-addons-update');
 const $ = require('jquery');
 const R = require('ramda');
 const moment = require('moment');
@@ -85,6 +86,34 @@ module.exports.anmDataPickFromState = [
 ];
 
 
+// after making labels human-readable,
+// we also need the ids in some parts of the state
+function updateStateIds(idReplacementMap, state) {
+	function replaceOrNot(currentId) {
+		return idReplacementMap[currentId] || currentId;
+	}
+
+	return update(
+		state,
+		{
+			attackerActorId: {
+				$set: replaceOrNot(state.attackerActorId)
+			},
+			toolChainId: {
+				$set: replaceOrNot(state.toolChainId)
+			},
+			attackerGoal: {
+				assetGoal: {
+					asset: {
+						$set: replaceOrNot(state.attackerGoal.assetGoal.asset)
+					}
+				}
+			},
+		}
+	);
+}
+
+
 const blacklist = [
 	constants.ACTION_setEditorElem,
 	constants.ACTION_setMouseOverEditor,
@@ -168,6 +197,10 @@ function reducer(state=initialState, action) {
 			);
 
 			return mergeWithState({ recentModels: R.take(5, models) });
+		}
+
+		case 'ACTION_humanizeModelIds_updateInterfaceState': {
+			return updateStateIds(action.idReplacementMap, state);
 		}
 
 		case constants.ACTION_select: {
