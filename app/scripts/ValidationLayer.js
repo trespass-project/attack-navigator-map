@@ -5,6 +5,7 @@ const R = require('ramda');
 const name =
 module.exports.name = 'ValidationLayer';
 
+// TODO: what to do with this?
 const editorProps =
 module.exports.editorProps = {
 	showEdges: false,
@@ -24,18 +25,23 @@ React.createClass({
 	render() {
 		const props = this.props;
 
+		// TODO: more warnings
+		// TODO: do this somewhere higher up, so that same warnings can
+		// be used in wizard, as well (DRY)
 		const warnings = R.values(props.graph.nodes)
 			.filter(R.propEq('modelComponentType', 'actor'))
 			.filter((item) => {
 				return !item['tkb:actor_type'];
 			})
 			.reduce((acc, item) => {
-				const message = 'actor does not have an actor type';
+				const message = 'missing actor type';
 				acc[item.id] = message;
 				return acc;
 			}, {});
 
-		const r = 50;
+		// TODO: make part of theme?
+		const r = 45;
+		const yShift = 7;
 
 		return <g className='layer'>
 			{R.values(props.graph.nodes).map((node) => {
@@ -44,7 +50,8 @@ React.createClass({
 					return null;
 				}
 
-				return <g transform={`translate(${node.x}, ${node.y})`}>
+				// TODO: outsource css
+				return <g transform={`translate(${node.x}, ${node.y + yShift})`}>
 					<circle
 						fill='rgba(255, 4, 0, 0.25)'
 						r={r}
