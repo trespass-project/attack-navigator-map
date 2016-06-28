@@ -180,6 +180,12 @@ function saveModelToKb() {
 	return (dispatch, getState) => {
 		const state = getState();
 		const modelId = state.model.metadata.id;
+
+		if (!modelId) {
+			// currently no model open to save
+			return;
+		}
+
 		const model = modelHelpers.modelFromGraph(
 			state.model.graph,
 			state.model.metadata,
@@ -1362,5 +1368,15 @@ function loadComponentTypes() {
 				});
 			})
 			.catch(handleError);
+	};
+};
+
+
+const showSaveDialog =
+module.exports.showSaveDialog =
+function showSaveDialog(yesNo) {
+	return {
+		type: constants.ACTION_showSaveDialog,
+		show: yesNo
 	};
 };

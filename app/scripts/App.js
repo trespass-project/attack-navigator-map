@@ -50,10 +50,9 @@ React.createClass({
 	},
 
 	handleBeforeUnload(event) {
-		event.preventDefault();
-
-		// TODO: ask if user wants to save
-		const msg = 'Are you sure?';
+		// this whole message thing doesn't seem to work (anymore),
+		// but let's still interrupt here.
+		const msg = 'Are you sure?\nChanges you made may not be saved.';
 		event.returnValue = msg;
 		return msg;
 	},
@@ -62,13 +61,24 @@ React.createClass({
 		// if control or command key is pressed and the s key is pressed
 		if ((event.ctrlKey || event.metaKey) && event.keyCode === 83) {
 			event.preventDefault();
-			this.props.dispatch( actionCreators.saveModelToKb() );
+			this.save();
 		}
+	},
+
+	save(event) {
+		if (event) {
+			event.preventDefault();
+		}
+		this.props.dispatch( actionCreators.saveModelToKb() );
 	},
 
 	fetchKbData(event) {
 		event.preventDefault();
 		this.props.dispatch( actionCreators.fetchKbData() );
+	},
+
+	saveDialogOnClose() {
+		this.props.dispatch( actionCreators.showSaveDialog(false) );
 	},
 
 	render() {
@@ -101,6 +111,14 @@ React.createClass({
 							>
 								re-fetch knowledgebase data
 							</a>
+							<UsageHint>
+								<a
+									href='#'
+									onClick={this.save}
+								>
+									save map
+								</a>
+							</UsageHint>
 						</div>
 						: ''
 					}
