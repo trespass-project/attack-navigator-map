@@ -61,13 +61,24 @@ React.createClass({
 		// if control or command key is pressed and the s key is pressed
 		if ((event.ctrlKey || event.metaKey) && event.keyCode === 83) {
 			event.preventDefault();
-			this.props.dispatch( actionCreators.saveModelToKb() );
+			this.save();
 		}
+	},
+
+	save(event) {
+		if (event) {
+			event.preventDefault();
+		}
+		this.props.dispatch( actionCreators.saveModelToKb() );
 	},
 
 	fetchKbData(event) {
 		event.preventDefault();
 		this.props.dispatch( actionCreators.fetchKbData() );
+	},
+
+	saveDialogOnClose() {
+		this.props.dispatch( actionCreators.showSaveDialog(false) );
 	},
 
 	render() {
@@ -100,6 +111,14 @@ React.createClass({
 							>
 								re-fetch knowledgebase data
 							</a>
+							<UsageHint>
+								<a
+									href='#'
+									onClick={this.save}
+								>
+									save map
+								</a>
+							</UsageHint>
 						</div>
 						: ''
 					}

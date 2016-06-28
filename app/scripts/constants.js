@@ -84,6 +84,8 @@ const constants = {
 	ACTION_loadRelationTypes: 'ACTION_loadRelationTypes',
 	ACTION_loadRelationTypes_DONE: 'ACTION_loadRelationTypes_DONE',
 
+	ACTION_showSaveDialog: 'ACTION_showSaveDialog',
+
 	CLONE_OFFSET: 70,
 };
 
