@@ -50,10 +50,9 @@ React.createClass({
 	},
 
 	handleBeforeUnload(event) {
-		event.preventDefault();
-
-		// TODO: ask if user wants to save
-		const msg = 'Are you sure?';
+		// this whole message thing doesn't seem to work (anymore),
+		// but let's still interrupt here.
+		const msg = 'Are you sure?\nChanges you made may not be saved.';
 		event.returnValue = msg;
 		return msg;
 	},
