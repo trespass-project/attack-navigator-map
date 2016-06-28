@@ -382,6 +382,11 @@ function reducer(state=initialState, action) {
 			return mergeWithState({ relationTypes });
 		}
 
+		case constants.ACTION_showSaveDialog: {
+			const { yesNo } = action;
+			return mergeWithState({ showSaveDialog: yesNo });
+		}
+
 		default:
 			return state;
 	}
