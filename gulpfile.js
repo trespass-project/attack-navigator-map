@@ -73,7 +73,7 @@ gulp.task('build:scripts', [/*'lint'*/], function() {
 
 		.pipe(uglify())
 
-		.pipe(sourcemaps.write(destFileName + '.map'))
+		.pipe(sourcemaps.write('./'))
 		.pipe(gulp.dest(distDir(scriptsDir())));
 });
 
