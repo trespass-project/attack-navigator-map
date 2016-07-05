@@ -42,6 +42,8 @@ var babelify = require('babelify');
 var brfs = require('brfs');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
+const uglify = require('gulp-uglify');
+const sourcemaps = require('gulp-sourcemaps');
 // ———
 var sourceFile = appDir(scriptsDir('main.js'));
 var destFileName = 'bundle.js';
@@ -69,10 +71,11 @@ gulp.task('build:scripts', [/*'lint'*/], function() {
 		.pipe(source(destFileName))
 
 		.pipe(buffer()) // convert from stream to buffered vinyl file object
-		// .pipe($.sourcemaps.init())
-		// .pipe($.uglify())
-		// .pipe($.sourcemaps.write())
+		.pipe(sourcemaps.init())
 
+		.pipe(uglify())
+
+		.pipe(sourcemaps.write(destFileName + '.map'))
 		.pipe(gulp.dest(distDir(scriptsDir())));
 });
 
