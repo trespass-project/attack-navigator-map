@@ -8,8 +8,6 @@ var del = require('del');
 var wiredep = require('wiredep').stream;
 var notifier = require('node-notifier');
 var execSync = require('child_process').execSync;
-var moment = require('moment');
-var chalk = require('chalk');
 var koutoSwiss = require('kouto-swiss');
 
 var $ = gulpLoadPlugins();
@@ -42,6 +40,8 @@ var babelify = require('babelify');
 var brfs = require('brfs');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
+const uglify = require('gulp-uglify');
+const sourcemaps = require('gulp-sourcemaps');
 // ———
 var sourceFile = appDir(scriptsDir('main.js'));
 var destFileName = 'bundle.js';
@@ -69,10 +69,11 @@ gulp.task('build:scripts', [/*'lint'*/], function() {
 		.pipe(source(destFileName))
 
 		.pipe(buffer()) // convert from stream to buffered vinyl file object
-		// .pipe($.sourcemaps.init())
-		// .pipe($.uglify())
-		// .pipe($.sourcemaps.write())
+		.pipe(sourcemaps.init())
 
+		.pipe(uglify())
+
+		.pipe(sourcemaps.write(destFileName + '.map'))
 		.pipe(gulp.dest(distDir(scriptsDir())));
 });
 
@@ -119,29 +120,6 @@ gulp.task('stylus', function() {
 
 
 gulp.task('styles', ['stylus']);
-
-
-// function lint(files, options) {
-// 	return function() {
-// 		return gulp.src(files)
-// 			.pipe(reload({ stream: true, once: true }))
-// 			.pipe($.eslint(options))
-// 			.pipe($.eslint.format())
-// 			.pipe($.if(!browserSync.active, $.eslint.failAfterError()));
-// 	};
-// }
-// var testLintOptions = {
-// 	env: {
-// 		mocha: true
-// 	},
-// 	globals: {
-// 		assert: false,
-// 		expect: false,
-// 		should: false
-// 	}
-// };
-// gulp.task('lint', lint(appDir(scriptsDir('**/*.js'))));
-// gulp.task('lint:test', lint(testDir(specDir('**/*.js')), testLintOptions));
 
 
 gulp.task('jade', function () {
@@ -289,33 +267,33 @@ gulp.task('fontcustom:sass-to-stylus', ['fontcustom:compile'], function() {
 });
 
 
-gulp.task('serve:dist', function() {
-	browserSync.create().init({
-		notify: false,
-		// port: 9000,
-		server: {
-			baseDir: [distDir()]
-		}
-	});
-});
+// gulp.task('serve:dist', function() {
+// 	browserSync.create().init({
+// 		notify: false,
+// 		// port: 9000,
+// 		server: {
+// 			baseDir: [distDir()]
+// 		}
+// 	});
+// });
 
 
-gulp.task('serve:test', function() {
-	browserSync.create().init({
-		notify: false,
-		// port: 9000,
-		ui: false,
-		server: {
-			baseDir: testDir(),
-			routes: {
-				'/bower_components': 'bower_components'
-			}
-		}
-	});
+// gulp.task('serve:test', function() {
+// 	browserSync.create().init({
+// 		notify: false,
+// 		// port: 9000,
+// 		ui: false,
+// 		server: {
+// 			baseDir: testDir(),
+// 			routes: {
+// 				'/bower_components': 'bower_components'
+// 			}
+// 		}
+// 	});
 
-	gulp.watch(testDir(specDir('**/*.js'))).on('change', reload);
-	// gulp.watch(testDir(specDir('**/*.js')), ['lint:test']);
-});
+// 	gulp.watch(testDir(specDir('**/*.js'))).on('change', reload);
+// 	// gulp.watch(testDir(specDir('**/*.js')), ['lint:test']);
+// });
 
 
 // inject bower components
@@ -333,58 +311,6 @@ gulp.task('wiredep', function() {
 			ignorePath: /^(\.\.\/)*\.\./
 		}))
 		.pipe(gulp.dest(appDir()));
-});
-
-
-gulp.task('npm-init', function(cb) {
-	var pkg = require('./package.json');
-	if (!pkg.name) { pkg.name = path.basename(__dirname); }
-	if (!pkg.version) { pkg.version = '0.0.0'; }
-	if (!pkg.private) { pkg.private = false; }
-
-	var fs = require('fs');
-	fs.writeFile(
-		path.join(__dirname, 'package.json'),
-		JSON.stringify(pkg, null, '  '),
-		function(err) {
-			if (err) throw err;
-			return cb();
-		}
-	);
-});
-
-
-gulp.task('version-bump', ['npm-init'], function(cb) {
-	// bump version
-	try {
-		execSync(
-			'git add -A && git commit -m "pre version bump"',
-			{ /*cwd: dir*/ }
-		);
-	} catch (e) {}
-	execSync(
-		'npm version prerelease',
-		{ /*cwd: dir*/ }
-	);
-
-	// rename dist dir
-	var date = moment().format('YYYY-MM-DD');
-	var pkg = require('./package.json');
-	var version = pkg.version;
-	console.log('version bump:', chalk.bgGreen.black(version));
-	var from = distDir();
-	var to = from+'__v'+version+'__'+date;
-	execSync(
-		'mv "'+from+'" "'+to+'"',
-		{ /*cwd: dir*/ }
-	);
-
-	return cb();
-});
-
-
-gulp.task('freeze', ['build'], function() {
-	gulp.start('version-bump');
 });
 
 
