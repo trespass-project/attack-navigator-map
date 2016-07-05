@@ -43,7 +43,6 @@
     "gulp-useref": "^1.1.1",
     "gulp-util": "^3.0.7",
     "main-bower-files": "^2.5.0",
-    "moment": "^2.10.3",
     "node-notifier": "^4.2.3",
     "opn": "^1.0.1",
     "vinyl-buffer": "^1.0.0",
