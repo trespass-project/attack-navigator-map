@@ -520,7 +520,7 @@ const Wizard = React.createClass({
 			{ value: props.toolChainId, message: 'No toolchain selected' },
 		].reduce(pushIfFalsey, missingForScenario);
 
-		// check if all actorso have a an `tkb:actor_type`
+		// check if all actors have a an `tkb:actor_type`
 		const otherWarnings = R.values(props.graph.nodes)
 			// .filter(R.propEq('type', 'tkb:actor'))
 			.filter(R.propEq('modelComponentType', 'actor'))
