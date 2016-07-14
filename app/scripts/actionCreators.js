@@ -967,26 +967,21 @@ const retrieveAnalysisResults =
 module.exports.retrieveAnalysisResults =
 function retrieveAnalysisResults(taskStatusData) {
 	// a $.ajax()-compatible function that returns blobs
-	const binaryAjax =
-	module.exports.binaryAjax =
 	function binaryAjax(params) {
 		return new Promise((resolve, reject) => {
 			const req = new XMLHttpRequest();
-			req.responseType = 'blob';
-			req.open(params.method || 'GET', params.url, true);
-
 			req.onload = (event) => {
 				const blob = req.response;
 				resolve(blob);
 			};
-
 			req.onerror = reject;
-
+			req.responseType = 'blob';
+			req.open(params.method || 'GET', params.url, true);
 			req.send();
 		});
-	};
+	}
 
-	const analysisToolNames = ['A.T. Analyzer', 'A.T. Evaluator'];
+	const analysisToolNames = knowledgebaseApi.analysisToolNames;
 	return knowledgebaseApi.getAnalysisResults(binaryAjax, taskStatusData, analysisToolNames)
 		.catch((err) => {
 			console.error(err.stack);
