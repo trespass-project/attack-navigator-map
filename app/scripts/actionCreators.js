@@ -1,5 +1,5 @@
 const isNodeEnvironment = require('detect-node');
-const $ = require('jquery');
+const axios = require('axios');
 const R = require('ramda');
 const _ = require('lodash');
 const JSZip = require('jszip');
@@ -7,7 +7,6 @@ const saveAs = require('browser-saveas');
 const trespass = require('trespass.js');
 const trespassModel = trespass.model;
 const api = trespass.api;
-// const toolsApi = api.tools;
 const knowledgebaseApi = api.knowledgebase;
 const constants = require('./constants.js');
 const modelHelpers = require('./model-helpers.js');
@@ -26,14 +25,6 @@ const noop = () => {};
 const retryRate = 1000;
 
 
-// let requests = {};
-// function abortRequests(requests, key) {
-// 	requests[key] = requests[key] || [];
-// 	requests[key].forEach((req) => { req.abort(); });
-// 	requests[key].length = 0;
-// }
-
-
 function handleError(err) {
 	if (err.statusText === 'abort') { return; }
 	console.error(err.stack);
@@ -47,13 +38,11 @@ const getRecentFiles =
 module.exports.getRecentFiles =
 function getRecentFiles() {
 	return (dispatch, getState) => {
-		return knowledgebaseApi.listModels($.ajax)
-			.fail((xhr, textStatus, err) => {
-				if (xhr.status === 0) {
-					alert('The knowledgebase doesn\'t appear to be running.');
-				}
+		return knowledgebaseApi.listModels(axios)
+			.catch((err) => {
+				console.error(err);
 			})
-			.done((models, textStatus, xhr) => {
+			.then((models) => {
 				dispatch({
 					type: constants.ACTION_getRecentFiles,
 					models
@@ -121,6 +110,7 @@ function fetchKbData() {
 };
 
 
+// TODO: move to trespass.js
 /**
  * creates a new model in the knowledgebase
  * @returns {Promise} - { modelId, isNew }
@@ -131,10 +121,10 @@ function getModelOrCreate(_modelId) {
 	if (!_modelId) {
 		const modelId = helpers.makeId('model');
 		console.warn(`no model id provided – creating new one: ${modelId}`);
-		return knowledgebaseApi.createModel($.ajax, modelId);
+		return knowledgebaseApi.createModel(axios, modelId);
 	}
 
-	return knowledgebaseApi.getModel($.ajax, _modelId)
+	return knowledgebaseApi.getModel(axios, _modelId)
 		.then((modelId) => {
 			const doesExist = !!modelId;
 			if (doesExist) {
@@ -142,7 +132,7 @@ function getModelOrCreate(_modelId) {
 				return Promise.resolve({ modelId, isNew });
 			} else {
 				console.warn(`model does not exist – creating new one with same id: ${_modelId}`);
-				return knowledgebaseApi.createModel($.ajax, _modelId);
+				return knowledgebaseApi.createModel(axios, _modelId);
 			}
 		})
 		.catch((err) => {
@@ -155,20 +145,19 @@ const loadModelFromKb =
 module.exports.loadModelFromKb =
 function loadModelFromKb(modelId) {
 	return (dispatch, getState) => {
-		return knowledgebaseApi.getModelFile($.ajax, modelId)
+		return knowledgebaseApi.getModelFile(axios, modelId)
 			.then((modelXML) => {
-				// console.log(modelXML);
 				dispatch( loadXML(modelXML) );
 			})
-			.catch((jqXHR) => {
-				if (jqXHR.status === 404) {
+			.catch((err) => {
+				if (err.response.status === 404) {
 					const message = 'no model file found';
 					console.error(message);
 					alert(message);
 					return;
 				}
-				console.error(jqXHR.statusText);
-				alert(jqXHR.statusText);
+				console.error(err.message);
+				alert(err.message);
 			});
 	};
 };
@@ -193,13 +182,13 @@ function saveModelToKb() {
 		);
 		const modelXmlStr = trespassModel.toXML(model);
 
-		return knowledgebaseApi.saveModelFile($.ajax, modelId, modelXmlStr)
+		return knowledgebaseApi.saveModelFile(axios, modelId, modelXmlStr)
 			.then(() => {
 				console.info('model sent');
 			})
-			.catch((jqXHR) => {
-				console.error(jqXHR.statusText);
-				alert(jqXHR.statusText);
+			.catch((err) => {
+				console.error(err.message);
+				alert(err.message);
 			});
 	};
 };
@@ -268,7 +257,7 @@ function importFragment(fragment, xy) {
 				// update kb
 				importedNodes
 					.forEach((node) => {
-						knowledgebaseApi.createItem($.ajax, modelId, node);
+						knowledgebaseApi.createItem(axios, modelId, node);
 					});
 			}
 		});
@@ -491,7 +480,7 @@ function removeNode(nodeId) {
 			type: constants.ACTION_removeNode,
 			nodeId,
 			cb: (modelId, itemId) => {
-				knowledgebaseApi.deleteItem($.ajax, modelId, itemId);
+				knowledgebaseApi.deleteItem(axios, modelId, itemId);
 			}
 		});
 	};
@@ -736,7 +725,7 @@ function removeGroup(groupId, removeNodes=false) {
 		type: constants.ACTION_removeGroup,
 		groupId, removeNodes,
 		cb: (modelId, itemId) => {
-			knowledgebaseApi.deleteItem($.ajax, modelId, itemId);
+			knowledgebaseApi.deleteItem(axios, modelId, itemId);
 		}
 	};
 };
@@ -749,7 +738,7 @@ function updateComponentProperties(componentId, graphComponentType, newPropertie
 		type: constants.ACTION_updateComponentProperties,
 		componentId, graphComponentType, newProperties,
 		cb: (modelId, item) => {
-			knowledgebaseApi.createItem($.ajax, modelId, item);
+			knowledgebaseApi.createItem(axios, modelId, item);
 		}
 	};
 };
@@ -842,13 +831,13 @@ function monitorTaskStatus(taskUrl, _callbacks={}) {
 		let intervalId;
 
 		function check() {
-			knowledgebaseApi.getTaskStatus($.ajax, taskUrl)
-				.fail((xhr, textStatus, err) => {
+			knowledgebaseApi.getTaskStatus(axios, taskUrl)
+				.catch((err) => {
 					clearInterval(intervalId);
 					console.error(err.stack);
 					reject(err);
 				})
-				.done((taskStatusData, textStatus, xhr) => {
+				.then((taskStatusData) => {
 					if (taskStatusData.status) {
 						const taskStatusDataCategorized = helpers.handleStatus(taskStatusData);
 						if (taskStatusDataCategorized.current[0]) {
@@ -862,12 +851,13 @@ function monitorTaskStatus(taskUrl, _callbacks={}) {
 								// do nothing
 								break;
 
-							case 'error':
+							case 'error': {
 								clearInterval(intervalId);
 								const errorMessage = taskStatusDataCategorized.current[0]['error-message'];
 								alert(errorMessage);
 								console.error(errorMessage);
 								break;
+							}
 
 							case 'done':
 								clearInterval(intervalId);
@@ -966,28 +956,8 @@ function setTaskStatusCategorized(taskStatusDataCategorized) {
 const retrieveAnalysisResults =
 module.exports.retrieveAnalysisResults =
 function retrieveAnalysisResults(taskStatusData) {
-	// a $.ajax()-compatible function that returns blobs
-	const binaryAjax =
-	module.exports.binaryAjax =
-	function binaryAjax(params) {
-		return new Promise((resolve, reject) => {
-			const req = new XMLHttpRequest();
-			req.responseType = 'blob';
-			req.open(params.method || 'GET', params.url, true);
-
-			req.onload = (event) => {
-				const blob = req.response;
-				resolve(blob);
-			};
-
-			req.onerror = reject;
-
-			req.send();
-		});
-	};
-
-	const analysisToolNames = ['A.T. Analyzer', 'A.T. Evaluator'];
-	return knowledgebaseApi.getAnalysisResults(binaryAjax, taskStatusData, analysisToolNames)
+	const analysisToolNames = knowledgebaseApi.analysisToolNames;
+	return knowledgebaseApi.getAnalysisResults(axios, taskStatusData, analysisToolNames)
 		.catch((err) => {
 			console.error(err.stack);
 		})
@@ -1016,7 +986,7 @@ function humanizeModelIds() {
 				promises = R.toPairs(idReplacementMap)
 					.map((pair) => {
 						return knowledgebaseApi.renameItemId(
-							$.ajax,
+							axios,
 							getState().model.metadata.id,
 							pair[0],
 							pair[1]
@@ -1090,7 +1060,7 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 				return Promise.resolve()
 					.then(() => {
 						return knowledgebaseApi.putFile(
-							$.ajax,
+							axios,
 							modelId,
 							modelXmlStr,
 							modelFileName,
@@ -1099,7 +1069,7 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 					})
 					.then(() => {
 						return knowledgebaseApi.putFile(
-							$.ajax,
+							axios,
 							modelId,
 							scenarioXmlStr,
 							scenarioFileName,
@@ -1219,13 +1189,13 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 				};
 
 				knowledgebaseApi.runToolChain(
-					$.ajax,
+					axios,
 					modelId,
 					toolChainId,
 					state.interface.attackerProfile.id,
 					callbacks || {}
 				)
-					.done((data, textStatus, xhr) => {
+					.then((data) => {
 						monitorTaskStatus(data.task_url, callbacks);
 					});
 			});
@@ -1247,11 +1217,11 @@ function loadToolChains() {
 		const state = getState();
 		const modelId = state.model.metadata.id;
 
-		knowledgebaseApi.getToolChains($.ajax, modelId)
-			.fail((xhr, textStatus, err) => {
+		knowledgebaseApi.getToolChains(axios, modelId)
+			.catch((err) => {
 				console.error(err.stack);
 			})
-			.done((toolChains, textStatus, xhr) => {
+			.then((toolChains) => {
 				// TODO: do they all begin with treemaker?
 				dispatch({
 					type: constants.ACTION_loadToolChains_DONE,
@@ -1271,7 +1241,7 @@ function loadAttackerProfiles() {
 		const state = getState();
 		const modelId = state.model.metadata.id;
 
-		knowledgebaseApi.getAttackerProfiles($.ajax, modelId)
+		knowledgebaseApi.getAttackerProfiles(axios, modelId)
 			.then((attackerProfiles) => {
 				dispatch({
 					type: constants.ACTION_loadAttackerProfiles_DONE,
@@ -1316,8 +1286,9 @@ function loadComponentTypes() {
 		const state = getState();
 		const modelId = state.model.metadata.id;
 
-		knowledgebaseApi.getTypes($.ajax, modelId)
+		knowledgebaseApi.getTypes(axios, modelId)
 			.then((types) => {
+				// TODO: do preparation elsewhere
 				const kbTypeAttributes = types
 					.reduce((acc, type) => {
 						acc[type['@id']] = type['tkb:has_attribute']

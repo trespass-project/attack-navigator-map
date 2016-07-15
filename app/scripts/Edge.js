@@ -1,5 +1,3 @@
-'use strict';
-
 const React = require('react');
 const reactDOM = require('react-dom');
 // const d3 = require('d3');
@@ -21,8 +19,8 @@ function pathifyBezier(p1, c1, c2, p2) {
 	return [
 		'M', `${p1.x}, ${p1.y}`,
 		'C', `${c1.x}, ${c1.y}`,
-		     `${c2.x}, ${c2.y}`,
-		     `${p2.x}, ${p2.y}`
+		`${c2.x}, ${c2.y}`,
+		`${p2.x}, ${p2.y}`
 	].join(' ');
 }
 
