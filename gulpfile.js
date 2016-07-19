@@ -22,7 +22,6 @@ function distDir(p) { return _dir(dirs['dist'], p); }
 function tempDir(p) { return _dir(dirs['temp'], p); }
 function appDir(p) { return _dir(dirs['app'], p); }
 function stylesDir(p) { return _dir(dirs['styles'], p); }
-function jadeDir(p) { return _dir(dirs['jade'], p); }
 function scriptsDir(p) { return _dir(dirs['scripts'], p); }
 function imagesDir(p) { return _dir(dirs['images'], p); }
 function dataDir(p) { return _dir('data', p); }
@@ -122,15 +121,7 @@ gulp.task('stylus', function() {
 gulp.task('styles', ['stylus']);
 
 
-gulp.task('jade', function () {
-	return gulp.src(appDir('*.jade'))
-		.pipe($.jade({ pretty: true }))
-		.pipe(gulp.dest(tempDir()))
-		.pipe(reload({ stream: true }));
-});
-
-
-gulp.task('html', ['jade', 'styles'], function() {
+gulp.task('html', ['styles'], function() {
 	var assets = $.useref.assets({ searchPath: [tempDir(), appDir(), '.']});
 
 	return gulp.src([appDir('*.html'), tempDir('*.html')])
@@ -202,7 +193,6 @@ gulp.task('extras', ['data'], function() {
 	return gulp.src([
 		appDir('*.*'),
 		'!'+appDir('*.html'),
-		'!'+appDir('*.jade')
 	], {
 		dot: true
 	}).pipe(gulp.dest(distDir()));
@@ -212,7 +202,7 @@ gulp.task('extras', ['data'], function() {
 gulp.task('clean', del.bind(null, [tempDir(), distDir()]));
 
 
-gulp.task('serve', ['jade', 'scripts', 'styles', 'fonts'], function() {
+gulp.task('serve', ['scripts', 'styles', 'fonts'], function() {
 	browserSync.create().init({
 			notify: false,
 			// port: 9000,
@@ -239,7 +229,6 @@ gulp.task('serve', ['jade', 'scripts', 'styles', 'fonts'], function() {
 		tempDir(fontsDir('**/*'))
 	]).on('change', reload);
 
-	gulp.watch(appDir('**/*.jade'), ['jade']);
 	gulp.watch(appDir(stylesDir('**/*.{sass,scss,styl}')), ['styles']);
 	gulp.watch(appDir(fontsDir('**/*')), ['fonts']);
 	gulp.watch(appDir(iconsDir('*.svg')), ['fontcustom']);
@@ -304,8 +293,7 @@ gulp.task('wiredep', function() {
 		}))
 		.pipe(gulp.dest(appDir(stylesDir())));
 
-	// gulp.src(appDir('*.html'))
-	gulp.src(appDir(jadeDir('layouts/*.jade')))
+	gulp.src(appDir('*.html'))
 		.pipe(wiredep({
 			exclude: ['bootstrap-sass', 'bootstrap-stylus'],
 			ignorePath: /^(\.\.\/)*\.\./
