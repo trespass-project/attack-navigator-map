@@ -1,20 +1,17 @@
-// based on generator-gulp-webapp 1.0.2
+const gulp = require('gulp');
+const path = require('path');
+const gulpLoadPlugins = require('gulp-load-plugins');
+const browserSync = require('browser-sync');
+const del = require('del');
+const wiredep = require('wiredep').stream;
+const notifier = require('node-notifier');
+const execSync = require('child_process').execSync;
+const koutoSwiss = require('kouto-swiss');
 
-var gulp = require('gulp');
-var path = require('path');
-var gulpLoadPlugins = require('gulp-load-plugins');
-var browserSync = require('browser-sync');
-var del = require('del');
-var wiredep = require('wiredep').stream;
-var notifier = require('node-notifier');
-var execSync = require('child_process').execSync;
-var koutoSwiss = require('kouto-swiss');
+const $ = gulpLoadPlugins();
+const reload = browserSync.reload;
 
-var $ = gulpLoadPlugins();
-var reload = browserSync.reload;
-
-function _dir(name, p) {
-	p = p || '';
+function _dir(name, p='') {
 	return path.join(name, p);
 }
 const dirs = require('./variables.js').dirs;
@@ -22,31 +19,30 @@ function distDir(p) { return _dir(dirs['dist'], p); }
 function tempDir(p) { return _dir(dirs['temp'], p); }
 function appDir(p) { return _dir(dirs['app'], p); }
 function stylesDir(p) { return _dir(dirs['styles'], p); }
-function jadeDir(p) { return _dir(dirs['jade'], p); }
 function scriptsDir(p) { return _dir(dirs['scripts'], p); }
 function imagesDir(p) { return _dir(dirs['images'], p); }
 function dataDir(p) { return _dir('data', p); }
 function iconsDir(p) { return _dir(dirs['icons'], p); }
 function fontsDir(p) { return _dir(dirs['fonts'], p); }
-function testDir(p) { return _dir(dirs['test'], p); }
-function specDir(p) { return _dir(dirs['spec'], p); }
+// function testDir(p) { return _dir(dirs['test'], p); }
+// function specDir(p) { return _dir(dirs['spec'], p); }
 
-var pkg = require('./package.json');
-var projectName = (pkg.name || path.basename(__dirname));
+const pkg = require('./package.json');
+const projectName = (pkg.name || path.basename(__dirname));
 
-var browserify = require('browserify');
-var watchify = require('watchify');
-var babelify = require('babelify');
-var brfs = require('brfs');
-var source = require('vinyl-source-stream');
-var buffer = require('vinyl-buffer');
+const browserify = require('browserify');
+const watchify = require('watchify');
+const babelify = require('babelify');
+const brfs = require('brfs');
+const source = require('vinyl-source-stream');
+const buffer = require('vinyl-buffer');
 const uglify = require('gulp-uglify');
 const sourcemaps = require('gulp-sourcemaps');
 // ———
-var sourceFile = appDir(scriptsDir('main.js'));
-var destFileName = 'bundle.js';
+const sourceFile = appDir(scriptsDir('main.js'));
+const destFileName = 'bundle.js';
 // ———
-var bundler = browserify({
+let bundler = browserify({
 	entries: [sourceFile],
 	transform: [babelify, brfs],
 	debug: true,
@@ -56,14 +52,14 @@ var bundler = browserify({
 	fullPaths: true
 });
 
-gulp.task('scripts', function() {
+gulp.task('scripts', () => {
 	bundler = watchify(bundler);
 	bundler.on('update', rebundle);
 	bundler.on('log', $.util.log);
 	return rebundle();
 });
 
-gulp.task('build:scripts', [/*'lint'*/], function() {
+gulp.task('build:scripts', [/*'lint'*/], () => {
 	return bundler.add(sourceFile)
 		.bundle()
 		.pipe(source(destFileName))
@@ -80,28 +76,28 @@ gulp.task('build:scripts', [/*'lint'*/], function() {
 function rebundle() {
 	return bundler.bundle()
 		// log errors if they happen
-		.on('error', function() {
+		.on('error', () => {
 			notifier.notify({
-				title: 'gulp: '+projectName,
+				title: `gulp: ${projectName}`,
 				message: 'browserify error',
 			});
 		})
 		.on('error', $.util.log.bind($.util, 'browserify error'))
 		.pipe(source(destFileName))
 		.pipe(gulp.dest(tempDir(scriptsDir())))
-		.on('end', function() {
+		.on('end', () => {
 			reload();
 		});
 }
 
 
-gulp.task('stylus', function() {
+gulp.task('stylus', () => {
 	gulp.src(appDir(stylesDir('main.styl')))
 		.pipe($.plumber({
-			errorHandler: function(err) {
+			errorHandler: (err) => {
 				console.log(err.message);
 				notifier.notify({
-					title: 'gulp: '+projectName,
+					title: `gulp: ${projectName}`,
 					message: 'stylus error',
 				});
 			}
@@ -122,16 +118,10 @@ gulp.task('stylus', function() {
 gulp.task('styles', ['stylus']);
 
 
-gulp.task('jade', function () {
-	return gulp.src(appDir('*.jade'))
-		.pipe($.jade({ pretty: true }))
-		.pipe(gulp.dest(tempDir()))
-		.pipe(reload({ stream: true }));
-});
-
-
-gulp.task('html', ['jade', 'styles'], function() {
-	var assets = $.useref.assets({ searchPath: [tempDir(), appDir(), '.']});
+gulp.task('html', ['styles'], () => {
+	const assets = $.useref.assets({
+		searchPath: [tempDir(), appDir(), '.']
+	});
 
 	return gulp.src([appDir('*.html'), tempDir('*.html')])
 		.pipe(assets)
@@ -144,7 +134,7 @@ gulp.task('html', ['jade', 'styles'], function() {
 });
 
 
-gulp.task('images', function() {
+gulp.task('images', () => {
 	return gulp.src(appDir(imagesDir('**/*')))
 		.pipe($.if($.if.isFile, $.cache($.imagemin({
 			progressive: true,
@@ -153,7 +143,7 @@ gulp.task('images', function() {
 			// as hooks for embedding and styling
 			svgoPlugins: [{ cleanupIDs: false }]
 		}))
-		.on('error', function (err) {
+		.on('error', (err) => {
 			console.log(err);
 			this.end();
 		})))
@@ -161,7 +151,7 @@ gulp.task('images', function() {
 });
 
 
-gulp.task('fonts', function() {
+gulp.task('fonts', () => {
 	// bootstrap
 	gulp.src('bower_components/bootstrap-stylus/fonts/*.{eot,svg,ttf,woff,woff2}')
 		.pipe(gulp.dest(tempDir(fontsDir())))
@@ -190,19 +180,16 @@ gulp.task('fonts', function() {
 });
 
 
-gulp.task('data', function() {
-	return gulp.src([
-			appDir(dataDir('**/*'))
-		])
+gulp.task('data', () => {
+	return gulp.src([appDir(dataDir('**/*'))])
 		.pipe(gulp.dest(distDir(dataDir())));
 });
 
 
-gulp.task('extras', ['data'], function() {
+gulp.task('extras', ['data'], () => {
 	return gulp.src([
 		appDir('*.*'),
-		'!'+appDir('*.html'),
-		'!'+appDir('*.jade')
+		`!${appDir('*.html')}`,
 	], {
 		dot: true
 	}).pipe(gulp.dest(distDir()));
@@ -212,8 +199,9 @@ gulp.task('extras', ['data'], function() {
 gulp.task('clean', del.bind(null, [tempDir(), distDir()]));
 
 
-gulp.task('serve', ['jade', 'scripts', 'styles', 'fonts'], function() {
-	browserSync.create().init({
+gulp.task('serve', ['scripts', 'styles', 'fonts'], () => {
+	browserSync.create()
+		.init({
 			notify: false,
 			// port: 9000,
 			server: {
@@ -223,7 +211,7 @@ gulp.task('serve', ['jade', 'scripts', 'styles', 'fonts'], function() {
 				}
 			}
 		},
-		function() {
+		() => {
 			// notifier.notify({
 			// 	title: 'gulp: '+projectName,
 			// 	message: 'server running',
@@ -239,7 +227,6 @@ gulp.task('serve', ['jade', 'scripts', 'styles', 'fonts'], function() {
 		tempDir(fontsDir('**/*'))
 	]).on('change', reload);
 
-	gulp.watch(appDir('**/*.jade'), ['jade']);
 	gulp.watch(appDir(stylesDir('**/*.{sass,scss,styl}')), ['styles']);
 	gulp.watch(appDir(fontsDir('**/*')), ['fonts']);
 	gulp.watch(appDir(iconsDir('*.svg')), ['fontcustom']);
@@ -248,16 +235,16 @@ gulp.task('serve', ['jade', 'scripts', 'styles', 'fonts'], function() {
 });
 
 
-gulp.task('fontcustom', ['fontcustom:sass-to-stylus'], function() {
+gulp.task('fontcustom', ['fontcustom:sass-to-stylus'], () => {
 	execSync('mv icons.css icons.styl', { cwd: appDir(iconsDir()) });
 });
-gulp.task('fontcustom:compile', function() {
+gulp.task('fontcustom:compile', () => {
 	execSync('fontcustom compile', { cwd: appDir(iconsDir()) });
 	gulp.start('fonts'); // copy fonts
 });
-gulp.task('fontcustom:sass-to-stylus', ['fontcustom:compile'], function() {
-	var iconsFile = appDir(iconsDir('icons.scss'));
-	var stream = gulp.src(iconsFile)
+gulp.task('fontcustom:sass-to-stylus', ['fontcustom:compile'], () => {
+	const iconsFile = appDir(iconsDir('icons.scss'));
+	/*const stream =*/ gulp.src(iconsFile)
 		.pipe($.sass.sync({
 			// outputStyle: 'expanded',
 			// indentedSyntax: true,
@@ -267,7 +254,7 @@ gulp.task('fontcustom:sass-to-stylus', ['fontcustom:compile'], function() {
 });
 
 
-// gulp.task('serve:dist', function() {
+// gulp.task('serve:dist', () => {
 // 	browserSync.create().init({
 // 		notify: false,
 // 		// port: 9000,
@@ -278,7 +265,7 @@ gulp.task('fontcustom:sass-to-stylus', ['fontcustom:compile'], function() {
 // });
 
 
-// gulp.task('serve:test', function() {
+// gulp.task('serve:test', () => {
 // 	browserSync.create().init({
 // 		notify: false,
 // 		// port: 9000,
@@ -297,15 +284,14 @@ gulp.task('fontcustom:sass-to-stylus', ['fontcustom:compile'], function() {
 
 
 // inject bower components
-gulp.task('wiredep', function() {
+gulp.task('wiredep', () => {
 	gulp.src(appDir(stylesDir('*.{sass,scss,styl}')))
 		.pipe(wiredep({
 			ignorePath: /^(\.\.\/)+/
 		}))
 		.pipe(gulp.dest(appDir(stylesDir())));
 
-	// gulp.src(appDir('*.html'))
-	gulp.src(appDir(jadeDir('layouts/*.jade')))
+	gulp.src(appDir('*.html'))
 		.pipe(wiredep({
 			exclude: ['bootstrap-sass', 'bootstrap-stylus'],
 			ignorePath: /^(\.\.\/)*\.\./
@@ -314,12 +300,12 @@ gulp.task('wiredep', function() {
 });
 
 
-gulp.task('build', ['build:scripts', 'html', 'images', 'fonts', 'extras'], function() {
+gulp.task('build', ['build:scripts', 'html', 'images', 'fonts', 'extras'], () => {
 	return gulp.src(distDir('**/*'))
 		.pipe($.size({ title: 'build', gzip: true }));
 });
 
 
-gulp.task('default', ['clean'], function() {
+gulp.task('default', ['clean'], () => {
 	gulp.start('build');
 });

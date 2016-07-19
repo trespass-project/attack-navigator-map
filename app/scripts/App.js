@@ -72,6 +72,13 @@ React.createClass({
 		this.props.dispatch( actionCreators.saveModelToKb() );
 	},
 
+	deleteModel(event) {
+		if (event) {
+			event.preventDefault();
+		}
+		this.props.dispatch( actionCreators.deleteModel() );
+	},
+
 	fetchKbData(event) {
 		event.preventDefault();
 		this.props.dispatch( actionCreators.fetchKbData() );
@@ -111,6 +118,7 @@ React.createClass({
 							>
 								re-fetch knowledgebase data
 							</a>
+
 							<UsageHint>
 								<a
 									href='#'
@@ -119,6 +127,13 @@ React.createClass({
 									save map
 								</a>
 							</UsageHint>
+
+							<a
+								href='#'
+								onClick={this.deleteModel}
+							>
+								delete map
+							</a>
 						</div>
 						: ''
 					}

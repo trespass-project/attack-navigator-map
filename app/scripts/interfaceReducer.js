@@ -189,6 +189,12 @@ function reducer(state=initialState, action) {
 			return mergeWithState(anmData.interface || {});
 		}
 
+		case constants.ACTION_deleteModel: {
+			return mergeWithState({
+				wizardSelectedSection: 'import',
+			});
+		}
+
 		case constants.ACTION_getRecentFiles: {
 			let { models } = action;
 			models

@@ -194,6 +194,33 @@ function saveModelToKb() {
 };
 
 
+const deleteModel =
+module.exports.deleteModel =
+function deleteModel() {
+	return (dispatch, getState) => {
+		const state = getState();
+		const modelId = state.model.metadata.id;
+		if (!modelId) {
+			return;
+		}
+
+		return knowledgebaseApi.deleteModel(axios, modelId)
+			.then(() => {
+				console.info('model deleted');
+				dispatch({
+					type: constants.ACTION_deleteModel,
+				});
+				dispatch( resetTransformation() );
+				dispatch( getRecentFiles() );
+			})
+			.catch((err) => {
+				console.error(err.message);
+				alert(err.message);
+			});
+	};
+};
+
+
 module.exports.setEditorElem =
 function setEditorElem(elem) {
 	return {
