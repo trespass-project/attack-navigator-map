@@ -70,6 +70,13 @@ function reducer(state=initialState, action) {
 			return newState;
 		}
 
+		case constants.ACTION_deleteModel: {
+			return _.merge(
+				{},
+				initialState
+			);
+		}
+
 		case constants.ACTION_addGroupBackgroundImage: {
 			const { groupId, dataURI, aspectRatio/*, width*/ } = action;
 			const newGraph = modelHelpers.addGroupBackgroundImage(
