@@ -77,11 +77,11 @@
     "redux-thunk": "^2.1.0",
     "shortid": "^2.2.4",
     "sifter": "^0.4.5",
-    "trespass.js": "^0.14.0",
+    "trespass.js": "^0.14.1",
     "tween.js": "^0.14.0",
     "xml2js": "^0.4.16"
   },
   "name": "attack-navigator-map",
-  "version": "0.7.4",
+  "version": "0.7.5",
   "private": false
 }
