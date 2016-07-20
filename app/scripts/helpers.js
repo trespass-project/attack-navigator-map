@@ -3,6 +3,7 @@ const $ = require('jquery');
 const reactDOM = require('react-dom');
 const shortid = require('shortid');
 const normalizr = require('normalizr');
+const trespassUtils = require('trespass.js').utils;
 
 
 const getElemByRef = module.exports.getElemByRef =
@@ -19,14 +20,8 @@ const noop = module.exports.noop =
 function noop() {};
 
 
-const toHashMap = module.exports.toHashMap =
-function toHashMap(key='id', list) {
-	return list
-		.reduce((acc, item) => {
-			acc[item[key]] = item;
-			return acc;
-		}, {});
-};
+const toHashMap =
+module.exports.toHashMap = trespassUtils.toHashMap;
 
 
 const normalize = module.exports.normalize =
