@@ -91,6 +91,17 @@ function initMap(modelId=undefined, metadata=undefined, anmData={}) {
 };
 
 
+
+
+const resetMap =
+module.exports.resetMap =
+function resetMap() {
+	return {
+		type: constants.ACTION_resetMap,
+	}
+};
+
+
 const fetchKbData =
 module.exports.fetchKbData =
 function fetchKbData() {
@@ -207,9 +218,10 @@ function deleteModel() {
 		return knowledgebaseApi.deleteModel(axios, modelId)
 			.then(() => {
 				console.info('model deleted');
-				dispatch({
-					type: constants.ACTION_deleteModel,
-				});
+				// dispatch({
+				// 	type: constants.ACTION_deleteModel,
+				// });
+				dispatch( resetMap() );
 				dispatch( resetTransformation() );
 				dispatch( getRecentFiles() );
 			})

@@ -70,7 +70,7 @@ function reducer(state=initialState, action) {
 			return newState;
 		}
 
-		case constants.ACTION_deleteModel: {
+		case constants.ACTION_resetMap: {
 			return _.merge(
 				{},
 				initialState
