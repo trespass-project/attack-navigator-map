@@ -1,7 +1,0 @@
-{
-  "name": "gulp-setup",
-  "private": true,
-  "dependencies": {
-    "selectize": "~0.12.1"
-  }
-}
