@@ -983,7 +983,7 @@ function setTaskStatusCategorized(taskStatusDataCategorized) {
 const retrieveAnalysisResults =
 module.exports.retrieveAnalysisResults =
 function retrieveAnalysisResults(taskStatusData) {
-	const analysisToolNames = knowledgebaseApi.analysisToolNames;
+	const { analysisToolNames } = trespass.analysis;
 	return knowledgebaseApi.getAnalysisResults(axios, taskStatusData, analysisToolNames)
 		.catch((err) => {
 			console.error(err.stack);
