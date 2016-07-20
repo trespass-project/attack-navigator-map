@@ -82,6 +82,6 @@
     "xml2js": "^0.4.16"
   },
   "name": "attack-navigator-map",
-  "version": "0.7.3",
+  "version": "0.7.4",
   "private": false
 }
