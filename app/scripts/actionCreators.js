@@ -239,6 +239,10 @@ const deleteModel =
 module.exports.deleteModel =
 function deleteModel() {
 	return (dispatch, getState) => {
+		if (!confirm('sure?')) {
+			return;
+		}
+
 		const state = getState();
 		const modelId = state.model.metadata.id;
 		if (!modelId) {
