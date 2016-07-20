@@ -190,9 +190,9 @@ function reducer(state=initialState, action) {
 		}
 
 		case constants.ACTION_resetMap: {
-			return mergeWithState({
-				wizardSelectedSection: 'import',
-			});
+			return mergeWithState(
+				R.pick(['wizardSelectedSection'], initialState)
+			);
 		}
 
 		case constants.ACTION_getRecentFiles: {
