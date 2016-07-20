@@ -3,7 +3,6 @@ const path = require('path');
 const gulpLoadPlugins = require('gulp-load-plugins');
 const browserSync = require('browser-sync');
 const del = require('del');
-const wiredep = require('wiredep').stream;
 const notifier = require('node-notifier');
 const execSync = require('child_process').execSync;
 const koutoSwiss = require('kouto-swiss');
@@ -91,7 +90,8 @@ function rebundle() {
 }
 
 
-gulp.task('stylus', () => {
+// gulp.task('stylus', () => {
+gulp.task('styles', () => {
 	gulp.src(appDir(stylesDir('main.styl')))
 		.pipe($.plumber({
 			errorHandler: (err) => {
@@ -115,7 +115,7 @@ gulp.task('stylus', () => {
 });
 
 
-gulp.task('styles', ['stylus']);
+// gulp.task('styles', ['stylus']);
 
 
 gulp.task('html', ['styles'], () => {
@@ -153,12 +153,12 @@ gulp.task('images', () => {
 
 gulp.task('fonts', () => {
 	// bootstrap
-	gulp.src('bower_components/bootstrap-stylus/fonts/*.{eot,svg,ttf,woff,woff2}')
+	gulp.src('node_modules/bootstrap-styl/fonts/*.{eot,svg,ttf,woff,woff2}')
 		.pipe(gulp.dest(tempDir(fontsDir())))
 		.pipe(gulp.dest(distDir(fontsDir())));
 
 	// fontawesome
-	gulp.src('bower_components/Font-Awesome-Stylus/fonts/*.{eot,svg,ttf,woff,woff2}')
+	gulp.src('node_modules/font-awesome-stylus/fonts/*.{eot,svg,ttf,woff,woff2}')
 		.pipe(gulp.dest(tempDir(fontsDir())))
 		.pipe(gulp.dest(distDir(fontsDir())));
 
@@ -171,12 +171,6 @@ gulp.task('fonts', () => {
 	gulp.src(appDir(fontsDir('SourceSansPro/**/*')))
 		.pipe(gulp.dest(tempDir(fontsDir('SourceSansPro'))))
 		.pipe(gulp.dest(distDir(fontsDir('SourceSansPro'))));
-
-	// return gulp.src(require('main-bower-files')({
-	// 	filter: '**/*.{ eot,svg,ttf,woff,woff2 }'
-	// }).concat(appDir(fontsDir('**/*'))))
-	// 	.pipe(gulp.dest(tempDir(fontsDir())))
-	// 	.pipe(gulp.dest(distDir(fontsDir())));
 });
 
 
@@ -207,7 +201,8 @@ gulp.task('serve', ['scripts', 'styles', 'fonts'], () => {
 			server: {
 				baseDir: [tempDir(), appDir()],
 				routes: {
-					'/bower_components': 'bower_components'
+					'/bower_components': 'bower_components',
+					'/node_modules': 'node_modules',
 				}
 			}
 		},
@@ -231,7 +226,6 @@ gulp.task('serve', ['scripts', 'styles', 'fonts'], () => {
 	gulp.watch(appDir(fontsDir('**/*')), ['fonts']);
 	gulp.watch(appDir(iconsDir('*.svg')), ['fontcustom']);
 	gulp.start('fontcustom');
-	gulp.watch('bower.json', ['wiredep', 'fonts']);
 });
 
 
@@ -251,52 +245,6 @@ gulp.task('fontcustom:sass-to-stylus', ['fontcustom:compile'], () => {
 			// includePaths: ['.']
 		}))
 		.pipe(gulp.dest(appDir(iconsDir())));
-});
-
-
-// gulp.task('serve:dist', () => {
-// 	browserSync.create().init({
-// 		notify: false,
-// 		// port: 9000,
-// 		server: {
-// 			baseDir: [distDir()]
-// 		}
-// 	});
-// });
-
-
-// gulp.task('serve:test', () => {
-// 	browserSync.create().init({
-// 		notify: false,
-// 		// port: 9000,
-// 		ui: false,
-// 		server: {
-// 			baseDir: testDir(),
-// 			routes: {
-// 				'/bower_components': 'bower_components'
-// 			}
-// 		}
-// 	});
-
-// 	gulp.watch(testDir(specDir('**/*.js'))).on('change', reload);
-// 	// gulp.watch(testDir(specDir('**/*.js')), ['lint:test']);
-// });
-
-
-// inject bower components
-gulp.task('wiredep', () => {
-	gulp.src(appDir(stylesDir('*.{sass,scss,styl}')))
-		.pipe(wiredep({
-			ignorePath: /^(\.\.\/)+/
-		}))
-		.pipe(gulp.dest(appDir(stylesDir())));
-
-	gulp.src(appDir('*.html'))
-		.pipe(wiredep({
-			exclude: ['bootstrap-sass', 'bootstrap-stylus'],
-			ignorePath: /^(\.\.\/)*\.\./
-		}))
-		.pipe(gulp.dest(appDir()));
 });
 
 

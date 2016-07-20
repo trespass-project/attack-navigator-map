@@ -41,20 +41,20 @@
     "gulp-uglify": "^1.5.4",
     "gulp-useref": "^1.1.1",
     "gulp-util": "^3.0.7",
-    "main-bower-files": "^2.5.0",
     "node-notifier": "^4.2.3",
     "opn": "^1.0.1",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
-    "watchify": "^3.6.0",
-    "wiredep": "^2.2.2"
+    "watchify": "^3.6.0"
   },
   "dependencies": {
     "axios": "^0.13.0",
+    "bootstrap-styl": "^4.0.5",
     "browser-saveas": "^1.0.0",
     "classnames": "^2.2.0",
     "d3": "^3.5.6",
     "detect-node": "^2.0.3",
+    "font-awesome-stylus": "^4.6.2",
     "jquery": "^3.0.0",
     "jszip": "^3.0.0",
     "klayjs": "^0.3.2",
