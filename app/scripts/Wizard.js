@@ -764,7 +764,7 @@ const Wizard = React.createClass({
 
 	clickCreateNew(event) {
 		event.preventDefault();
-		this.context.dispatch( actionCreators.initMap(undefined) );
+		this.context.dispatch( actionCreators.createNewMap() );
 	},
 
 	clickFileButton(event) {

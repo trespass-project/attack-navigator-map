@@ -15,6 +15,8 @@ const constants = {
 	// ——— action types ————
 	ACTION_getRecentFiles: 'ACTION_getRecentFiles',
 	ACTION_initMap: 'ACTION_initMap',
+	ACTION_createNewMap: 'ACTION_createNewMap',
+	ACTION_resetMap: 'ACTION_resetMap',
 	ACTION_deleteModel: 'ACTION_deleteModel',
 	ACTION_setEditorElem: 'ACTION_setEditorElem',
 	ACTION_select: 'ACTION_select',

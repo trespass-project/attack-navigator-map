@@ -43,34 +43,21 @@ function reducer(state=initialState, action) {
 	switch (action.type) {
 		case constants.ACTION_initMap: {
 			const { modelId, metadata } = action;
-
-			let title = undefined;
-			if (metadata && metadata.title) {
-				title = metadata.title;
-			}
-			if (!title) {
-				title = prompt('Enter map title');
-				if (_.isString(title) && title.trim() === '') {
-					title = undefined;
-				}
-			}
-
-			// - clone initial state
-			// - set model id
+			const title = (metadata && metadata.title)
+				? metadata.title
+				: undefined;
+			const meta = {
+				id: modelId,
+				title,
+			};
 			const newState = _.merge(
-				{},
-				initialState,
-				{
-					metadata: {
-						id: modelId,
-						title,
-					}
-				}
+				state,
+				{ metadata: meta }
 			);
 			return newState;
 		}
 
-		case constants.ACTION_deleteModel: {
+		case constants.ACTION_resetMap: {
 			return _.merge(
 				{},
 				initialState

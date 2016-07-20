@@ -58,35 +58,76 @@ function getRecentFiles() {
  */
 const initMap =
 module.exports.initMap =
-function initMap(modelId=undefined, metadata=undefined, anmData={}) {
+function initMap(modelId, metadata, anmData={}) {
+	// TODO: remove
+	if (!modelId) {
+		console.error('missing model id');
+	}
+	if (!metadata) {
+		console.error('missing metadata');
+	}
+
 	return (dispatch, getState) => {
-		// create model, if necessary
-		return getModelOrCreate(modelId)
-			.then(({ modelId, isNew=false }) => {
-				// set model id
-				dispatch({
-					type: constants.ACTION_initMap,
-					modelId,
-					metadata,
-					anmData
-				});
-
-				// get data in any case
-				dispatch( fetchKbData() );
-
-				// save new model
-				if (isNew) {
-					dispatch( saveModelToKb() )
-						.then(() => {
-							// make sure new model shows up in recent files
-							dispatch( getRecentFiles() );
-						});
-				}
-			})
-			.then(() => {
-				// reset view
-				dispatch( resetTransformation() );
+		return new Promise((resolve, reject) => {
+			dispatch({
+				type: constants.ACTION_initMap,
+				modelId,
+				metadata,
+				anmData
 			});
+
+			// reset
+			dispatch( resetMap() );
+
+			// reset view
+			dispatch( resetTransformation() );
+
+			// load model-specific kb data
+			dispatch( fetchKbData() );
+
+			dispatch( getRecentFiles() );
+
+			resolve();
+		});
+	};
+};
+
+
+const createNewMap =
+module.exports.createNewMap =
+function createNewMap() {
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_createNewMap,
+		});
+
+		const title = prompt('Enter map title');
+		if (!title || title.trim() === '') {
+			// cancelled, or nothing entered
+			return;
+		}
+
+		const modelId = undefined;
+		getModelOrCreate(modelId)
+			.then(({ modelId, isNew }) => {
+				const metadata = { title };
+				dispatch( initMap(modelId, metadata) )
+					.then(() => {
+						// TODO: needed?
+						// import empty fragment
+						// dispatch( importFragment({}) );
+						dispatch( saveModelToKb() );
+					});
+			});
+	};
+};
+
+
+const resetMap =
+module.exports.resetMap =
+function resetMap() {
+	return {
+		type: constants.ACTION_resetMap,
 	};
 };
 
@@ -198,6 +239,10 @@ const deleteModel =
 module.exports.deleteModel =
 function deleteModel() {
 	return (dispatch, getState) => {
+		if (!confirm('sure?')) {
+			return;
+		}
+
 		const state = getState();
 		const modelId = state.model.metadata.id;
 		if (!modelId) {
@@ -207,9 +252,10 @@ function deleteModel() {
 		return knowledgebaseApi.deleteModel(axios, modelId)
 			.then(() => {
 				console.info('model deleted');
-				dispatch({
-					type: constants.ACTION_deleteModel,
-				});
+				// dispatch({
+				// 	type: constants.ACTION_deleteModel,
+				// });
+				dispatch( resetMap() );
 				dispatch( resetTransformation() );
 				dispatch( getRecentFiles() );
 			})
@@ -626,6 +672,7 @@ function loadXML(xmlString) {
 			)
 				.then(() => {
 					// import
+					// TODO: document
 					// `importFragment()` clones fragment entirely (all new ids)
 					// `mergeFragment()` add everything "as is"
 					if (result.anmData) {

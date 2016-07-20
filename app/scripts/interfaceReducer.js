@@ -189,10 +189,10 @@ function reducer(state=initialState, action) {
 			return mergeWithState(anmData.interface || {});
 		}
 
-		case constants.ACTION_deleteModel: {
-			return mergeWithState({
-				wizardSelectedSection: 'import',
-			});
+		case constants.ACTION_resetMap: {
+			return mergeWithState(
+				R.pick(['wizardSelectedSection'], initialState)
+			);
 		}
 
 		case constants.ACTION_getRecentFiles: {
