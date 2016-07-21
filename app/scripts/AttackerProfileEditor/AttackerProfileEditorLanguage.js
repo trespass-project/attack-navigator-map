@@ -1,5 +1,3 @@
-'use strict';
-
 const React = require('react');
 const R = require('ramda');
 const classnames = require('classnames');
@@ -8,12 +6,12 @@ const helpers = require('../helpers.js');
 
 // const AttackerProfile = require('../AttackerProfileEditor/AttackerProfile.js');
 const profileOptions = require('../../data/attacker-profiles.js').options;
-const DropdownSearchable = require('./DropdownSearchable.js');
+const SelectizeDropdown = require('./SelectizeDropdown.js');
 const DropdownSelectize = require('./DropdownSelectize.js');
 
 
-const displayAttribute = 'title';
-const valueAttribute = 'value';
+const labelKey = 'title';
+const valueKey = 'value';
 
 const profileIdAttribute = 'id';
 const profileDisplayAttribute = 'codename';
@@ -34,12 +32,16 @@ const AttackerProfileEditorLanguage = React.createClass({
 		profile: React.PropTypes.object/*.isRequired*/
 	},
 
-	getDefaultProps: function() {
+	getDefaultProps() {
 		return {
 			// profilePresets: {},
 			profile: {},
 			handleUpdate: () => {}
 		};
+	},
+
+	getInitialState() {
+		return {};
 	},
 
 	updateProfile: function(name, val) {
@@ -64,7 +66,7 @@ const AttackerProfileEditorLanguage = React.createClass({
 	renderProfileParameterItem: function(item, index) {
 		const props = this.props;
 
-		const valueEquals = R.propEq(valueAttribute);
+		const valueEquals = R.propEq(valueKey);
 		const value = props.profile[item.name];
 		const option = R.find(valueEquals(value))(item.options);
 
@@ -73,10 +75,10 @@ const AttackerProfileEditorLanguage = React.createClass({
 			? `[${item.name}]`
 			: (item.multiple)
 				// multiple values
-				? (value || []).join(', ') // TODO: show displayAttribute here, too
+				? (value || []).join(', ') // TODO: show labelKey here, too
 				// single value
 				: (!!option)
-					? option[displayAttribute]
+					? option[labelKey]
 					: '';
 
 		const barClasses = classnames(
@@ -95,7 +97,8 @@ const AttackerProfileEditorLanguage = React.createClass({
 					value={value || undefined}
 					onChange={(event) => {
 						this.updateProfile(item.name, event.target.value);
-					}}/>
+					}}
+				/>
 			</li>;
 		}
 
@@ -105,22 +108,20 @@ const AttackerProfileEditorLanguage = React.createClass({
 			{(item.multiple)
 				? <DropdownSelectize
 					name={item.name}
-					title={label}
 					value={value}
 					items={item.options}
-					displayAttribute={displayAttribute}
-					valueAttribute={valueAttribute}
+					labelKey={labelKey}
+					valueKey={valueKey}
 					handleSelection={this.updateProfile}
 				/>
-				: <DropdownSearchable
+				: <SelectizeDropdown
+					multi={false}
 					name={item.name}
-					title={label}
 					value={value}
-					searchable={false}
-					items={item.options}
-					displayAttribute={displayAttribute}
-					valueAttribute={valueAttribute}
-					handleSelection={this.updateProfile}
+					options={item.options}
+					labelKey={labelKey}
+					valueKey={valueKey}
+					onChange={this.updateProfile}
 				/>
 			}
 		</li>;
