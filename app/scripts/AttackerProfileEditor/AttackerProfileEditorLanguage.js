@@ -7,7 +7,6 @@ const helpers = require('../helpers.js');
 // const AttackerProfile = require('../AttackerProfileEditor/AttackerProfile.js');
 const profileOptions = require('../../data/attacker-profiles.js').options;
 const SelectizeDropdown = require('./SelectizeDropdown.js');
-const DropdownSelectize = require('./DropdownSelectize.js');
 
 
 const labelKey = 'title';
@@ -106,13 +105,14 @@ const AttackerProfileEditorLanguage = React.createClass({
 			<div className={barClasses}></div>
 			<span>{item.name} {(item.multiple) ? 'are' : 'is'} </span>
 			{(item.multiple)
-				? <DropdownSelectize
+				? <SelectizeDropdown
+					multi={true}
 					name={item.name}
 					value={value}
-					items={item.options}
+					options={item.options}
 					labelKey={labelKey}
 					valueKey={valueKey}
-					handleSelection={this.updateProfile}
+					onChange={this.updateProfile}
 				/>
 				: <SelectizeDropdown
 					multi={false}
