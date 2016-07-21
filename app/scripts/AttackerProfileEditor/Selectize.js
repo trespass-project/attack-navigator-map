@@ -1,7 +1,6 @@
-'use strict';
-
 const React = require('react');
-const $ = jQuery;
+const $ = window.$ = window.jQuery = require('jquery');
+require('selectize');
 
 
 const Selectize = React.createClass({
