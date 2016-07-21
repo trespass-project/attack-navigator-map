@@ -65,6 +65,8 @@
     "normalizr": "^2.0.0",
     "ramda": "^0.21.0",
     "react": "^15.1.0",
+    "react-addons-css-transition-group": "^15.2.1",
+    "react-addons-shallow-compare": "^15.2.1",
     "react-addons-update": "^15.1.0",
     "react-bootstrap": "^0.30.0-rc.1",
     "react-dnd": "^2.1.2",
