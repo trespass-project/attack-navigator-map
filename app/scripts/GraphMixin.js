@@ -177,8 +177,10 @@ const GraphMixin = {
 
 				{(!props.isMinimap && props.activeLayers.length)
 					? props.activeLayers
-						.map(R.prop('Component'))
-						.map((Component) => <Component {...props} />)
+						.map((layer) => {
+							const { Component, name } = layer;
+							return <Component {...props} key={name} />;
+						})
 					: null
 				}
 
