@@ -8,3 +8,6 @@ app/icons/icons
 .fontcustom-manifest.json
 axel-test
 build
+_old
+sketches
+manual
