@@ -10,7 +10,10 @@ module.exports = React.createClass({
 		multi: React.PropTypes.bool,
 		name: React.PropTypes.string.isRequired,
 		placeholder: React.PropTypes.string,
-		value: React.PropTypes.array,
+		value: React.PropTypes.oneOfType([
+			React.PropTypes.string,
+			React.PropTypes.array,
+		]),
 		options: React.PropTypes.array,
 		onChange: React.PropTypes.func,
 		valueKey: React.PropTypes.string,
