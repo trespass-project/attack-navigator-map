@@ -1,19 +1,17 @@
-'use strict';
-
 const React = require('react');
 const R = require('ramda');
+const _ = require('lodash');
 const classnames = require('classnames');
 
 const helpers = require('../helpers.js');
 
 // const AttackerProfile = require('../AttackerProfileEditor/AttackerProfile.js');
 const profileOptions = require('../../data/attacker-profiles.js').options;
-const DropdownSearchable = require('./DropdownSearchable.js');
-const DropdownSelectize = require('./DropdownSelectize.js');
+const SelectizeDropdown = require('./SelectizeDropdown.js');
 
 
-const displayAttribute = 'title';
-const valueAttribute = 'value';
+const labelKey = 'title';
+const valueKey = 'value';
 
 const profileIdAttribute = 'id';
 const profileDisplayAttribute = 'codename';
@@ -30,109 +28,106 @@ function getClassName(option, value) {
 const AttackerProfileEditorLanguage = React.createClass({
 	propTypes: {
 		handleUpdate: React.PropTypes.func,
-		profilePresets: React.PropTypes.object.isRequired,
+		profilePresets: React.PropTypes.object/*.isRequired*/,
 		profile: React.PropTypes.object/*.isRequired*/
 	},
 
-	getDefaultProps: function() {
+	getDefaultProps() {
 		return {
-			// profilePresets: {},
+			handleUpdate: () => {},
+			profilePresets: {},
 			profile: {},
-			handleUpdate: () => {}
 		};
 	},
 
-	updateProfile: function(name, val) {
-		const props = this.props;
-		let state = this.state;
-		state[name] = val;
-
-		state[profileIdAttribute] = '';
-		R.values(props.profilePresets)
-			.forEach((profile) => {
-				if (helpers.areAttackerProfilesEqual(profile, state)) {
-					state[profileIdAttribute] = profile[profileIdAttribute];
-				}
-			});
-
-		this.setState(state, () => {
-			// report to parent
-			props.handleUpdate(state);
-		});
+	mergeWithCurrentProfile(partialProfile) {
+		return _.merge(
+			{},
+			this.props.profile,
+			partialProfile
+		);
 	},
 
-	renderProfileParameterItem: function(item, index) {
+	updateProfile(name, val) {
+		const props = this.props;
+		const attackerProfile = this.mergeWithCurrentProfile({ [name]: val });
+
+		// see if there is a preset that matches the current configuration
+		const matchingPreset = R.find(
+			(preset) => {
+				return helpers.areAttackerProfilesEqual(attackerProfile, preset);
+			},
+			R.values(props.profilePresets)
+		);
+
+		//  if there is one, use its id
+		attackerProfile[profileIdAttribute] = (!matchingPreset)
+			? ''
+			: matchingPreset[profileIdAttribute];
+
+		// report to parent
+		props.handleUpdate(attackerProfile);
+	},
+
+	renderProfileParameterItem(item, index) {
 		const props = this.props;
 
-		const valueEquals = R.propEq(valueAttribute);
 		const value = props.profile[item.name];
-		const option = R.find(valueEquals(value))(item.options);
-
-		// set default label, if there is no value
-		const label = (!value)
-			? `[${item.name}]`
-			: (item.multiple)
-				// multiple values
-				? (value || []).join(', ') // TODO: show displayAttribute here, too
-				// single value
-				: (!!option)
-					? option[displayAttribute]
-					: '';
+		const option = R.find(
+			R.propEq(valueKey, value),
+			item.options
+		);
 
 		const barClasses = classnames(
 			'bar',
 			getClassName(option, value)
 		);
 
+		// TODO: item.multiple doesn't exist anymore, currently
+		const itemMultiple = false;
+
 		// kind of hacky for now
 		if (item.options.length === 1 && item.options[0].value === Number) {
 			return <li key={`li-${item.name}`}>
 				<div className={barClasses}></div>
-				<span>{item.name} {(item.multiple) ? 'are' : 'is'} </span>
+				<span>{item.name} {(itemMultiple) ? 'are' : 'is'} </span>
 				<input
 					type='number'
-					placeholder={item.name}
-					value={value || undefined}
+					placeholder={`[${item.name}]`}
+					value={value || ''}
 					onChange={(event) => {
 						this.updateProfile(item.name, event.target.value);
-					}}/>
+					}}
+				/>
 			</li>;
 		}
 
 		return <li key={`li-${item.name}`}>
 			<div className={barClasses}></div>
-			<span>{item.name} {(item.multiple) ? 'are' : 'is'} </span>
-			{(item.multiple)
-				? <DropdownSelectize
-					name={item.name}
-					title={label}
-					value={value}
-					items={item.options}
-					displayAttribute={displayAttribute}
-					valueAttribute={valueAttribute}
-					handleSelection={this.updateProfile}
-				/>
-				: <DropdownSearchable
-					name={item.name}
-					title={label}
-					value={value}
-					searchable={false}
-					items={item.options}
-					displayAttribute={displayAttribute}
-					valueAttribute={valueAttribute}
-					handleSelection={this.updateProfile}
-				/>
-			}
+			<span>{item.name} {(itemMultiple) ? 'are' : 'is'} </span>
+			<SelectizeDropdown
+				placeholder={`[${item.name}]`}
+				multi={itemMultiple}
+				name={item.name}
+				value={option || undefined}
+				options={item.options}
+				labelKey={labelKey}
+				valueKey={valueKey}
+				onChange={this.updateProfile}
+			/>
 		</li>;
 	},
 
-	renderPresetOption: function(preset, index) {
-		return <option key={preset[profileIdAttribute]} value={preset[profileIdAttribute]}>
+	renderPresetOption(preset, index) {
+		return <option
+			key={preset[profileIdAttribute]}
+			value={preset[profileIdAttribute]}
+		>
 			{preset[profileDisplayAttribute]}
 		</option>;
 	},
 
-	render: function() {
+	render() {
 		const props = this.props;
 
 		return (
@@ -167,15 +162,16 @@ const AttackerProfileEditorLanguage = React.createClass({
 		);
 	},
 
-	handleSelectPreset: function(event) {
+	handleSelectPreset(event) {
 		const props = this.props;
 		// const preset = helpers.getItemByKey(profileIdAttribute, props.profilePresets, event.target.value);
 		const preset = props.profilePresets[event.target.value];
-		console.log(preset);
 		if (!!preset) {
-			this.setState(preset, () => {
-				this.props.handleUpdate(this.state);
-			});
+			const attackerProfile = _.merge(
+				this.mergeWithCurrentProfile(preset),
+				{ id: preset[profileIdAttribute] }
+			);
+			props.handleUpdate(attackerProfile);
 		}
 	},
 });
