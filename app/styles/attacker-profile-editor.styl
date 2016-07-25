@@ -1,3 +1,4 @@
+@import 'selectize.styl'
 $fontSize = 18px
 
 
@@ -16,7 +17,7 @@ $fontSize = 18px
 		position: relative
 		.bar
 			height: 1.3em
-			top: 0
+			top: 5px
 			background-color: white
 			position: absolute
 			width: 0%
@@ -39,84 +40,11 @@ $fontSize = 18px
 		font-size: 14px
 		font-weight: 600
 
-
-
-.selectize-control
-	*
-		border-radius: 0 !important
-
-.selectize-dropdown
-	padding: 5px !important
-
-// .selectize-input .item
-// 	@extend .label.tag
-
-
-.dropdown-selectize
-	&, & *
-		box-shadow: none !important
-
-	.selectize-control
-		min-width: 200px
-
-		display: flex
-		flex-direction: column
-		.selectize-input
-			width: auto
-
-		.option
-			padding: 3px 10px
-
-	.selectize-dropdown
-		width: 100% !important
-
-	.selectize-dropdown, .selectize-dropdown-content
-		top: 0px
-		left: 0px
-		position: static
-		float: none
-		border: none !important
-		box-shadow: none
-		margin: 0 !important
-		padding: 0 !important
-		visibility: visible !important
-		display: block !important
-
-.dropdown-menu
-	&, & *
-		box-shadow: none !important
-
-.dropdown-menu .input-group.filter
-	padding: 10px
-	width: 100%
-
-.dropdown-menu, .dropdown-menu *
-	border-radius: 0
-	font-size: $fontSize
-
-
-.selectize-input
-	margin: 10px
-	// margin-bottom: 0px
-
-
-.dropdown-selectize
-	.dropdown-menu
-		padding: 0
-
-
-.dropdown-menu li[role=presentation]
-	background: none
-	padding-left: 0
-	a[role=menuitem]
-		padding: 3px 10px
-
-
-.dropdown > a
-	font-weight: bold
-	white-space: nowrap
-
-
+	li > input
+		height: 34px;
+		border: 0;
+		font-weight: 600;
+		border-bottom: solid 1px $trespass_grey_light;
 
 
 // visualization ————————————————

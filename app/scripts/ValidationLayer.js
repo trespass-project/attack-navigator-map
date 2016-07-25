@@ -2,6 +2,9 @@ const React = require('react');
 const R = require('ramda');
 
 
+const name =
+module.exports.name = 'ValidationLayer';
+
 const editorProps =
 module.exports.editorProps = {
 	showEdges: false,
@@ -57,5 +60,4 @@ React.createClass({
 			})}
 		</g>;
 	},
-
 });

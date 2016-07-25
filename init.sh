@@ -15,4 +15,4 @@ git add -A
 git commit -m "init"
 
 # install dependencies
-npm i && bower i
+npm i

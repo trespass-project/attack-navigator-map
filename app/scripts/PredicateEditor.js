@@ -1,16 +1,11 @@
-'use strict';
-
 const React = require('react');
 const R = require('ramda');
-const classnames = require('classnames');
 
 const helpers = require('./helpers.js');
+const SelectizeDropdown = require('./AttackerProfileEditor/SelectizeDropdown.js');
 
-const DropdownSearchable = require('./AttackerProfileEditor/DropdownSearchable.js');
-// const DropdownSelectize = require('./AttackerProfileEditor/DropdownSelectize.js');
-
-const displayAttribute = 'title';
-const valueAttribute = 'value';
+const labelKey = 'title';
+const valueKey = 'value';
 
 
 const PredicateEditor = React.createClass({
@@ -38,39 +33,37 @@ const PredicateEditor = React.createClass({
 		const updatePredicate = R.partial(this.updatePredicate, [predicate.id]);
 
 		return <li key={`${subj}-${predicate.type}-${obj}`}>
-			<DropdownSearchable
+			<SelectizeDropdown
+				multi={false}
 				name={'subject'}
-				title={subjObjOptionsMap[subj].label}
+				{/*title={subjObjOptionsMap[subj].label}*/ ...{}}
 				value={subj}
-				searchable={true}
-				searchPlaceholder={predicateType.subjectPlaceholder}
-				items={subjObjOptions}
-				displayAttribute={'label'}
-				valueAttribute={'id'}
-				handleSelection={updatePredicate}
+				options={subjObjOptions}
+				labelKey={'label'}
+				valueKey={'id'}
+				onChange={updatePredicate}
 			/>
 			&nbsp;&nbsp;&nbsp;
-			<DropdownSearchable
+			<SelectizeDropdown
+				multi={false}
 				name={'predicate'}
-				title={predicateType.label}
+				{/*title={predicateType.label}*/ ...{}}
 				value={predicate.label}
-				searchable={true}
-				items={R.values(props.predicatesLib)}
-				displayAttribute={'label'}
-				valueAttribute={'id'}
-				handleSelection={updatePredicate}
+				options={R.values(props.predicatesLib)}
+				labelKey={'label'}
+				valueKey={'id'}
+				onChange={updatePredicate}
 			/>
 			&nbsp;&nbsp;&nbsp;
-			<DropdownSearchable
+			<SelectizeDropdown
+				multi={false}
 				name={'object'}
-				title={subjObjOptionsMap[obj].label}
+				{/*title={subjObjOptionsMap[obj].label}*/ ...{}}
 				value={obj}
-				searchable={true}
-				searchPlaceholder={predicateType.objectPlaceholder}
-				items={subjObjOptions}
-				displayAttribute={'label'}
-				valueAttribute={'id'}
-				handleSelection={updatePredicate}
+				options={subjObjOptions}
+				labelKey={'label'}
+				valueKey={'id'}
+				onChange={updatePredicate}
 			/>
 			<br />
 		</li>;

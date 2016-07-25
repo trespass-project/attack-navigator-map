@@ -1,4 +1,4 @@
-'use strict';
+const R = require('ramda');
 
 // editor options
 // const accessOptions = [
@@ -84,13 +84,11 @@ const options = module.exports.options = [
 ];
 
 
-const values = module.exports.values =
-options
-	.reduce(function(result, item) {
+const values =
+module.exports.values = options
+	.reduce((result, item) => {
 		result[item.name] = item.options
-			.map(function(option) {
-				return option.value;
-			});
+			.map(R.prop('value'));
 		return result;
 	}, {});
 

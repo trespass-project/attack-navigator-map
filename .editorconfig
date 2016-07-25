@@ -14,6 +14,6 @@ trim_trailing_whitespace = false
 [*.jade]
 trim_trailing_whitespace = false
 
-[{package,bower}.json]
+[{package}.json]
 indent_style = tab
 indent_size = 4

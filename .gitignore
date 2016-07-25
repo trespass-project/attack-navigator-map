@@ -2,11 +2,12 @@ node_modules
 dist
 dist__*
 .tmp
-bower_components
-test/bower_components
 *.sublime-project
 *.sublime-workspace
 app/icons/icons
 .fontcustom-manifest.json
 axel-test
 build
+_old
+sketches
+manual
