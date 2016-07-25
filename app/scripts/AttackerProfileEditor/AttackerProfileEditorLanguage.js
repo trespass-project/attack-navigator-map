@@ -143,7 +143,7 @@ const AttackerProfileEditorLanguage = React.createClass({
 				</div>
 
 				{/*<AttackerProfile profile={props.profile} />*/}
-				{(props.profile)
+				{(props.profile && props.profile.description)
 					? <div className='profile-descrioption'>
 						<br />
 						{props.profile.description}
