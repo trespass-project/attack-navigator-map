@@ -43,7 +43,7 @@ const AttackerProfileEditorLanguage = React.createClass({
 	mergeWithCurrentProfile(partialProfile) {
 		return _.merge(
 			{},
-			this.props.profile,
+			R.omit(['description'], this.props.profile),
 			partialProfile
 		);
 	},
