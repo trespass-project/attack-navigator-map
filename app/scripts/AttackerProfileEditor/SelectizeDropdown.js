@@ -5,13 +5,13 @@ const SimpleSelect = ReactSelectize.SimpleSelect;
 const MultiSelect = ReactSelectize.MultiSelect;
 
 
-module.exports = React.createClass({
+const SelectizeDropdown = React.createClass({
 	propTypes: {
 		multi: React.PropTypes.bool,
 		name: React.PropTypes.string.isRequired,
 		placeholder: React.PropTypes.string,
 		value: React.PropTypes.oneOfType([
-			React.PropTypes.string,
+			React.PropTypes.object,
 			React.PropTypes.array,
 		]),
 		options: React.PropTypes.array,
@@ -87,3 +87,5 @@ module.exports = React.createClass({
 		/>;
 	},
 });
+
+module.exports = SelectizeDropdown;
