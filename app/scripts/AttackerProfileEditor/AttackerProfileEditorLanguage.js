@@ -73,7 +73,10 @@ const AttackerProfileEditorLanguage = React.createClass({
 		const props = this.props;
 
 		const value = props.profile[item.name];
-		const option = R.find(R.propEq(valueKey)(value))(item.options);
+		const option = R.find(
+			R.propEq(valueKey, value),
+			item.options
+		);
 
 		// set default label, if there is no value
 		const label = (!value)
@@ -99,7 +102,7 @@ const AttackerProfileEditorLanguage = React.createClass({
 				<input
 					type='number'
 					placeholder={item.name}
-					value={value || 0}
+					value={value || ''}
 					onChange={(event) => {
 						this.updateProfile(item.name, event.target.value);
 					}}
