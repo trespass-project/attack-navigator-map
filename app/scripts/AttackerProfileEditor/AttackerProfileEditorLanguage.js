@@ -39,11 +39,12 @@ const AttackerProfileEditorLanguage = React.createClass({
 		};
 	},
 
+	// TODO: make this stateless!
 	getInitialState() {
 		return {};
 	},
 
-	updateProfile: function(name, val) {
+	updateProfile(name, val) {
 		const props = this.props;
 		let state = this.state;
 		state[name] = val;
@@ -62,7 +63,7 @@ const AttackerProfileEditorLanguage = React.createClass({
 		});
 	},
 
-	renderProfileParameterItem: function(item, index) {
+	renderProfileParameterItem(item, index) {
 		const props = this.props;
 
 		const valueEquals = R.propEq(valueKey);
@@ -127,13 +128,13 @@ const AttackerProfileEditorLanguage = React.createClass({
 		</li>;
 	},
 
-	renderPresetOption: function(preset, index) {
+	renderPresetOption(preset, index) {
 		return <option key={preset[profileIdAttribute]} value={preset[profileIdAttribute]}>
 			{preset[profileDisplayAttribute]}
 		</option>;
 	},
 
-	render: function() {
+	render() {
 		const props = this.props;
 
 		return (
@@ -168,7 +169,7 @@ const AttackerProfileEditorLanguage = React.createClass({
 		);
 	},
 
-	handleSelectPreset: function(event) {
+	handleSelectPreset(event) {
 		const props = this.props;
 		// const preset = helpers.getItemByKey(profileIdAttribute, props.profilePresets, event.target.value);
 		const preset = props.profilePresets[event.target.value];
