@@ -54,9 +54,7 @@ const AttackerProfileEditorLanguage = React.createClass({
 
 		// see if there is a preset that matches the current configuration
 		const matchingPreset = R.find(
-			(preset) => {
-				return helpers.areAttackerProfilesEqual(attackerProfile, preset);
-			},
+			(preset) => helpers.areAttackerProfilesEqual(attackerProfile, preset),
 			R.values(props.profilePresets)
 		);
 
@@ -143,10 +141,11 @@ const AttackerProfileEditorLanguage = React.createClass({
 						{R.values(props.profilePresets).map(this.renderPresetOption)}
 					</select>
 				</div>
-				<br />
+
 				{/*<AttackerProfile profile={props.profile} />*/}
 				{(props.profile)
 					? <div className='profile-descrioption'>
+						<br />
 						{props.profile.description}
 					</div>
 					: null
