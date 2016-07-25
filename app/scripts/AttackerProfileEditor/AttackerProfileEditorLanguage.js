@@ -78,30 +78,22 @@ const AttackerProfileEditorLanguage = React.createClass({
 			item.options
 		);
 
-		// set default label, if there is no value
-		const label = (!value)
-			? `[${item.name}]`
-			: (item.multiple)
-				// multiple values
-				? (value || []).join(', ') // TODO: show labelKey here, too
-				// single value
-				: (!!option)
-					? option[labelKey]
-					: '';
-
 		const barClasses = classnames(
 			'bar',
 			getClassName(option, value)
 		);
 
+		// TODO: item.multiple doesn't exist anymore, currently
+		const itemMultiple = false;
+
 		// kind of hacky for now
 		if (item.options.length === 1 && item.options[0].value === Number) {
 			return <li key={`li-${item.name}`}>
 				<div className={barClasses}></div>
-				<span>{item.name} {(item.multiple) ? 'are' : 'is'} </span>
+				<span>{item.name} {(itemMultiple) ? 'are' : 'is'} </span>
 				<input
 					type='number'
-					placeholder={item.name}
+					placeholder={`[${item.name}]`}
 					value={value || ''}
 					onChange={(event) => {
 						this.updateProfile(item.name, event.target.value);
@@ -112,32 +104,25 @@ const AttackerProfileEditorLanguage = React.createClass({
 
 		return <li key={`li-${item.name}`}>
 			<div className={barClasses}></div>
-			<span>{item.name} {(item.multiple) ? 'are' : 'is'} </span>
-			{(item.multiple)
-				? <SelectizeDropdown
-					multi={true}
-					name={item.name}
-					value={value}
-					options={item.options}
-					labelKey={labelKey}
-					valueKey={valueKey}
-					onChange={this.updateProfile}
-				/>
-				: <SelectizeDropdown
-					multi={false}
-					name={item.name}
-					value={value}
-					options={item.options}
-					labelKey={labelKey}
-					valueKey={valueKey}
-					onChange={this.updateProfile}
-				/>
-			}
+			<span>{item.name} {(itemMultiple) ? 'are' : 'is'} </span>
+			<SelectizeDropdown
+				placeholder={`[${item.name}]`}
+				multi={itemMultiple}
+				name={item.name}
+				value={option || undefined}
+				options={item.options}
+				labelKey={labelKey}
+				valueKey={valueKey}
+				onChange={this.updateProfile}
+			/>
 		</li>;
 	},
 
 	renderPresetOption(preset, index) {
-		return <option key={preset[profileIdAttribute]} value={preset[profileIdAttribute]}>
+		return <option
+			key={preset[profileIdAttribute]}
+			value={preset[profileIdAttribute]}
+		>
 			{preset[profileDisplayAttribute]}
 		</option>;
 	},

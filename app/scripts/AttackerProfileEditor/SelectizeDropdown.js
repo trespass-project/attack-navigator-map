@@ -47,10 +47,18 @@ module.exports = React.createClass({
 			: SimpleSelect;
 
 		const extraProps = {};
-		if (props.multi && props.value) {
-			extraProps.values = props.value;
-		} else {
-			extraProps.value = props.value;
+		if (props.value) {
+			if (props.multi) {
+				extraProps.values = props.value;
+				// TODO: renderValue
+			} else {
+				extraProps.value = props.value;
+				extraProps.renderValue = (item) => {
+					return <div className='simple-value'>
+						{item[props.labelKey]}
+					</div>;
+				};
+			}
 		}
 
 		// options need `label` and `value` properties
