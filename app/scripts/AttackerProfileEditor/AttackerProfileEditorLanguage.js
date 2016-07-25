@@ -1,5 +1,6 @@
 const React = require('react');
 const R = require('ramda');
+const _ = require('lodash');
 const classnames = require('classnames');
 
 const helpers = require('../helpers.js');
@@ -27,48 +28,52 @@ function getClassName(option, value) {
 const AttackerProfileEditorLanguage = React.createClass({
 	propTypes: {
 		handleUpdate: React.PropTypes.func,
-		profilePresets: React.PropTypes.object.isRequired,
+		profilePresets: React.PropTypes.object/*.isRequired*/,
 		profile: React.PropTypes.object/*.isRequired*/
 	},
 
 	getDefaultProps() {
 		return {
-			// profilePresets: {},
+			handleUpdate: () => {},
+			profilePresets: {},
 			profile: {},
-			handleUpdate: () => {}
 		};
 	},
 
-	// TODO: make this stateless!
-	getInitialState() {
-		return {};
+	mergeWithCurrentProfile(partialProfile) {
+		return _.merge(
+			{},
+			this.props.profile,
+			partialProfile
+		);
 	},
 
 	updateProfile(name, val) {
 		const props = this.props;
-		let state = this.state;
-		state[name] = val;
+		const attackerProfile = this.mergeWithCurrentProfile({ [name]: val });
 
-		state[profileIdAttribute] = '';
-		R.values(props.profilePresets)
-			.forEach((profile) => {
-				if (helpers.areAttackerProfilesEqual(profile, state)) {
-					state[profileIdAttribute] = profile[profileIdAttribute];
-				}
-			});
+		// see if there is a preset that matches the current configuration
+		const matchingPreset = R.find(
+			(preset) => {
+				return helpers.areAttackerProfilesEqual(attackerProfile, preset);
+			},
+			R.values(props.profilePresets)
+		);
 
-		this.setState(state, () => {
-			// report to parent
-			props.handleUpdate(state);
-		});
+		//  if there is one, use its id
+		attackerProfile[profileIdAttribute] = (!matchingPreset)
+			? ''
+			: matchingPreset[profileIdAttribute];
+
+		// report to parent
+		props.handleUpdate(attackerProfile);
 	},
 
 	renderProfileParameterItem(item, index) {
 		const props = this.props;
 
-		const valueEquals = R.propEq(valueKey);
 		const value = props.profile[item.name];
-		const option = R.find(valueEquals(value))(item.options);
+		const option = R.find(R.propEq(valueKey)(value))(item.options);
 
 		// set default label, if there is no value
 		const label = (!value)
@@ -94,7 +99,7 @@ const AttackerProfileEditorLanguage = React.createClass({
 				<input
 					type='number'
 					placeholder={item.name}
-					value={value || undefined}
+					value={value || 0}
 					onChange={(event) => {
 						this.updateProfile(item.name, event.target.value);
 					}}
@@ -173,11 +178,12 @@ const AttackerProfileEditorLanguage = React.createClass({
 		const props = this.props;
 		// const preset = helpers.getItemByKey(profileIdAttribute, props.profilePresets, event.target.value);
 		const preset = props.profilePresets[event.target.value];
-		console.log(preset);
 		if (!!preset) {
-			this.setState(preset, () => {
-				this.props.handleUpdate(this.state);
-			});
+			const attackerProfile = _.merge(
+				this.mergeWithCurrentProfile(preset),
+				{ id: preset[profileIdAttribute] }
+			);
+			props.handleUpdate(attackerProfile);
 		}
 	},
 });
