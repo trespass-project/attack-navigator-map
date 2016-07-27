@@ -45,26 +45,23 @@ const ValidationLayer = React.createClass({
 		const yShift = 6; // TODO: get label font size
 
 		function renderItem(node, message) {
-			// TODO: outsource css
 			return <g
 				key={node.id}
 				transform={`translate(${node.x}, ${node.y + yShift})`}
 			>
 				<circle
-					fill='rgba(255, 40, 0, 0.25)'
-					r={r}
-					cx={0}
-					cy={0}
+					className='backgroundCircle'
+					r={r} cx={0} cy={0}
 				/>
 				<g transform={`translate(${r / -3}, ${r + 10})`}>
-					<text fill='rgb(255, 40, 0)' style={{ fontSize: 10 }}>
+					<text className='errorText'>
 						<tspan x='0' dy='0'>{message}</tspan>
 					</text>
 				</g>
 			</g>;
 		}
 
-		return <g className='layer'>
+		return <g className='layer validationLayer'>
 			{R.values(props.graph.nodes)
 				.map((node) => {
 					const message = warnings[node.id];
