@@ -9,9 +9,8 @@ const helpers = require('./helpers.js');
 const theme = require('./graph-theme-default.js');
 
 
-const ValidationLayer = require('./ValidationLayer.js');
-const layers = [
-	ValidationLayer,
+const layersList = [
+	require('./ValidationLayer.js'),
 ];
 
 
@@ -81,8 +80,8 @@ const initialState = {
 
 	// ——————————
 
-	availableLayers: layers,
-	activeLayers: layers,
+	availableLayersList: layersList,
+	activeLayers: helpers.toHashMap('name', layersList),
 };
 
 
@@ -395,19 +394,23 @@ function reducer(state=initialState, action) {
 
 		case constants.ACTION_enableLayer: {
 			const { layerName, isEnabled } = action;
+			const _activeLayersList = R.values(state.activeLayers);
+
+			let activeLayersList;
 			if (!isEnabled) {
-				const activeLayers = R.filter(
+				activeLayersList = R.filter(
 					(layer) => (layer.name !== layerName),
-					state.activeLayers
+					_activeLayersList
 				);
-				return mergeWithState({ activeLayers });
 			} else {
-				const activeLayers = [
-					...state.activeLayers,
-					R.find(R.propEq('name', layerName), layers)
+				activeLayersList = [
+					..._activeLayersList,
+					R.find(R.propEq('name', layerName), layersList)
 				];
-				return mergeWithState({ activeLayers });
 			}
+			return mergeWithState({
+				activeLayers: helpers.toHashMap('name', activeLayersList)
+			});
 		}
 
 		default:

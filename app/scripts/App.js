@@ -97,23 +97,17 @@ React.createClass({
 	render() {
 		const props = this.props;
 
-		const checkedLayers = props.activeLayers
-			.reduce((acc, layer) => {
-				acc[layer.name] = true;
-				return acc;
-			}, {});
-
 		return (
 			<div id='container'>
 				<input type='file' accept='.svg' id='add-file' />
 
 				<div id='layersControl'>
-					{props.availableLayers
+					{props.availableLayersList
 						.map((layer) => {
 							return <div key={layer.name}>
 								<input
 									type='checkbox'
-									checked={checkedLayers[layer.name] || false}
+									checked={!!props.activeLayers[layer.name]}
 									onChange={(event) => this.handleLayerChange(layer, event.target.checked)}
 								/> {layer.displayName}
 							</div>;
