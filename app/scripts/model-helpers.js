@@ -410,7 +410,7 @@ function xmlModelToGraph(xmlStr, done) {
 
 const layoutGraphByType =
 module.exports.layoutGraphByType =
-function layoutGraphByType(_graph) {
+function layoutGraphByType(_graph, spacing=100, maxNodesPerCol=7) {
 	let graph = update(
 		createFragment(),
 		{ $merge: _graph }
@@ -419,9 +419,7 @@ function layoutGraphByType(_graph) {
 	let colCounter = 0;
 	let rowCounter = 0;
 	let lastGroupIndex = 0;
-	const maxNodesPerCol = 7;
 	let isShifted = true;
-	const spacing = 100;
 	let xOffset = spacing / 2;
 	const yOffset = spacing / 2;
 	let groupIndex = -1;

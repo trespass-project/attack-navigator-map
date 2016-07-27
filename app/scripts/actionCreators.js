@@ -1435,8 +1435,51 @@ const enableLayer =
  */
 module.exports.enableLayer =
 function enableLayer(layerName, isEnabled) {
-	return {
-		type: constants.ACTION_enableLayer,
-		layerName, isEnabled
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_enableLayer,
+			layerName, isEnabled
+		});
+
+		const { availableLayersList } = getState().interface;
+		const layer = R.find(R.propEq('name', layerName), availableLayersList);
+		const cb = (isEnabled)
+			? layer.onActivation
+			: layer.onDeactivation;
+		(cb || noop)(module.exports, dispatch);
+	};
+};
+
+
+const nodesStorePosition =
+module.exports.nodesStorePosition =
+function nodesStorePosition() {
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_nodesStorePosition,
+		});
+	};
+};
+
+
+const nodesRestorePosition =
+module.exports.nodesRestorePosition =
+function nodesRestorePosition() {
+	return (dispatch, getState) => {
+		dispatch({ type: constants.ACTION_nodesRestorePosition });
+	};
+};
+
+
+const clusterNodesByType =
+module.exports.clusterNodesByType =
+function clusterNodesByType() {
+	return (dispatch, getState) => {
+		const { graph } = getState().model;
+		const laidOut = modelHelpers.layoutGraphByType(graph);
+		// R.values(laidOut.nodes)
+		// 	.forEach((node) => {
+		// 		//
+		// 	});
 	};
 };
