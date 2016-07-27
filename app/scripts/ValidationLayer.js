@@ -45,6 +45,7 @@ React.createClass({
 		function renderItem(node, message) {
 			// TODO: outsource css
 			return <g
+				key={node.id}
 				transform={`translate(${node.x}, ${node.y + yShift})`}
 			>
 				<circle
