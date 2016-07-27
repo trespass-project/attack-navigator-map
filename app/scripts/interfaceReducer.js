@@ -11,9 +11,14 @@ const theme = require('./graph-theme-default.js');
 
 const ValidationLayer = require('./ValidationLayer.js');
 const HighlightLayer = require('./HighlightLayer.js');
-const layersList = [
+const GroupedComponentsLayer = require('./GroupedComponentsLayer.js');
+const availableLayersList = [
 	ValidationLayer,
 	HighlightLayer,
+	GroupedComponentsLayer,
+];
+const defaultActiveLayersList = [
+	ValidationLayer,
 ];
 
 
@@ -83,10 +88,8 @@ const initialState = {
 
 	// ——————————
 
-	availableLayersList: layersList,
-	activeLayers: helpers.toHashMap('name', [
-		ValidationLayer,
-	]),
+	availableLayersList: availableLayersList,
+	activeLayers: helpers.toHashMap('name', defaultActiveLayersList),
 };
 
 
@@ -400,6 +403,7 @@ function reducer(state=initialState, action) {
 		case constants.ACTION_enableLayer: {
 			const { layerName, isEnabled } = action;
 			const _activeLayersList = R.values(state.activeLayers);
+			const theLayer = R.find(R.propEq('name', layerName), availableLayersList);
 
 			let activeLayersList;
 			if (!isEnabled) {
@@ -410,7 +414,7 @@ function reducer(state=initialState, action) {
 			} else {
 				activeLayersList = [
 					..._activeLayersList,
-					R.find(R.propEq('name', layerName), layersList)
+					theLayer
 				];
 			}
 			return mergeWithState({

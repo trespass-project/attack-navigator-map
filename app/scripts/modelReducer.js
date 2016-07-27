@@ -1,5 +1,7 @@
+const update = require('react-addons-update');
 const R = require('ramda');
 const _ = require('lodash');
+const helpers = require('./helpers.js');
 const modelHelpers = require('./model-helpers.js');
 const mergeWith = require('./reducer-utils.js').mergeWith;
 const constants = require('./constants.js');
@@ -169,6 +171,42 @@ function reducer(state=initialState, action) {
 			const { nodeId, xy } = action;
 			const newGraph = modelHelpers.moveNode(state.graph, nodeId, xy);
 			return mergeWithState({ graph: newGraph });
+		}
+
+		case constants.ACTION_nodesStorePosition: {
+			const nodes = R.values(state.graph.nodes)
+				.map((node) => {
+					return Object.assign(
+						{},
+						node,
+						{ _x: node.x },
+						{ _y: node.y }
+					);
+				});
+			return mergeWithState({
+				graph: update(
+					state.graph,
+					{ nodes: { $set: helpers.toHashMap('id', nodes) } }
+				)
+			});
+		}
+
+		case constants.ACTION_nodesRestorePosition: {
+			const nodes = R.values(state.graph.nodes)
+				.map((node) => {
+					return Object.assign(
+						{},
+						node,
+						{ x: node._x || node.x },
+						{ y: node._y || node.y }
+					);
+				});
+			return mergeWithState({
+				graph: update(
+					state.graph,
+					{ nodes: { $set: helpers.toHashMap('id', nodes) } }
+				)
+			});
 		}
 
 		case constants.ACTION_ungroupNode: {

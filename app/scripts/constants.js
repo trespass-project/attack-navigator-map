@@ -89,6 +89,8 @@ const constants = {
 
 	ACTION_showSaveDialog: 'ACTION_showSaveDialog',
 	ACTION_enableLayer: 'ACTION_enableLayer',
+	ACTION_nodesStorePosition: 'ACTION_nodesStorePosition',
+	ACTION_nodesRestorePosition: 'ACTION_nodesRestorePosition',
 
 	CLONE_OFFSET: 70,
 };
