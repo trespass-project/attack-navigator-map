@@ -12,8 +12,7 @@ module.exports.editorProps = {
 };
 
 
-module.exports.Component =
-React.createClass({
+const ValidationLayer = React.createClass({
 	propTypes: {
 		graph: React.PropTypes.object.isRequired,
 	},
@@ -74,3 +73,5 @@ React.createClass({
 		</g>;
 	},
 });
+
+module.exports.Component = ValidationLayer;
