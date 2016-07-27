@@ -10,11 +10,11 @@ const displayName =
 module.exports.displayName = 'validation layer';
 
 
-// TODO: what to do with this?
-const editorProps =
-module.exports.editorProps = {
-	showEdges: false,
-};
+const adjustProps =
+module.exports.adjustProps = undefined;
+// function adjustProps(props) {
+// 	return Object.assign({}, props, { showNodeLabels: false });
+// };
 
 
 const ValidationLayer = React.createClass({

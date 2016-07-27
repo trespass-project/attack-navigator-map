@@ -11,6 +11,7 @@ const theme = require('./graph-theme-default.js');
 
 const layersList = [
 	require('./ValidationLayer.js'),
+	require('./HighlightLayer.js'),
 ];
 
 
