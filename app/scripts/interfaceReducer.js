@@ -9,9 +9,11 @@ const helpers = require('./helpers.js');
 const theme = require('./graph-theme-default.js');
 
 
+const ValidationLayer = require('./ValidationLayer.js');
+const HighlightLayer = require('./HighlightLayer.js');
 const layersList = [
-	require('./ValidationLayer.js'),
-	require('./HighlightLayer.js'),
+	ValidationLayer,
+	HighlightLayer,
 ];
 
 
@@ -82,7 +84,9 @@ const initialState = {
 	// ——————————
 
 	availableLayersList: layersList,
-	activeLayers: helpers.toHashMap('name', layersList),
+	activeLayers: helpers.toHashMap('name', [
+		ValidationLayer,
+	]),
 };
 
 
