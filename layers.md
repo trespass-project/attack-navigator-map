@@ -32,5 +32,6 @@
 
 - cluster entities by type
 	- actors, locations, assets
+	- grouping is not a problem → restoring the original graph is
 
 - relations view
