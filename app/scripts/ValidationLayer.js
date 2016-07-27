@@ -5,6 +5,11 @@ const R = require('ramda');
 const name =
 module.exports.name = 'ValidationLayer';
 
+
+const displayName =
+module.exports.displayName = 'validation layer';
+
+
 // TODO: what to do with this?
 const editorProps =
 module.exports.editorProps = {

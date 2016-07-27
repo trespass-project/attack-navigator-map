@@ -81,7 +81,7 @@ const initialState = {
 
 	// ——————————
 
-	// activeLayers: [],
+	availableLayers: layers,
 	activeLayers: layers,
 };
 
@@ -391,6 +391,23 @@ function reducer(state=initialState, action) {
 		case constants.ACTION_showSaveDialog: {
 			const { yesNo } = action;
 			return mergeWithState({ showSaveDialog: yesNo });
+		}
+
+		case constants.ACTION_enableLayer: {
+			const { layerName, isEnabled } = action;
+			if (!isEnabled) {
+				const activeLayers = R.filter(
+					(layer) => (layer.name !== layerName),
+					state.activeLayers
+				);
+				return mergeWithState({ activeLayers });
+			} else {
+				const activeLayers = [
+					...state.activeLayers,
+					R.find(R.propEq('name', layerName), layers)
+				];
+				return mergeWithState({ activeLayers });
+			}
 		}
 
 		default:
