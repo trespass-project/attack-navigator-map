@@ -35,7 +35,7 @@ function mapStateToProps(state) {
 	// flatten one level
 	return _.assign.apply(
 		null,
-		[{}].concat(R.values(state))
+		[{}, ...R.values(state)]
 	);
 }
 
