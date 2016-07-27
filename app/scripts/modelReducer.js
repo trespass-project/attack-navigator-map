@@ -197,8 +197,8 @@ function reducer(state=initialState, action) {
 					return Object.assign(
 						{},
 						node,
-						{ x: node._x },
-						{ y: node._y }
+						{ x: node._x || node.x },
+						{ y: node._y || node.y }
 					);
 				});
 			return mergeWithState({
