@@ -4,7 +4,9 @@
 @import $bootstrap-path
 @import $fontawesome-path
 @import 'common.styl'
+
 @import 'layers.styl'
+@import 'ValidationLayer.styl'
 
 
 // LAYOUT
@@ -25,6 +27,15 @@ body
 	position: fixed
 	bottom: 0.5em
 	left: 0.5em
+	font-size: 12px
+
+
+#layersControl
+	position: fixed
+	top: 0
+	right: $panelWidth
+	padding-top: 0.5em
+	padding-right: 0.5em
 	font-size: 12px
 
 

@@ -160,6 +160,8 @@ const GraphMixin = {
 		const props = this.props;
 		const graph = props.graph;
 
+		const activeLayersList = R.values(props.activeLayers);
+
 		return (
 			<g
 				ref='map-group'
@@ -175,8 +177,8 @@ const GraphMixin = {
 					.map(this.renderGroup)
 				}
 
-				{(!props.isMinimap && props.activeLayers.length)
-					? props.activeLayers
+				{(!props.isMinimap && activeLayersList.length)
+					? activeLayersList
 						.map((layer) => {
 							const { Component, name } = layer;
 							return <Component {...props} key={name} />;

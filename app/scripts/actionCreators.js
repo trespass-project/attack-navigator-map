@@ -1425,3 +1425,18 @@ function showSaveDialog(yesNo) {
 		show: yesNo
 	};
 };
+
+
+const enableLayer =
+/**
+ * enables / disables layers
+ * @param {String} layerName - name of the layer
+ * @param {Boolean} isEnabled - enable or disable
+ */
+module.exports.enableLayer =
+function enableLayer(layerName, isEnabled) {
+	return {
+		type: constants.ACTION_enableLayer,
+		layerName, isEnabled
+	};
+};

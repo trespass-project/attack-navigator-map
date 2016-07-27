@@ -88,11 +88,32 @@ React.createClass({
 		this.props.dispatch( actionCreators.showSaveDialog(false) );
 	},
 
+	handleLayerChange(layer, isChecked) {
+		this.props.dispatch(
+			actionCreators.enableLayer(layer.name, isChecked)
+		);
+	},
+
 	render() {
 		const props = this.props;
+
 		return (
 			<div id='container'>
 				<input type='file' accept='.svg' id='add-file' />
+
+				<div id='layersControl'>
+					{props.availableLayersList
+						.map((layer) => {
+							return <div key={layer.name}>
+								<input
+									type='checkbox'
+									checked={!!props.activeLayers[layer.name]}
+									onChange={(event) => this.handleLayerChange(layer, event.target.checked)}
+								/> {layer.displayName}
+							</div>;
+						})
+					}
+				</div>
 
 				<div id='meta'>
 					{(props.metadata.id)

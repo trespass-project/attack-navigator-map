@@ -5,6 +5,11 @@ const R = require('ramda');
 const name =
 module.exports.name = 'ValidationLayer';
 
+
+const displayName =
+module.exports.displayName = 'validation layer';
+
+
 // TODO: what to do with this?
 const editorProps =
 module.exports.editorProps = {
@@ -12,8 +17,7 @@ module.exports.editorProps = {
 };
 
 
-module.exports.Component =
-React.createClass({
+const ValidationLayer = React.createClass({
 	propTypes: {
 		graph: React.PropTypes.object.isRequired,
 	},
@@ -22,8 +26,13 @@ React.createClass({
 	// 	return {};
 	// },
 
+	contextTypes: {
+		theme: React.PropTypes.object,
+	},
+
 	render() {
 		const props = this.props;
+		const { theme } = this.context;
 
 		// TODO: what other warnings can we show?
 		// TODO: do this somewhere higher up, so that same warnings can
@@ -37,32 +46,27 @@ React.createClass({
 				return acc;
 			}, {});
 
-		// TODO: make part of theme?
-		// better: derive from theme
-		const r = 45;
-		const yShift = 7;
+		const r = theme.node.size + theme.node.cornerRadius;
+		const yShift = 6; // TODO: get label font size
 
 		function renderItem(node, message) {
-			// TODO: outsource css
 			return <g
 				key={node.id}
 				transform={`translate(${node.x}, ${node.y + yShift})`}
 			>
 				<circle
-					fill='rgba(255, 40, 0, 0.25)'
-					r={r}
-					cx={0}
-					cy={0}
+					className='backgroundCircle'
+					r={r} cx={0} cy={0}
 				/>
 				<g transform={`translate(${r / -3}, ${r + 10})`}>
-					<text fill='rgb(255, 40, 0)' style={{ fontSize: 10 }}>
+					<text className='errorText'>
 						<tspan x='0' dy='0'>{message}</tspan>
 					</text>
 				</g>
 			</g>;
 		}
 
-		return <g className='layer'>
+		return <g className='layer validationLayer'>
 			{R.values(props.graph.nodes)
 				.map((node) => {
 					const message = warnings[node.id];
@@ -74,3 +78,5 @@ React.createClass({
 		</g>;
 	},
 });
+
+module.exports.Component = ValidationLayer;
