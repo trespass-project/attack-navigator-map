@@ -1,9 +1,6 @@
-const _ = require('lodash');
 const R = require('ramda');
-
 const React = require('react');
 const reactDOM = require('react-dom');
-
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Provider, connect } from 'react-redux';
 import ReduxThunk from 'redux-thunk';
@@ -31,12 +28,21 @@ function configureStore(initialState) {
 }
 const store = configureStore();
 
-function mapStateToProps(state) {
+function mapStateToProps(_state) {
 	// flatten one level
-	return _.assign.apply(
+	const state = Object.assign.apply(
 		null,
-		[{}, ...R.values(state)]
+		[{}, ...R.values(_state)]
 	);
+
+	// layers get the chance to change props
+	const props = R.values(state.activeLayers)
+		.reduce(
+			(acc, layer) => (layer.adjustProps || R.identity)(acc),
+			state
+		);
+
+	return props;
 }
 
 let App = require('./App.js');
