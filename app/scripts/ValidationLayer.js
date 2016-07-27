@@ -25,14 +25,12 @@ React.createClass({
 	render() {
 		const props = this.props;
 
-		// TODO: more warnings
+		// TODO: what other warnings can we show?
 		// TODO: do this somewhere higher up, so that same warnings can
 		// be used in wizard, as well (DRY)
 		const warnings = R.values(props.graph.nodes)
 			.filter(R.propEq('modelComponentType', 'actor'))
-			.filter((item) => {
-				return !item['tkb:actor_type'];
-			})
+			.filter((item) => !item['tkb:actor_type'])
 			.reduce((acc, item) => {
 				const message = 'missing actor type';
 				acc[item.id] = message;
@@ -40,31 +38,38 @@ React.createClass({
 			}, {});
 
 		// TODO: make part of theme?
+		// better: derive from theme
 		const r = 45;
 		const yShift = 7;
 
-		return <g className='layer'>
-			{R.values(props.graph.nodes).map((node) => {
-				const message = warnings[node.id];
-				if (!message) {
-					return null;
-				}
+		function renderItem(node, message) {
+			// TODO: outsource css
+			return <g
+				transform={`translate(${node.x}, ${node.y + yShift})`}
+			>
+				<circle
+					fill='rgba(255, 40, 0, 0.25)'
+					r={r}
+					cx={0}
+					cy={0}
+				/>
+				<g transform={`translate(${r / -3}, ${r + 10})`}>
+					<text fill='rgb(255, 40, 0)' style={{ fontSize: 10 }}>
+						<tspan x='0' dy='0'>{message}</tspan>
+					</text>
+				</g>
+			</g>;
+		}
 
-				// TODO: outsource css
-				return <g transform={`translate(${node.x}, ${node.y + yShift})`}>
-					<circle
-						fill='rgba(255, 4, 0, 0.25)'
-						r={r}
-						cx={0}
-						cy={0}
-					/>
-					<g transform={`translate(${r / -3}, ${r + 10})`}>
-						<text fill='rgb(255, 40, 0)' style={{ fontSize: 10 }}>
-							<tspan x='0' dy='0'>{message}</tspan>
-						</text>
-					</g>
-				</g>;
-			})}
+		return <g className='layer'>
+			{R.values(props.graph.nodes)
+				.map((node) => {
+					const message = warnings[node.id];
+					return (!message)
+						? null
+						: renderItem(node, message);
+				})
+			}
 		</g>;
 	},
 });
