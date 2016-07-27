@@ -21,8 +21,13 @@ const ValidationLayer = React.createClass({
 	// 	return {};
 	// },
 
+	contextTypes: {
+		theme: React.PropTypes.object,
+	},
+
 	render() {
 		const props = this.props;
+		const { theme } = this.context;
 
 		// TODO: what other warnings can we show?
 		// TODO: do this somewhere higher up, so that same warnings can
@@ -36,10 +41,8 @@ const ValidationLayer = React.createClass({
 				return acc;
 			}, {});
 
-		// TODO: make part of theme?
-		// better: derive from theme
-		const r = 45;
-		const yShift = 7;
+		const r = theme.node.size + theme.node.cornerRadius;
+		const yShift = 6; // TODO: get label font size
 
 		function renderItem(node, message) {
 			// TODO: outsource css
