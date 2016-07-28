@@ -408,6 +408,9 @@ function xmlModelToGraph(xmlStr, done) {
 };
 
 
+// TODO: split this up into
+// - lay out by type
+// - group by type
 const layoutGraphByType =
 module.exports.layoutGraphByType =
 function layoutGraphByType(_graph, spacing=100, maxNodesPerCol=7) {
