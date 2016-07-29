@@ -69,6 +69,9 @@ function initMap(modelId, metadata, anmData={}) {
 
 	return (dispatch, getState) => {
 		return new Promise((resolve, reject) => {
+			dispatch( resetMap() );
+			dispatch( resetTransformation() );
+
 			dispatch({
 				type: constants.ACTION_initMap,
 				modelId,
@@ -76,16 +79,7 @@ function initMap(modelId, metadata, anmData={}) {
 				anmData
 			});
 
-			// reset
-			dispatch( resetMap() );
-
-			// reset view
-			dispatch( resetTransformation() );
-
-			// load model-specific kb data
-			dispatch( fetchKbData() );
-
-			dispatch( getRecentFiles() );
+			dispatch( fetchKbData(modelId) );
 
 			resolve();
 		});
@@ -116,7 +110,7 @@ function createNewMap() {
 						// TODO: needed?
 						// import empty fragment
 						// dispatch( importFragment({}) );
-						dispatch( saveModelToKb() );
+						dispatch( saveModelToKb(modelId) );
 					});
 			});
 	};
@@ -134,19 +128,18 @@ function resetMap() {
 
 const fetchKbData =
 module.exports.fetchKbData =
-function fetchKbData() {
+function fetchKbData(modelId) {
 	return (dispatch, getState) => {
 		// load model-specific stuff from knowledgebase
-		dispatch( loadComponentTypes() );
-		dispatch( loadAttackerProfiles() );
-		dispatch( loadToolChains() );
-
+		dispatch( loadComponentTypes(modelId) );
+		dispatch( loadAttackerProfiles(modelId) );
+		dispatch( loadToolChains(modelId) );
 		dispatch( getRecentFiles() );
 
 		// fake api
 		// TODO: should use kb
-		dispatch( loadModelPatterns() );
-		dispatch( loadRelationTypes() );
+		dispatch( loadModelPatterns(modelId) );
+		dispatch( loadRelationTypes(modelId) );
 	};
 };
 
@@ -206,16 +199,14 @@ function loadModelFromKb(modelId) {
 
 const saveModelToKb =
 module.exports.saveModelToKb =
-function saveModelToKb() {
+function saveModelToKb(modelId) {
 	return (dispatch, getState) => {
-		const state = getState();
-		const modelId = state.model.metadata.id;
-
 		if (!modelId) {
 			// currently no model open to save
 			return;
 		}
 
+		const state = getState();
 		const model = modelHelpers.modelFromGraph(
 			state.model.graph,
 			state.model.metadata,
@@ -237,15 +228,13 @@ function saveModelToKb() {
 
 const deleteModel =
 module.exports.deleteModel =
-function deleteModel() {
+function deleteModel(modelId) {
 	return (dispatch, getState) => {
-		if (!confirm('sure?')) {
+		if (!modelId) {
 			return;
 		}
 
-		const state = getState();
-		const modelId = state.model.metadata.id;
-		if (!modelId) {
+		if (!confirm('sure?')) {
 			return;
 		}
 
@@ -663,23 +652,23 @@ function loadXML(xmlString) {
 				return;
 			}
 
-			dispatch(
-				initMap(
-					result.metadata.id || undefined,
-					result.metadata,
-					result.anmData
-				)
-			)
+			const { graph, metadata, anmData } = result;
+			const modelId = metadata.id || undefined;
+
+			getModelOrCreate(modelId)
+				.then(({ modelId, isNew }) => {
+					return dispatch( initMap(modelId, metadata, anmData) );
+				})
 				.then(() => {
 					// import
 					// TODO: document
 					// `importFragment()` clones fragment entirely (all new ids)
 					// `mergeFragment()` add everything "as is"
-					if (result.anmData) {
-						const fragment = result.graph;
+					if (anmData) {
+						const fragment = graph;
 						dispatch( mergeFragment(fragment) );
 					} else {
-						const fragment = modelHelpers.layoutGraphByType(result.graph);
+						const fragment = modelHelpers.layoutGraphByType(graph);
 						dispatch( importFragment(fragment) );
 					}
 				});
@@ -726,13 +715,12 @@ function downloadModelXML() {
 
 const downloadZippedScenario =
 module.exports.downloadZippedScenario =
-function downloadZippedScenario() {
+function downloadZippedScenario(modelId) {
 	return (dispatch, getState) => {
 		dispatch( humanizeModelIds() )
 			.then(() => {
 				const state = getState();
-				const { modelXmlStr, model } = stateToModelXML(state);
-				const modelId = model.system.id;
+				const { modelXmlStr/*, model*/ } = stateToModelXML(state);
 
 				const scenarioXmlStr = generateScenarioXML(
 					modelId,
@@ -1056,12 +1044,15 @@ function humanizeModelIds() {
 			type: constants.ACTION_humanizeModelIds,
 			done: (_idReplacementMap) => {
 				idReplacementMap = _idReplacementMap;
+
+				// TODO: should not rely on state
+				const modelId = getState().model.metadata.id;
 				// update ids in kb
 				promises = R.toPairs(idReplacementMap)
 					.map((pair) => {
 						return knowledgebaseApi.renameItemId(
 							axios,
-							getState().model.metadata.id,
+							modelId,
 							pair[0],
 							pair[1]
 						);
@@ -1080,7 +1071,11 @@ function humanizeModelIds() {
 
 const runAnalysis =
 module.exports.runAnalysis =
-function runAnalysis(toolChainId, downloadScenario=false) {
+function runAnalysis(modelId, toolChainId, downloadScenario=false) {
+	if (!modelId) {
+		throw new Error('missing model id');
+	}
+
 	return (dispatch, getState) => {
 		const state = getState();
 		const toolChains = state.interface.toolChains;
@@ -1090,16 +1085,10 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 			throw new Error('Tool chain not found.');
 		}
 
-		const modelId = state.model.metadata.id;
-		if (!modelId) {
-			throw new Error('missing model id');
-		}
 
 		// humanize ids
 		dispatch( humanizeModelIds() )
 			.then(() => {
-				const state = getState();
-
 				const { modelXmlStr, model } = stateToModelXML(state);
 
 				const validationErrors = trespass.model.validateModel(model);
@@ -1284,12 +1273,9 @@ function runAnalysis(toolChainId, downloadScenario=false) {
 
 const loadToolChains =
 module.exports.loadToolChains =
-function loadToolChains() {
+function loadToolChains(modelId) {
 	return (dispatch, getState) => {
 		// dispatch({ type: constants.ACTION_loadToolChains });
-
-		const state = getState();
-		const modelId = state.model.metadata.id;
 
 		knowledgebaseApi.getToolChains(axios, modelId)
 			.catch((err) => {
@@ -1299,7 +1285,8 @@ function loadToolChains() {
 				// TODO: do they all begin with treemaker?
 				dispatch({
 					type: constants.ACTION_loadToolChains_DONE,
-					normalizedToolChains: helpers.normalize(toolChains)
+					normalizedToolChains: helpers.normalize(toolChains),
+					modelId,
 				});
 			});
 	};
@@ -1308,18 +1295,16 @@ function loadToolChains() {
 
 const loadAttackerProfiles =
 module.exports.loadAttackerProfiles =
-function loadAttackerProfiles() {
+function loadAttackerProfiles(modelId) {
 	return (dispatch, getState) => {
 		// dispatch({ type: constants.ACTION_loadAttackerProfiles });
-
-		const state = getState();
-		const modelId = state.model.metadata.id;
 
 		knowledgebaseApi.getAttackerProfiles(axios, modelId)
 			.then((attackerProfiles) => {
 				dispatch({
 					type: constants.ACTION_loadAttackerProfiles_DONE,
-					normalizedAttackerProfiles: helpers.normalize(attackerProfiles)
+					normalizedAttackerProfiles: helpers.normalize(attackerProfiles),
+					modelId,
 				});
 			})
 			.catch(handleError);
@@ -1353,12 +1338,9 @@ function loadRelationTypes() {
 
 const loadComponentTypes =
 module.exports.loadComponentTypes =
-function loadComponentTypes() {
+function loadComponentTypes(modelId) {
 	return (dispatch, getState) => {
 		// dispatch({ type: constants.ACTION_loadComponentTypes });
-
-		const state = getState();
-		const modelId = state.model.metadata.id;
 
 		knowledgebaseApi.getTypes(axios, modelId)
 			.then((types) => {
@@ -1409,7 +1391,8 @@ function loadComponentTypes() {
 					type: constants.ACTION_loadComponentTypes_DONE,
 					kbTypeAttributes,
 					componentsLib,
-					modelComponentTypeToKbTypes
+					modelComponentTypeToKbTypes,
+					modelId,
 				});
 			})
 			.catch(handleError);
