@@ -652,27 +652,59 @@ function loadXML(xmlString) {
 				return;
 			}
 
-			const { graph, metadata, anmData } = result;
-			const modelId = metadata.id || undefined;
+			function bla(graph, metadata, anmData) {
+				const modelId = metadata.id || undefined;
 
-			getModelOrCreate(modelId)
-				.then(({ modelId, isNew }) => {
-					return dispatch( initMap(modelId, metadata, anmData) );
-				})
-				.then(() => {
-					// import
-					// TODO: document
-					// `importFragment()` clones fragment entirely (all new ids)
-					// `mergeFragment()` add everything "as is"
-					if (anmData) {
-						const fragment = graph;
-						dispatch( mergeFragment(fragment) );
-					} else {
-						const fragment = modelHelpers.layoutGraphByType(graph);
-						dispatch( importFragment(fragment) );
-					}
-					dispatch( saveModelToKb(modelId) );
-				});
+				return getModelOrCreate(modelId)
+					.then(({ modelId, isNew }) => {
+						if (!isNew) {
+							// model with that id already exists in kb
+							const msg = [
+								`A model with this id exists already: ${modelId}`,
+								'Do you want to overwrite the existing one?'
+							].join('\n');
+							const cancelled = !confirm(msg);
+
+							if (cancelled) {
+								const msg = [
+									'Would you still like to load the file, ',
+									'but use a new id instead?'
+								].join('');
+								const cancelled = !confirm(msg);
+
+								if (cancelled) {
+									return;
+								} else {
+									const modelId = helpers.makeId('model');
+									return bla(
+										graph,
+										_.merge({}, metadata, { id: modelId }),
+										anmData
+									);
+								}
+							}
+						}
+
+						return dispatch( initMap(modelId, metadata, anmData) )
+							.then(() => {
+								// import
+								// TODO: document
+								// `importFragment()` clones fragment entirely (all new ids)
+								// `mergeFragment()` add everything "as is"
+								if (anmData) {
+									const fragment = graph;
+									dispatch( mergeFragment(fragment) );
+								} else {
+									const fragment = modelHelpers.layoutGraphByType(graph);
+									dispatch( importFragment(fragment) );
+								}
+								dispatch( saveModelToKb(modelId) );
+							});
+					});
+			}
+
+			const { graph, metadata, anmData } = result;
+			return bla(graph, metadata, anmData);
 		});
 	};
 };
