@@ -657,21 +657,34 @@ function loadXML(xmlString) {
 
 			getModelOrCreate(modelId)
 				.then(({ modelId, isNew }) => {
-					return dispatch( initMap(modelId, metadata, anmData) );
-				})
-				.then(() => {
-					// import
-					// TODO: document
-					// `importFragment()` clones fragment entirely (all new ids)
-					// `mergeFragment()` add everything "as is"
-					if (anmData) {
-						const fragment = graph;
-						dispatch( mergeFragment(fragment) );
-					} else {
-						const fragment = modelHelpers.layoutGraphByType(graph);
-						dispatch( importFragment(fragment) );
+					if (!isNew) {
+						// model with that id already exists in kb
+						const msg = [
+							`A model with this id exists already: ${modelId}`,
+							'Do you want to overwrite the existing one?'
+						].join('\n');
+						const cancelled = !confirm(msg);
+
+						if (cancelled) {
+							return;
+						}
 					}
-					dispatch( saveModelToKb(modelId) );
+
+					return dispatch( initMap(modelId, metadata, anmData) )
+						.then(() => {
+							// import
+							// TODO: document
+							// `importFragment()` clones fragment entirely (all new ids)
+							// `mergeFragment()` add everything "as is"
+							if (anmData) {
+								const fragment = graph;
+								dispatch( mergeFragment(fragment) );
+							} else {
+								const fragment = modelHelpers.layoutGraphByType(graph);
+								dispatch( importFragment(fragment) );
+							}
+							dispatch( saveModelToKb(modelId) );
+						});
 				});
 		});
 	};
