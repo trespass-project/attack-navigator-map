@@ -671,6 +671,7 @@ function loadXML(xmlString) {
 						const fragment = modelHelpers.layoutGraphByType(graph);
 						dispatch( importFragment(fragment) );
 					}
+					dispatch( saveModelToKb(modelId) );
 				});
 		});
 	};
