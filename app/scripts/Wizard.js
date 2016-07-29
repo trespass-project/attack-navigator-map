@@ -731,11 +731,15 @@ const Wizard = React.createClass({
 	},
 
 	runAnalysis() {
+		const props = this.props;
 		const dlScenarioCheckbox = this.refs['checkbox-dl-scenario'];
 		this.context.dispatch(
 			actionCreators.runAnalysis(
-				this.props.toolChainId,
-				(!dlScenarioCheckbox) ? false : dlScenarioCheckbox.checked
+				props.metadata.id,
+				props.toolChainId,
+				(!dlScenarioCheckbox)
+					? false
+					: dlScenarioCheckbox.checked
 			)
 		);
 	},
@@ -792,7 +796,8 @@ const Wizard = React.createClass({
 
 	downloadZippedScenario(event) {
 		event.preventDefault();
-		this.context.dispatch( actionCreators.downloadZippedScenario() );
+		const modelId = this.props.metadata.id;
+		this.context.dispatch( actionCreators.downloadZippedScenario(modelId) );
 	},
 
 	selectWizardStep(name, event) {

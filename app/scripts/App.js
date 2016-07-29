@@ -69,14 +69,16 @@ React.createClass({
 		if (event) {
 			event.preventDefault();
 		}
-		this.props.dispatch( actionCreators.saveModelToKb() );
+		const modelId = this.props.metadata.id;
+		this.props.dispatch( actionCreators.saveModelToKb(modelId) );
 	},
 
 	deleteModel(event) {
 		if (event) {
 			event.preventDefault();
 		}
-		this.props.dispatch( actionCreators.deleteModel() );
+		const modelId = this.props.metadata.id;
+		this.props.dispatch( actionCreators.deleteModel(modelId) );
 	},
 
 	fetchKbData(event) {
