@@ -69,6 +69,9 @@ function initMap(modelId, metadata, anmData={}) {
 
 	return (dispatch, getState) => {
 		return new Promise((resolve, reject) => {
+			dispatch( resetMap() );
+			dispatch( resetTransformation() );
+
 			dispatch({
 				type: constants.ACTION_initMap,
 				modelId,
@@ -76,14 +79,6 @@ function initMap(modelId, metadata, anmData={}) {
 				anmData
 			});
 
-			// reset
-			dispatch( resetMap() );
-
-			// reset view
-			dispatch( resetTransformation() );
-
-
-			dispatch( getRecentFiles() );
 			dispatch( fetchKbData(modelId) );
 
 			resolve();
@@ -657,23 +652,23 @@ function loadXML(xmlString) {
 				return;
 			}
 
-			dispatch(
-				initMap(
-					result.metadata.id || undefined,
-					result.metadata,
-					result.anmData
-				)
-			)
+			const { graph, metadata, anmData } = result;
+			const modelId = metadata.id || undefined;
+
+			getModelOrCreate(modelId)
+				.then(({ modelId, isNew }) => {
+					return dispatch( initMap(modelId, metadata, anmData) );
+				})
 				.then(() => {
 					// import
 					// TODO: document
 					// `importFragment()` clones fragment entirely (all new ids)
 					// `mergeFragment()` add everything "as is"
-					if (result.anmData) {
-						const fragment = result.graph;
+					if (anmData) {
+						const fragment = graph;
 						dispatch( mergeFragment(fragment) );
 					} else {
-						const fragment = modelHelpers.layoutGraphByType(result.graph);
+						const fragment = modelHelpers.layoutGraphByType(graph);
 						dispatch( importFragment(fragment) );
 					}
 				});
