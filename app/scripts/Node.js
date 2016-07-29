@@ -1,8 +1,5 @@
-'use strict';
-
 const R = require('ramda');
 const React = require('react');
-const reactDOM = require('react-dom');
 const classnames = require('classnames');
 const SchleppMixin = require('./SchleppMixin.js');
 const Port = require('./Port.js');
@@ -65,7 +62,8 @@ const Node = React.createClass({
 			className='icon fa'
 			x='0'
 			y='2'
-			dangerouslySetInnerHTML={{__html: icon}}></text>;
+			dangerouslySetInnerHTML={{ __html: icon }}
+		/>;
 	},
 
 	renderLabel: function() {
@@ -81,7 +79,8 @@ const Node = React.createClass({
 			ref='label'
 			className='label'
 			x='0'
-			y={12 + context.theme.node.size*0.5}>
+			y={12 + context.theme.node.size*0.5}
+		>
 			{label}
 		</text>;
 	},
@@ -105,16 +104,24 @@ const Node = React.createClass({
 				onContextMenu={this._onContextMenu}
 				onClick={this._onClick}
 				onMouseEnter={this._handleHover}
-				onMouseLeave={this._handleHoverOut}>
+				onMouseLeave={this._handleHoverOut}
+			>
 				<g ref='dragRoot'>
 					<rect
-						className={classnames('node', { 'hover': props.isHovered, 'selected': props.isSelected })}
+						className={classnames(
+							'node',
+							{
+								'hover': props.isHovered,
+								'selected': props.isSelected
+							}
+						)}
 						x={-radius}
 						y={-radius}
 						rx={context.theme.node.cornerRadius}
 						ry={context.theme.node.cornerRadius}
 						height={radius*2}
-						width={radius*2} />
+						width={radius*2}
+					/>
 					{this.renderLabel()}
 					{this.renderIcon()}
 				</g>
@@ -164,33 +171,6 @@ const Node = React.createClass({
 
 		context.dispatch( actionCreators.showContextMenu(event, menuItems) );
 	},
-
-	// _getLabelWidth: function() {
-	// 	var label = this.refs.label;
-	// 	var bbox = label.getBBox();
-	// 	var width = bbox.width;
-	// 	return width;
-	// },
-
-	// _positionPorts: function() {
-	// 	var w = this._getLabelWidth();
-	// 	this.setState({
-	// 		portPosX: context.theme.port.size+context.theme.label.fontSize+w*0.5
-	// 	});
-	// },
-
-	// componentDidMount: function() {
-	// 	// this._positionPorts();
-	// },
-
-	// componentDidUpdate: function() {
-	// 	if (!this.state.portPosX)
-	// 		this._positionPorts();
-	// },
-
-	// getInitialState: function() {
-	// 	return {};
-	// },
 
 	_onClick: function(event) {
 		event.preventDefault();

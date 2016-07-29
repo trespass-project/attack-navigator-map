@@ -28,10 +28,11 @@
 	- highlight a number of model entities that occur in attack tree
 
 - search results layer
+	- how to implement search / filter options?
 	✔ highlight one or more entities that match the current search / filter query
 
-- cluster entities by type
-	- actors, locations, assets
-	- grouping is not a problem → restoring the original graph is
+✔ cluster entities by type
+	✔ actors, locations, assets
+	- (grouping is not a problem → restoring the original graph is)
 
 - relations view
