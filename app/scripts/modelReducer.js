@@ -123,7 +123,6 @@ function reducer(state=initialState, action) {
 		case constants.ACTION_mergeFragment: {
 			const { fragment } = action;
 			const newGraph = modelHelpers.combineFragments([state.graph, fragment]);
-			console.log(fragment, newGraph);
 			return mergeWithState({ graph: newGraph });
 		}
 
