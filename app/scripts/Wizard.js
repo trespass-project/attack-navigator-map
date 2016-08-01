@@ -444,7 +444,7 @@ const Wizard = React.createClass({
 		return <div>
 			<h3>Attacker goal</h3>
 			<select
-				value={goalValue}
+				value={goalValue || ''}
 				onChange={this.setAttackerGoal}
 			>
 				<option value=''>— select goal —</option>
@@ -476,7 +476,7 @@ const Wizard = React.createClass({
 			<select
 				ref='toolchain'
 				onChange={this.setSelectedToolChain}
-				value={props.toolChainId}
+				value={props.toolChainId || ''}
 			>
 				<option value=''>— select tool chain —</option>
 				{R.values(props.toolChains)
