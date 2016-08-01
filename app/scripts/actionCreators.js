@@ -181,7 +181,8 @@ function loadModelFromKb(modelId) {
 	return (dispatch, getState) => {
 		return knowledgebaseApi.getModelFile(axios, modelId)
 			.then((modelXML) => {
-				dispatch( loadXML(modelXML) );
+				const source = 'knowledgebase';
+				dispatch( loadXML(modelXML, source) );
 			})
 			.catch((err) => {
 				if (err.response.status === 404) {
@@ -630,7 +631,8 @@ function loadModelFile(file) {
 		const reader = new FileReader();
 		reader.onload = (event) => {
 			const content = event.target.result;
-			dispatch( loadXML(content) );
+			const source = 'file';
+			dispatch( loadXML(content, source) );
 		};
 		reader.readAsText(file);
 	};
@@ -639,12 +641,15 @@ function loadModelFile(file) {
 
 const loadXML =
 module.exports.loadXML =
-function loadXML(xmlString) {
+function loadXML(xmlString, source) {
 	return (dispatch, getState) => {
 		dispatch({
 			type: constants.ACTION_loadXML,
 			xml: xmlString,
+			source,
 		});
+
+		const sourceIsFile = (source === 'file');
 
 		modelHelpers.xmlModelToGraph(xmlString, (err, result) => {
 			if (err) {
@@ -663,7 +668,11 @@ function loadXML(xmlString) {
 								`A model with this id exists already: ${modelId}`,
 								'Do you want to overwrite the existing one?'
 							].join('\n');
-							const cancelled = !confirm(msg);
+
+							// only ask, if model was loaded from local file
+							const cancelled = (sourceIsFile)
+								? !confirm(msg)
+								: false;
 
 							if (cancelled) {
 								const msg = [
