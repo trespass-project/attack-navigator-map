@@ -16,6 +16,7 @@ const OverlayTrigger = require('react-bootstrap').OverlayTrigger;
 const Tooltip = require('react-bootstrap').Tooltip;
 
 import JSONTree from 'react-json-tree';
+import { AutoSizer, FlexTable, FlexColumn, SortDirection } from 'react-virtualized';
 
 const ToolChainOverlay = require('./ToolChainOverlay.js');
 const PredicateEditor = require('./PredicateEditor.js');
@@ -190,23 +191,48 @@ const Wizard = React.createClass({
 
 			<h2 className='title'>Recent models</h2>
 			<div className='recent-models'>
-				<ul>
-					{props.recentModels
-						.map((model) => {
-							return <li key={model.model_id}>
-								<span className='title'>
-									<a
-										href='#'
-										onClick={R.partial(this.loadModelFromKb, [model.model_id])}
-									>
-										{model.title}
-									</a>
-								</span>
-								<span className='date'>{model['date-modified']}</span>
-							</li>;
-						})
-					}
-				</ul>
+				<AutoSizer>{
+					({ height, width }) => <FlexTable
+						width={width}
+						height={300}
+						disableHeader={false}
+						headerHeight={24}
+						rowHeight={24}
+						rowGetter={({ index }) => props.recentModels[index]}
+						rowCount={props.recentModels.length}
+						onRowClick={
+							({ index }) => {
+								this.loadModelFromKb(props.recentModels[index].model_id);
+							}
+						}
+					>
+					{/*
+						sort={
+							({ sortBy, sortDirection }) => {
+								console.log(sortBy, sortDirection);
+								return R.sortBy(R.prop(sortBy));
+							}
+						}
+					*/}
+						<FlexColumn
+							dataKey='title'
+							label='title'
+							className='title'
+							disableSort={false}
+							width={1}
+							flexGrow={1}
+						/>
+						<FlexColumn
+							dataKey='date-modified'
+							label='mod. date'
+							className='date'
+							disableSort={false}
+							width={1}
+							flexGrow={1}
+							flexShrink={0}
+						/>
+					</FlexTable>
+				}</AutoSizer>
 			</div>
 		</div>;
 	},
@@ -798,8 +824,7 @@ const Wizard = React.createClass({
 		this.context.dispatch( actionCreators.loadModelFile(file) );
 	},
 
-	loadModelFromKb(modelId, event) {
-		event.preventDefault();
+	loadModelFromKb(modelId) {
 		this.context.dispatch( actionCreators.loadModelFromKb(modelId) );
 	},
 
