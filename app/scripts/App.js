@@ -98,38 +98,43 @@ React.createClass({
 
 	render() {
 		const props = this.props;
+		const modelId = props.metadata.id;
+		const hasOpenMap = !!modelId;
 
 		return (
 			<div id='container'>
 				<input type='file' accept='.svg' id='add-file' />
 
-				<div id='layersControl'>
-					{props.availableLayersList
-						.map((layer) => {
-							return <div key={layer.name}>
-								<input
-									type='checkbox'
-									checked={!!props.activeLayers[layer.name]}
-									onChange={(event) => this.handleLayerChange(layer, event.target.checked)}
-								/> {layer.displayName}
-							</div>;
-						})
-					}
-				</div>
+				{(hasOpenMap)
+					? <div id='layersControl'>
+						{props.availableLayersList
+							.map((layer) => {
+								return <div key={layer.name}>
+									<input
+										type='checkbox'
+										checked={!!props.activeLayers[layer.name]}
+										onChange={(event) => this.handleLayerChange(layer, event.target.checked)}
+									/> {layer.displayName}
+								</div>;
+							})
+						}
+					</div>
+					: null
+				}
 
 				<div id='meta'>
-					{(props.metadata.id)
+					{(hasOpenMap)
 						? <div>
-							<div>model id: {props.metadata.id}</div>
+							<div>model id: {modelId}</div>
 							<div>title: {props.metadata.title}</div>
 						</div>
 						: ''
 					}
 
-					{(props.metadata.id)
+					{(hasOpenMap)
 						? <div>
 							<a
-								href={`${knowledgebaseApi.host}tkb/files/edit?model_id=${props.metadata.id}`}
+								href={`${knowledgebaseApi.host}tkb/files/edit?model_id=${modelId}`}
 								target='_blank'
 							>
 								edit knowledgebase files
@@ -165,32 +170,36 @@ React.createClass({
 				</div>
 
 				<div id='map-container'>
-					<div id='introduction'>
-						<div id='intro-box'>
-							<div>
-								<strong>Attack Navigator Map</strong>
-							</div>
+					{(!hasOpenMap)
+						? <div id='introduction'>
+							<div id='intro-box'>
+								<div>
+									<strong>Attack Navigator Map</strong>
+								</div>
 
-							<div>
-								Start by
-								<ul>
-									<li>creating a new map</li>
-									<li>loading a model file</li>
-									<li>opening an existing map</li>
-								</ul>
-							</div>
+								<div>
+									Start by
+									<ul>
+										<li>creating a new map</li>
+										<li>loading a model file</li>
+										<li>opening an existing map</li>
+									</ul>
+								</div>
 
-							<div>
-								<a target='_blank' href='https://docs.google.com/document/d/1Qp8nJgdvDespq1Q5zQcAT1SSTKK23m2XKMUKKmoKYQU/edit?usp=sharing'>Read the manual</a>
-							</div>
+								<div>
+									<a target='_blank' href='https://docs.google.com/document/d/1Qp8nJgdvDespq1Q5zQcAT1SSTKK23m2XKMUKKmoKYQU/edit?usp=sharing'>Read the manual</a>
+								</div>
 
-							<div>
-								<a href='https://gitlab.com/freder/anm-feedback/issues' target='_blank'>Report an issue</a>
+								<div>
+									<a href='https://gitlab.com/freder/anm-feedback/issues' target='_blank'>Report an issue</a>
+								</div>
 							</div>
 						</div>
-					</div>
+						: null
+					}
+
 					<div id='map'>
-						<GraphEditor id='editor' {...props} />
+						<GraphEditor id='editor' hasOpenMap={hasOpenMap} {...props} />
 					</div>
 				</div>
 
@@ -206,7 +215,7 @@ React.createClass({
 				</div>*/}
 
 				<div id='panel-container'>
-					<Wizard {...props} />
+					<Wizard hasOpenMap={hasOpenMap} {...props} />
 				</div>
 			</div>
 		);

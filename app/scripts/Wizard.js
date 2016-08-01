@@ -113,6 +113,7 @@ const Wizard = React.createClass({
 	renderMinimap(props) {
 		return <GraphMinimap
 			id='minimap'
+			hasOpenMap={props.hasOpenMap}
 			graph={props.graph}
 			theme={this.context.theme}
 			showEdges={true}
