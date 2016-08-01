@@ -80,6 +80,7 @@ function initMap(modelId, metadata, anmData={}) {
 			});
 
 			dispatch( fetchKbData(modelId) );
+			dispatch( selectWizardStep('patterns') );
 
 			resolve();
 		});
@@ -606,6 +607,7 @@ function setPannable(yesno) {
 };
 
 
+const selectWizardStep =
 module.exports.selectWizardStep =
 function selectWizardStep(name) {
 	return {

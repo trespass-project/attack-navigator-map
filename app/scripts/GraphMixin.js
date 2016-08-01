@@ -227,6 +227,7 @@ const GraphMixin = {
 		const classNames = classnames(
 			'graph',
 			{
+				'open': props.hasOpenMap,
 				'editable': props.editable,
 				'not-editable': !props.editable,
 				'pannable': props.pannable,
