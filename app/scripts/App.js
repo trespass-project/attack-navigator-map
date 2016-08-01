@@ -3,6 +3,7 @@ const React = require('react');
 const fs = require('fs');
 const pkg = JSON.parse(fs.readFileSync('./package.json').toString());
 
+const constants = require('./constants.js');
 const actionCreators = require('./actionCreators.js');
 const knowledgebaseApi = require('trespass.js').api.knowledgebase;
 
@@ -166,7 +167,11 @@ React.createClass({
 						: ''
 					}
 
-					ANM {pkg.version}
+					<span>ANM {pkg.version}</span>
+					{(hasOpenMap)
+						? <span> · <a href={constants.manualUrl} target='_blank'>manual</a> · <a href={constants.issueTrackerUrl} target='_blank'>issue tracker</a></span>
+						: null
+					}
 				</div>
 
 				<div id='map-container'>
@@ -187,11 +192,11 @@ React.createClass({
 								</div>
 
 								<div>
-									<a target='_blank' href='https://docs.google.com/document/d/1Qp8nJgdvDespq1Q5zQcAT1SSTKK23m2XKMUKKmoKYQU/edit?usp=sharing'>Read the manual</a>
+									<a href={constants.manualUrl} target='_blank'>Read the manual</a>
 								</div>
 
 								<div>
-									<a href='https://gitlab.com/freder/anm-feedback/issues' target='_blank'>Report an issue</a>
+									<a href={constants.issueTrackerUrl} target='_blank'>Report an issue</a>
 								</div>
 							</div>
 						</div>
