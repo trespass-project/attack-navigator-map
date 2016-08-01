@@ -18,7 +18,7 @@ const relationsLib = require('./relation-lib.js');
 
 const modelFileName = 'model.xml';
 const scenarioFileName = 'scenario.xml';
-const zipFileName = 'scenario.zip';
+const scenarioZipName = 'scenario.zip';
 
 
 const noop = () => {};
@@ -767,7 +767,7 @@ function downloadZippedScenario(modelId) {
 					scenarioXmlStr,
 					scenarioFileName
 				);
-				saveAs(zipBlob, zipFileName);
+				saveAs(zipBlob, scenarioZipName);
 			});
 	};
 };
@@ -1148,7 +1148,7 @@ function runAnalysis(modelId, toolChainId, downloadScenario=false) {
 						scenarioFileName
 					)
 						.then((zipBlob) => {
-							saveAs(zipBlob, zipFileName);
+							saveAs(zipBlob, scenarioZipName);
 						});
 				}
 
