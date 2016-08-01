@@ -1,4 +1,7 @@
 const constants = {
+	manualUrl: 'https://docs.google.com/document/d/1Qp8nJgdvDespq1Q5zQcAT1SSTKK23m2XKMUKKmoKYQU/edit?usp=sharing',
+	issueTrackerUrl: 'https://gitlab.com/freder/anm-feedback/issues',
+
 	GRAPH: 'graph',
 	INTERFACE: 'interface',
 

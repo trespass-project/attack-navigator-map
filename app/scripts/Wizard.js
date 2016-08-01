@@ -65,11 +65,14 @@ const Tab = React.createClass({
 		icon: React.PropTypes.string.isRequired,
 		tooltip: React.PropTypes.string.isRequired,
 		handleClick: React.PropTypes.func.isRequired,
+		isDisabled: React.PropTypes.bool,
 	},
 
-	// getDefaultProps() {
-	// 	return {};
-	// },
+	getDefaultProps() {
+		return {
+			isDisabled: false,
+		};
+	},
 
 	render() {
 		const props = this.props;
@@ -79,19 +82,27 @@ const Tab = React.createClass({
 		// 	: props.icon;
 		const imgSrc = props.icon;
 
-		return <OverlayTrigger
-			placement='left'
-			overlay={<Tooltip id={props.name}>{props.tooltip}</Tooltip>}
+		const onClick = (!props.isDisabled)
+			? props.handleClick
+			: () => {};
+
+		const tooltip = <Tooltip id={props.name}>{props.tooltip}</Tooltip>;
+		const tab = <div
+			className={classnames(
+				'step-icon',
+				{ selected: isSelected },
+				{ disabled: props.isDisabled }
+			)}
+			onClick={onClick}
 		>
-			<div
-				className={classnames('step-icon',
-					{ selected: isSelected })
-				}
-				onClick={props.handleClick}
-			>
-				<img src={imgSrc} />
-			</div>
-		</OverlayTrigger>;
+			<img src={imgSrc} />
+		</div>;
+
+		return (!props.isDisabled)
+			? <OverlayTrigger placement='left' overlay={tooltip} >
+				{tab}
+			</OverlayTrigger>
+			: tab;
 	},
 });
 
@@ -112,6 +123,7 @@ const Wizard = React.createClass({
 	renderMinimap(props) {
 		return <GraphMinimap
 			id='minimap'
+			hasOpenMap={props.hasOpenMap}
 			graph={props.graph}
 			theme={this.context.theme}
 			showEdges={true}
@@ -146,7 +158,6 @@ const Wizard = React.createClass({
 		const props = this.props;
 
 		return <div>
-			<UsageHint>start here ...</UsageHint>
 			<h2 className='title'>New</h2>
 			<button
 				onClick={this.clickCreateNew}
@@ -158,7 +169,6 @@ const Wizard = React.createClass({
 			<br />
 			<br />
 
-			<UsageHint>... or here ...</UsageHint>
 			<h2 className='title'>Import</h2>
 			<input
 				style={{ display: 'none' }}
@@ -178,7 +188,6 @@ const Wizard = React.createClass({
 			<br />
 			<br />
 
-			<UsageHint>... or here</UsageHint>
 			<h2 className='title'>Recent models</h2>
 			<div className='recent-models'>
 				<ul>
@@ -199,10 +208,12 @@ const Wizard = React.createClass({
 					}
 				</ul>
 			</div>
+		</div>;
+	},
 
-			<hr />
-			<br />
-
+	renderPatterns() {
+		const props = this.props;
+		return <div>
 			<div className='pattern-lib'>
 				<Library
 					items={props.modelPatterns}
@@ -600,15 +611,66 @@ const Wizard = React.createClass({
 		const wizardSelectedSection = props.wizardSelectedSection;
 
 		const wizardSteps = {
-			'import': { renderFn: this.renderImport },
-			'locations': { renderFn: this.renderLocations },
-			'assets': { renderFn: this.renderAssets },
-			'actors': { renderFn: this.renderActors },
-			'connections': { renderFn: this.renderConnections },
-			'policies': { renderFn: this.renderPolicies },
-			'processes': { renderFn: this.renderProcesses },
-			'attackerprofile': { renderFn: this.renderAttackerProfile },
-			'runanalysis': { renderFn: this.renderRunAnalysis },
+			'import': {
+				icon: 'images/icons/import-01.svg',
+				tooltip: 'Import / create model',
+				handleClick: R.partial(this.selectWizardStep, ['import']),
+				renderFn: this.renderImport,
+			},
+			'patterns': {
+				icon: 'images/icons/import-01.svg',
+				tooltip: 'Model patterns',
+				handleClick: R.partial(this.selectWizardStep, ['patterns']),
+				renderFn: this.renderPatterns,
+			},
+			'locations': {
+				icon: 'images/icons/location-01.svg',
+				tooltip: 'Locations',
+				handleClick: R.partial(this.selectWizardStep, ['locations']),
+				renderFn: this.renderLocations,
+			},
+			'assets': {
+				icon: 'images/icons/assets-01.svg',
+				tooltip: 'Assets',
+				handleClick: R.partial(this.selectWizardStep, ['assets']),
+				renderFn: this.renderAssets,
+			},
+			'actors': {
+				icon: 'images/icons/actors-01.svg',
+				tooltip: 'Actors',
+				handleClick: R.partial(this.selectWizardStep, ['actors']),
+				renderFn: this.renderActors,
+			},
+			'connections': {
+				icon: 'images/icons/edges-01.svg',
+				tooltip: 'Connections',
+				handleClick: R.partial(this.selectWizardStep, ['connections']),
+				renderFn: this.renderConnections,
+			},
+			'policies': {
+				icon: 'images/icons/policies-01.svg',
+				tooltip: 'Policies',
+				handleClick: R.partial(this.selectWizardStep, ['policies']),
+				renderFn: this.renderPolicies,
+			},
+			'processes': {
+				icon: 'images/icons/connections-01.svg',
+				tooltip: 'Processes',
+				handleClick: R.partial(this.selectWizardStep, ['processes']),
+				renderFn: this.renderProcesses,
+			},
+			'attackerprofile': {
+				icon: 'images/icons/attacker_profile-01.svg',
+				tooltip: 'Attacker profile',
+				handleClick: R.partial(this.selectWizardStep, ['attackerprofile']),
+				renderFn: this.renderAttackerProfile,
+			},
+			'runanalysis': {
+				icon: 'images/icons/run-01.svg',
+				tooltip: 'Run analysis',
+				handleClick: R.partial(this.selectWizardStep, ['runanalysis']),
+				renderFn: this.renderRunAnalysis,
+			},
 		};
 
 		const defaultRenderFn = () => {
@@ -628,69 +690,21 @@ const Wizard = React.createClass({
 
 				<div id='wizard-container'>
 					<div id='steps-container'>
-						<Tab
-							name='import'
-							selectedSection={wizardSelectedSection}
-							icon='images/icons/import-01.svg'
-							tooltip='Import / create model'
-							handleClick={R.partial(this.selectWizardStep, ['import'])}
-						/>
-						<Tab
-							name='locations'
-							selectedSection={wizardSelectedSection}
-							icon='images/icons/location-01.svg'
-							tooltip='Locations'
-							handleClick={R.partial(this.selectWizardStep, ['locations'])}
-						/>
-						<Tab
-							name='assets'
-							selectedSection={wizardSelectedSection}
-							icon='images/icons/assets-01.svg'
-							tooltip='Assets'
-							handleClick={R.partial(this.selectWizardStep, ['assets'])}
-						/>
-						<Tab
-							name='actors'
-							selectedSection={wizardSelectedSection}
-							icon='images/icons/actors-01.svg'
-							tooltip='Actors'
-							handleClick={R.partial(this.selectWizardStep, ['actors'])}
-						/>
-						<Tab
-							name='connections'
-							selectedSection={wizardSelectedSection}
-							icon='images/icons/edges-01.svg'
-							tooltip='Connections'
-							handleClick={R.partial(this.selectWizardStep, ['connections'])}
-						/>
-						<Tab
-							name='policies'
-							selectedSection={wizardSelectedSection}
-							icon='images/icons/policies-01.svg'
-							tooltip='Policies'
-							handleClick={R.partial(this.selectWizardStep, ['policies'])}
-						/>
-						<Tab
-							name='processes'
-							selectedSection={wizardSelectedSection}
-							icon='images/icons/connections-01.svg'
-							tooltip='Processes'
-							handleClick={R.partial(this.selectWizardStep, ['processes'])}
-						/>
-						<Tab
-							name='attackerprofile'
-							selectedSection={wizardSelectedSection}
-							icon='images/icons/attacker_profile-01.svg'
-							tooltip='Attacker profile'
-							handleClick={R.partial(this.selectWizardStep, ['attackerprofile'])}
-						/>
-						<Tab
-							name='runanalysis'
-							selectedSection={wizardSelectedSection}
-							icon='images/icons/run-01.svg'
-							tooltip='Run analysis'
-							handleClick={R.partial(this.selectWizardStep, ['runanalysis'])}
-						/>
+						{R.keys(wizardSteps)
+							.map((stepName) => {
+								const step = wizardSteps[stepName];
+								const isDisabled = !props.hasOpenMap && (stepName !== 'import');
+								return <Tab
+									key={stepName}
+									name={stepName}
+									isDisabled={isDisabled}
+									selectedSection={wizardSelectedSection}
+									icon={step.icon}
+									tooltip={step.tooltip}
+									handleClick={step.handleClick}
+								/>;
+							})
+						}
 					</div>
 
 					{renderFn(props)}

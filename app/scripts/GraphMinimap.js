@@ -68,7 +68,8 @@ const GraphMinimap = React.createClass({
 					panY={transform.pan.y}
 					showNodeLabels={showNodeLabels}
 					showEdgeLabels={showEdgeLabels}
-					showGroupLabels={showGroupLabels} />
+					showGroupLabels={showGroupLabels}
+				/>
 			</div>
 		);
 	},
