@@ -1088,9 +1088,8 @@ function humanizeModelIds() {
 			type: constants.ACTION_humanizeModelIds,
 			done: (_idReplacementMap) => {
 				idReplacementMap = _idReplacementMap;
-
-				// TODO: should not rely on state
 				const modelId = getState().model.metadata.id;
+
 				// update ids in kb
 				promises = R.toPairs(idReplacementMap)
 					.map((pair) => {
