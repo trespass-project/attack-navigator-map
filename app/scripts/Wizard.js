@@ -84,9 +84,10 @@ const Tab = React.createClass({
 			overlay={<Tooltip id={props.name}>{props.tooltip}</Tooltip>}
 		>
 			<div
-				className={classnames('step-icon',
-					{ selected: isSelected })
-				}
+				className={classnames(
+					'step-icon',
+					{ selected: isSelected }
+				)}
 				onClick={props.handleClick}
 			>
 				<img src={imgSrc} />
@@ -199,10 +200,12 @@ const Wizard = React.createClass({
 					}
 				</ul>
 			</div>
+		</div>;
+	},
 
-			<hr />
-			<br />
-
+	renderPatterns() {
+		const props = this.props;
+		return <div>
 			<div className='pattern-lib'>
 				<Library
 					items={props.modelPatterns}
@@ -601,6 +604,7 @@ const Wizard = React.createClass({
 
 		const wizardSteps = {
 			'import': { renderFn: this.renderImport },
+			'patterns': { renderFn: this.renderPatterns },
 			'locations': { renderFn: this.renderLocations },
 			'assets': { renderFn: this.renderAssets },
 			'actors': { renderFn: this.renderActors },
@@ -634,6 +638,13 @@ const Wizard = React.createClass({
 							icon='images/icons/import-01.svg'
 							tooltip='Import / create model'
 							handleClick={R.partial(this.selectWizardStep, ['import'])}
+						/>
+						<Tab
+							name='patterns'
+							selectedSection={wizardSelectedSection}
+							icon='images/icons/import-01.svg'
+							tooltip='Model patterns'
+							handleClick={R.partial(this.selectWizardStep, ['patterns'])}
 						/>
 						<Tab
 							name='locations'
