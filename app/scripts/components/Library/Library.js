@@ -101,10 +101,6 @@ const Library = React.createClass({
 				</div>
 				{this.renderFilter()}
 
-				<UsageHint>
-					drag and drop items from list onto the map
-				</UsageHint>
-
 				<div className='results'>
 					<ul className='list-group'>
 						{itemsFiltered.map(this.renderListItem)}
