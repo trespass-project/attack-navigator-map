@@ -105,30 +105,39 @@ module.exports.anmDataPickFromState = [
 
 
 // after making labels human-readable,
-// we also need the ids in some parts of the state
+// we also need to update the ids in some parts of the state
 function updateStateIds(idReplacementMap, state) {
 	function replaceOrNot(currentId) {
 		return idReplacementMap[currentId] || currentId;
 	}
 
-	return update(
-		state,
-		{
-			attackerActorId: {
-				$set: replaceOrNot(state.attackerActorId)
-			},
-			toolChainId: {
-				$set: replaceOrNot(state.toolChainId)
-			},
-			attackerGoal: {
-				assetGoal: {
-					asset: {
-						$set: replaceOrNot(state.attackerGoal.assetGoal.asset)
-					}
+	const updateData = {};
+
+	if (state.attackerActorId) {
+		updateData.attackerActorId = {
+			$set: replaceOrNot(state.attackerActorId)
+		};
+	}
+
+	if (state.toolChainId) {
+		updateData.toolChainId = {
+			$set: replaceOrNot(state.toolChainId)
+		};
+	}
+
+	if (state.attackerGoal
+		&& state.attackerGoal.assetGoal
+		&& state.attackerGoal.assetGoal.asset) {
+		updateData.attackerGoal = {
+			assetGoal: {
+				asset: {
+					$set: replaceOrNot(state.attackerGoal.assetGoal.asset)
 				}
-			},
-		}
-	);
+			}
+		};
+	}
+
+	return update(state, updateData);
 }
 
 
