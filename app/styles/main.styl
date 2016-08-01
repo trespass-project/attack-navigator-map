@@ -384,10 +384,24 @@ svg.graph
 		clear: both
 
 	.title
-		color: $trespass_black
+		margin-bottom: 0px
 
 	.date
-		&::before
-			content: ' '
 		color: $trespass_grey_light
-		float: right
+
+	.FlexTable__row:hover
+		background-color: $trespass_red
+		cursor: pointer
+
+
+.FlexTable__headerColumn:first-of-type, .FlexTable__rowColumn:first-of-type {
+	margin-left: 0px;
+}
+
+.FlexTable__headerColumn, .FlexTable__rowColumn {
+	margin-right: 0px;
+}
+
+.FlexTable__headerRow {
+	text-transform: capitalize;
+}
