@@ -34,6 +34,11 @@
 		.step-icon img
 			width: 100%
 
+		transition: opacity 0.5s
+		.step-icon.disabled
+			cursor: default
+			opacity: 0.0
+
 		// currently selected one
 		.step-icon.selected
 			background-color: $wizard-selectedColor

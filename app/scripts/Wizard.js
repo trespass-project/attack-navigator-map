@@ -65,11 +65,14 @@ const Tab = React.createClass({
 		icon: React.PropTypes.string.isRequired,
 		tooltip: React.PropTypes.string.isRequired,
 		handleClick: React.PropTypes.func.isRequired,
+		isDisabled: React.PropTypes.bool,
 	},
 
-	// getDefaultProps() {
-	// 	return {};
-	// },
+	getDefaultProps() {
+		return {
+			isDisabled: false,
+		};
+	},
 
 	render() {
 		const props = this.props;
@@ -79,20 +82,27 @@ const Tab = React.createClass({
 		// 	: props.icon;
 		const imgSrc = props.icon;
 
-		return <OverlayTrigger
-			placement='left'
-			overlay={<Tooltip id={props.name}>{props.tooltip}</Tooltip>}
+		const onClick = (!props.isDisabled)
+			? props.handleClick
+			: () => {};
+
+		const tooltip = <Tooltip id={props.name}>{props.tooltip}</Tooltip>;
+		const tab = <div
+			className={classnames(
+				'step-icon',
+				{ selected: isSelected },
+				{ disabled: props.isDisabled }
+			)}
+			onClick={onClick}
 		>
-			<div
-				className={classnames(
-					'step-icon',
-					{ selected: isSelected }
-				)}
-				onClick={props.handleClick}
-			>
-				<img src={imgSrc} />
-			</div>
-		</OverlayTrigger>;
+			<img src={imgSrc} />
+		</div>;
+
+		return (!props.isDisabled)
+			? <OverlayTrigger placement='left' overlay={tooltip} >
+				{tab}
+			</OverlayTrigger>
+			: tab;
 	},
 });
 
@@ -683,9 +693,11 @@ const Wizard = React.createClass({
 						{R.keys(wizardSteps)
 							.map((stepName) => {
 								const step = wizardSteps[stepName];
+								const isDisabled = !props.hasOpenMap && (stepName !== 'import');
 								return <Tab
 									key={stepName}
 									name={stepName}
+									isDisabled={isDisabled}
 									selectedSection={wizardSelectedSection}
 									icon={step.icon}
 									tooltip={step.tooltip}
