@@ -228,7 +228,7 @@ function reducer(state=initialState, action) {
 				models
 			);
 
-			return mergeWithState({ recentModels: R.take(5, models) });
+			return mergeWithState({ recentModels: /*R.take(5, */models/*)*/ });
 		}
 
 		case 'ACTION_humanizeModelIds_updateInterfaceState': {
