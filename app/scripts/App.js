@@ -161,28 +161,34 @@ React.createClass({
 						: ''
 					}
 
-					<hr style={{ marginTop: 5, marginBottom: 5 }} />
-					ANM {pkg.version}<br />
-					<UsageHint>
-						<a
-							target='_blank'
-							href='https://docs.google.com/document/d/1Qp8nJgdvDespq1Q5zQcAT1SSTKK23m2XKMUKKmoKYQU/edit?usp=sharing'
-						>
-							manual
-						</a>
-					</UsageHint>
-
-					<UsageHint>
-						<a
-							href='https://gitlab.com/freder/anm-feedback/issues'
-							target='_blank'
-						>
-							report bug / give feedback
-						</a>
-					</UsageHint>
+					ANM {pkg.version}
 				</div>
 
 				<div id='map-container'>
+					<div id='introduction'>
+						<div id='intro-box'>
+							<div>
+								<strong>Attack Navigator Map</strong>
+							</div>
+
+							<div>
+								Start by
+								<ul>
+									<li>creating a new map</li>
+									<li>loading a model file</li>
+									<li>opening an existing map</li>
+								</ul>
+							</div>
+
+							<div>
+								<a target='_blank' href='https://docs.google.com/document/d/1Qp8nJgdvDespq1Q5zQcAT1SSTKK23m2XKMUKKmoKYQU/edit?usp=sharing'>Read the manual</a>
+							</div>
+
+							<div>
+								<a href='https://gitlab.com/freder/anm-feedback/issues' target='_blank'>Report an issue</a>
+							</div>
+						</div>
+					</div>
 					<div id='map'>
 						<GraphEditor id='editor' {...props} />
 					</div>
