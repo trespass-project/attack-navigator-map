@@ -540,10 +540,9 @@ const Wizard = React.createClass({
 
 	renderRunAnalysis(props) {
 		function pushIfFalsey(acc, item) {
-			if (!item.value) {
-				acc = [...acc, item.message];
-			}
-			return acc;
+			return (!item.value)
+				? [...acc, item.message]
+				: acc;
 		}
 
 		const missingForScenario = [
@@ -559,14 +558,9 @@ const Wizard = React.createClass({
 
 		// check if all actors have a an `tkb:actor_type`
 		const otherWarnings = R.values(props.graph.nodes)
-			// .filter(R.propEq('type', 'tkb:actor'))
 			.filter(R.propEq('modelComponentType', 'actor'))
-			.filter((item) => {
-				return !item['tkb:actor_type'];
-			})
-			.map((item) => {
-				return `Actor "${item.label}" does not have an actor type`;
-			});
+			.filter((item) => !item['tkb:actor_type'])
+			.map((item) => `Actor "${item.label}" does not have an actor type`);
 
 		const isReadyToDownload = (missingForScenario.length === 0);
 		const isReadyToRun = (missingForAnalysis.length === 0);
