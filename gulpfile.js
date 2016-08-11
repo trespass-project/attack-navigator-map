@@ -84,9 +84,7 @@ function rebundle() {
 		.on('error', $.util.log.bind($.util, 'browserify error'))
 		.pipe(source(destFileName))
 		.pipe(gulp.dest(tempDir(scriptsDir())))
-		.on('end', () => {
-			reload();
-		});
+		/*.on('end', reload)*/;
 }
 
 
@@ -111,7 +109,7 @@ gulp.task('styles', () => {
 		.pipe($.autoprefixer({ browsers: ['last 2 versions'] }))
 		.pipe($.sourcemaps.write())
 		.pipe(gulp.dest(tempDir(stylesDir())))
-		.pipe(reload({ stream: true }));
+		/*.pipe(reload({ stream: true }))*/;
 });
 
 
@@ -213,13 +211,13 @@ gulp.task('serve', ['scripts', 'styles', 'fonts'], () => {
 		}
 	);
 
-	gulp.watch([
-		appDir('*.html'),
-		tempDir('*.html'),
-		// appDir(scriptsDir('**/*.js')),
-		appDir(imagesDir('**/*')),
-		tempDir(fontsDir('**/*'))
-	]).on('change', reload);
+	// gulp.watch([
+	// 	appDir('*.html'),
+	// 	tempDir('*.html'),
+	// 	// appDir(scriptsDir('**/*.js')),
+	// 	appDir(imagesDir('**/*')),
+	// 	tempDir(fontsDir('**/*'))
+	// ]).on('change', reload);
 
 	gulp.watch(appDir(stylesDir('**/*.{sass,scss,styl}')), ['styles']);
 	gulp.watch(appDir(fontsDir('**/*')), ['fonts']);
