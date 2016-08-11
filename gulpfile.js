@@ -221,9 +221,12 @@ gulp.task('serve', ['scripts', 'styles', 'fonts'], () => {
 	// ]).on('change', reload);
 
 	watch(appDir(stylesDir('**/*.{sass,scss,styl}')), ['styles']);
-	watch(appDir(fontsDir('**/*')), ['fonts']);
-	watch(appDir(iconsDir('*.svg')), ['fontcustom']);
-	gulp.start('fontcustom');
+
+	// watch(appDir(fontsDir('**/*')), ['fonts']);
+	// gulp.start('fonts');
+
+	// watch(appDir(iconsDir('*.svg')), ['fontcustom']);
+	// gulp.start('fontcustom');
 });
 
 
