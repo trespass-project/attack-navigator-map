@@ -1,4 +1,5 @@
 const R = require('ramda');
+import { createSelector } from 'reselect';
 const React = require('react');
 const reactDOM = require('react-dom');
 import { createStore, combineReducers, applyMiddleware } from 'redux';
@@ -41,6 +42,26 @@ function mapStateToProps(_state) {
 			(acc, layer) => (layer.adjustProps || R.identity)(acc),
 			state
 		);
+
+	// validation
+	const getNodes = (state) => state.graph.nodes;
+	const getNodeWarnings = createSelector(
+		getNodes,
+		(nodes) => {
+			/* eslint no-param-reassign: 0 */
+			return R.values(nodes)
+				.filter(R.propEq('modelComponentType', 'actor'))
+				.filter((item) => !item['tkb:actor_type'])
+				.reduce((acc, item) => {
+					const message = 'is missing actor type';
+					acc[item.id] = { id: item.id, message, };
+					return acc;
+				}, {});
+		}
+	);
+	props.validation = {
+		componentWarnings: getNodeWarnings(props),
+	};
 
 	return props;
 }

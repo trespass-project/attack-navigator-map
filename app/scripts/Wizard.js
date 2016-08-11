@@ -557,10 +557,12 @@ const Wizard = React.createClass({
 		].reduce(pushIfFalsey, missingForScenario);
 
 		// check if all actors have a an `tkb:actor_type`
-		const otherWarnings = R.values(props.graph.nodes)
-			.filter(R.propEq('modelComponentType', 'actor'))
-			.filter((item) => !item['tkb:actor_type'])
-			.map((item) => `Actor "${item.label}" does not have an actor type`);
+		const componentWarnings = props.validation.componentWarnings;
+		const otherWarnings = R.values(componentWarnings)
+			.map((item) => {
+				const node = props.graph.nodes[item.id];
+				return `${node.modelComponentType} "${node.label}" ${item.message}`;
+			});
 
 		const isReadyToDownload = (missingForScenario.length === 0);
 		const isReadyToRun = (missingForAnalysis.length === 0);

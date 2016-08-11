@@ -35,16 +35,8 @@ const ValidationLayer = React.createClass({
 		const { theme } = this.context;
 
 		// TODO: what other warnings can we show?
-		// TODO: do this somewhere higher up, so that same warnings can
-		// be used in wizard, as well (DRY)
-		const warnings = R.values(props.graph.nodes)
-			.filter(R.propEq('modelComponentType', 'actor'))
-			.filter((item) => !item['tkb:actor_type'])
-			.reduce((acc, item) => {
-				const message = 'missing actor type';
-				acc[item.id] = message;
-				return acc;
-			}, {});
+		const componentWarnings = props.validation.componentWarnings;
+		const warnings = R.values(componentWarnings);
 
 		const r = theme.node.size + theme.node.cornerRadius;
 		const yShift = 6; // TODO: get label font size
@@ -67,12 +59,10 @@ const ValidationLayer = React.createClass({
 		}
 
 		return <g className='layer validationLayer'>
-			{R.values(props.graph.nodes)
-				.map((node) => {
-					const message = warnings[node.id];
-					return (!message)
-						? null
-						: renderItem(node, message);
+			{warnings
+				.map((item) => {
+					const { message, id } = item;
+					return renderItem(props.graph.nodes[id], message);
 				})
 			}
 		</g>;
