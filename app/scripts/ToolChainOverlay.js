@@ -12,11 +12,14 @@ const ToolChainOverlay = React.createClass({
 		toolChain: React.PropTypes.object.isRequired,
 		taskStatusCategorized: React.PropTypes.object/*.isRequired*/,
 		analysisResults: React.PropTypes.object/*.isRequired*/,
+		onClose: React.PropTypes.func,
 	},
 
-	// getDefaultProps: function() {
-	// 	return {};
-	// },
+	getDefaultProps: function() {
+		return {
+			onClose: () => {},
+		};
+	},
 
 	renderCompleted: function(item, index) {
 		const hasResult = !!item.result_file_url;
@@ -77,7 +80,11 @@ const ToolChainOverlay = React.createClass({
 
 		const resultsReady = !!props.analysisResults;
 
-		return <div id='task-overlay' style={{ overflowY: 'auto', overflowX: 'hidden' }}>
+		return <div id='task-overlay'>
+			<div className='close-x' onClick={this.onClose}>
+				×
+			</div>
+
 			<div>
 				{(!toolChain)
 					? 'Tool chain not found.'
@@ -109,11 +116,8 @@ const ToolChainOverlay = React.createClass({
 		</div>;
 	},
 
-	onClose: function(event) {
-		const props = this.props;
-		if (props.onClose) {
-			props.onClose();
-		}
+	onClose: function() {
+		this.props.onClose();
 	},
 });
 
