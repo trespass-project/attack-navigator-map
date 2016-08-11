@@ -17,7 +17,7 @@
     "babelify": "^7.3.0",
     "brfs": "^1.4.3",
     "browser-sync": "^2.14.0",
-    "browserify": "^10.2.6",
+    "browserify": "^13.1.0",
     "chalk": "^1.1.1",
     "del": "^1.1.1",
     "eslint": "^2.8.0",
