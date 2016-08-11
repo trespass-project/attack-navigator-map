@@ -7,8 +7,9 @@ const notifier = require('node-notifier');
 const execSync = require('child_process').execSync;
 const koutoSwiss = require('kouto-swiss');
 
+const watch = require('gulp-watch');
 const $ = gulpLoadPlugins();
-const reload = browserSync.reload;
+// const reload = browserSync.reload;
 
 function _dir(name, p='') {
 	return path.join(name, p);
@@ -211,7 +212,7 @@ gulp.task('serve', ['scripts', 'styles', 'fonts'], () => {
 		}
 	);
 
-	// gulp.watch([
+	// watch([
 	// 	appDir('*.html'),
 	// 	tempDir('*.html'),
 	// 	// appDir(scriptsDir('**/*.js')),
@@ -219,9 +220,9 @@ gulp.task('serve', ['scripts', 'styles', 'fonts'], () => {
 	// 	tempDir(fontsDir('**/*'))
 	// ]).on('change', reload);
 
-	gulp.watch(appDir(stylesDir('**/*.{sass,scss,styl}')), ['styles']);
-	gulp.watch(appDir(fontsDir('**/*')), ['fonts']);
-	gulp.watch(appDir(iconsDir('*.svg')), ['fontcustom']);
+	watch(appDir(stylesDir('**/*.{sass,scss,styl}')), ['styles']);
+	watch(appDir(fontsDir('**/*')), ['fonts']);
+	watch(appDir(iconsDir('*.svg')), ['fontcustom']);
 	gulp.start('fontcustom');
 });
 
