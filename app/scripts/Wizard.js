@@ -539,11 +539,12 @@ const Wizard = React.createClass({
 	},
 
 	renderRunAnalysis(props) {
+		const dispatch = this.context.dispatch;
+
 		function pushIfFalsey(acc, item) {
-			if (!item.value) {
-				acc = [...acc, item.message];
-			}
-			return acc;
+			return (!item.value)
+				? [...acc, item.message]
+				: acc;
 		}
 
 		const missingForScenario = [
@@ -557,16 +558,25 @@ const Wizard = React.createClass({
 			{ value: props.toolChainId, message: 'No toolchain selected' },
 		].reduce(pushIfFalsey, missingForScenario);
 
-		// check if all actors have a an `tkb:actor_type`
-		const otherWarnings = R.values(props.graph.nodes)
-			// .filter(R.propEq('type', 'tkb:actor'))
-			.filter(R.propEq('modelComponentType', 'actor'))
-			.filter((item) => {
-				return !item['tkb:actor_type'];
-			})
+		const otherWarnings = R.values(props.validation.componentWarnings)
 			.map((item) => {
-				return `Actor "${item.label}" does not have an actor type`;
-			});
+				const node = props.graph.nodes[item.id];
+				return item.messages
+					.map((message, index) => {
+						const hoverable = <strong
+							onMouseEnter={
+								() => { dispatch( actionCreators.setHighlighted([node.id]) ); }
+							}
+							onMouseLeave={
+								() => { dispatch( actionCreators.setHighlighted([]) ); }
+							}
+						>
+							{`${node.modelComponentType} "${node.label}"`}
+						</strong>;
+						return <li key={`${node.id}-${index}`}>{hoverable} {message}</li>;
+					});
+			})
+			.reduce((acc, messages) => [...acc, ...messages], []);
 
 		const isReadyToDownload = (missingForScenario.length === 0);
 		const isReadyToRun = (missingForAnalysis.length === 0);
@@ -587,9 +597,7 @@ const Wizard = React.createClass({
 					: <h3>Problems</h3>
 				}
 				<ul>
-					{otherWarnings
-						.map(item => <li key={item}>{item}</li>)
-					}
+					{otherWarnings}
 				</ul>
 				<ul>
 					{missingForAnalysis

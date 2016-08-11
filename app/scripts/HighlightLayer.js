@@ -11,14 +11,14 @@ module.exports.displayName = 'highlight layer';
 
 
 const adjustProps =
-module.exports.adjustProps =
-function adjustProps(props) {
+module.exports.adjustProps = undefined
+/*function adjustProps(props) {
 	return Object.assign(
 		{},
 		props,
 		{ highlightIds: R.keys(props.graph.nodes) }
 	);
-};
+}*/;
 
 
 const HighlightLayer = React.createClass({
@@ -41,6 +41,9 @@ const HighlightLayer = React.createClass({
 		const props = this.props;
 		const { theme } = this.context;
 
+		if (!props.highlightIds.length) {
+			return null;
+		}
 		const nodes = props.highlightIds
 			.map((id) => props.graph.nodes[id]);
 
