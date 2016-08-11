@@ -1,8 +1,5 @@
-'use strict';
-
 const R = require('ramda');
 const React = require('react');
-const classnames = require('classnames');
 const Loader = require('react-loader');
 import AnalyticsComponent from './AnalysisVisualization/AnalyticsComponent.js';
 
@@ -15,13 +12,17 @@ const ToolChainOverlay = React.createClass({
 		onClose: React.PropTypes.func,
 	},
 
-	getDefaultProps: function() {
+	getDefaultProps() {
 		return {
 			onClose: () => {},
 		};
 	},
 
-	renderCompleted: function(item, index) {
+	onClose() {
+		this.props.onClose();
+	},
+
+	renderCompleted(item, index) {
 		const hasResult = !!item.result_file_url;
 		return <h3 className='completed' key={item.name}>
 			{item.name} ✔
@@ -32,7 +33,7 @@ const ToolChainOverlay = React.createClass({
 		</h3>;
 	},
 
-	renderCurrent: function(item, index) {
+	renderCurrent(item, index) {
 		const hasError = (item.status === 'error');
 		return <h3 className='current' key={item.name}>
 			{item.name}
@@ -43,17 +44,17 @@ const ToolChainOverlay = React.createClass({
 					length={4}
 					width={2.5}
 					lines={10}
-					radius={5} >
-				</Loader>
+					radius={5}
+				/>
 			}
 		</h3>;
 	},
 
-	renderPending: function(item, index) {
+	renderPending(item, index) {
 		return <h3 className='pending' key={item.name}>{item.name}</h3>;
 	},
 
-	renderTools: function(taskStatusCategorized) {
+	renderTools(taskStatusCategorized) {
 		return <div>
 			{(taskStatusCategorized.completed || []).map(this.renderCompleted)}
 			{(taskStatusCategorized.current || []).map(this.renderCurrent)}
@@ -61,7 +62,7 @@ const ToolChainOverlay = React.createClass({
 		</div>;
 	},
 
-	render: function() {
+	render() {
 		const props = this.props;
 		const toolChain = props.toolChain;
 
@@ -93,7 +94,7 @@ const ToolChainOverlay = React.createClass({
 
 				{isDone || hasErrors
 					? <div>
-						<hr/>
+						<hr />
 						<button
 							className='btn btn-primary'
 							onClick={this.onClose}
@@ -104,7 +105,7 @@ const ToolChainOverlay = React.createClass({
 
 				{resultsReady
 					? <div style={{ width: '100vw', position: 'absolute', left: 0 }}>
-						<hr/>
+						<hr />
 						<AnalyticsComponent
 							ataInput={props.analysisResults['A.T. Analyzer']}
 							ateInput={props.analysisResults['A.T. Evaluator'][0]}
@@ -114,10 +115,6 @@ const ToolChainOverlay = React.createClass({
 				}
 			</div>
 		</div>;
-	},
-
-	onClose: function() {
-		this.props.onClose();
 	},
 });
 

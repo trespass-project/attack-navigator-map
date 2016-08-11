@@ -19,6 +19,7 @@ const availableLayersList = [
 ];
 const defaultActiveLayersList = [
 	ValidationLayer,
+	HighlightLayer,
 ];
 
 
@@ -429,6 +430,11 @@ function reducer(state=initialState, action) {
 			return mergeWithState({
 				activeLayers: helpers.toHashMap('name', activeLayersList)
 			});
+		}
+
+		case constants.ACTION_setHighlighted: {
+			const { highlightIds } = action;
+			return mergeWithState({ highlightIds });
 		}
 
 		default:

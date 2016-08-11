@@ -176,7 +176,7 @@ const PropertiesPanel = React.createClass({
 									<select
 										onChange={onChange}
 										name='relation'
-										value={edge.relation || null}
+										value={edge.relation || ''}
 									>
 										{props.relationTypes.map((relation) => {
 											return <option
