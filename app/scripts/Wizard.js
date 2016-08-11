@@ -556,13 +556,13 @@ const Wizard = React.createClass({
 			{ value: props.toolChainId, message: 'No toolchain selected' },
 		].reduce(pushIfFalsey, missingForScenario);
 
-		// check if all actors have a an `tkb:actor_type`
-		const componentWarnings = props.validation.componentWarnings;
-		const otherWarnings = R.values(componentWarnings)
+		const otherWarnings = R.values(props.validation.componentWarnings)
 			.map((item) => {
 				const node = props.graph.nodes[item.id];
-				return `${node.modelComponentType} "${node.label}" ${item.message}`;
-			});
+				return item.messages
+					.map((message) => `${node.modelComponentType} "${node.label}" ${message}`);
+			})
+			.reduce((acc, messages) => [...acc, ...messages], []);
 
 		const isReadyToDownload = (missingForScenario.length === 0);
 		const isReadyToRun = (missingForAnalysis.length === 0);

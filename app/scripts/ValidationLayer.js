@@ -41,7 +41,7 @@ const ValidationLayer = React.createClass({
 		const r = theme.node.size + theme.node.cornerRadius;
 		const yShift = 6; // TODO: get label font size
 
-		function renderItem(node, message) {
+		function renderItem(node, item) {
 			return <g
 				key={node.id}
 				transform={`translate(${node.x}, ${node.y + yShift})`}
@@ -52,19 +52,18 @@ const ValidationLayer = React.createClass({
 				/>
 				<g transform={`translate(${r / -3}, ${r + 10})`}>
 					<text className='errorText'>
-						<tspan x='0' dy='0'>{message}</tspan>
+						{item.messages
+							.map((message, index) => {
+								return <tspan key={index} x='0' dy={index * 12}>{message}</tspan>;
+							})
+						}
 					</text>
 				</g>
 			</g>;
 		}
 
 		return <g className='layer validationLayer'>
-			{warnings
-				.map((item) => {
-					const { message, id } = item;
-					return renderItem(props.graph.nodes[id], message);
-				})
-			}
+			{warnings.map((item) => renderItem(props.graph.nodes[item.id], item))}
 		</g>;
 	},
 });

@@ -12,6 +12,8 @@ const interfaceReducer = require('./interfaceReducer.js');
 const HTML5Backend = require('react-dnd-html5-backend');
 const DragDropContext = require('react-dnd').DragDropContext;
 
+const modelHelpers = require('./model-helpers');
+
 
 function configureStore(initialState) {
 	const combinedReducers = combineReducers({
@@ -49,12 +51,44 @@ function mapStateToProps(_state) {
 		getNodes,
 		(nodes) => {
 			/* eslint no-param-reassign: 0 */
+			const applyAll = (predicateFuncs, it) => predicateFuncs.map((func) => func(it));
 			return R.values(nodes)
-				.filter(R.propEq('modelComponentType', 'actor'))
-				.filter((item) => !item['tkb:actor_type'])
-				.reduce((acc, item) => {
-					const message = 'is missing actor type';
-					acc[item.id] = { id: item.id, message, };
+				.reduce((acc, node) => {
+					let messages = [];
+					const nodeEdges = modelHelpers.getNodeEdges(node, state.graph.edges);
+
+					// missing actor type
+					if (node.modelComponentType === 'actor'
+						&& !node['tkb:actor_type']) {
+						messages = [...messages, 'is missing actor type'];
+					}
+
+					// location is not connected to anything
+					if (node.modelComponentType === 'location') {
+						const connectionEdges = nodeEdges
+							.filter((edge) => ((!edge.relation) || (edge.relation === 'connects')));
+						if (!connectionEdges.length) {
+							messages = [...messages, 'is not connected to anything'];
+						}
+					}
+
+					// things are not located anywhere
+					if (R.contains(node.modelComponentType, ['actor', 'item', 'data'])) {
+						const atLocationEdges = nodeEdges
+							.filter((edge) => (edge.from === node.id))
+							.filter((edge) => (edge.relation === 'atLocation'));
+						if (!atLocationEdges.length) {
+							messages = [...messages, 'is not located anywhere'];
+						}
+					}
+
+					if (!!messages.length) {
+						acc[node.id] = {
+							id: node.id,
+							messages,
+						};
+					}
+
 					return acc;
 				}, {});
 		}
