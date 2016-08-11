@@ -1509,3 +1509,15 @@ function clusterNodesByType() {
 		// 	});
 	};
 };
+
+
+const setHighlighted =
+module.exports.setHighlighted =
+function setHighlighted(highlightIds) {
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_setHighlighted,
+			highlightIds,
+		});
+	};
+};

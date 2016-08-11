@@ -95,6 +95,8 @@ const constants = {
 	ACTION_nodesStorePosition: 'ACTION_nodesStorePosition',
 	ACTION_nodesRestorePosition: 'ACTION_nodesRestorePosition',
 
+	ACTION_setHighlighted: 'ACTION_setHighlighted',
+
 	CLONE_OFFSET: 70,
 };
 

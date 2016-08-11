@@ -539,6 +539,8 @@ const Wizard = React.createClass({
 	},
 
 	renderRunAnalysis(props) {
+		const dispatch = this.context.dispatch;
+
 		function pushIfFalsey(acc, item) {
 			return (!item.value)
 				? [...acc, item.message]
@@ -560,7 +562,19 @@ const Wizard = React.createClass({
 			.map((item) => {
 				const node = props.graph.nodes[item.id];
 				return item.messages
-					.map((message) => `${node.modelComponentType} "${node.label}" ${message}`);
+					.map((message, index) => {
+						const hoverable = <strong
+							onMouseEnter={
+								() => { dispatch( actionCreators.setHighlighted([node.id]) ); }
+							}
+							onMouseLeave={
+								() => { dispatch( actionCreators.setHighlighted([]) ); }
+							}
+						>
+							{`${node.modelComponentType} "${node.label}"`}
+						</strong>;
+						return <li key={`${node.id}-${index}`}>{hoverable} {message}</li>;
+					});
 			})
 			.reduce((acc, messages) => [...acc, ...messages], []);
 
@@ -583,9 +597,7 @@ const Wizard = React.createClass({
 					: <h3>Problems</h3>
 				}
 				<ul>
-					{otherWarnings
-						.map(item => <li key={item}>{item}</li>)
-					}
+					{otherWarnings}
 				</ul>
 				<ul>
 					{missingForAnalysis
