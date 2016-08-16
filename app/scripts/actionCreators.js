@@ -208,13 +208,7 @@ function saveModelToKb(modelId) {
 			return;
 		}
 
-		const state = getState();
-		const model = modelHelpers.modelFromGraph(
-			state.model.graph,
-			state.model.metadata,
-			state
-		);
-		const modelXmlStr = trespassModel.toXML(model);
+		const { modelXmlStr } = stateToModelXML(getState());
 
 		return knowledgebaseApi.saveModelFile(axios, modelId, modelXmlStr)
 			.then(() => {
@@ -748,10 +742,9 @@ function downloadModelXML() {
 	return (dispatch, getState) => {
 		dispatch( humanizeModelIds() )
 			.then(() => {
-				const state = getState();
-				const { modelXmlStr, model } = stateToModelXML(state);
-				const modelFileName = `${model.system.title.replace(/\s/g, '-')}.xml`;
-				saveAs(getXMLBlob(modelXmlStr), modelFileName);
+				const { modelXmlStr, model } = stateToModelXML(getState());
+				const slugifiedTitle = model.system.title.replace(/\s/g, '-');
+				saveAs(getXMLBlob(modelXmlStr), `${slugifiedTitle}.xml`);
 			});
 	};
 };

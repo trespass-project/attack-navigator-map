@@ -630,6 +630,10 @@ function modelFromGraph(graph, metadata={}, state={}) {
 	R.values(graph.edges || {})
 		.forEach((edge) => {
 			const isDirected = !R.contains(edge.relation, nonDirectedRelationTypes);
+
+			// there are two possibilities here. either the graph
+			// edge becomes an edge in the model (physical connections),
+			// or not
 			if (relationConvertsToEdge(edge.relation)) {
 				model = trespass.model.addEdge(model, {
 					source: edge.from,
@@ -638,15 +642,28 @@ function modelFromGraph(graph, metadata={}, state={}) {
 					kind: edge.relation,
 				});
 			} else {
+				// certain edge relation types translate to s.th.
+				// specific in the model:
 				if (edge.relation === 'atLocation') {
 					const fromNode = graph.nodes[edge.from];
 					if (!fromNode.atLocations) {
 						fromNode.atLocations = [];
 					}
-					// TODO: investigate bug
+					// TODO: investigate bug — which one?
 					fromNode.atLocations = R.uniq([...fromNode.atLocations, edge.to]);
 				} else {
-					// TODO: what else could there be?
+					// the rest of them become predicates
+					/*arity: 2,
+					id: 'isUserId',
+					value: [
+						'user1 userId1',
+						'user2 userId2',
+					]*/
+					model = trespass.model.addPredicate(model, {
+						arity: 2,
+						id: edge.relation,
+						value: [`${edge.from} ${edge.to}`],
+					});
 				}
 			}
 		});
