@@ -103,6 +103,8 @@ const Edge = React.createClass({
 			y: mout.math.lerp(t, edgeNodes.fromNode.y, edgeNodes.toNode.y),
 		};
 
+		// TODO: look up label from `relationTypes`,
+		// instead of using id
 		let label = edge.relation || '';
 		label = helpers.ellipsize(15, label);
 
@@ -110,7 +112,10 @@ const Edge = React.createClass({
 			onClick={this._onClick}
 			className='label'
 			x={center.x}
-			y={center.y + 10}>{label}</text>;
+			y={center.y + 10}
+		>
+			{label}
+		</text>;
 	},
 
 	_onClick: function(event) {
