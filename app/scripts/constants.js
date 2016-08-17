@@ -96,6 +96,7 @@ const constants = {
 	ACTION_nodesRestorePosition: 'ACTION_nodesRestorePosition',
 
 	ACTION_setHighlighted: 'ACTION_setHighlighted',
+	ACTION_saveModelToKb: 'ACTION_saveModelToKb',
 
 	CLONE_OFFSET: 70,
 };
