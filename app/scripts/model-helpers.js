@@ -532,14 +532,33 @@ function graphFromModel(model) {
 			graph = update(graph, { nodes: { $merge: coll } });
 		});
 
-	graph.edges = helpers.toHashMap('id', edges);
-
 	// everything that's neither node nor edge
 	const neitherNodeNorEdge = nonGraphCollectionNames
 		.reduce((result, collectionName) => {
-			result[collectionName] = model.system[collectionName];
+			if (collectionName !== 'predicates') {
+				result[collectionName] = model.system[collectionName];
+			} else {
+				// predicates become graph edges
+				const predicates = model.system[collectionName];
+				predicates.forEach((pred) => {
+					(pred.value || []).forEach((val) => {
+						const parts = val.split(/ +/);
+						console.log(pred, parts);
+						const edge = duplicateEdge({
+							from: parts[0],
+							to: parts[1],
+							directed: true,
+							relation: pred.id,
+						});
+						edges.push(edge);
+					});
+				});
+			}
 			return result;
 		}, {});
+
+	delete graph.predicates;
+	graph.edges = helpers.toHashMap('id', edges);
 
 	graph = _.merge(graph, neitherNodeNorEdge);
 	const metadata = R.pick(
