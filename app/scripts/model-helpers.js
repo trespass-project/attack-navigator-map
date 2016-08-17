@@ -686,17 +686,18 @@ function modelFromGraph(graph, metadata={}, state={}) {
 		}, {});
 	R.values(predicatesMap)
 		.forEach((item) => {
-			trespass.model.addPredicate(model, R.omit(keysToOmit, item));
+			const pred = R.omit(keysToOmit, item);
+			model = trespass.model.addPredicate(model, pred);
 		});
 
 	R.values(graph.policies || {})
 		.forEach((item) => {
-			trespass.model.addPolicy(model, R.omit(keysToOmit, item));
+			model = trespass.model.addPolicy(model, R.omit(keysToOmit, item));
 		});
 
 	R.values(graph.processes || {})
 		.forEach((item) => {
-			trespass.model.addProcess(model, R.omit(keysToOmit, item));
+			model = trespass.model.addProcess(model, R.omit(keysToOmit, item));
 		});
 
 	R.values(graph.nodes || {})
