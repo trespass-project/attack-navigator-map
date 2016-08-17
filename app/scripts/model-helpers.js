@@ -532,15 +532,33 @@ function graphFromModel(model) {
 			graph = update(graph, { nodes: { $merge: coll } });
 		});
 
-	graph.edges = helpers.toHashMap('id', edges);
-
 	// everything that's neither node nor edge
 	const neitherNodeNorEdge = nonGraphCollectionNames
 		.reduce((result, collectionName) => {
-			result[collectionName] = model.system[collectionName];
+			if (collectionName !== 'predicates') {
+				result[collectionName] = model.system[collectionName];
+			} else {
+				// predicates become graph edges
+				const predicates = model.system[collectionName];
+				predicates.forEach((pred) => {
+					(pred.value || []).forEach((val) => {
+						const parts = val.split(/ +/);
+						console.log(pred, parts);
+						const edge = duplicateEdge({
+							from: parts[0],
+							to: parts[1],
+							directed: true,
+							relation: pred.id,
+						});
+						edges.push(edge);
+					});
+				});
+			}
 			return result;
 		}, {});
 
+	delete graph.predicates;
+	graph.edges = helpers.toHashMap('id', edges);
 
 	graph = _.merge(graph, neitherNodeNorEdge);
 	const metadata = R.pick(
@@ -625,7 +643,7 @@ function modelFromGraph(graph, metadata={}, state={}) {
 		'modelComponentType',
 		// 'type' // knowledgebase type
 	];
-	const re = new RegExp('^tkb:', 'i');
+	const tkbPrefixRe = new RegExp('^tkb:', 'i');
 
 	R.values(graph.edges || {})
 		.forEach((edge) => {
@@ -671,7 +689,7 @@ function modelFromGraph(graph, metadata={}, state={}) {
 	// predicates
 	const predicatesMap = R.values(graph.predicates || {})
 		.reduce((acc, item) => {
-			const predId = item.type;
+			const predId = item.id; // item.type;
 			if (!item.arity) {
 				console.warn('predicate has no arity', item);
 			}
@@ -680,24 +698,25 @@ function modelFromGraph(graph, metadata={}, state={}) {
 					id: predId,
 					arity: item.arity || 2,
 					value: [],
-				}
+				};
 			}
 			acc[predId].value = [...acc[predId].value, item.value.join(' ')];
 			return acc;
 		}, {});
 	R.values(predicatesMap)
 		.forEach((item) => {
-			trespass.model.addPredicate(model, R.omit(keysToOmit, item));
+			const pred = R.omit(keysToOmit, item);
+			model = trespass.model.addPredicate(model, pred);
 		});
 
 	R.values(graph.policies || {})
 		.forEach((item) => {
-			trespass.model.addPolicy(model, R.omit(keysToOmit, item));
+			model = trespass.model.addPolicy(model, R.omit(keysToOmit, item));
 		});
 
 	R.values(graph.processes || {})
 		.forEach((item) => {
-			trespass.model.addProcess(model, R.omit(keysToOmit, item));
+			model = trespass.model.addProcess(model, R.omit(keysToOmit, item));
 		});
 
 	R.values(graph.nodes || {})
@@ -711,7 +730,7 @@ function modelFromGraph(graph, metadata={}, state={}) {
 				let item = R.omit(keysToOmit, node);
 				// also remove all kb stuff
 				item = R.pickBy(
-					(value, key) => !re.test(key),
+					(value, key) => !tkbPrefixRe.test(key),
 					item
 				);
 				if (node.label) {
@@ -721,7 +740,6 @@ function modelFromGraph(graph, metadata={}, state={}) {
 			}
 		});
 
-	// console.log(model.system);
 	return model;
 };
 
