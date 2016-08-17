@@ -671,7 +671,7 @@ function modelFromGraph(graph, metadata={}, state={}) {
 	// predicates
 	const predicatesMap = R.values(graph.predicates || {})
 		.reduce((acc, item) => {
-			const predId = item.type;
+			const predId = item.id; // item.type;
 			if (!item.arity) {
 				console.warn('predicate has no arity', item);
 			}
