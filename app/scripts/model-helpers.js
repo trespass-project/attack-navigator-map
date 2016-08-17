@@ -541,7 +541,6 @@ function graphFromModel(model) {
 			return result;
 		}, {});
 
-
 	graph = _.merge(graph, neitherNodeNorEdge);
 	const metadata = R.pick(
 		['title', ...trespass.model.knownAttributes.system],
@@ -625,7 +624,7 @@ function modelFromGraph(graph, metadata={}, state={}) {
 		'modelComponentType',
 		// 'type' // knowledgebase type
 	];
-	const re = new RegExp('^tkb:', 'i');
+	const tkbPrefixRe = new RegExp('^tkb:', 'i');
 
 	R.values(graph.edges || {})
 		.forEach((edge) => {
@@ -680,7 +679,7 @@ function modelFromGraph(graph, metadata={}, state={}) {
 					id: predId,
 					arity: item.arity || 2,
 					value: [],
-				}
+				};
 			}
 			acc[predId].value = [...acc[predId].value, item.value.join(' ')];
 			return acc;
@@ -711,7 +710,7 @@ function modelFromGraph(graph, metadata={}, state={}) {
 				let item = R.omit(keysToOmit, node);
 				// also remove all kb stuff
 				item = R.pickBy(
-					(value, key) => !re.test(key),
+					(value, key) => !tkbPrefixRe.test(key),
 					item
 				);
 				if (node.label) {
@@ -721,7 +720,6 @@ function modelFromGraph(graph, metadata={}, state={}) {
 			}
 		});
 
-	// console.log(model.system);
 	return model;
 };
 
