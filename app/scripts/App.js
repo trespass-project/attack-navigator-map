@@ -74,6 +74,15 @@ React.createClass({
 		this.props.dispatch( actionCreators.saveModelToKb(modelId) );
 	},
 
+	renameMap() {
+		let newName = prompt('Enter new name');
+		if (!newName) { return; }
+		newName = newName.trim();
+		if (!newName) { return; }
+		const modelId = this.props.metadata.id;
+		this.props.dispatch( actionCreators.renameMap(modelId, newName) );
+	},
+
 	deleteModel(event) {
 		if (event) {
 			event.preventDefault();
@@ -127,7 +136,10 @@ React.createClass({
 					{(hasOpenMap)
 						? <div>
 							<div>model id: {modelId}</div>
-							<div>title: {props.metadata.title}</div>
+							<div>
+								<span>title: {props.metadata.title} </span>
+								<a href='#' onClick={this.renameMap}>edit</a>
+							</div>
 						</div>
 						: ''
 					}

@@ -115,6 +115,20 @@ function createNewMap() {
 };
 
 
+const renameMap =
+module.exports.renameMap =
+function renameMap(modelId, newName) {
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_updateMetadata,
+			metadata: { title: newName },
+		});
+		// update in kb
+		dispatch( saveModelToKb(modelId) );
+	};
+};
+
+
 const resetMap =
 module.exports.resetMap =
 function resetMap() {

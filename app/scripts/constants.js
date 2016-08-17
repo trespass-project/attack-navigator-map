@@ -97,6 +97,7 @@ const constants = {
 
 	ACTION_setHighlighted: 'ACTION_setHighlighted',
 	ACTION_saveModelToKb: 'ACTION_saveModelToKb',
+	ACTION_updateMetadata: 'ACTION_updateMetadata',
 
 	CLONE_OFFSET: 70,
 };

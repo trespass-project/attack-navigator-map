@@ -59,6 +59,14 @@ function reducer(state=initialState, action) {
 			return newState;
 		}
 
+		case constants.ACTION_updateMetadata: {
+			const { metadata } = action;
+			return _.merge(
+				state,
+				{ metadata }
+			);
+		}
+
 		case constants.ACTION_resetMap: {
 			return _.merge(
 				{},
