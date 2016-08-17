@@ -159,7 +159,6 @@ const blacklist = [
 	constants.ACTION_setPreviewEdge,
 	constants.ACTION_setTransformation,
 	constants.ACTION_setTaskStatusCategorized,
-	constants.ACTION_setAnalysisRunning,
 	constants.ACTION_updateComponentProperties,
 ];
 // const whitelist = [

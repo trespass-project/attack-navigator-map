@@ -106,12 +106,9 @@ function createNewMap() {
 		getModelOrCreate(modelId)
 			.then(({ modelId, isNew }) => {
 				const metadata = { title };
-				dispatch( initMap(modelId, metadata) )
+				return dispatch( initMap(modelId, metadata) )
 					.then(() => {
-						// TODO: needed?
-						// import empty fragment
-						// dispatch( importFragment({}) );
-						dispatch( saveModelToKb(modelId) );
+						return dispatch( saveModelToKb(modelId) );
 					});
 			});
 	};
@@ -208,11 +205,17 @@ function saveModelToKb(modelId) {
 			return;
 		}
 
-		const { modelXmlStr } = stateToModelXML(getState());
+		const state = getState();
+		const { modelXmlStr } = stateToModelXML(state);
+		dispatch({
+			type: constants.ACTION_saveModelToKb,
+			state,
+		});
 
 		return knowledgebaseApi.saveModelFile(axios, modelId, modelXmlStr)
 			.then(() => {
 				console.info('model sent');
+				return dispatch( getRecentFiles() );
 			})
 			.catch((err) => {
 				console.error(err.message);
@@ -703,7 +706,7 @@ function loadXML(xmlString, source) {
 									const fragment = modelHelpers.layoutGraphByType(graph);
 									dispatch( importFragment(fragment) );
 								}
-								dispatch( saveModelToKb(modelId) );
+								return dispatch( saveModelToKb(modelId) );
 							});
 					});
 			}
