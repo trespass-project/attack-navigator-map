@@ -197,14 +197,15 @@ function loadModelFromKb(modelId) {
 				dispatch( loadXML(modelXML, source) );
 			})
 			.catch((err) => {
-				if (err.response.status === 404) {
+				console.error(err.message);
+				alert(err.message);
+				if (err.response && err.response.status === 404) {
 					const message = 'no model file found';
 					console.error(message);
 					alert(message);
 					return;
 				}
-				console.error(err.message);
-				alert(err.message);
+				console.error(err.stack);
 			});
 	};
 };
@@ -216,7 +217,7 @@ function saveModelToKb(modelId) {
 	return (dispatch, getState) => {
 		if (!modelId) {
 			// currently no model open to save
-			return;
+			return Promise.resolve();
 		}
 
 		const state = getState();
