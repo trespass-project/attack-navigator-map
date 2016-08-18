@@ -1093,15 +1093,26 @@ module.exports.humanizeModelIds =
 function humanizeModelIds() {
 	return (dispatch, getState) => {
 		let idReplacementMap;
-		let promises;
 		dispatch({
 			type: constants.ACTION_humanizeModelIds,
 			done: (_idReplacementMap) => {
 				idReplacementMap = _idReplacementMap;
-				const modelId = getState().model.metadata.id;
+			}
+		});
 
+		// dispatch is synchronous
+		dispatch({
+			type: constants.ACTION_humanizeModelIds_updateInterfaceState,
+			idReplacementMap
+		});
+
+		const modelId = getState().model.metadata.id;
+		// first save new model to kb,
+		// then tell kb, that things have been renamed
+		return dispatch( saveModelToKb(modelId) )
+			.then(() => {
 				// update ids in kb
-				promises = R.toPairs(idReplacementMap)
+				const promises = R.toPairs(idReplacementMap)
 					.map((pair) => {
 						return knowledgebaseApi.renameItemId(
 							axios,
@@ -1110,14 +1121,8 @@ function humanizeModelIds() {
 							pair[1]
 						);
 					});
-			}
-		});
-		// dispatch is synchronous
-		dispatch({
-			type: constants.ACTION_humanizeModelIds_updateInterfaceState,
-			idReplacementMap
-		});
-		return Promise.all(promises);
+				return Promise.all(promises);
+			});
 	};
 };
 
