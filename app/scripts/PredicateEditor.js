@@ -4,8 +4,8 @@ const R = require('ramda');
 const helpers = require('./helpers.js');
 const SelectizeDropdown = require('./SelectizeDropdown.js');
 
-const labelKey = 'title';
-const valueKey = 'value';
+// const labelKey = 'title';
+// const valueKey = 'value';
 
 
 const PredicateEditor = React.createClass({
@@ -17,17 +17,40 @@ const PredicateEditor = React.createClass({
 		predicates: React.PropTypes.array.isRequired,
 	},
 
-	getDefaultProps: function() {
+	getDefaultProps() {
 		return {
 			handleCreate: () => {},
 			handleUpdate: () => {},
 		};
 	},
 
-	renderPredicate: function(predicate, subjObjOptions, subjObjOptionsMap) {
+	addPredicate(event) {
+		const subject = this.refs['new-subject'].value;
+		const type = this.refs['new-predicate'].value;
+		const object = this.refs['new-object'].value;
+		const predicate = {
+			type,
+			value: [subject, object],
+		};
+		this.props.handleCreate(predicate);
+
+		this.refs['new-subject'].value = '';
+		this.refs['new-predicate'].value = '';
+		this.refs['new-object'].value = '';
+	},
+
+	updatePredicate(predicateId, property, value) {
+		this.props.handleUpdate(predicateId, { [property]: value });
+	},
+
+	renderPredicate(predicate, subjObjOptions, subjObjOptionsMap) {
 		const props = this.props;
 		const predicateType = props.predicatesLib[predicate.type]
-			|| { id: predicate.type, subjectPlaceholder: '?', objectPlaceholder: '?' };
+			|| {
+				id: predicate.type,
+				subjectPlaceholder: '?',
+				objectPlaceholder: '?'
+			};
 		const [subj, obj] = predicate.value;
 
 		const updatePredicate = R.partial(this.updatePredicate, [predicate.id]);
@@ -69,8 +92,9 @@ const PredicateEditor = React.createClass({
 		</li>;
 	},
 
-	render: function() {
+	render() {
 		const props = this.props;
+
 		let subjObjOptions = props.predicates
 			.reduce((options, predicate) => {
 				const items = predicate.value
@@ -115,25 +139,6 @@ const PredicateEditor = React.createClass({
 				</div>
 			</div>
 		);
-	},
-
-	addPredicate: function(event) {
-		const subject = this.refs['new-subject'].value;
-		const type = this.refs['new-predicate'].value;
-		const object = this.refs['new-object'].value;
-		const predicate = {
-			type,
-			value: [subject, object],
-		};
-		this.props.handleCreate(predicate);
-
-		this.refs['new-subject'].value = '';
-		this.refs['new-predicate'].value = '';
-		this.refs['new-object'].value = '';
-	},
-
-	updatePredicate: function(predicateId, property, value) {
-		this.props.handleUpdate(predicateId, { [property]: value });
 	},
 });
 
