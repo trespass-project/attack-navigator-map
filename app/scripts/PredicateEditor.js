@@ -1,7 +1,7 @@
 const React = require('react');
 const R = require('ramda');
-
 const helpers = require('./helpers.js');
+const actionCreators = require('./actionCreators.js');
 const SelectizeDropdown = require('./SelectizeDropdown.js');
 
 // const labelKey = 'title';
@@ -12,8 +12,9 @@ const PredicateEditor = React.createClass({
 	propTypes: {
 		handleCreate: React.PropTypes.func,
 		handleUpdate: React.PropTypes.func,
-		nodes: React.PropTypes.array.isRequired,
-		predicatesLib: React.PropTypes.object.isRequired,
+		nodes: React.PropTypes.object.isRequired,
+		edges: React.PropTypes.array.isRequired,
+		relationTypes: React.PropTypes.array.isRequired,
 		predicates: React.PropTypes.array.isRequired,
 	},
 
@@ -22,6 +23,10 @@ const PredicateEditor = React.createClass({
 			handleCreate: () => {},
 			handleUpdate: () => {},
 		};
+	},
+
+	contextTypes: {
+		dispatch: React.PropTypes.func,
 	},
 
 	addPredicate(event) {
@@ -43,82 +48,115 @@ const PredicateEditor = React.createClass({
 		this.props.handleUpdate(predicateId, { [property]: value });
 	},
 
-	renderPredicate(predicate, subjObjOptions, subjObjOptionsMap) {
+	edgeRelationChanged(name, relation, edgeId) {
+		this.context.dispatch(
+			actionCreators.updateComponentProperties(
+				edgeId, 'edge', { relation }
+			)
+		);
+	},
+
+	renderPredicate(edge, index, relationsOptions, predicatesMap) {
 		const props = this.props;
-		const predicateType = props.predicatesLib[predicate.type]
-			|| {
-				id: predicate.type,
-				subjectPlaceholder: '?',
-				objectPlaceholder: '?'
-			};
-		const [subj, obj] = predicate.value;
+		const subj = (props.nodes[edge.from])
+			? <b>{edge.from}</b>
+			: edge.from;
+		const obj = (props.nodes[edge.to])
+			? <b>{edge.to}</b>
+			: edge.to;
 
-		const updatePredicate = R.partial(this.updatePredicate, [predicate.id]);
-
-		return <li key={`${subj}-${predicate.type}-${obj}`}>
+		return <li key={index}>
+			<span>{subj} </span>
 			<SelectizeDropdown
 				multi={false}
-				name={'subject'}
-				{/*title={subjObjOptionsMap[subj].label}*/ ...{}}
-				value={subj}
-				options={subjObjOptions}
-				labelKey={'label'}
-				valueKey={'id'}
-				onChange={updatePredicate}
+				name='relation'
+				placeholder='relation'
+				options={relationsOptions}
+				value={predicatesMap[edge.relation]}
+				valueKey='value'
+				labelKey='label'
+				onChange={(name, relation) => {
+					this.edgeRelationChanged(name, relation, edge.id);
+				}}
 			/>
-			&nbsp;&nbsp;&nbsp;
-			<SelectizeDropdown
-				multi={false}
-				name={'predicate'}
-				{/*title={predicateType.label}*/ ...{}}
-				value={predicate.label}
-				options={R.values(props.predicatesLib)}
-				labelKey={'label'}
-				valueKey={'id'}
-				onChange={updatePredicate}
-			/>
-			&nbsp;&nbsp;&nbsp;
-			<SelectizeDropdown
-				multi={false}
-				name={'object'}
-				{/*title={subjObjOptionsMap[obj].label}*/ ...{}}
-				value={obj}
-				options={subjObjOptions}
-				labelKey={'label'}
-				valueKey={'id'}
-				onChange={updatePredicate}
-			/>
-			<br />
+			<span> {obj}</span>
 		</li>;
+
+		// const predicateType = props.relationTypes[predicate.type]
+		// 	|| {
+		// 		id: predicate.type,
+		// 		subjectPlaceholder: '?',
+		// 		objectPlaceholder: '?'
+		// 	};
+		// const [subj, obj] = predicate.value;
+
+		// const updatePredicate = R.partial(this.updatePredicate, [predicate.id]);
+
+		// return <li key={`${subj}-${predicate.type}-${obj}`}>
+		// 	<SelectizeDropdown
+		// 		multi={false}
+		// 		name={'subject'}
+		// 		{/*title={subjObjOptionsMap[subj].label}*/ ...{}}
+		// 		value={subj}
+		// 		options={subjObjOptions}
+		// 		labelKey={'label'}
+		// 		valueKey={'id'}
+		// 		onChange={updatePredicate}
+		// 	/>
+		// 	&nbsp;&nbsp;&nbsp;
+		// 	<SelectizeDropdown
+		// 		multi={false}
+		// 		name={'predicate'}
+		// 		{/*title={predicateType.label}*/ ...{}}
+		// 		value={predicate.label}
+		// 		options={R.values(props.relationTypes)}
+		// 		labelKey={'label'}
+		// 		valueKey={'id'}
+		// 		onChange={updatePredicate}
+		// 	/>
+		// 	&nbsp;&nbsp;&nbsp;
+		// 	<SelectizeDropdown
+		// 		multi={false}
+		// 		name={'object'}
+		// 		{/*title={subjObjOptionsMap[obj].label}*/ ...{}}
+		// 		value={obj}
+		// 		options={subjObjOptions}
+		// 		labelKey={'label'}
+		// 		valueKey={'id'}
+		// 		onChange={updatePredicate}
+		// 	/>
+		// 	<br />
+		// </li>;
 	},
 
 	render() {
 		const props = this.props;
+		const relationsOptions = props.relationTypes;
+		const relationsMap = helpers.toHashMap('value', props.relationTypes);
 
-		let subjObjOptions = props.predicates
-			.reduce((options, predicate) => {
-				const items = predicate.value
-					.reduce((acc, val) => {
-						// often it will be the id of a node ...
-						const node = props.nodes[val];
-						// ... otherwise it's just a name used in the predicate
-						if (!node) {
-							return [...acc, { label: val, id: val }];
-						} else {
-							return acc;
-						}
-					}, []);
-				return options.concat(items);
-			}, [])
-			.concat(R.values(props.nodes));
-		subjObjOptions = R.uniq(subjObjOptions);
-		const subjObjOptionsMap = helpers.toHashMap('id', subjObjOptions);
+		// let subjObjOptions = props.predicates
+		// 	.reduce((options, predicate) => {
+		// 		const items = predicate.value
+		// 			.reduce((acc, val) => {
+		// 				// often it will be the id of a node ...
+		// 				const node = props.nodes[val];
+		// 				// ... otherwise it's just a name used in the predicate
+		// 				if (!node) {
+		// 					return [...acc, { label: val, id: val }];
+		// 				} else {
+		// 					return acc;
+		// 				}
+		// 			}, []);
+		// 		return options.concat(items);
+		// 	}, [])
+		// 	.concat(R.values(props.nodes));
+		// subjObjOptions = R.uniq(subjObjOptions);
+		// const subjObjOptionsMap = helpers.toHashMap('id', subjObjOptions);
 
 		return (
 			<div className='predicate-editor language'>
 				<div className='predicates'>
-					<h3>Predicates</h3>
-					<div className='add-new-container'>
+					{/*<div className='add-new-container'>
 						add new:
 						<div>
 							<input ref='new-subject' type='text' placeholder='subject placeholder' />
@@ -127,13 +165,17 @@ const PredicateEditor = React.createClass({
 						</div>
 						<button onClick={this.addPredicate}>add</button>
 						<hr />
-					</div>
+					</div>*/}
 
 					<ul>
-						{props.predicates
-							.map(pred => {
-								return this.renderPredicate(pred, subjObjOptions, subjObjOptionsMap);
-							}
+						{props.edges
+							.map((edge, index) =>
+								this.renderPredicate(
+									edge,
+									index,
+									relationsOptions,
+									relationsMap
+								)
 						)}
 					</ul>
 				</div>

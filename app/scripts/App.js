@@ -156,12 +156,12 @@ React.createClass({
 								href='#'
 								onClick={this.fetchKbData}
 							>re-fetch knowledgebase data</a>
-
+							<br />
 							<a
 								href='#'
 								onClick={this.save}
 							>save map</a>
-
+							<br />
 							<a
 								href='#'
 								onClick={this.deleteModel}

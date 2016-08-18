@@ -23,8 +23,6 @@ const ToolChainOverlay = require('./ToolChainOverlay.js');
 const PredicateEditor = require('./PredicateEditor.js');
 const AttackerProfileEditor = require('./AttackerProfileEditor/AttackerProfileEditor.js');
 
-const predicatesLib = helpers.normalize(require('../data/predicate-lib.json')).items;
-
 
 const theme = {
 	scheme: 'asdf',
@@ -303,10 +301,11 @@ const Wizard = React.createClass({
 		const props = this.props;
 		const predicates = R.values(props.graph.predicates || {});
 		return <div>
-			<h2 className='title'>Connections</h2>
+			<h2 className='title'>Predicates</h2>
 			<PredicateEditor
+				edges={props.predicateEdges}
 				nodes={props.graph.nodes}
-				predicatesLib={props.predicatesLib || predicatesLib}
+				relationTypes={props.relationTypes}
 				predicates={predicates}
 				handleCreate={this.createPredicate}
 				handleUpdate={this.updatePredicate}
@@ -667,7 +666,7 @@ const Wizard = React.createClass({
 			},
 			'connections': {
 				icon: 'images/icons/edges-01.svg',
-				tooltip: 'Connections',
+				tooltip: 'Predicates',
 				handleClick: R.partial(this.selectWizardStep, ['connections']),
 				renderFn: this.renderConnections,
 			},

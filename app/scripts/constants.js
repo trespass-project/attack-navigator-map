@@ -6,7 +6,6 @@ const constants = {
 	INTERFACE: 'interface',
 
 	MODEL_LIBRARY: 'model-library',
-	MODEL_PREDICATES_LIBRARY: 'predicate-lib.json',
 
 	// dnd drop targets
 	DND_TARGET_MAP: 'model-map',
