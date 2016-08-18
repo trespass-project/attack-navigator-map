@@ -693,29 +693,6 @@ function modelFromGraph(graph, metadata={}, state={}) {
 			}
 		});
 
-	// predicates
-	const predicatesMap = R.values(graph.predicates || {})
-		.reduce((acc, item) => {
-			const predId = item.id; // item.type;
-			if (!item.arity) {
-				console.warn('predicate has no arity', item);
-			}
-			if (!acc[predId]) {
-				acc[predId] = {
-					id: predId,
-					arity: item.arity || 2,
-					value: [],
-				};
-			}
-			acc[predId].value = [...acc[predId].value, item.value.join(' ')];
-			return acc;
-		}, {});
-	R.values(predicatesMap)
-		.forEach((item) => {
-			const pred = R.omit(keysToOmit, item);
-			model = trespass.model.addPredicate(model, pred);
-		});
-
 	R.values(graph.policies || {})
 		.forEach((item) => {
 			model = trespass.model.addPolicy(model, R.omit(keysToOmit, item));

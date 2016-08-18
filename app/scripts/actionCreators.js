@@ -1138,7 +1138,6 @@ function runAnalysis(modelId, toolChainId, downloadScenario=false) {
 			throw new Error('Tool chain not found.');
 		}
 
-
 		// humanize ids
 		dispatch( humanizeModelIds() )
 			.then(() => {
