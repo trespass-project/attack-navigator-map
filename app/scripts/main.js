@@ -45,6 +45,29 @@ function mapStateToProps(_state) {
 			state
 		);
 
+	const getEdges = (state) => state.graph.edges;
+	const splitEdges = createSelector(
+		getEdges,
+		(edgesMap) => {
+			const edges = R.values(edgesMap) || [];
+			return edges
+				.reduce((acc, edge) => {
+					if (modelHelpers.relationConvertsToEdge(edge.relation)) {
+						acc.regularEdges = [...acc.regularEdges, edge];
+					} else {
+						acc.predicateEdges = [...acc.predicateEdges, edge];
+					}
+					return acc;
+				}, {
+					regularEdges: [],
+					predicateEdges: [],
+				});
+		}
+	);
+	const { regularEdges, predicateEdges } = splitEdges(state);
+	props.regularEdges = regularEdges;
+	props.predicateEdges = predicateEdges;
+
 	// validation
 	const getNodes = (state) => state.graph.nodes;
 	const getNodeWarnings = createSelector(

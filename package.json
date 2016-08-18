@@ -81,7 +81,7 @@
     "react-redux": "^4.4.0",
     "react-selectize": "^2.0.3",
     "react-virtualized": "^7.16.0",
-    "redux": "^3.3.1",
+    "redux": "^3.5.2",
     "redux-thunk": "^2.1.0",
     "reselect": "^2.5.3",
     "shortid": "^2.2.4",
