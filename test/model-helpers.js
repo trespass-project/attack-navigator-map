@@ -732,9 +732,9 @@ describe(common.f1('model-helpers.js'), () => {
 		const { graph } = modelHelpers.graphFromModel(model);
 		const edges = R.values(graph.edges);
 		const nodes = R.values(graph.nodes);
-		// const processes = R.values(graph.processes);
-		const policies = R.values(graph.policies);
 		// const predicates = R.values(graph.predicates);
+		const policies = R.values(graph.policies);
+		// const processes = R.values(graph.processes);
 
 		it(common.f3('should produce hash-maps, not arrays'), () => {
 			assert(!_.isArray(graph.edges));
@@ -743,9 +743,15 @@ describe(common.f1('model-helpers.js'), () => {
 		});
 
 		it(common.f3('should create edges'), () => {
-			assert(edges.length === 1);
 			assert(edges[0].from === 'source');
 			assert(edges[0].to === 'target');
+		});
+
+		it(common.f3('should turn predicates into edges'), () => {
+			assert(edges.length === 2);
+			assert(edges[1].from === 'val1');
+			assert(edges[1].to === 'val2');
+			assert(edges[1].relation === 'predicate');
 		});
 
 		it(common.f3('should create locations'), () => {
@@ -753,10 +759,9 @@ describe(common.f1('model-helpers.js'), () => {
 			assert(nodes[0].id === 'location');
 		});
 
-		it(common.f3('should contain predicates, policies, etc.'), () => {
+		it(common.f3('should contain policies, etc.'), () => {
 			assert(policies.length === 1);
 		});
-		// TODO: predicates
 	});
 
 	describe(common.f2('modelFromGraph()'), () => {
@@ -764,26 +769,41 @@ describe(common.f1('model-helpers.js'), () => {
 			{
 				id: 'node-1',
 				modelComponentType: 'item',
-				atLocations: ['location']
 			},
 			{
 				id: 'node-2',
 				modelComponentType: 'data',
 				value: 'value',
-				atLocations: ['location']
 			},
-			{
-				id: 'node-3',
-				modelComponentType: 'predicate',
-				arity: '2',
-				value: ['value']
-			}
 		];
 		const edges = [
-			{ id: 'edge-1', relation: undefined },
-			{ id: 'edge-2', relation: 'connects' },
-			{ id: 'edge-4', relation: 'network' },
-			{ id: 'edge-3', relation: 'atLocation', from: 'node-1', to: 'node-2' },
+			{ id: 'edge-1', relation: undefined, from: 'a1', to: 'b1' },
+			{ id: 'edge-2', relation: 'connects', from: 'a2', to: 'b2' },
+			{ id: 'edge-3', relation: 'network', from: 'a3', to: 'b3' },
+			{
+				id: 'edge-5',
+				relation: 'predicate',
+				from: 'a5',
+				to: 'b5'
+			},
+			{
+				id: 'edge-4',
+				relation: 'atLocation',
+				from: 'node-1',
+				to: 'node-2'
+			},
+			{
+				id: 'edge-6',
+				relation: 'atLocation',
+				from: 'node-2',
+				to: 'node-98'
+			},
+			{
+				id: 'edge-7',
+				relation: 'atLocation',
+				from: 'node-2',
+				to: 'node-99'
+			},
 		];
 		const graph = {
 			nodes: helpers.toHashMap('id', nodes),
@@ -800,36 +820,52 @@ describe(common.f1('model-helpers.js'), () => {
 			}
 		};
 		const model = modelHelpers.modelFromGraph(graph, metadata, state);
+		const system = model.system;
 
 		it(common.f3('should include metadata'), () => {
-			assert(model.system.title === metadata.title);
-			assert(model.system.version === metadata.version);
+			assert(system.title === metadata.title);
+			assert(system.version === metadata.version);
 		});
 
 		it(common.f3('should include anm_data'), () => {
-			assert(!_.isEmpty(model.system.anm_data));
-			const anmData = JSON.parse(model.system.anm_data);
+			assert(!_.isEmpty(system.anm_data));
+			const anmData = JSON.parse(system.anm_data);
 			assert(anmData.interface.attackerGoal === state.interface.attackerGoal);
 		});
 
 		it(common.f3('should create elements'), () => {
-			assert(model.system.items.length === 1);
-			assert(model.system.data.length === 1);
-			assert(model.system.predicates.length === 1);
+			assert(system.items.length === 1);
+			assert(system.data.length === 1);
 		});
 
-		it(common.f3('should create edges'), () => {
-			assert(model.system.edges.length === 3);
+		it(common.f3('should turn some edges into model edges, and others into predicates'), () => {
+			assert(system.predicates.length === 1);
+			assert(system.edges.length === 3);
+
+			assert(!system.edges[0].kind);
+			assert(system.edges[0].source === 'a1');
+			assert(system.edges[0].target === 'b1');
+
+			assert(system.edges[1].source === 'a2');
+			assert(system.edges[1].target === 'b2');
+
+			assert(system.edges[2].source === 'a3');
+			assert(system.edges[2].target === 'b3');
 		});
 
 		it(common.f3('should convert `atLocation` type edges to `atLocations`'), () => {
-			const atLocations = model.system.items[0].atLocations;
-			assert(atLocations.length === 2);
-			assert(R.contains('node-2', atLocations));
+			const itemAtLocations = system.items[0].atLocations;
+			assert(itemAtLocations.length === 1);
+			assert(R.contains('node-2', itemAtLocations));
+
+			const dataAtLocations = system.data[0].atLocations;
+			assert(dataAtLocations.length === 2);
+			assert(R.contains('node-98', dataAtLocations));
+			assert(R.contains('node-99', dataAtLocations));
 		});
 
 		it(common.f3('should set edge directedness'), () => {
-			model.system.edges
+			system.edges
 				.forEach((edge) => {
 					assert(edge.directed !== undefined);
 				});
