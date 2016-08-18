@@ -7,7 +7,7 @@ const helpers = require('../helpers.js');
 
 // const AttackerProfile = require('../AttackerProfileEditor/AttackerProfile.js');
 const profileOptions = require('../../data/attacker-profiles.js').options;
-const SelectizeDropdown = require('./SelectizeDropdown.js');
+const SelectizeDropdown = require('../SelectizeDropdown.js');
 
 
 const labelKey = 'title';

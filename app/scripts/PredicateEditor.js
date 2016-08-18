@@ -2,7 +2,7 @@ const React = require('react');
 const R = require('ramda');
 
 const helpers = require('./helpers.js');
-const SelectizeDropdown = require('./AttackerProfileEditor/SelectizeDropdown.js');
+const SelectizeDropdown = require('./SelectizeDropdown.js');
 
 const labelKey = 'title';
 const valueKey = 'value';
