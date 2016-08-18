@@ -45,6 +45,8 @@ const GraphMixin = {
 			minZoom: 0.2,
 			maxZoom: 5.0,
 			isMinimap: false,
+			regularEdges: [],
+			predicateEdges: [],
 		};
 	},
 
@@ -87,11 +89,11 @@ const GraphMixin = {
 		/>;
 	},
 
-	renderPreviewEdge(edge, index, collection) {
-		return this.renderEdge(edge, index, collection, true);
+	renderPreviewEdge(edge, index) {
+		return this.renderEdge(edge, index, true);
 	},
 
-	renderEdge(edge, index, collection, isPreview) {
+	renderEdge(edge, index, isPreview=false) {
 		const props = this.props;
 		const context = this.context;
 		const showEdgeLabels = (props.isMinimap)
@@ -187,8 +189,13 @@ const GraphMixin = {
 				}
 
 				{(props.showEdges)
-					? R.values(graph.edges)
-						.map(this.renderEdge)
+					? props.regularEdges
+						.map((edge, index) => this.renderEdge(edge, index))
+					: null
+				}
+				{(props.showPredicateEdges)
+					? props.predicateEdges
+						.map((edge, index) => this.renderEdge(edge, index))
 					: null
 				}
 				{(props.previewEdge && !props.isMinimap)
