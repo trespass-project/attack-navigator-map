@@ -705,6 +705,10 @@ function modelFromGraph(graph, metadata={}, state={}) {
 
 	R.values(graph.nodes || {})
 		.forEach((node) => {
+			if (_.isEmpty(node.atLocations)) {
+				delete node.atLocations;
+			}
+
 			const type = node.modelComponentType;
 			const fnName = `add${properCase(type)}`;
 			const addFn = trespass.model[fnName];
