@@ -11,14 +11,17 @@ const theme = require('./graph-theme-default.js');
 
 const ValidationLayer = require('./ValidationLayer.js');
 const HighlightLayer = require('./HighlightLayer.js');
+const PredicateLayer = require('./PredicateLayer.js');
 const GroupedComponentsLayer = require('./GroupedComponentsLayer.js');
 const availableLayersList = [
 	ValidationLayer,
+	PredicateLayer,
 	HighlightLayer,
 	GroupedComponentsLayer,
 ];
 const defaultActiveLayersList = [
 	ValidationLayer,
+	PredicateLayer,
 	HighlightLayer,
 ];
 
