@@ -58,6 +58,9 @@ const PredicateEditor = React.createClass({
 
 	renderPredicate(edge, index, relationsOptions, predicatesMap) {
 		const props = this.props;
+
+		// TODO: render nodes differently
+		// - highlight on hover
 		const subj = (props.nodes[edge.from])
 			? <b>{edge.from}</b>
 			: edge.from;
@@ -65,6 +68,7 @@ const PredicateEditor = React.createClass({
 			? <b>{edge.to}</b>
 			: edge.to;
 
+		// TODO: allow custom value
 		return <li key={index}>
 			<span>{subj} </span>
 			<SelectizeDropdown
@@ -81,6 +85,8 @@ const PredicateEditor = React.createClass({
 			/>
 			<span> {obj}</span>
 		</li>;
+
+		// TODO: make it possible to add predicates
 
 		// const predicateType = props.relationTypes[predicate.type]
 		// 	|| {
@@ -131,7 +137,7 @@ const PredicateEditor = React.createClass({
 
 	render() {
 		const props = this.props;
-		const relationsOptions = props.relationTypes;
+		// TODO: do this in mapStateToProps
 		const relationsMap = helpers.toHashMap('value', props.relationTypes);
 
 		// let subjObjOptions = props.predicates
@@ -173,7 +179,7 @@ const PredicateEditor = React.createClass({
 								this.renderPredicate(
 									edge,
 									index,
-									relationsOptions,
+									props.relationTypes,
 									relationsMap
 								)
 						)}
