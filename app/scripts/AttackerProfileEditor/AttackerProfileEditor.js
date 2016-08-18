@@ -25,7 +25,7 @@ function getClassName(option, value) {
 }
 
 
-const AttackerProfileEditorLanguage = React.createClass({
+const AttackerProfileEditor = React.createClass({
 	propTypes: {
 		handleUpdate: React.PropTypes.func,
 		profilePresets: React.PropTypes.object/*.isRequired*/,
@@ -176,4 +176,4 @@ const AttackerProfileEditorLanguage = React.createClass({
 });
 
 
-module.exports = AttackerProfileEditorLanguage;
+module.exports = AttackerProfileEditor;

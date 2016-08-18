@@ -20,7 +20,7 @@ import { AutoSizer, FlexTable, FlexColumn, SortDirection } from 'react-virtualiz
 
 const ToolChainOverlay = require('./ToolChainOverlay.js');
 const PredicateEditor = require('./PredicateEditor.js');
-const AttackerProfileEditor = require('./AttackerProfileEditor/AttackerProfileEditorLanguage.js');
+const AttackerProfileEditor = require('./AttackerProfileEditor/AttackerProfileEditor.js');
 
 const predicatesLib = helpers.normalize(require('../data/predicate-lib.json')).items;
 
