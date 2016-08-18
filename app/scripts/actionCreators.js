@@ -853,7 +853,9 @@ module.exports.updateComponentProperties =
 function updateComponentProperties(componentId, graphComponentType, newProperties) {
 	return {
 		type: constants.ACTION_updateComponentProperties,
-		componentId, graphComponentType, newProperties,
+		componentId,
+		graphComponentType,
+		newProperties,
 		cb: (modelId, item) => {
 			knowledgebaseApi.createItem(axios, modelId, item);
 		}
