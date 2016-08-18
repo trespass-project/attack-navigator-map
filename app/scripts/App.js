@@ -156,25 +156,17 @@ React.createClass({
 							<a
 								href='#'
 								onClick={this.fetchKbData}
-							>
-								re-fetch knowledgebase data
-							</a>
+							>re-fetch knowledgebase data</a>
 
-							<UsageHint>
-								<a
-									href='#'
-									onClick={this.save}
-								>
-									save map
-								</a>
-							</UsageHint>
+							<a
+								href='#'
+								onClick={this.save}
+							>save map</a>
 
 							<a
 								href='#'
 								onClick={this.deleteModel}
-							>
-								delete map
-							</a>
+							>delete map</a>
 						</div>
 						: ''
 					}
@@ -216,7 +208,11 @@ React.createClass({
 					}
 
 					<div id='map'>
-						<GraphEditor id='editor' hasOpenMap={hasOpenMap} {...props} />
+						<GraphEditor
+							id='editor'
+							hasOpenMap={hasOpenMap}
+							{...props}
+						/>
 					</div>
 				</div>
 
