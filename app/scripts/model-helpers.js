@@ -541,9 +541,7 @@ function graphFromModel(model) {
 				// predicates become graph edges
 				const predicates = model.system[collectionName];
 				predicates.forEach((pred) => {
-					(pred.value || []).forEach((val) => {
-						const parts = val.split(/ +/);
-						console.log(pred, parts);
+					(pred.value || []).forEach((parts) => {
 						const edge = duplicateEdge({
 							from: parts[0],
 							to: parts[1],
@@ -645,6 +643,12 @@ function modelFromGraph(graph, metadata={}, state={}) {
 	];
 	const tkbPrefixRe = new RegExp('^tkb:', 'i');
 
+	// reset `atLocations`
+	R.values(graph.nodes || {})
+		.forEach((node) => {
+			node.atLocations = [];
+		});
+
 	R.values(graph.edges || {})
 		.forEach((edge) => {
 			const isDirected = !R.contains(edge.relation, nonDirectedRelationTypes);
@@ -662,13 +666,16 @@ function modelFromGraph(graph, metadata={}, state={}) {
 			} else {
 				// certain edge relation types translate to s.th.
 				// specific in the model:
-				if (edge.relation === 'atLocation') {
+
+				// TODO: use one or the other!
+				if (edge.relation === 'atLocation'
+					|| edge.relation === 'at-location') {
 					const fromNode = graph.nodes[edge.from];
-					if (!fromNode.atLocations) {
-						fromNode.atLocations = [];
+					if (fromNode) {
+						fromNode.atLocations = R.uniq(
+							[...fromNode.atLocations, edge.to]
+						);
 					}
-					// TODO: investigate bug — which one?
-					fromNode.atLocations = R.uniq([...fromNode.atLocations, edge.to]);
 				} else {
 					// the rest of them become predicates
 					/*arity: 2,
