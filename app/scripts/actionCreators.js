@@ -1156,7 +1156,7 @@ function humanizeModelIds() {
 
 const runAnalysis =
 module.exports.runAnalysis =
-function runAnalysis(modelId, toolChainId, downloadScenario=false) {
+function runAnalysis(modelId, toolChainId) {
 	if (!modelId) {
 		throw new Error('missing model id');
 	}
@@ -1189,19 +1189,6 @@ function runAnalysis(modelId, toolChainId, downloadScenario=false) {
 					modelFileName,
 					state.interface
 				);
-
-				// download
-				if (downloadScenario) {
-					zipScenario(
-						modelXmlStr,
-						modelFileName,
-						scenarioXmlStr,
-						scenarioFileName
-					)
-						.then((zipBlob) => {
-							saveAs(zipBlob, scenarioZipName);
-						});
-				}
 
 				// upload to knowledgebase
 				return Promise.resolve()
