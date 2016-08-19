@@ -63,8 +63,10 @@ function reducer(state=initialState, action) {
 		}
 
 		case constants.ACTION_updateMetadata: {
-			const { metadata } = action;
-			return mergeWithState({ metadata });
+			return update(
+				state,
+				{ metadata: { $merge: action.metadata } }
+			);
 		}
 
 		case constants.ACTION_resetMap: {
