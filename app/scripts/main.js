@@ -35,6 +35,12 @@ const store = configureStore();
 // selectors
 const getNodes = (state) => state.graph.nodes;
 const getEdges = (state) => state.graph.edges;
+const getModelId = (state) => state.metadata.id;
+
+const hasOpenMap = createSelector(
+	getModelId,
+	(modelId) => !!modelId
+);
 
 const splitEdges = createSelector(
 	getEdges,
@@ -124,6 +130,8 @@ function mapStateToProps(_state) {
 	const { regularEdges, predicateEdges } = splitEdges(state);
 	props.regularEdges = regularEdges;
 	props.predicateEdges = predicateEdges;
+
+	props.hasOpenMap = hasOpenMap(state);
 
 	// validation
 	props.validation = {

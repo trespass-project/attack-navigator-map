@@ -109,13 +109,12 @@ React.createClass({
 	render() {
 		const props = this.props;
 		const modelId = props.metadata.id;
-		const hasOpenMap = !!modelId;
 
 		return (
 			<div id='container'>
 				<input type='file' accept='.svg' id='add-file' />
 
-				{(hasOpenMap)
+				{(props.hasOpenMap)
 					? <div id='layersControl'>
 						{props.availableLayersList
 							.map((layer) => {
@@ -133,7 +132,7 @@ React.createClass({
 				}
 
 				<div id='meta'>
-					{(hasOpenMap)
+					{(props.hasOpenMap)
 						? <div>
 							<div>model id: {modelId}</div>
 							<div>
@@ -144,7 +143,7 @@ React.createClass({
 						: ''
 					}
 
-					{(hasOpenMap)
+					{(props.hasOpenMap)
 						? <div>
 							<a
 								href={`${knowledgebaseApi.host}tkb/files/edit?model_id=${modelId}`}
@@ -172,14 +171,14 @@ React.createClass({
 					}
 
 					<span>ANM {pkg.version}</span>
-					{(hasOpenMap)
+					{(props.hasOpenMap)
 						? <span> · <a href={constants.manualUrl} target='_blank'>manual</a> · <a href={constants.issueTrackerUrl} target='_blank'>issue tracker</a></span>
 						: null
 					}
 				</div>
 
 				<div id='map-container'>
-					{(!hasOpenMap)
+					{(!props.hasOpenMap)
 						? <div id='introduction'>
 							<div id='intro-box'>
 								<div>
@@ -210,7 +209,7 @@ React.createClass({
 					<div id='map'>
 						<GraphEditor
 							id='editor'
-							hasOpenMap={hasOpenMap}
+							hasOpenMap={props.hasOpenMap}
 							{...props}
 						/>
 					</div>
@@ -228,7 +227,7 @@ React.createClass({
 				</div>*/}
 
 				<div id='panel-container'>
-					<Wizard hasOpenMap={hasOpenMap} {...props} />
+					<Wizard hasOpenMap={props.hasOpenMap} {...props} />
 				</div>
 			</div>
 		);
