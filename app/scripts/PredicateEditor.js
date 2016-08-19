@@ -66,6 +66,7 @@ const PredicateEditor = React.createClass({
 				{fromNode.label}
 			</ComponentReference>
 			: edge.from;
+
 		const toNode = props.nodes[edge.to];
 		const obj = (toNode)
 			? <ComponentReference modelComponent={toNode}>

@@ -36,7 +36,12 @@ const SelectizeDropdown = React.createClass({
 
 	onChange(selectedOption) {
 		const props = this.props;
-		props.onChange(props.name, selectedOption.value);
+		props.onChange(
+			props.name,
+			(!selectedOption)
+				? ''
+				: selectedOption.value
+		);
 	},
 
 	render() {
