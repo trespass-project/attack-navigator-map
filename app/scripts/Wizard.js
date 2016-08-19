@@ -4,7 +4,6 @@ const _ = require('lodash');
 const React = require('react');
 const classnames = require('classnames');
 const actionCreators = require('./actionCreators.js');
-const helpers = require('./helpers.js');
 
 const GraphMinimap = require('./GraphMinimap.js');
 const PropertiesPanel = require('./PropertiesPanel.js');

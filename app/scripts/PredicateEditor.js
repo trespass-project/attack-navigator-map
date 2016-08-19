@@ -1,7 +1,8 @@
 const React = require('react');
-const R = require('ramda');
+// const R = require('ramda');
 const helpers = require('./helpers.js');
 const actionCreators = require('./actionCreators.js');
+const ComponentReference = require('./ComponentReference.js');
 const SelectizeDropdown = require('./SelectizeDropdown.js');
 
 // const labelKey = 'title';
@@ -59,13 +60,17 @@ const PredicateEditor = React.createClass({
 	renderPredicate(edge, index, relationsOptions, predicatesMap) {
 		const props = this.props;
 
-		// TODO: render nodes differently
-		// - highlight on hover
-		const subj = (props.nodes[edge.from])
-			? <b>{edge.from}</b>
+		const fromNode = props.nodes[edge.from];
+		const subj = (fromNode)
+			? <ComponentReference modelComponent={fromNode}>
+				{fromNode.label}
+			</ComponentReference>
 			: edge.from;
-		const obj = (props.nodes[edge.to])
-			? <b>{edge.to}</b>
+		const toNode = props.nodes[edge.to];
+		const obj = (toNode)
+			? <ComponentReference modelComponent={toNode}>
+				{toNode.label}
+			</ComponentReference>
 			: edge.to;
 
 		// TODO: allow custom value
