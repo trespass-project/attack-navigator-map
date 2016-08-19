@@ -78,6 +78,7 @@ const PredicateEditor = React.createClass({
 		nodes: React.PropTypes.object.isRequired,
 		edges: React.PropTypes.array.isRequired,
 		relationTypes: React.PropTypes.array.isRequired,
+		relationsMap: React.PropTypes.object.isRequired,
 		predicates: React.PropTypes.array.isRequired,
 	},
 
@@ -128,7 +129,7 @@ const PredicateEditor = React.createClass({
 		);
 	},
 
-	renderPredicate(edge, index, relationsOptions, predicatesMap) {
+	renderPredicate(edge, index, relationsOptions, relationsMap) {
 		const props = this.props;
 
 		const subj = <SubjObjSelectize
@@ -164,7 +165,7 @@ const PredicateEditor = React.createClass({
 			<span>{subj} </span>
 			<RelationSelectize
 				options={relationsOptions}
-				value={predicatesMap[edge.relation]}
+				value={relationsMap[edge.relation]}
 				onChange={(name, relation) => {
 					this.edgeRelationChanged(name, relation, edge.id);
 				}}
@@ -175,8 +176,6 @@ const PredicateEditor = React.createClass({
 
 	render() {
 		const props = this.props;
-		// TODO: do this in mapStateToProps
-		const relationsMap = helpers.toHashMap('value', props.relationTypes);
 
 		// let subjObjOptions = props.predicates
 		// 	.reduce((options, predicate) => {
@@ -218,7 +217,7 @@ const PredicateEditor = React.createClass({
 									edge,
 									index,
 									props.relationTypes,
-									relationsMap
+									props.relationsMap
 								)
 						)}
 					</ul>

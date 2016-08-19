@@ -305,6 +305,7 @@ const Wizard = React.createClass({
 				edges={props.predicateEdges}
 				nodes={props.graph.nodes}
 				relationTypes={props.relationTypes}
+				relationsMap={props.relationsMap}
 				predicates={predicates}
 				handleCreate={this.createPredicate}
 				handleUpdate={this.updatePredicate}

@@ -163,6 +163,7 @@ const blacklist = [
 	constants.ACTION_setTransformation,
 	constants.ACTION_setTaskStatusCategorized,
 	constants.ACTION_updateComponentProperties,
+	constants.ACTION_setHighlighted,
 ];
 // const whitelist = [
 // 	constants.ACTION_loadModelFile,

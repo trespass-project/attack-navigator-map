@@ -12,6 +12,7 @@ const interfaceReducer = require('./interfaceReducer.js');
 const HTML5Backend = require('react-dnd-html5-backend');
 const DragDropContext = require('react-dnd').DragDropContext;
 
+const helpers = require('./helpers');
 const modelHelpers = require('./model-helpers');
 
 
@@ -36,6 +37,15 @@ const store = configureStore();
 const getNodes = (state) => state.graph.nodes;
 const getEdges = (state) => state.graph.edges;
 const getModelId = (state) => state.metadata.id;
+const getRelationTypes = (state) => state.relationTypes;
+
+const relationsMap = createSelector(
+	getRelationTypes,
+	(relationTypes) => {
+		console.log(relationTypes);
+		return helpers.toHashMap('value', relationTypes);
+	}
+);
 
 const hasOpenMap = createSelector(
 	getModelId,
@@ -132,6 +142,7 @@ function mapStateToProps(_state) {
 	props.predicateEdges = predicateEdges;
 
 	props.hasOpenMap = hasOpenMap(state);
+	props.relationsMap = relationsMap(state);
 
 	// validation
 	props.validation = {
