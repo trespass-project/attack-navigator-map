@@ -7,6 +7,9 @@ const mergeWith = require('./reducer-utils.js').mergeWith;
 const constants = require('./constants.js');
 
 
+const noop = () => {};
+
+
 const initialState = {
 	metadata: {
 		id: null,
@@ -115,19 +118,31 @@ function reducer(state=initialState, action) {
 		}
 
 		case constants.ACTION_importFragment: {
-			const { fragment, xy, cb=(() => {}) } = action;
+			const { fragment, xy, cb=noop } = action;
 			const newGraph = modelHelpers.importFragment(
 				state.graph,
 				modelHelpers.duplicateFragment(fragment),
 				xy,
-				(importedNodesMap) => { cb(state.metadata.id, R.values(importedNodesMap)); }
+				(importedNodesMap) => {
+					cb(
+						state.metadata.id,
+						R.values(importedNodesMap)
+					);
+				}
 			);
 			return mergeWithState({ graph: newGraph });
 		}
 
 		case constants.ACTION_mergeFragment: {
-			const { fragment } = action;
-			const newGraph = modelHelpers.combineFragments([state.graph, fragment]);
+			const { fragment, cb=noop } = action;
+			const newGraph = modelHelpers.combineFragments([
+				state.graph,
+				fragment
+			]);
+			cb(
+				state.metadata.id,
+				R.values(fragment.nodes)
+			);
 			return mergeWithState({ graph: newGraph });
 		}
 
