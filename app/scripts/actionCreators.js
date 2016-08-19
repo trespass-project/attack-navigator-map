@@ -1122,7 +1122,10 @@ function humanizeModelIds() {
 							modelId,
 							pair[0],
 							pair[1]
-						);
+						)
+							.catch(() => {
+								console.warn('renaming item id failed');
+							});
 					});
 				return Promise.all(promises);
 			});
