@@ -3,7 +3,7 @@ const axios = require('axios');
 const R = require('ramda');
 const _ = require('lodash');
 const JSZip = require('jszip');
-const saveAs = require('browser-saveas');
+const saveAs = require('file-saver').saveAs;
 const trespass = require('trespass.js');
 const trespassModel = trespass.model;
 const api = trespass.api;
@@ -783,7 +783,9 @@ function downloadModelXML() {
 			.then(() => {
 				const { modelXmlStr, model } = stateToModelXML(getState());
 				const slugifiedTitle = model.system.title.replace(/\s/g, '-');
-				saveAs(getXMLBlob(modelXmlStr), `${slugifiedTitle}.xml`);
+				const blob = getXMLBlob(modelXmlStr);
+				const fileName = `${slugifiedTitle}.xml`;
+				saveAs(blob, fileName);
 			});
 	};
 };
@@ -804,12 +806,14 @@ function downloadZippedScenario(modelId) {
 					state.interface
 				);
 
-				const zipBlob = zipScenario(
+				return zipScenario(
 					modelXmlStr,
 					modelFileName,
 					scenarioXmlStr,
 					scenarioFileName
 				);
+			})
+			.then((zipBlob) => {
 				saveAs(zipBlob, scenarioZipName);
 			});
 	};
@@ -1156,7 +1160,7 @@ function humanizeModelIds() {
 
 const runAnalysis =
 module.exports.runAnalysis =
-function runAnalysis(modelId, toolChainId, downloadScenario=false) {
+function runAnalysis(modelId, toolChainId) {
 	if (!modelId) {
 		throw new Error('missing model id');
 	}
@@ -1189,19 +1193,6 @@ function runAnalysis(modelId, toolChainId, downloadScenario=false) {
 					modelFileName,
 					state.interface
 				);
-
-				// download
-				if (downloadScenario) {
-					zipScenario(
-						modelXmlStr,
-						modelFileName,
-						scenarioXmlStr,
-						scenarioFileName
-					)
-						.then((zipBlob) => {
-							saveAs(zipBlob, scenarioZipName);
-						});
-				}
 
 				// upload to knowledgebase
 				return Promise.resolve()

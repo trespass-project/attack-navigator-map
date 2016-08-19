@@ -614,12 +614,6 @@ const Wizard = React.createClass({
 					justifyContent: 'center',
 				}}
 			>
-				{/*<div>
-					<input type='checkbox' name='checkbox-dl-scenario' ref='checkbox-dl-scenario' />&nbsp;
-					<label style={{ fontWeight: 'normal' }} htmlFor='checkbox-dl-scenario'>
-						Download scenario file(s)
-					</label>
-				</div>*/}
 				<button
 					disabled={!isReadyToRun}
 					onClick={this.runAnalysis}
@@ -780,14 +774,10 @@ const Wizard = React.createClass({
 
 	runAnalysis() {
 		const props = this.props;
-		const dlScenarioCheckbox = this.refs['checkbox-dl-scenario'];
 		this.context.dispatch(
 			actionCreators.runAnalysis(
 				props.metadata.id,
-				props.toolChainId,
-				(!dlScenarioCheckbox)
-					? false
-					: dlScenarioCheckbox.checked
+				props.toolChainId
 			)
 		);
 	},
