@@ -718,6 +718,23 @@ function loadXML(xmlString, source) {
 								// TODO: document
 								if (anmData) {
 									const fragment = graph;
+
+									// make sure all nodes have at least a default position
+									R.values(fragment.nodes)
+										.forEach((node) => {
+											const twoPi = Math.PI * 2;
+											const offset = 100;
+											const maxRadius = 70;
+											node.x = node.x
+												|| offset + Math.cos(
+													Math.random() * twoPi
+												) * maxRadius;
+											node.y = node.y
+												|| offset + Math.sin(
+													Math.random() * twoPi
+												) * maxRadius;
+										});
+
 									// `mergeFragment()` add everything "as is"
 									dispatch( mergeFragment(fragment) );
 								} else {
