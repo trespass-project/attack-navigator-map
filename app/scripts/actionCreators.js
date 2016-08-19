@@ -806,12 +806,14 @@ function downloadZippedScenario(modelId) {
 					state.interface
 				);
 
-				const zipBlob = zipScenario(
+				return zipScenario(
 					modelXmlStr,
 					modelFileName,
 					scenarioXmlStr,
 					scenarioFileName
 				);
+			})
+			.then((zipBlob) => {
 				saveAs(zipBlob, scenarioZipName);
 			});
 	};
