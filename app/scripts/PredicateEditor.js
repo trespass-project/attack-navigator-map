@@ -171,52 +171,6 @@ const PredicateEditor = React.createClass({
 			/>
 			<span> {obj}</span>
 		</li>;
-
-		// const predicateType = props.relationTypes[predicate.type]
-		// 	|| {
-		// 		id: predicate.type,
-		// 		subjectPlaceholder: '?',
-		// 		objectPlaceholder: '?'
-		// 	};
-		// const [subj, obj] = predicate.value;
-
-		// const updatePredicate = R.partial(this.updatePredicate, [predicate.id]);
-
-		// return <li key={`${subj}-${predicate.type}-${obj}`}>
-		// 	<SelectizeDropdown
-		// 		multi={false}
-		// 		name={'subject'}
-		// 		{/*title={subjObjOptionsMap[subj].label}*/ ...{}}
-		// 		value={subj}
-		// 		options={subjObjOptions}
-		// 		labelKey={'label'}
-		// 		valueKey={'id'}
-		// 		onChange={updatePredicate}
-		// 	/>
-		// 	&nbsp;&nbsp;&nbsp;
-		// 	<SelectizeDropdown
-		// 		multi={false}
-		// 		name={'predicate'}
-		// 		{/*title={predicateType.label}*/ ...{}}
-		// 		value={predicate.label}
-		// 		options={R.values(props.relationTypes)}
-		// 		labelKey={'label'}
-		// 		valueKey={'id'}
-		// 		onChange={updatePredicate}
-		// 	/>
-		// 	&nbsp;&nbsp;&nbsp;
-		// 	<SelectizeDropdown
-		// 		multi={false}
-		// 		name={'object'}
-		// 		{/*title={subjObjOptionsMap[obj].label}*/ ...{}}
-		// 		value={obj}
-		// 		options={subjObjOptions}
-		// 		labelKey={'label'}
-		// 		valueKey={'id'}
-		// 		onChange={updatePredicate}
-		// 	/>
-		// 	<br />
-		// </li>;
 	},
 
 	render() {
