@@ -345,9 +345,25 @@ function combineFragments(fragments) {
 };
 
 
+function offsetNodes(atXY, nodes) {
+	const xOffset = 60;
+	const yOffset = 30;
+	return R.values(nodes)
+		.reduce((acc, node, index) => {
+			const coords = {
+				x: atXY.x + (node.x || index * xOffset),
+				y: atXY.y + (node.y || index * yOffset),
+			};
+			acc[node.id] = update(node, { $merge: coords });
+			return acc;
+		}, {});
+}
+
+
 const importFragment =
 module.exports.importFragment =
 function importFragment(graph, fragment, atXY=origin, cb=noop) {
+	// TODO: still needed?
 	// prepare predicates
 	fragment.predicates = (fragment.predicates || [])
 		.reduce((acc, predicate) => {
@@ -372,27 +388,19 @@ function importFragment(graph, fragment, atXY=origin, cb=noop) {
 			}
 		});
 
-	function offsetNodes(nodes) {
-		const xOffset = 60;
-		const yOffset = 30;
-		return R.values(nodes)
-			.reduce((acc, node, index) => {
-				const coords = {
-					x: atXY.x + (node.x || index * xOffset),
-					y: atXY.y + (node.y || index * yOffset),
-				};
-				acc[node.id] = update(node, { $merge: coords });
-				return acc;
-			}, {});
-	}
-
 	cb(fragment.nodes);
 
 	return combineFragments([
 		graph,
 		update(
 			fragment,
-			{ nodes: { $apply: offsetNodes } }
+			{
+				nodes: {
+					$apply: (nodes) => {
+						offsetNodes(atXY, nodes);
+					}
+				}
+			}
 		)
 	]);
 };
