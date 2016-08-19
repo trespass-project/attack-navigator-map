@@ -321,6 +321,15 @@ function dropModelFragment(fragment, clientOffset) {
 };
 
 
+function kbCreateNodes(modelId, addedNodes) {
+	// update kb
+	addedNodes
+		.forEach((node) => {
+			knowledgebaseApi.createItem(axios, modelId, node);
+		});
+}
+
+
 const importFragment =
 module.exports.importFragment =
 function importFragment(fragment, xy) {
@@ -329,13 +338,7 @@ function importFragment(fragment, xy) {
 			type: constants.ACTION_importFragment,
 			fragment,
 			xy,
-			cb: (modelId, importedNodes) => {
-				// update kb
-				importedNodes
-					.forEach((node) => {
-						knowledgebaseApi.createItem(axios, modelId, node);
-					});
-			}
+			cb: kbCreateNodes
 		});
 	};
 };
@@ -348,6 +351,7 @@ function mergeFragment(fragment) {
 		dispatch({
 			type: constants.ACTION_mergeFragment,
 			fragment,
+			cb: kbCreateNodes
 		});
 	};
 };
@@ -712,13 +716,13 @@ function loadXML(xmlString, source) {
 							.then(() => {
 								// import
 								// TODO: document
-								// `importFragment()` clones fragment entirely (all new ids)
-								// `mergeFragment()` add everything "as is"
 								if (anmData) {
 									const fragment = graph;
+									// `mergeFragment()` add everything "as is"
 									dispatch( mergeFragment(fragment) );
 								} else {
 									const fragment = modelHelpers.layoutGraphByType(graph);
+									// `importFragment()` clones fragment entirely (all new ids)
 									dispatch( importFragment(fragment) );
 								}
 								return dispatch( saveModelToKb(modelId) );
@@ -1122,7 +1126,10 @@ function humanizeModelIds() {
 							modelId,
 							pair[0],
 							pair[1]
-						);
+						)
+							.catch(() => {
+								console.warn('renaming item id failed');
+							});
 					});
 				return Promise.all(promises);
 			});
