@@ -54,10 +54,10 @@
   "dependencies": {
     "axios": "^0.13.0",
     "bootstrap-styl": "^4.0.5",
-    "browser-saveas": "^1.0.0",
     "classnames": "^2.2.0",
     "d3": "^3.5.6",
     "detect-node": "^2.0.3",
+    "file-saver": "^1.3.2",
     "font-awesome-stylus": "^4.6.2",
     "jquery": "^3.0.0",
     "jszip": "^3.0.0",
@@ -91,6 +91,6 @@
     "xml2js": "^0.4.16"
   },
   "name": "attack-navigator-map",
-  "version": "0.11.12",
+  "version": "0.11.13",
   "private": false
 }
