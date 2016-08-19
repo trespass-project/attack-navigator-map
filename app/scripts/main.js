@@ -31,6 +31,88 @@ function configureStore(initialState) {
 }
 const store = configureStore();
 
+
+// selectors
+const getNodes = (state) => state.graph.nodes;
+const getEdges = (state) => state.graph.edges;
+const getModelId = (state) => state.metadata.id;
+
+const hasOpenMap = createSelector(
+	getModelId,
+	(modelId) => !!modelId
+);
+
+const splitEdges = createSelector(
+	getEdges,
+	(edgesMap) => {
+		const edges = R.values(edgesMap) || [];
+		return edges
+			.reduce((acc, edge) => {
+				if (modelHelpers.relationConvertsToEdge(edge.relation)) {
+					acc.regularEdges = [...acc.regularEdges, edge];
+				} else {
+					acc.predicateEdges = [...acc.predicateEdges, edge];
+				}
+				return acc;
+			}, {
+				regularEdges: [],
+				predicateEdges: [],
+			});
+	}
+);
+
+const getNodeWarnings = createSelector(
+	getNodes,
+	getEdges,
+	(nodes, edges) => {
+		/* eslint no-param-reassign: 0 */
+
+		const applyAll = (predicateFuncs, it) => predicateFuncs
+			.map((func) => func(it));
+
+		return R.values(nodes)
+			.reduce((acc, node) => {
+				let messages = [];
+				const nodeEdges = modelHelpers.getNodeEdges(node, edges);
+
+				// missing actor type
+				if (node.modelComponentType === 'actor'
+					&& !node['tkb:actor_type']) {
+					messages = [...messages, 'is missing actor type'];
+				}
+
+				// location is not connected to anything
+				if (node.modelComponentType === 'location') {
+					const connectionEdges = nodeEdges
+						.filter((edge) => ((!edge.relation) || (edge.relation === 'connects')));
+					if (!connectionEdges.length) {
+						messages = [...messages, 'is not connected to anything'];
+					}
+				}
+
+				// things are not located anywhere
+				if (R.contains(node.modelComponentType, ['actor', 'item', 'data'])) {
+					const atLocationEdges = nodeEdges
+						.filter((edge) => (edge.from === node.id))
+						.filter((edge) => (edge.relation === 'atLocation'));
+					if (!atLocationEdges.length) {
+						messages = [...messages, 'is not located anywhere'];
+					}
+				}
+
+				if (!!messages.length) {
+					acc[node.id] = {
+						id: node.id,
+						messages,
+					};
+				}
+
+				return acc;
+			}, {});
+	}
+);
+
+
 function mapStateToProps(_state) {
 	// flatten one level
 	const state = Object.assign.apply(
@@ -45,77 +127,13 @@ function mapStateToProps(_state) {
 			state
 		);
 
-	const getEdges = (state) => state.graph.edges;
-	const splitEdges = createSelector(
-		getEdges,
-		(edgesMap) => {
-			const edges = R.values(edgesMap) || [];
-			return edges
-				.reduce((acc, edge) => {
-					if (modelHelpers.relationConvertsToEdge(edge.relation)) {
-						acc.regularEdges = [...acc.regularEdges, edge];
-					} else {
-						acc.predicateEdges = [...acc.predicateEdges, edge];
-					}
-					return acc;
-				}, {
-					regularEdges: [],
-					predicateEdges: [],
-				});
-		}
-	);
 	const { regularEdges, predicateEdges } = splitEdges(state);
 	props.regularEdges = regularEdges;
 	props.predicateEdges = predicateEdges;
 
+	props.hasOpenMap = hasOpenMap(state);
+
 	// validation
-	const getNodes = (state) => state.graph.nodes;
-	const getNodeWarnings = createSelector(
-		getNodes,
-		(nodes) => {
-			/* eslint no-param-reassign: 0 */
-			const applyAll = (predicateFuncs, it) => predicateFuncs.map((func) => func(it));
-			return R.values(nodes)
-				.reduce((acc, node) => {
-					let messages = [];
-					const nodeEdges = modelHelpers.getNodeEdges(node, state.graph.edges);
-
-					// missing actor type
-					if (node.modelComponentType === 'actor'
-						&& !node['tkb:actor_type']) {
-						messages = [...messages, 'is missing actor type'];
-					}
-
-					// location is not connected to anything
-					if (node.modelComponentType === 'location') {
-						const connectionEdges = nodeEdges
-							.filter((edge) => ((!edge.relation) || (edge.relation === 'connects')));
-						if (!connectionEdges.length) {
-							messages = [...messages, 'is not connected to anything'];
-						}
-					}
-
-					// things are not located anywhere
-					if (R.contains(node.modelComponentType, ['actor', 'item', 'data'])) {
-						const atLocationEdges = nodeEdges
-							.filter((edge) => (edge.from === node.id))
-							.filter((edge) => (edge.relation === 'atLocation'));
-						if (!atLocationEdges.length) {
-							messages = [...messages, 'is not located anywhere'];
-						}
-					}
-
-					if (!!messages.length) {
-						acc[node.id] = {
-							id: node.id,
-							messages,
-						};
-					}
-
-					return acc;
-				}, {});
-		}
-	);
 	props.validation = {
 		componentWarnings: getNodeWarnings(props),
 	};
