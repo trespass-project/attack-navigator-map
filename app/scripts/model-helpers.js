@@ -692,11 +692,12 @@ function modelFromGraph(graph, metadata={}, state={}) {
 						'user1 userId1',
 						'user2 userId2',
 					]*/
-					model = trespass.model.addPredicate(model, {
+					const pred = {
 						arity: 2,
 						id: edge.relation,
-						value: [`${edge.from} ${edge.to}`],
-					});
+						value: [edge.from, edge.to],
+					};
+					model = trespass.model.addPredicate(model, pred);
 				}
 			}
 		});
