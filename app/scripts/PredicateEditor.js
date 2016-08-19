@@ -9,6 +9,37 @@ const SelectizeDropdown = require('./SelectizeDropdown.js');
 // const valueKey = 'value';
 
 
+const RelationSelectize = React.createClass({
+	render() {
+		const props = this.props;
+
+		// TODO: added ones are not persisted
+		const createFromSearch = (options, search) => {
+			if (!search || options.length) {
+				return null;
+			}
+			const result = {
+				label: search,
+				value: search
+					.toLowerCase()
+					.replace(/ +/g, '-'),
+			};
+			return result;
+		};
+
+		return <SelectizeDropdown
+			multi={false}
+			name='relation'
+			placeholder='relation'
+			valueKey='value'
+			labelKey='label'
+			extraProps={{ createFromSearch }}
+			{...props}
+		/>;
+	},
+});
+
+
 const PredicateEditor = React.createClass({
 	propTypes: {
 		handleCreate: React.PropTypes.func,
@@ -79,14 +110,9 @@ const PredicateEditor = React.createClass({
 		// http://furqanzafar.github.io/react-selectize/#/?category=simple
 		return <li key={index}>
 			<span>{subj} </span>
-			<SelectizeDropdown
-				multi={false}
-				name='relation'
-				placeholder='relation'
+			<RelationSelectize
 				options={relationsOptions}
 				value={predicatesMap[edge.relation]}
-				valueKey='value'
-				labelKey='label'
 				onChange={(name, relation) => {
 					this.edgeRelationChanged(name, relation, edge.id);
 				}}
