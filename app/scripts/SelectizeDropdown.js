@@ -18,6 +18,7 @@ const SelectizeDropdown = React.createClass({
 		onChange: React.PropTypes.func,
 		valueKey: React.PropTypes.string,
 		labelKey: React.PropTypes.string,
+		extraProps: React.PropTypes.object,
 	},
 
 	getDefaultProps() {
@@ -28,15 +29,20 @@ const SelectizeDropdown = React.createClass({
 			options: [],
 			valueKey: 'value',
 			labelKey: 'label',
-			onChange: (name, value) => {
-				// console.log(name, value);
-			},
+			onChange: (name, value) => {},
+			extraProps: {},
 		};
 	},
 
 	onChange(selectedOption) {
 		const props = this.props;
-		props.onChange(props.name, selectedOption.value);
+		props.onChange(
+			props.name,
+			// TODO: maybe have a flag that allows deletion
+			(!selectedOption)
+				? ''
+				: selectedOption.value
+		);
 	},
 
 	render() {
@@ -84,6 +90,7 @@ const SelectizeDropdown = React.createClass({
 			options={options}
 			onValueChange={this.onChange}
 			{...extraProps}
+			{...props.extraProps}
 		/>;
 	},
 });
