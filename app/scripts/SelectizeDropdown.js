@@ -38,6 +38,7 @@ const SelectizeDropdown = React.createClass({
 		const props = this.props;
 		props.onChange(
 			props.name,
+			// TODO: maybe have a flag that allows deletion
 			(!selectedOption)
 				? ''
 				: selectedOption.value

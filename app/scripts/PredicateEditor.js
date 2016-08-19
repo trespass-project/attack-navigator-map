@@ -74,7 +74,9 @@ const PredicateEditor = React.createClass({
 			</ComponentReference>
 			: edge.to;
 
-		// TODO: allow custom value
+		// TODO: make it possible to add predicates
+		// allow 'create from search':
+		// http://furqanzafar.github.io/react-selectize/#/?category=simple
 		return <li key={index}>
 			<span>{subj} </span>
 			<SelectizeDropdown
@@ -91,8 +93,6 @@ const PredicateEditor = React.createClass({
 			/>
 			<span> {obj}</span>
 		</li>;
-
-		// TODO: make it possible to add predicates
 
 		// const predicateType = props.relationTypes[predicate.type]
 		// 	|| {
