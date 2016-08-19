@@ -783,7 +783,9 @@ function downloadModelXML() {
 			.then(() => {
 				const { modelXmlStr, model } = stateToModelXML(getState());
 				const slugifiedTitle = model.system.title.replace(/\s/g, '-');
-				saveAs(getXMLBlob(modelXmlStr), `${slugifiedTitle}.xml`);
+				const blob = getXMLBlob(modelXmlStr);
+				const fileName = `${slugifiedTitle}.xml`;
+				saveAs(blob, fileName);
 			});
 	};
 };
