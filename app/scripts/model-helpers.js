@@ -641,11 +641,12 @@ function modelFromGraph(graph, metadata={}, state={}) {
 		metadata
 	);
 
+	// TODO: use whitelisting instead of blacklisting
 	const keysToOmit = [
 		/*'name', */
 		'label',
-		'x',
-		'y',
+		'x', '_x',
+		'y', '_y',
 		'modelComponentType',
 		// 'type' // knowledgebase type
 	];
