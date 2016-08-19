@@ -1,12 +1,9 @@
 const React = require('react');
-// const R = require('ramda');
+const R = require('ramda');
 const helpers = require('./helpers.js');
 const actionCreators = require('./actionCreators.js');
 const ComponentReference = require('./ComponentReference.js');
 const SelectizeDropdown = require('./SelectizeDropdown.js');
-
-// const labelKey = 'title';
-// const valueKey = 'value';
 
 
 const RelationSelectize = React.createClass({
@@ -34,6 +31,40 @@ const RelationSelectize = React.createClass({
 			valueKey='value'
 			labelKey='label'
 			extraProps={{ createFromSearch }}
+			{...props}
+		/>;
+	},
+});
+
+
+const SubjObjSelectize = React.createClass({
+	render() {
+		const props = this.props;
+
+		// TODO: added ones are not persisted
+		const createFromSearch = (options, search) => {
+			if (!search || options.length) {
+				return null;
+			}
+			const result = {
+				label: search,
+				value: search,
+			};
+			return result;
+		};
+
+		const renderValue = (item) => {
+			const node = props.nodes[item[props.valueKey]];
+			return (node)
+				? <ComponentReference modelComponent={node}>
+					{node.label}
+				</ComponentReference>
+				: item[props.labelKey];
+		};
+
+		return <SelectizeDropdown
+			multi={false}
+			extraProps={{ createFromSearch, renderValue }}
 			{...props}
 		/>;
 	},
@@ -88,22 +119,43 @@ const PredicateEditor = React.createClass({
 		);
 	},
 
+	subjObjChanged(name, value, edgeId) {
+		const key = (name === 'subject') ? 'from' : 'to';
+		this.context.dispatch(
+			actionCreators.updateComponentProperties(
+				edgeId, 'edge', { [key]: value }
+			)
+		);
+	},
+
 	renderPredicate(edge, index, relationsOptions, predicatesMap) {
 		const props = this.props;
 
-		const fromNode = props.nodes[edge.from];
-		const subj = (fromNode)
-			? <ComponentReference modelComponent={fromNode}>
-				{fromNode.label}
-			</ComponentReference>
-			: edge.from;
+		const subj = <SubjObjSelectize
+			nodes={props.nodes}
+			placeholder='subject'
+			name='subject'
+			valueKey='id'
+			labelKey='label'
+			options={R.values(props.nodes)}
+			value={{ id: edge.from, label: edge.from }}
+			onChange={(name, value) => {
+				this.subjObjChanged(name, value, edge.id);
+			}}
+		/>;
 
-		const toNode = props.nodes[edge.to];
-		const obj = (toNode)
-			? <ComponentReference modelComponent={toNode}>
-				{toNode.label}
-			</ComponentReference>
-			: edge.to;
+		const obj = <SubjObjSelectize
+			nodes={props.nodes}
+			placeholder='object'
+			name='object'
+			valueKey='id'
+			labelKey='label'
+			options={R.values(props.nodes)}
+			value={{ id: edge.to, label: edge.to }}
+			onChange={(name, value) => {
+				this.subjObjChanged(name, value, edge.id);
+			}}
+		/>;
 
 		// TODO: make it possible to add predicates
 		// allow 'create from search':
