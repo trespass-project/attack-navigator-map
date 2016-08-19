@@ -9,6 +9,7 @@ const helpers = require('./helpers.js');
 const GraphMinimap = require('./GraphMinimap.js');
 const PropertiesPanel = require('./PropertiesPanel.js');
 const UsageHint = require('./UsageHint.js');
+const ComponentReference = require('./ComponentReference.js');
 // const GraphOutline = require('./GraphOutline.js');
 const Library = require('./components/Library/Library.js');
 
@@ -16,7 +17,7 @@ const OverlayTrigger = require('react-bootstrap').OverlayTrigger;
 const Tooltip = require('react-bootstrap').Tooltip;
 
 import JSONTree from 'react-json-tree';
-import { AutoSizer, FlexTable, FlexColumn, SortDirection } from 'react-virtualized';
+import { AutoSizer, FlexTable, FlexColumn/*, SortDirection*/ } from 'react-virtualized';
 
 const ToolChainOverlay = require('./ToolChainOverlay.js');
 const PredicateEditor = require('./PredicateEditor.js');
@@ -563,16 +564,11 @@ const Wizard = React.createClass({
 				const node = props.graph.nodes[item.id];
 				return item.messages
 					.map((message, index) => {
-						const hoverable = <strong
-							onMouseEnter={
-								() => { dispatch( actionCreators.setHighlighted([node.id]) ); }
-							}
-							onMouseLeave={
-								() => { dispatch( actionCreators.setHighlighted([]) ); }
-							}
+						const hoverable = <ComponentReference
+							modelComponent={node}
 						>
 							{`${node.modelComponentType} "${node.label}"`}
-						</strong>;
+						</ComponentReference>;
 						return <li key={`${node.id}-${index}`}>{hoverable} {message}</li>;
 					});
 			})
