@@ -984,9 +984,12 @@ function monitorTaskStatus(taskUrl, _callbacks={}) {
 				.then((taskStatusData) => {
 					if (taskStatusData.status) {
 						const taskStatusDataCategorized = helpers.handleStatus(taskStatusData);
+
+						// log current tool name
 						if (taskStatusDataCategorized.current[0]) {
 							console.warn(taskStatusDataCategorized.current[0].name, taskStatusData.status);
 						}
+
 						callbacks.onTaskStatus(taskStatusDataCategorized);
 
 						switch (taskStatusData.status) {
@@ -1246,9 +1249,7 @@ function runAnalysis(modelId, toolChainId) {
 										})
 										.map((file) => {
 											return file.async('string')
-												.then((content) => {
-													return content;
-												});
+												.then((content) => content);
 										});
 
 									return Promise.all(promises)
@@ -1318,7 +1319,6 @@ function runAnalysis(modelId, toolChainId) {
 					// 	console.log('onToolEnd', toolId);
 					// },
 					onTaskStatus: (taskStatusDataCategorized) => {
-						// console.log('onTaskStatus', taskStatusDataCategorized);
 						dispatch(
 							setTaskStatusCategorized(taskStatusDataCategorized)
 						);
