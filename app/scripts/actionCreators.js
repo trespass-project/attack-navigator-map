@@ -1101,7 +1101,8 @@ const retrieveAnalysisResults =
 module.exports.retrieveAnalysisResults =
 function retrieveAnalysisResults(taskStatusData) {
 	const { analysisToolNames } = trespass.analysis;
-	return knowledgebaseApi.getAnalysisResults(axios, taskStatusData, analysisToolNames)
+	const toolNames = [...analysisToolNames, 'Attack Pattern Lib.'];
+	return knowledgebaseApi.getAnalysisResults(axios, taskStatusData, toolNames)
 		.catch((err) => {
 			console.error(err.stack);
 		})
@@ -1261,7 +1262,7 @@ function runAnalysis(modelId, toolChainId) {
 						}
 
 						const blob = item.blob;
-						console.log(item.name, blob);
+						// console.log(item.name, blob);
 
 						const reader = new FileReader();
 						// for what we know, zip blob type could be any of these
@@ -1272,7 +1273,8 @@ function runAnalysis(modelId, toolChainId) {
 							'application/octet-stream',
 							'multipart/x-zip',
 						];
-						if (blob.type === 'text/plain') {
+						if (blob.type === 'text/plain'
+							|| blob.type === 'application/xml') {
 							reader.onload = textHandler;
 							reader.readAsText(blob);
 						} else if (R.contains(blob.type, zipTypes)) {
@@ -1293,7 +1295,6 @@ function runAnalysis(modelId, toolChainId) {
 						console.log('done', taskStatusData);
 						retrieveAnalysisResults(taskStatusData)
 							.then(analysisResults => {
-								console.log('analysisResults', analysisResults);
 								const promises = R.values(analysisResults)
 									.map(prepareResult);
 
