@@ -1038,9 +1038,49 @@ function setAnalysisRunning(yesno) {
 const setAnalysisResults =
 module.exports.setAnalysisResults =
 function setAnalysisResults(analysisResults) {
-	return {
-		type: constants.ACTION_setAnalysisResults,
-		analysisResults
+	const promises = R.keys(analysisResults)
+		.reduce((acc, key) => {
+			const result = analysisResults[key];
+			switch (key) {
+				case 'Attack Pattern Lib.': {
+					const promise = trespass.attacktree.parse(result[0])
+						.then((attacktree) => ({ [key]: attacktree }));
+					return [...acc, promise];
+				}
+				case 'A.T. Evaluator': {
+					const promise = Promise.resolve(
+						{ [key]: trespass.analysis.ate.parse(result[0]) }
+					);
+					return [...acc, promise];
+				}
+				case 'A.T. Analyzer': {
+					const promises = result
+						.map((attacktreeStr) => {
+							return trespass.attacktree.parse(attacktreeStr);
+						});
+					const promise = Promise.all(promises)
+						.then((attacktrees) => ({ [key]: attacktrees }));
+					return [...acc, promise];
+				}
+				default: {
+					return acc;
+				}
+			}
+		}, []);
+
+	return (dispatch, getState) => {
+		Promise.all(promises)
+			.then((results) => {
+				return results
+					.reduce((acc, item) => Object.assign({}, acc, item), {});
+			})
+			.then((preparedResults) => {
+				console.log(preparedResults);
+				dispatch({
+					type: constants.ACTION_setAnalysisResults,
+					analysisResults: preparedResults,
+				});
+			});
 	};
 };
 
