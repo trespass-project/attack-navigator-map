@@ -1302,13 +1302,11 @@ function runAnalysis(modelId, toolChainId) {
 										console.error(err);
 									})
 									.then((_results) => {
-										console.log('results', _results);
 										const results = _results
-											.reduce((acc, item) => {
-												return _.assign(acc, item);
-											}, {});
-										console.log('analysis results:', results);
-										dispatch( setAnalysisResults(results) );
+											.reduce((acc, item) => _.assign(acc, item), {});
+										dispatch(
+											setAnalysisResults(results)
+										);
 									});
 							});
 					},
