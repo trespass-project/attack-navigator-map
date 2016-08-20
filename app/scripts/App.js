@@ -10,8 +10,9 @@ const knowledgebaseApi = require('trespass.js').api.knowledgebase;
 // const ModelDebugView = require('./components/ModelDebugView/ModelDebugView.js');
 // const MainMenu = require('./MainMenu.js');
 const Wizard = require('./Wizard.js');
-const UsageHint = require('./UsageHint.js');
+// const UsageHint = require('./UsageHint.js');
 const GraphEditor = require('./GraphEditor.js');
+const AnalysisResultsOverlay = require('./AnalysisResultsOverlay.js');
 
 
 module.exports =
@@ -229,6 +230,19 @@ React.createClass({
 				<div id='panel-container'>
 					<Wizard hasOpenMap={props.hasOpenMap} {...props} />
 				</div>
+
+				{(props.analysisRunning) &&
+					<AnalysisResultsOverlay
+						toolChain={props.toolChains[props.toolChainId]}
+						taskStatusCategorized={props.taskStatusCategorized}
+						analysisResults={props.analysisResults}
+						onClose={() => {
+							props.dispatch(
+								actionCreators.setAnalysisRunning(false)
+							);
+						}}
+					/>
+				}
 			</div>
 		);
 	}

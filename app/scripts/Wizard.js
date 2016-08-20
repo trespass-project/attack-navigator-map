@@ -18,7 +18,6 @@ const Tooltip = require('react-bootstrap').Tooltip;
 import JSONTree from 'react-json-tree';
 import { AutoSizer, FlexTable, FlexColumn/*, SortDirection*/ } from 'react-virtualized';
 
-const ToolChainOverlay = require('./ToolChainOverlay.js');
 const PredicateEditor = require('./PredicateEditor.js');
 const AttackerProfileEditor = require('./AttackerProfileEditor/AttackerProfileEditor.js');
 
@@ -731,8 +730,6 @@ const Wizard = React.createClass({
 					</div>
 
 					{renderFn(props)}
-
-					{this.renderToolChainOverlay()}
 				</div>
 			</div>
 		);
@@ -775,28 +772,6 @@ const Wizard = React.createClass({
 				props.toolChainId
 			)
 		);
-	},
-
-	renderToolChainOverlay() {
-		const props = this.props;
-		const context = this.context;
-
-		if (!props.analysisRunning) {
-			return null;
-		}
-
-		function onClose() {
-			context.dispatch(
-				actionCreators.setAnalysisRunning(false)
-			);
-		}
-
-		return <ToolChainOverlay
-			toolChain={props.toolChains[props.toolChainId]}
-			taskStatusCategorized={props.taskStatusCategorized}
-			analysisResults={props.analysisResults}
-			onClose={onClose}
-		/>;
 	},
 
 	clickCreateNew(event) {

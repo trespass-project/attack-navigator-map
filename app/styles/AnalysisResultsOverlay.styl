@@ -1,0 +1,33 @@
+#AnalysisDashboard
+	background-color: white
+	z-index: 999999
+	position: absolute
+	top: 0
+	left: 0
+	width: 100%
+	height: 100%
+	overflowX: hidden
+	overflowY: hidden
+
+	display: flex
+	flex-direction: row
+
+	.visualization
+		background-color: $bgcolor
+		flex: 1
+
+	.tools
+		width: 300px
+		background-color: white
+		padding: $panelPadding
+		overflowY: auto
+
+	.close-x
+		// position: fixed
+		// top: 0
+		// right: 0
+		padding: 0px
+		font-size: 30px
+		line-height: 22px
+		// color: $trespass_red
+		cursor: pointer
