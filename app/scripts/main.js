@@ -8,6 +8,7 @@ import ReduxThunk from 'redux-thunk';
 
 const modelReducer = require('./modelReducer.js');
 const interfaceReducer = require('./interfaceReducer.js');
+const analysisReducer = require('./analysisReducer.js');
 
 const HTML5Backend = require('react-dnd-html5-backend');
 const DragDropContext = require('react-dnd').DragDropContext;
@@ -20,6 +21,7 @@ function configureStore(initialState) {
 	const combinedReducers = combineReducers({
 		model: modelReducer.reducer,
 		interface: interfaceReducer.reducer,
+		analysis: analysisReducer.reducer,
 	});
 
 	const store = createStore(
@@ -42,7 +44,6 @@ const getRelationTypes = (state) => state.relationTypes;
 const relationsMap = createSelector(
 	getRelationTypes,
 	(relationTypes) => {
-		console.log(relationTypes);
 		return helpers.toHashMap('value', relationTypes);
 	}
 );

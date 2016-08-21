@@ -79,8 +79,6 @@ const initialState = {
 	toolChainIds: [],
 	toolChains: {},
 	toolChainId: null,
-	analysisRunning: false,
-	analysisResults: null,
 	taskStatusCategorized: undefined,
 
 	relationTypes: [],
@@ -341,31 +339,6 @@ function reducer(state=initialState, action) {
 		case constants.ACTION_setSelectedToolChain:
 			return mergeWithState({
 				toolChainId: action.toolChainId,
-			});
-
-		case constants.ACTION_runAnalysis:
-			return mergeWithState({
-				analysisRunning: true,
-			});
-
-		case constants.ACTION_setAnalysisResults:
-			return mergeWithState({
-				analysisResults: action.analysisResults,
-			});
-
-		case constants.ACTION_setAnalysisRunning: {
-			const update = {
-				analysisRunning: action.yesno,
-			};
-			if (!action.yesno) {
-				update.analysisResults = null;
-			}
-			return mergeWithState(update);
-		}
-
-		case constants.ACTION_setTaskStatusCategorized:
-			return mergeWithState({
-				taskStatusCategorized: action.taskStatusCategorized,
 			});
 
 		// case constants.ACTION_loadToolChains:
