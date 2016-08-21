@@ -151,6 +151,7 @@ const AnalysisResultsOverlay = React.createClass({
 		return <div id='AnalysisDashboard'>
 			<div className='visualization'>
 				<div>visualization</div>
+				<div>attacker profit: {props.attackerProfit}</div>
 				{/*<AttacktreeVisualization
 					attacktree={state.attacktree}
 					layout={undefined}

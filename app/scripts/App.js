@@ -233,6 +233,7 @@ React.createClass({
 
 				{(props.analysisRunning) &&
 					<AnalysisResultsOverlay
+						attackerProfit={props.attackerProfit}
 						toolChain={props.toolChains[props.toolChainId]}
 						taskStatusCategorized={props.taskStatusCategorized}
 						analysisResults={props.analysisResults}
