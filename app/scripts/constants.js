@@ -98,6 +98,7 @@ const constants = {
 	ACTION_saveModelToKb: 'ACTION_saveModelToKb',
 	ACTION_updateMetadata: 'ACTION_updateMetadata',
 	ACTION_resultsSelectTool: 'ACTION_resultsSelectTool',
+	ACTION_resultsSelectAttack: 'ACTION_resultsSelectAttack',
 	ACTION_resetAnalysis: 'ACTION_resetAnalysis',
 
 	CLONE_OFFSET: 70,

@@ -238,6 +238,7 @@ React.createClass({
 						taskStatusCategorized={props.taskStatusCategorized}
 						analysisResults={props.analysisResults}
 						resultsSelectedTool={props.resultsSelectedTool}
+						resultsSelectedAttackIndex={props.resultsSelectedAttackIndex}
 						onClose={() => {
 							props.dispatch(
 								actionCreators.setAnalysisRunning(false)

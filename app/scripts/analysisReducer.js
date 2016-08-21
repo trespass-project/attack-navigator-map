@@ -9,6 +9,7 @@ const initialState = {
 	analysisRunning: false,
 	analysisResults: null,
 	resultsSelectedTool: undefined,
+	resultsSelectedAttackIndex: undefined,
 };
 
 
@@ -49,6 +50,13 @@ function reducer(state=initialState, action) {
 			const { toolName } = action;
 			return mergeWithState({
 				resultsSelectedTool: toolName,
+			});
+		}
+
+		case constants.ACTION_resultsSelectAttack: {
+			const { index } = action;
+			return mergeWithState({
+				resultsSelectedAttackIndex: index,
 			});
 		}
 

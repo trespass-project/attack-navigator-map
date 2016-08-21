@@ -86,6 +86,7 @@ const AnalysisResultsOverlay = React.createClass({
 		taskStatusCategorized: React.PropTypes.object,
 		analysisResults: React.PropTypes.object,
 		resultsSelectedTool: React.PropTypes.string,
+		resultsSelectedAttackIndex: React.PropTypes.number,
 		onClose: React.PropTypes.func,
 	},
 
@@ -109,6 +110,12 @@ const AnalysisResultsOverlay = React.createClass({
 		}
 		this.context.dispatch(
 			actionCreators.resultsSelectTool(toolName)
+		);
+	},
+
+	onAttackSelect(item, index) {
+		this.context.dispatch(
+			actionCreators.resultsSelectAttack(index)
 		);
 	},
 
@@ -187,6 +194,8 @@ const AnalysisResultsOverlay = React.createClass({
 				case 'A.T. Analyzer': {
 					ToolVisualization = <ATAnalyzerResults
 						attacktrees={props.analysisResults['A.T. Analyzer']}
+						selectedIndex={props.resultsSelectedAttackIndex}
+						onSelect={this.onAttackSelect}
 					/>;
 					break;
 				}
@@ -197,6 +206,8 @@ const AnalysisResultsOverlay = React.createClass({
 						height={400}
 						data={props.analysisResults['A.T. Evaluator']}
 						profit={props.attackerProfit}
+						selectedIndex={props.resultsSelectedAttackIndex}
+						onSelect={this.onAttackSelect}
 					/>;
 					break;
 				}

@@ -1626,3 +1626,15 @@ function resultsSelectTool(toolName) {
 		});
 	};
 };
+
+
+const resultsSelectAttack =
+module.exports.resultsSelectAttack =
+function resultsSelectAttack(index) {
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_resultsSelectAttack,
+			index,
+		});
+	};
+};
