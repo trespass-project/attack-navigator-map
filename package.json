@@ -86,7 +86,7 @@
     "reselect": "^2.5.3",
     "shortid": "^2.2.4",
     "sifter": "^0.5.1",
-    "trespass.js": "^0.20.4",
+    "trespass.js": "^0.20.5",
     "tween.js": "^0.14.0",
     "xml2js": "^0.4.16"
   },

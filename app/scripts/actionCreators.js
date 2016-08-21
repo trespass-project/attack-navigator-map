@@ -1624,6 +1624,12 @@ function resultsSelectTool(toolName) {
 			type: constants.ACTION_resultsSelectTool,
 			toolName,
 		});
+
+		if (toolName === 'Treemaker'
+			|| toolName === 'Attack Pattern Lib.') {
+			// display tree
+			dispatch( resultsSelectAttack(0) );
+		}
 	};
 };
 
@@ -1635,15 +1641,28 @@ function resultsSelectAttack(index) {
 		const state = getState();
 		const selectedTool = state.analysis.resultsSelectedTool;
 		let attacktree = undefined;
+
+		/* eslint brace-style: 0 */
 		if (selectedTool === 'A.T. Analyzer') {
 			attacktree = state.analysis.analysisResults[selectedTool][index];
-		} else if (selectedTool === 'A.T. Evaluator') {
+		}
+		else if (selectedTool === 'A.T. Evaluator') {
 			const aplAttacktree = state.analysis.analysisResults['Attack Pattern Lib.'];
-			attacktree = trespass.attacktree.subtreeFromLeafLabels(
-				trespass.attacktree.getRootNode(aplAttacktree),
-				state.analysis.analysisResults[selectedTool][index].labels
-			);
-		} else if (selectedTool === 'Treemaker'
+			const rootNode = trespass.attacktree.getRootNode(aplAttacktree);
+			const labels = state.analysis.analysisResults[selectedTool][index].labels;
+			try {
+				attacktree = trespass.attacktree.subtreeFromLeafLabels(
+					rootNode,
+					labels
+				);
+			} catch (err) {
+				const msg = 'constructing subtree from labels failed';
+				console.error(msg);
+				attacktree = undefined;
+				alert(msg);
+			}
+		}
+		else if (selectedTool === 'Treemaker'
 			|| selectedTool === 'Attack Pattern Lib.') {
 			attacktree = state.analysis.analysisResults[selectedTool];
 		}
