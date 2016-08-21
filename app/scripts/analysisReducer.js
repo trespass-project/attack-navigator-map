@@ -17,6 +17,9 @@ function reducer(state=initialState, action) {
 	const mergeWithState = R.partial(mergeWith, [state]);
 
 	switch (action.type) {
+		case constants.ACTION_resetAnalysis:
+			return initialState;
+
 		case constants.ACTION_runAnalysis:
 			return mergeWithState({
 				analysisRunning: true,

@@ -1220,6 +1220,13 @@ function humanizeModelIds() {
 };
 
 
+const resetAnalysis =
+module.exports.resetAnalysis =
+function resetAnalysis() {
+	return { type: constants.ACTION_resetAnalysis };
+};
+
+
 const runAnalysis =
 module.exports.runAnalysis =
 function runAnalysis(modelId, toolChainId) {
@@ -1228,6 +1235,9 @@ function runAnalysis(modelId, toolChainId) {
 	}
 
 	return (dispatch, getState) => {
+		// reset everything before running new analysis
+		dispatch( resetAnalysis() );
+
 		const state = getState();
 		const toolChains = state.interface.toolChains;
 		const toolChainData = toolChains[toolChainId];
