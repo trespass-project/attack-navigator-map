@@ -3,8 +3,8 @@ const React = require('react');
 const classnames = require('classnames');
 // const Loader = require('react-loader');
 const actionCreators = require('./actionCreators.js');
-// const trespassVisualizations = require('trespass-visualizations');
-// const { AnalysisResults } = trespassVisualizations.components;
+const trespassVisualizations = require('trespass-visualizations');
+const { ATAnalyzerResults, ATEvaluatorResults } = trespassVisualizations.components;
 
 const noop = () => {};
 
@@ -173,17 +173,39 @@ const AnalysisResultsOverlay = React.createClass({
 		// 	taskStatusCategorized.current || []
 		// );
 
-		const resultsReady = !!props.analysisResults;
-
 		const closeX = <div
 			className='close-x'
 			onClick={this.onClose}
 		>×</div>;
 
+		const resultsReady = !!props.analysisResults;
+
+		let ToolVisualization = null;
+		if (props.resultsSelectedTool) {
+			/* eslint default-case: 0 */
+			switch (props.resultsSelectedTool) {
+				case 'A.T. Analyzer': {
+					ToolVisualization = <ATAnalyzerResults
+						attacktrees={props.analysisResults['A.T. Analyzer']}
+					/>;
+					break;
+				}
+
+				case 'A.T. Evaluator': {
+					ToolVisualization = <ATEvaluatorResults
+						width={0}
+						height={400}
+						data={props.analysisResults['A.T. Evaluator']}
+						profit={props.attackerProfit}
+					/>;
+					break;
+				}
+			}
+		}
+
 		return <div id='AnalysisDashboard'>
 			<div className='visualization'>
 				<div>visualization</div>
-				<div>attacker profit: {props.attackerProfit}</div>
 				{/*<AttacktreeVisualization
 					attacktree={state.attacktree}
 					layout={undefined}
@@ -206,26 +228,9 @@ const AnalysisResultsOverlay = React.createClass({
 				}
 
 				<hr />
-			</div>
 
-			{/*<div>
-				{resultsReady
-					? <div >
-						<hr />
-						<AnalyticsComponent
-							ataInput={props.analysisResults['A.T. Analyzer']}
-							ateInput={props.analysisResults['A.T. Evaluator'][0]}
-						/>
-						{<AnalysisResults
-							parsedATAResults={props.ataAttacktrees}
-							parsedATEResults={props.ateData}
-							aplAttacktree={props.aplAttacktree}
-							utility={20000}
-						/>}
-					</div>
-					: null
-				}
-			</div>*/}
+				{ToolVisualization}
+			</div>
 		</div>;
 	},
 });
