@@ -1632,9 +1632,26 @@ const resultsSelectAttack =
 module.exports.resultsSelectAttack =
 function resultsSelectAttack(index) {
 	return (dispatch, getState) => {
+		const state = getState();
+		const selectedTool = state.analysis.resultsSelectedTool;
+		let attacktree = undefined;
+		if (selectedTool === 'A.T. Analyzer') {
+			attacktree = state.analysis.analysisResults[selectedTool][index];
+		} else if (selectedTool === 'A.T. Evaluator') {
+			const aplAttacktree = state.analysis.analysisResults['Attack Pattern Lib.'];
+			attacktree = trespass.attacktree.subtreeFromLeafLabels(
+				trespass.attacktree.getRootNode(aplAttacktree),
+				state.analysis.analysisResults[selectedTool][index].labels
+			);
+		} else if (selectedTool === 'Treemaker'
+			|| selectedTool === 'Attack Pattern Lib.') {
+			attacktree = state.analysis.analysisResults[selectedTool];
+		}
+
 		dispatch({
 			type: constants.ACTION_resultsSelectAttack,
 			index,
+			attacktree,
 		});
 	};
 };

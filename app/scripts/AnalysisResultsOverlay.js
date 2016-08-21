@@ -4,7 +4,7 @@ const classnames = require('classnames');
 // const Loader = require('react-loader');
 const actionCreators = require('./actionCreators.js');
 const trespassVisualizations = require('trespass-visualizations');
-const { ATAnalyzerResults, ATEvaluatorResults } = trespassVisualizations.components;
+const { ATAnalyzerResults, ATEvaluatorResults, AttacktreeVisualization } = trespassVisualizations.components;
 
 const noop = () => {};
 
@@ -87,6 +87,7 @@ const AnalysisResultsOverlay = React.createClass({
 		analysisResults: React.PropTypes.object,
 		resultsSelectedTool: React.PropTypes.string,
 		resultsSelectedAttackIndex: React.PropTypes.number,
+		resultsAttacktree: React.PropTypes.object,
 		onClose: React.PropTypes.func,
 	},
 
@@ -216,11 +217,10 @@ const AnalysisResultsOverlay = React.createClass({
 
 		return <div id='AnalysisDashboard'>
 			<div className='visualization'>
-				<div>visualization</div>
-				{/*<AttacktreeVisualization
-					attacktree={state.attacktree}
+				<AttacktreeVisualization
+					attacktree={props.resultsAttacktree}
 					layout={undefined}
-				/>*/}
+				/>
 			</div>
 
 			<div className={classnames('tools', { ready: resultsReady })}>

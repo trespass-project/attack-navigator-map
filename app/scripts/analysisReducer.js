@@ -10,6 +10,7 @@ const initialState = {
 	analysisResults: null,
 	resultsSelectedTool: undefined,
 	resultsSelectedAttackIndex: undefined,
+	resultsAttacktree: undefined,
 };
 
 
@@ -50,13 +51,15 @@ function reducer(state=initialState, action) {
 			const { toolName } = action;
 			return mergeWithState({
 				resultsSelectedTool: toolName,
+				resultsSelectedAttackIndex: undefined,
 			});
 		}
 
 		case constants.ACTION_resultsSelectAttack: {
-			const { index } = action;
+			const { index, attacktree } = action;
 			return mergeWithState({
 				resultsSelectedAttackIndex: index,
+				resultsAttacktree: attacktree,
 			});
 		}
 
