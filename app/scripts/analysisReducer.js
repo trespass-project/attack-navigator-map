@@ -8,6 +8,7 @@ const constants = require('./constants.js');
 const initialState = {
 	analysisRunning: false,
 	analysisResults: null,
+	resultsSelectedTool: undefined,
 };
 
 
@@ -40,6 +41,13 @@ function reducer(state=initialState, action) {
 			return mergeWithState({
 				taskStatusCategorized: action.taskStatusCategorized,
 			});
+
+		case constants.ACTION_resultsSelectTool: {
+			const { toolName } = action;
+			return mergeWithState({
+				resultsSelectedTool: toolName,
+			});
+		}
 
 		default:
 			return state;

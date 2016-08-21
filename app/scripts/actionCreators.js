@@ -1604,3 +1604,15 @@ function setHighlighted(highlightIds) {
 		});
 	};
 };
+
+
+const resultsSelectTool =
+module.exports.resultsSelectTool =
+function resultsSelectTool(toolName) {
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_resultsSelectTool,
+			toolName,
+		});
+	};
+};

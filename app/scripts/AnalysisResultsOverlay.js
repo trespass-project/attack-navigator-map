@@ -2,6 +2,7 @@
 const React = require('react');
 const classnames = require('classnames');
 // const Loader = require('react-loader');
+const actionCreators = require('./actionCreators.js');
 // const trespassVisualizations = require('trespass-visualizations');
 // const { AnalysisResults } = trespassVisualizations.components;
 
@@ -13,6 +14,7 @@ const ToolName = React.createClass({
 		item: React.PropTypes.object.isRequired,
 		pending: React.PropTypes.bool,
 		completed: React.PropTypes.bool,
+		selected: React.PropTypes.bool,
 		onClick: React.PropTypes.func,
 	},
 
@@ -20,12 +22,13 @@ const ToolName = React.createClass({
 		return {
 			pending: false,
 			completed: false,
+			selected: false,
 			onClick: noop,
 		};
 	},
 
 	render() {
-		const { item, pending, completed, onClick } = this.props;
+		const { item, pending, completed, selected, onClick } = this.props;
 		const hasResult = !!item.result_file_url;
 		const hasError = (item.status === 'error');
 
@@ -48,13 +51,17 @@ const ToolName = React.createClass({
 
 		if (!pending && !completed) {
 			style.color = 'red';
-			style.fontWeight = 'bold';
+			// style.fontWeight = 'bold';
+		}
+
+		if (selected) {
+			style.border = 'solid 1px rgb(255, 40, 0)';
 		}
 
 		return <div
 			className='tool-item clearfix'
 			style={style}
-			onClick={onClick}
+			onClick={() => onClick(item.name)}
 		>
 			<div style={{ float: 'left' }}>
 				{item.name}
@@ -78,7 +85,12 @@ const AnalysisResultsOverlay = React.createClass({
 		toolChain: React.PropTypes.object.isRequired,
 		taskStatusCategorized: React.PropTypes.object,
 		analysisResults: React.PropTypes.object,
+		resultsSelectedTool: React.PropTypes.string,
 		onClose: React.PropTypes.func,
+	},
+
+	contextTypes: {
+		dispatch: React.PropTypes.func,
 	},
 
 	getDefaultProps() {
@@ -91,18 +103,20 @@ const AnalysisResultsOverlay = React.createClass({
 		this.props.onClose();
 	},
 
-	onToolSelect(event) {
-		event.preventDefault();
+	onToolSelect(toolName) {
 		if (!this.props.analysisResults) {
 			return;
 		}
-		// TODO: select tool
+		this.context.dispatch(
+			actionCreators.resultsSelectTool(toolName)
+		);
 	},
 
 	renderCompleted(item, index) {
 		return <ToolName
 			key={index}
 			item={item}
+			selected={this.props.resultsSelectedTool === item.name}
 			onClick={this.onToolSelect}
 			completed
 		/>;
@@ -112,6 +126,7 @@ const AnalysisResultsOverlay = React.createClass({
 		return <ToolName
 			key={index}
 			item={item}
+			selected={this.props.resultsSelectedTool === item.name}
 			onClick={this.onToolSelect}
 		/>;
 	},
@@ -120,6 +135,7 @@ const AnalysisResultsOverlay = React.createClass({
 		return <ToolName
 			key={index}
 			item={item}
+			selected={this.props.resultsSelectedTool === item.name}
 			onClick={this.onToolSelect}
 			pending
 		/>;
