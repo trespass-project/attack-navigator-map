@@ -1042,6 +1042,7 @@ function setAnalysisResults(analysisResults) {
 		.reduce((acc, key) => {
 			const result = analysisResults[key];
 			switch (key) {
+				case 'Treemaker':
 				case 'Attack Pattern Lib.': {
 					const promise = trespass.attacktree.parse(result[0])
 						.then((attacktree) => ({ [key]: attacktree }));
@@ -1157,7 +1158,11 @@ const retrieveAnalysisResults =
 module.exports.retrieveAnalysisResults =
 function retrieveAnalysisResults(taskStatusData) {
 	const { analysisToolNames } = trespass.analysis;
-	const toolNames = [...analysisToolNames, 'Attack Pattern Lib.'];
+	const toolNames = [
+		'Treemaker',
+		'Attack Pattern Lib.',
+		...analysisToolNames,
+	];
 	return knowledgebaseApi.getAnalysisResults(axios, taskStatusData, toolNames)
 		.catch((err) => {
 			console.error(err.stack);

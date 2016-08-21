@@ -44,7 +44,6 @@ const getRelationTypes = (state) => state.relationTypes;
 const relationsMap = createSelector(
 	getRelationTypes,
 	(relationTypes) => {
-		console.log(relationTypes);
 		return helpers.toHashMap('value', relationTypes);
 	}
 );
