@@ -1133,9 +1133,22 @@ function setSelectedToolChain(toolChainId) {
 const setTaskStatusCategorized =
 module.exports.setTaskStatusCategorized =
 function setTaskStatusCategorized(taskStatusDataCategorized) {
-	return {
-		type: constants.ACTION_setTaskStatusCategorized,
-		taskStatusCategorized: taskStatusDataCategorized
+	return (dispatch, getState) => {
+		// const state = getState();
+		// const oldtaskStatusCategorized = state.interface.taskStatusCategorized;
+		// if (oldtaskStatusCategorized) {
+		// 	const oldCompleted = oldtaskStatusCategorized.completed;
+		// 	const { completed } = taskStatusDataCategorized;
+		// 	if (oldCompleted.length !== completed.length) {
+		// 		// tools that just finished running
+		// 		const newCompleted = R.difference(completed, oldCompleted);
+		// 	}
+		// }
+
+		dispatch({
+			type: constants.ACTION_setTaskStatusCategorized,
+			taskStatusCategorized: taskStatusDataCategorized
+		});
 	};
 };
 
@@ -1352,12 +1365,6 @@ function runAnalysis(modelId, toolChainId) {
 									});
 							});
 					},
-					// onToolStart: (toolId) => {
-					// 	console.log('onToolStart', toolId);
-					// },
-					// onToolEnd: (toolId) => {
-					// 	console.log('onToolEnd', toolId);
-					// },
 					onTaskStatus: (taskStatusDataCategorized) => {
 						dispatch(
 							setTaskStatusCategorized(taskStatusDataCategorized)
