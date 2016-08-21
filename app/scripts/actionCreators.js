@@ -961,7 +961,7 @@ module.exports.setAttackerProfit =
 function setAttackerProfit(profit) {
 	return {
 		type: constants.ACTION_setAttackerProfit,
-		profit
+		profit: parseFloat(profit, 10),
 	};
 };
 
@@ -984,9 +984,12 @@ function monitorTaskStatus(taskUrl, _callbacks={}) {
 				.then((taskStatusData) => {
 					if (taskStatusData.status) {
 						const taskStatusDataCategorized = helpers.handleStatus(taskStatusData);
+
+						// log current tool name
 						if (taskStatusDataCategorized.current[0]) {
 							console.warn(taskStatusDataCategorized.current[0].name, taskStatusData.status);
 						}
+
 						callbacks.onTaskStatus(taskStatusDataCategorized);
 
 						switch (taskStatusData.status) {
@@ -1035,9 +1038,50 @@ function setAnalysisRunning(yesno) {
 const setAnalysisResults =
 module.exports.setAnalysisResults =
 function setAnalysisResults(analysisResults) {
-	return {
-		type: constants.ACTION_setAnalysisResults,
-		analysisResults
+	const promises = R.keys(analysisResults)
+		.reduce((acc, key) => {
+			const result = analysisResults[key];
+			switch (key) {
+				case 'Treemaker':
+				case 'Attack Pattern Lib.': {
+					const promise = trespass.attacktree.parse(result[0])
+						.then((attacktree) => ({ [key]: attacktree }));
+					return [...acc, promise];
+				}
+				case 'A.T. Evaluator': {
+					const promise = Promise.resolve(
+						{ [key]: trespass.analysis.ate.parse(result[0]) }
+					);
+					return [...acc, promise];
+				}
+				case 'A.T. Analyzer': {
+					const promises = result
+						.map((attacktreeStr) => {
+							return trespass.attacktree.parse(attacktreeStr);
+						});
+					const promise = Promise.all(promises)
+						.then((attacktrees) => ({ [key]: attacktrees }));
+					return [...acc, promise];
+				}
+				default: {
+					return acc;
+				}
+			}
+		}, []);
+
+	return (dispatch, getState) => {
+		Promise.all(promises)
+			.then((results) => {
+				return results
+					.reduce((acc, item) => Object.assign({}, acc, item), {});
+			})
+			.then((preparedResults) => {
+				console.log(preparedResults);
+				dispatch({
+					type: constants.ACTION_setAnalysisResults,
+					analysisResults: preparedResults,
+				});
+			});
 	};
 };
 
@@ -1090,9 +1134,22 @@ function setSelectedToolChain(toolChainId) {
 const setTaskStatusCategorized =
 module.exports.setTaskStatusCategorized =
 function setTaskStatusCategorized(taskStatusDataCategorized) {
-	return {
-		type: constants.ACTION_setTaskStatusCategorized,
-		taskStatusCategorized: taskStatusDataCategorized
+	return (dispatch, getState) => {
+		// const state = getState();
+		// const oldtaskStatusCategorized = state.interface.taskStatusCategorized;
+		// if (oldtaskStatusCategorized) {
+		// 	const oldCompleted = oldtaskStatusCategorized.completed;
+		// 	const { completed } = taskStatusDataCategorized;
+		// 	if (oldCompleted.length !== completed.length) {
+		// 		// tools that just finished running
+		// 		const newCompleted = R.difference(completed, oldCompleted);
+		// 	}
+		// }
+
+		dispatch({
+			type: constants.ACTION_setTaskStatusCategorized,
+			taskStatusCategorized: taskStatusDataCategorized
+		});
 	};
 };
 
@@ -1101,7 +1158,12 @@ const retrieveAnalysisResults =
 module.exports.retrieveAnalysisResults =
 function retrieveAnalysisResults(taskStatusData) {
 	const { analysisToolNames } = trespass.analysis;
-	return knowledgebaseApi.getAnalysisResults(axios, taskStatusData, analysisToolNames)
+	const toolNames = [
+		'Treemaker',
+		'Attack Pattern Lib.',
+		...analysisToolNames,
+	];
+	return knowledgebaseApi.getAnalysisResults(axios, taskStatusData, toolNames)
 		.catch((err) => {
 			console.error(err.stack);
 		})
@@ -1158,6 +1220,13 @@ function humanizeModelIds() {
 };
 
 
+const resetAnalysis =
+module.exports.resetAnalysis =
+function resetAnalysis() {
+	return { type: constants.ACTION_resetAnalysis };
+};
+
+
 const runAnalysis =
 module.exports.runAnalysis =
 function runAnalysis(modelId, toolChainId) {
@@ -1166,6 +1235,9 @@ function runAnalysis(modelId, toolChainId) {
 	}
 
 	return (dispatch, getState) => {
+		// reset everything before running new analysis
+		dispatch( resetAnalysis() );
+
 		const state = getState();
 		const toolChains = state.interface.toolChains;
 		const toolChainData = toolChains[toolChainId];
@@ -1245,9 +1317,7 @@ function runAnalysis(modelId, toolChainId) {
 										})
 										.map((file) => {
 											return file.async('string')
-												.then((content) => {
-													return content;
-												});
+												.then((content) => content);
 										});
 
 									return Promise.all(promises)
@@ -1261,7 +1331,7 @@ function runAnalysis(modelId, toolChainId) {
 						}
 
 						const blob = item.blob;
-						console.log(item.name, blob);
+						// console.log(item.name, blob);
 
 						const reader = new FileReader();
 						// for what we know, zip blob type could be any of these
@@ -1272,7 +1342,8 @@ function runAnalysis(modelId, toolChainId) {
 							'application/octet-stream',
 							'multipart/x-zip',
 						];
-						if (blob.type === 'text/plain') {
+						if (blob.type === 'text/plain'
+							|| blob.type === 'application/xml') {
 							reader.onload = textHandler;
 							reader.readAsText(blob);
 						} else if (R.contains(blob.type, zipTypes)) {
@@ -1293,7 +1364,6 @@ function runAnalysis(modelId, toolChainId) {
 						console.log('done', taskStatusData);
 						retrieveAnalysisResults(taskStatusData)
 							.then(analysisResults => {
-								console.log('analysisResults', analysisResults);
 								const promises = R.values(analysisResults)
 									.map(prepareResult);
 
@@ -1302,24 +1372,15 @@ function runAnalysis(modelId, toolChainId) {
 										console.error(err);
 									})
 									.then((_results) => {
-										console.log('results', _results);
 										const results = _results
-											.reduce((acc, item) => {
-												return _.assign(acc, item);
-											}, {});
-										console.log('analysis results:', results);
-										dispatch( setAnalysisResults(results) );
+											.reduce((acc, item) => _.assign(acc, item), {});
+										dispatch(
+											setAnalysisResults(results)
+										);
 									});
 							});
 					},
-					// onToolStart: (toolId) => {
-					// 	console.log('onToolStart', toolId);
-					// },
-					// onToolEnd: (toolId) => {
-					// 	console.log('onToolEnd', toolId);
-					// },
 					onTaskStatus: (taskStatusDataCategorized) => {
-						// console.log('onTaskStatus', taskStatusDataCategorized);
 						dispatch(
 							setTaskStatusCategorized(taskStatusDataCategorized)
 						);
@@ -1550,6 +1611,66 @@ function setHighlighted(highlightIds) {
 		dispatch({
 			type: constants.ACTION_setHighlighted,
 			highlightIds,
+		});
+	};
+};
+
+
+const resultsSelectTool =
+module.exports.resultsSelectTool =
+function resultsSelectTool(toolName) {
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_resultsSelectTool,
+			toolName,
+		});
+
+		if (toolName === 'Treemaker'
+			|| toolName === 'Attack Pattern Lib.') {
+			// display tree
+			dispatch( resultsSelectAttack(0) );
+		}
+	};
+};
+
+
+const resultsSelectAttack =
+module.exports.resultsSelectAttack =
+function resultsSelectAttack(index) {
+	return (dispatch, getState) => {
+		const state = getState();
+		const selectedTool = state.analysis.resultsSelectedTool;
+		let attacktree = undefined;
+
+		/* eslint brace-style: 0 */
+		if (selectedTool === 'A.T. Analyzer') {
+			attacktree = state.analysis.analysisResults[selectedTool][index];
+		}
+		else if (selectedTool === 'A.T. Evaluator') {
+			const aplAttacktree = state.analysis.analysisResults['Attack Pattern Lib.'];
+			const rootNode = trespass.attacktree.getRootNode(aplAttacktree);
+			const labels = state.analysis.analysisResults[selectedTool][index].labels;
+			try {
+				attacktree = trespass.attacktree.subtreeFromLeafLabels(
+					rootNode,
+					labels
+				);
+			} catch (err) {
+				const msg = 'constructing subtree from labels failed';
+				console.error(msg);
+				attacktree = undefined;
+				alert(msg);
+			}
+		}
+		else if (selectedTool === 'Treemaker'
+			|| selectedTool === 'Attack Pattern Lib.') {
+			attacktree = state.analysis.analysisResults[selectedTool];
+		}
+
+		dispatch({
+			type: constants.ACTION_resultsSelectAttack,
+			index,
+			attacktree,
 		});
 	};
 };
