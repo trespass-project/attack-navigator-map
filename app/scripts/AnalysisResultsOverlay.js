@@ -1,8 +1,11 @@
-const R = require('ramda');
+// const R = require('ramda');
 const React = require('react');
+const classnames = require('classnames');
 // const Loader = require('react-loader');
-const trespassVisualizations = require('trespass-visualizations');
-const { AnalysisResults } = trespassVisualizations.components;
+// const trespassVisualizations = require('trespass-visualizations');
+// const { AnalysisResults } = trespassVisualizations.components;
+
+const noop = () => {};
 
 
 const ToolName = React.createClass({
@@ -10,24 +13,25 @@ const ToolName = React.createClass({
 		item: React.PropTypes.object.isRequired,
 		pending: React.PropTypes.bool,
 		completed: React.PropTypes.bool,
+		onClick: React.PropTypes.func,
 	},
 
 	getDefaultProps() {
 		return {
 			pending: false,
 			completed: false,
+			onClick: noop,
 		};
 	},
 
 	render() {
-		const { item, pending, completed } = this.props;
+		const { item, pending, completed, onClick } = this.props;
 		const hasResult = !!item.result_file_url;
 		const hasError = (item.status === 'error');
 
 		const style = {
 			padding: '5px',
 			marginBottom: '5px',
-			cursor: 'pointer',
 			border: 'solid 1px black',
 			color: 'black',
 			fontWeight: 'normal',
@@ -48,8 +52,9 @@ const ToolName = React.createClass({
 		}
 
 		return <div
-			className='clearfix'
+			className='tool-item clearfix'
 			style={style}
+			onClick={onClick}
 		>
 			<div style={{ float: 'left' }}>
 				{item.name}
@@ -86,10 +91,19 @@ const AnalysisResultsOverlay = React.createClass({
 		this.props.onClose();
 	},
 
+	onToolSelect(event) {
+		event.preventDefault();
+		if (!this.props.analysisResults) {
+			return;
+		}
+		// TODO: select tool
+	},
+
 	renderCompleted(item, index) {
 		return <ToolName
 			key={index}
 			item={item}
+			onClick={this.onToolSelect}
 			completed
 		/>;
 	},
@@ -98,6 +112,7 @@ const AnalysisResultsOverlay = React.createClass({
 		return <ToolName
 			key={index}
 			item={item}
+			onClick={this.onToolSelect}
 		/>;
 	},
 
@@ -105,6 +120,7 @@ const AnalysisResultsOverlay = React.createClass({
 		return <ToolName
 			key={index}
 			item={item}
+			onClick={this.onToolSelect}
 			pending
 		/>;
 	},
@@ -141,7 +157,7 @@ const AnalysisResultsOverlay = React.createClass({
 		// 	taskStatusCategorized.current || []
 		// );
 
-		// const resultsReady = !!props.analysisResults;
+		const resultsReady = !!props.analysisResults;
 
 		const closeX = <div
 			className='close-x'
@@ -158,7 +174,7 @@ const AnalysisResultsOverlay = React.createClass({
 				/>*/}
 			</div>
 
-			<div className='tools'>
+			<div className={classnames('tools', { ready: resultsReady })}>
 				<div className='clearfix' style={{ marginBottom: 5 }}>
 					<div style={{ float: 'left', color: 'grey' }}>
 						Tools
