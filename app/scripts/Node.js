@@ -22,13 +22,6 @@ const typeIcons = {
 
 
 const Node = React.createClass({
-	mixins: [SchleppMixin],
-
-	contextTypes: {
-		theme: React.PropTypes.object,
-		dispatch: React.PropTypes.func,
-	},
-
 	propTypes: {
 		x: React.PropTypes.number.isRequired,
 		y: React.PropTypes.number.isRequired,
@@ -42,7 +35,14 @@ const Node = React.createClass({
 		// editorTransformElem: React.PropTypes.object.isRequired,
 	},
 
-	getDefaultProps: function() {
+	contextTypes: {
+		theme: React.PropTypes.object,
+		dispatch: React.PropTypes.func,
+	},
+
+	mixins: [SchleppMixin],
+
+	getDefaultProps() {
 		return {
 			isSelected: false,
 			isHovered: false,
@@ -50,7 +50,152 @@ const Node = React.createClass({
 		};
 	},
 
-	renderIcon: function() {
+	_onContextMenu(event) {
+		const context = this.context;
+		const props = this.props;
+
+		const menuItems = [
+			{	label: 'delete',
+				destructive: true,
+				icon: icons['fa-trash'],
+				action: () => {
+					context.dispatch( actionCreators.removeNode(props.node.id) );
+				}
+			},
+			{	label: 'clone',
+				icon: icons['fa-files-o'],
+				action: () => {
+					context.dispatch( actionCreators.cloneNode(props.node.id) );
+				}
+			},
+			{	label: 'remove\nfrom group',
+				icon: icons['fa-object-group'],
+				action: () => {
+					context.dispatch( actionCreators.ungroupNode(props.node.id) );
+				}
+			},
+		];
+
+		context.dispatch( actionCreators.showContextMenu(event, menuItems) );
+	},
+
+	_onClick(event) {
+		event.preventDefault();
+		event.stopPropagation();
+		this.context.dispatch(
+			actionCreators.select(this.props.node.id, 'node')
+		);
+	},
+
+	_onDragStart(event) {
+		const props = this.props;
+		const node = props.node;
+
+		this.context.dispatch(
+			actionCreators.setDragNode(node.id)
+		);
+
+		this.originalPositionX = node.x;
+		this.originalPositionY = node.y;
+
+		this.modelXYEventOrigin = helpers.unTransformFromTo(
+			props.editorElem,
+			props.editorTransformElem,
+			{
+				x: event.clientX,
+				y: event.clientY
+			}
+		);
+	},
+
+	_onDragMove(event) {
+		const props = this.props;
+
+		// get event coords in model space
+		const modelXYEvent = helpers.unTransformFromTo(
+			props.editorElem,
+			props.editorTransformElem,
+			{
+				x: event.clientX,
+				y: event.clientY
+			}
+		);
+
+		const modelXYDelta = {
+			x: (modelXYEvent.x - this.modelXYEventOrigin.x),
+			y: (modelXYEvent.y - this.modelXYEventOrigin.y),
+		};
+
+		this.context.dispatch(
+			actionCreators.moveNode(
+				props.node.id,
+				{
+					x: this.originalPositionX + modelXYDelta.x,
+					y: this.originalPositionY + modelXYDelta.y,
+				}
+			)
+		);
+	},
+
+	_onDragEnd(event) {
+		// TODO: DRY (almost same code as in <Dropzone>)
+
+		// for every group
+			// check if node is inside the bounds of group
+				// if yes, add node to group
+		const context = this.context;
+		const props = this.props;
+		const graph = props.graph;
+		const groups = graph.groups;
+		const node = props.node;
+		const halfSize = 0.5 * context.theme.node.size;
+		const dropGroups = R.values(groups)
+			.filter((group) => {
+				const groupRect = helpers.getGroupBBox(graph.nodes, group);
+				const nodeRect = {
+					x: node.x - halfSize,
+					y: node.y - halfSize,
+					width: context.theme.node.size,
+					height: context.theme.node.size,
+				};
+				const groupCenter = {
+					x: groupRect.x + groupRect.width * 0.5,
+					y: groupRect.y + groupRect.height * 0.5,
+				};
+				// console.log(helpers.distBetweenPoints(node, groupCenter));
+				// if (helpers.isRectInsideRect(nodeRect, groupRect)
+				// 	|| helpers.isRectInsideRect(groupRect, nodeRect) // or, when group is smaller than node
+				// 	) {
+					// check if actually inside dropzone
+					if (helpers.distBetweenPoints(nodeRect, groupCenter) <= context.theme.group.dropzoneRadius) {
+						return true;
+					}
+				// }
+				return false;
+			});
+
+		if (dropGroups.length) {
+			context.dispatch(
+				actionCreators.addNodeToGroup(node.id, R.last(dropGroups).id)
+			);
+		}
+
+		context.dispatch( actionCreators.setDragNode(null) );
+	},
+
+	_handleHover(event) {
+		this.context.dispatch(
+			actionCreators.setHoverNode(this.props.node.id)
+		);
+	},
+
+	_handleHoverOut(event) {
+		this.context.dispatch(
+			actionCreators.setHoverNode(null)
+		);
+	},
+
+	renderIcon() {
 		const props = this.props;
 
 		if (!props.showNodeLabels) { return null; }
@@ -66,7 +211,7 @@ const Node = React.createClass({
 		/>;
 	},
 
-	renderLabel: function() {
+	renderLabel() {
 		const props = this.props;
 		const context = this.context;
 
@@ -85,7 +230,7 @@ const Node = React.createClass({
 		</text>;
 	},
 
-	render: function() {
+	render() {
 		const props = this.props;
 		const context = this.context;
 		const radius = context.theme.node.size * 0.5;
@@ -142,142 +287,6 @@ const Node = React.createClass({
 			</g>
 		);
 	},
-
-	_onContextMenu: function(event) {
-		const context = this.context;
-		const props = this.props;
-
-		const menuItems = [
-			{	label: 'delete',
-				destructive: true,
-				icon: icons['fa-trash'],
-				action: () => {
-					context.dispatch( actionCreators.removeNode(props.node.id) );
-				}
-			},
-			{	label: 'clone',
-				icon: icons['fa-files-o'],
-				action: () => {
-					context.dispatch( actionCreators.cloneNode(props.node.id) );
-				}
-			},
-			{	label: 'remove\nfrom group',
-				icon: icons['fa-object-group'],
-				action: () => {
-					context.dispatch( actionCreators.ungroupNode(props.node.id) );
-				}
-			},
-		];
-
-		context.dispatch( actionCreators.showContextMenu(event, menuItems) );
-	},
-
-	_onClick: function(event) {
-		event.preventDefault();
-		event.stopPropagation();
-		this.context.dispatch(
-			actionCreators.select(this.props.node.id, 'node')
-		);
-	},
-
-	_onDragStart: function(event) {
-		const props = this.props;
-		const node = props.node;
-
-		this.context.dispatch(
-			actionCreators.setDragNode(node.id)
-		);
-
-		this.originalPositionX = node.x;
-		this.originalPositionY = node.y;
-
-		this.modelXYEventOrigin = helpers.unTransformFromTo(
-			props.editorElem,
-			props.editorTransformElem,
-			{ x: event.clientX,
-			  y: event.clientY }
-		);
-	},
-
-	_onDragMove: function(event) {
-		const props = this.props;
-
-		// get event coords in model space
-		const modelXYEvent = helpers.unTransformFromTo(
-			props.editorElem,
-			props.editorTransformElem,
-			{ x: event.clientX,
-			  y: event.clientY }
-		);
-
-		const modelXYDelta = {
-			x: (modelXYEvent.x - this.modelXYEventOrigin.x),
-			y: (modelXYEvent.y - this.modelXYEventOrigin.y),
-		};
-
-		this.context.dispatch(
-			actionCreators.moveNode(
-				props.node.id, {
-					x: this.originalPositionX + modelXYDelta.x,
-					y: this.originalPositionY + modelXYDelta.y,
-				}
-			)
-		);
-	},
-
-	_onDragEnd: function(event) {
-		// TODO: DRY (almost same code as in <Dropzone>)
-
-		// for every group
-			// check if node is inside the bounds of group
-				// if yes, add node to group
-		const context = this.context;
-		const props = this.props;
-		const graph = props.graph;
-		const groups = graph.groups;
-		const node = props.node;
-		const halfSize = 0.5 * context.theme.node.size;
-		const dropGroups = R.values(groups)
-			.filter((group) => {
-				const groupRect = helpers.getGroupBBox(graph.nodes, group);
-				const nodeRect = {
-					x: node.x - halfSize,
-					y: node.y - halfSize,
-					width: context.theme.node.size,
-					height: context.theme.node.size,
-				};
-				const groupCenter = {
-					x: groupRect.x + groupRect.width * 0.5,
-					y: groupRect.y + groupRect.height * 0.5,
-				};
-				// console.log(helpers.distBetweenPoints(node, groupCenter));
-				// if (helpers.isRectInsideRect(nodeRect, groupRect)
-				// 	|| helpers.isRectInsideRect(groupRect, nodeRect) // or, when group is smaller than node
-				// 	) {
-					// check if actually inside dropzone
-					if (helpers.distBetweenPoints(nodeRect, groupCenter) <= context.theme.group.dropzoneRadius) {
-						return true;
-					}
-				// }
-				return false;
-			});
-
-		if (dropGroups.length) {
-			context.dispatch(
-				actionCreators.addNodeToGroup(node.id, R.last(dropGroups).id)
-			);
-		}
-
-		context.dispatch( actionCreators.setDragNode(null) );
-	},
-
-	_handleHover: function(event) {
-		this.context.dispatch( actionCreators.setHoverNode(this.props.node.id) );
-	},
-
-	_handleHoverOut: function(event) {
-		this.context.dispatch( actionCreators.setHoverNode(null) );
-	}
 });
 
 
