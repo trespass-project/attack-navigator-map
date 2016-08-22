@@ -9,6 +9,8 @@ module.exports = {
 	},
 	node: {
 		radius: 25,
+		size: 40, // needed for groups
+		cornerRadius: 5, // needed for groups
 	},
 	countermeasure: {
 		size: 40,
