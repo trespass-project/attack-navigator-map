@@ -8,8 +8,11 @@ module.exports = {
 		//
 	},
 	node: {
+		radius: 25,
+	},
+	countermeasure: {
 		size: 40,
-		cornerRadius: 5,
+		cornerRadius: 0,
 	},
 	label: {
 		//

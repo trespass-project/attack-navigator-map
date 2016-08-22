@@ -211,9 +211,8 @@ const Node = React.createClass({
 		/>;
 	},
 
-	renderLabel() {
+	renderLabel(shapeSize) {
 		const props = this.props;
-		const context = this.context;
 
 		if (!props.showNodeLabels) { return null; }
 
@@ -224,7 +223,7 @@ const Node = React.createClass({
 			ref='label'
 			className='label'
 			x='0'
-			y={12 + context.theme.node.size*0.5}
+			y={12 + (shapeSize / 2)}
 		>
 			{label}
 		</text>;
@@ -233,7 +232,17 @@ const Node = React.createClass({
 	render() {
 		const props = this.props;
 		const context = this.context;
-		const radius = context.theme.node.size * 0.5;
+
+		const isCountermeasure = true;
+
+		const shapeSize = isCountermeasure
+			? context.theme.countermeasure.size
+			: context.theme.node.radius * 2;
+		const halfShapeSize = 0.5 * shapeSize;
+
+		const portOffset = isCountermeasure
+			? -halfShapeSize
+			: -shapeSize;
 
 		// DON'T TOUCH THIS!
 		// trying to 'clean this up' resulted in dragging edges
@@ -250,6 +259,23 @@ const Node = React.createClass({
 			}
 		);
 
+		const nodeShape = isCountermeasure
+			? <rect
+				className={nodeClasses}
+				x={-halfShapeSize}
+				y={-halfShapeSize}
+				rx={context.theme.node.cornerRadius * 0}
+				ry={context.theme.node.cornerRadius * 0}
+				height={context.theme.countermeasure.size}
+				width={context.theme.countermeasure.size}
+			/>
+			: <circle
+				className={nodeClasses}
+				cx={0}
+				cy={0}
+				r={context.theme.node.radius}
+			/>;
+
 		return <g
 			className='node-group'
 			transform={`translate(${props.x}, ${props.y})`}
@@ -259,23 +285,15 @@ const Node = React.createClass({
 			onMouseLeave={this._handleHoverOut}
 		>
 			<g ref='dragRoot'>
-				<rect
-					className={nodeClasses}
-					x={-radius}
-					y={-radius}
-					rx={context.theme.node.cornerRadius}
-					ry={context.theme.node.cornerRadius}
-					height={radius*2}
-					width={radius*2}
-				/>
-				{this.renderLabel()}
+				{nodeShape}
+				{this.renderLabel(shapeSize)}
 				{this.renderIcon()}
 			</g>
 			{(props.editable) &&
 				<Port
 					style={portStyle}
 					x={0}
-					y={-radius}
+					y={portOffset}
 					size={context.theme.port.size}
 					node={props.node}
 					editorElem={props.editorElem}
