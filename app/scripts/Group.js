@@ -5,7 +5,6 @@ const _ = require('lodash');
 const R = require('ramda');
 const classnames = require('classnames');
 const React = require('react');
-const reactDOM = require('react-dom');
 const SchleppMixin = require('./SchleppMixin.js');
 const icons = require('./icons.js');
 const helpers = require('./helpers.js');
@@ -20,12 +19,12 @@ const Dropzone = React.createClass({
 		radius: React.PropTypes.number.isRequired,
 	},
 
-	// getDefaultProps: function() {
+	// getDefaultProps() {
 	// 	return {
 	// 	};
 	// },
 
-	render: function() {
+	render() {
 		const props = this.props;
 		return (
 			<g transform={`translate(${props.x}, ${props.y})`}>
@@ -60,7 +59,7 @@ const Group = React.createClass({
 		showGroupLabels: React.PropTypes.bool,
 	},
 
-	getDefaultProps: function() {
+	getDefaultProps() {
 		return {
 			isHovered: false,
 			isSelected: false,
@@ -68,7 +67,7 @@ const Group = React.createClass({
 		};
 	},
 
-	renderLabel: function() {
+	renderLabel() {
 		const props = this.props;
 		if (!props.showGroupLabels) { return null; }
 		return <text
@@ -77,7 +76,7 @@ const Group = React.createClass({
 			className='label'>{props.group.label}</text>;
 	},
 
-	renderDropzone: function() {
+	renderDropzone() {
 		const props = this.props;
 		const context = this.context;
 
@@ -113,7 +112,7 @@ const Group = React.createClass({
 		return null;
 	},
 
-	render: function() {
+	render() {
 		const props = this.props;
 		const context = this.context;
 
@@ -140,19 +139,19 @@ const Group = React.createClass({
 		);
 	},
 
-	_handleHover: function(event) {
+	_handleHover(event) {
 		this.context.dispatch(
 			actionCreators.setHoverGroup(this.props.group.id)
 		);
 	},
 
-	_handleHoverOut: function(event) {
+	_handleHoverOut(event) {
 		this.context.dispatch(
 			actionCreators.setHoverGroup(null)
 		);
 	},
 
-	_onContextMenu: function(event) {
+	_onContextMenu(event) {
 		const context = this.context;
 		const props = this.props;
 
@@ -194,13 +193,13 @@ const Group = React.createClass({
 		context.dispatch( actionCreators.showContextMenu(event, menuItems) );
 	},
 
-	openFileDialog: function() {
+	openFileDialog() {
 		const $addfile = $('#add-file');
 		$addfile.on('change', this.loadBackgroundFile);
 		$addfile.click();
 	},
 
-	loadBackgroundFile: function(event) { // TODO: do this elsewhere
+	loadBackgroundFile(event) { // TODO: do this elsewhere
 		const that = this;
 		const props = this.props;
 
@@ -224,7 +223,7 @@ const Group = React.createClass({
 		$('#add-file').off('change', this.loadBackgroundFile);
 	},
 
-	_onClick: function(event) {
+	_onClick(event) {
 		event.preventDefault();
 		event.stopPropagation();
 		this.context.dispatch(
@@ -232,19 +231,19 @@ const Group = React.createClass({
 		);
 	},
 
-	_onMouseOver: function(event) {
+	_onMouseOver(event) {
 		this.context.dispatch(
 			actionCreators.setHoverGroup(this.props.group.id)
 		);
 	},
 
-	_onMouseOut: function(event) {
+	_onMouseOut(event) {
 		this.context.dispatch(
 			actionCreators.setHoverGroup(null)
 		);
 	},
 
-	_onDragStart: function(event) {
+	_onDragStart(event) {
 		const props = this.props;
 
 		this.originalPositionX = props.x;
@@ -258,7 +257,7 @@ const Group = React.createClass({
 		);
 	},
 
-	_onDragMove: function(event) {
+	_onDragMove(event) {
 		const props = this.props;
 
 		this.currentPositionX = props.x;
@@ -290,7 +289,7 @@ const Group = React.createClass({
 		);
 	},
 
-	_onDragEnd: function(event) {
+	_onDragEnd(event) {
 		//
 	}
 });
