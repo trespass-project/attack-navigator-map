@@ -242,50 +242,49 @@ const Node = React.createClass({
 			? { display: 'none' }
 			: {};
 
-		return (
-			<g
-				className='node-group'
-				transform={`translate(${props.x}, ${props.y})`}
-				onContextMenu={this._onContextMenu}
-				onClick={this._onClick}
-				onMouseEnter={this._handleHover}
-				onMouseLeave={this._handleHoverOut}
-			>
-				<g ref='dragRoot'>
-					<rect
-						className={classnames(
-							'node',
-							{
-								'hover': props.isHovered,
-								'selected': props.isSelected
-							}
-						)}
-						x={-radius}
-						y={-radius}
-						rx={context.theme.node.cornerRadius}
-						ry={context.theme.node.cornerRadius}
-						height={radius*2}
-						width={radius*2}
-					/>
-					{this.renderLabel()}
-					{this.renderIcon()}
-				</g>
-				{(props.editable)
-					? <Port
-						style={portStyle}
-						x={0}
-						y={-radius}
-						size={context.theme.port.size}
-						node={props.node}
-						editorElem={props.editorElem}
-						editorTransformElem={props.editorTransformElem}
-						hoverNodeId={props.hoverNodeId}
-						dragNodeId={props.dragNodeId}
-					/>
-					: null
-				}
-			</g>
+		const nodeClasses = classnames(
+			'node',
+			{
+				'hover': props.isHovered,
+				'selected': props.isSelected
+			}
 		);
+
+		return <g
+			className='node-group'
+			transform={`translate(${props.x}, ${props.y})`}
+			onContextMenu={this._onContextMenu}
+			onClick={this._onClick}
+			onMouseEnter={this._handleHover}
+			onMouseLeave={this._handleHoverOut}
+		>
+			<g ref='dragRoot'>
+				<rect
+					className={nodeClasses}
+					x={-radius}
+					y={-radius}
+					rx={context.theme.node.cornerRadius}
+					ry={context.theme.node.cornerRadius}
+					height={radius*2}
+					width={radius*2}
+				/>
+				{this.renderLabel()}
+				{this.renderIcon()}
+			</g>
+			{(props.editable) &&
+				<Port
+					style={portStyle}
+					x={0}
+					y={-radius}
+					size={context.theme.port.size}
+					node={props.node}
+					editorElem={props.editorElem}
+					editorTransformElem={props.editorTransformElem}
+					hoverNodeId={props.hoverNodeId}
+					dragNodeId={props.dragNodeId}
+				/>
+			}
+		</g>;
 	},
 });
 
