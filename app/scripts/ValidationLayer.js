@@ -38,7 +38,7 @@ const ValidationLayer = React.createClass({
 		const componentWarnings = props.validation.componentWarnings;
 		const warnings = R.values(componentWarnings);
 
-		const r = theme.node.size + theme.node.cornerRadius;
+		const r = 45;
 		const yShift = 6; // TODO: get label font size
 
 		function renderItem(node, item) {
@@ -48,7 +48,9 @@ const ValidationLayer = React.createClass({
 			>
 				<circle
 					className='backgroundCircle'
-					r={r} cx={0} cy={0}
+					cx={0}
+					cy={0}
+					r={r}
 				/>
 				<g transform={`translate(${r / -3}, ${r + 10})`}>
 					<text className='errorText'>
