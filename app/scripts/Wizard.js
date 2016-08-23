@@ -22,9 +22,25 @@ const PredicateEditor = require('./PredicateEditor.js');
 const AttackerProfileEditor = require('./AttackerProfileEditor/AttackerProfileEditor.js');
 
 
-const theme = {
-	scheme: 'asdf',
-	author: 'asdf',
+// const colorMap = theme => ({
+// 	BACKGROUND_COLOR: theme.base00,
+// 	TEXT_COLOR: theme.base07,
+// 	STRING_COLOR: theme.base0B,
+// 	DATE_COLOR: theme.base0B,
+// 	NUMBER_COLOR: theme.base09,
+// 	BOOLEAN_COLOR: theme.base09,
+// 	NULL_COLOR: theme.base08,
+// 	UNDEFINED_COLOR: theme.base08,
+// 	FUNCTION_COLOR: theme.base08,
+// 	SYMBOL_COLOR: theme.base08,
+// 	LABEL_COLOR: theme.base0D,
+// 	ARROW_COLOR: theme.base0D,
+// 	ITEM_STRING_COLOR: theme.base0B,
+// 	ITEM_STRING_EXPANDED_COLOR: theme.base03
+// });
+const jsonTreeTheme = {
+	scheme: 'scheme',
+	author: 'author',
 	base00: '#000000',
 	base01: '#000000',
 	base02: '#000000',
@@ -40,7 +56,7 @@ const theme = {
 	base0C: '#000000',
 	base0D: '#000000',
 	base0E: '#000000',
-	base0F: '#000000'
+	base0F: '#000000',
 };
 
 
@@ -344,8 +360,9 @@ const Wizard = React.createClass({
 
 			{policies
 				.map((item) => {
+					// isLightTheme={true}
+					// theme={jsonTreeTheme}
 					return <JSONTree
-						theme={theme}
 						data={R.omit(['modelComponentType'], item)}
 						key={`policy-${item.id}`}
 					/>;
