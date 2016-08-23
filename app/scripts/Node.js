@@ -233,7 +233,7 @@ const Node = React.createClass({
 		const props = this.props;
 		const context = this.context;
 
-		const isCountermeasure = true;
+		const isCountermeasure = false;
 
 		const shapeSize = isCountermeasure
 			? context.theme.countermeasure.size
