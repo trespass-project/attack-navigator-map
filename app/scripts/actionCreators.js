@@ -1081,6 +1081,9 @@ function setAnalysisResults(analysisResults) {
 					type: constants.ACTION_setAnalysisResults,
 					analysisResults: preparedResults,
 				});
+				dispatch(
+					resultsSelectTool('Attack Pattern Lib.')
+				);
 			});
 	};
 };
