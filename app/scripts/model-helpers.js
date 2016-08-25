@@ -530,7 +530,7 @@ function graphFromModel(model) {
 								from: item.id,
 								to: loc,
 								directed: true,
-								relation: 'atLocation'
+								relation: 'at-location'
 							});
 							edges.push(edge);
 						});
@@ -676,9 +676,7 @@ function modelFromGraph(graph, metadata={}, state={}) {
 				// certain edge relation types translate to s.th.
 				// specific in the model:
 
-				// TODO: use one or the other!
-				if (edge.relation === 'atLocation'
-					|| edge.relation === 'at-location') {
+				if (edge.relation === 'at-location') {
 					const fromNode = graph.nodes[edge.from];
 					if (fromNode) {
 						fromNode.atLocations = R.uniq(
@@ -1051,7 +1049,7 @@ function inferEdgeType(fromType, toType) {
 	} else if (fromType === 'item' && toType === 'item') {
 		return 'networkConnection';
 	} else if (fromType === 'item' && toType === 'location') { // TODO: is that always the case?
-		return 'atLocation';
+		return 'at-location';
 	} else {
 		return undefined;
 	}

@@ -82,7 +82,7 @@ describe(common.f1('model-helpers.js'), () => {
 
 		it(common.f3('edges between items and locations should have type "atLocation"'), () => {
 			const edgeType = modelHelpers.inferEdgeType('item', 'location');
-			assert(edgeType === 'atLocation');
+			assert(edgeType === 'at-location');
 		});
 
 		// it(common.f3('spread operator test'), () => {
@@ -788,19 +788,19 @@ describe(common.f1('model-helpers.js'), () => {
 			},
 			{
 				id: 'edge-4',
-				relation: 'atLocation',
+				relation: 'at-location',
 				from: 'node-1',
 				to: 'node-2'
 			},
 			{
 				id: 'edge-6',
-				relation: 'atLocation',
+				relation: 'at-location',
 				from: 'node-2',
 				to: 'node-98'
 			},
 			{
 				id: 'edge-7',
-				relation: 'atLocation',
+				relation: 'at-location',
 				from: 'node-2',
 				to: 'node-99'
 			},

@@ -105,7 +105,7 @@ const getNodeWarnings = createSelector(
 				if (R.contains(node.modelComponentType, ['actor', 'item', 'data'])) {
 					const atLocationEdges = nodeEdges
 						.filter((edge) => (edge.from === node.id))
-						.filter((edge) => (edge.relation === 'atLocation'));
+						.filter((edge) => (edge.relation === 'at-location'));
 					if (!atLocationEdges.length) {
 						messages = [...messages, 'is not located anywhere'];
 					}
