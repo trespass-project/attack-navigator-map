@@ -242,7 +242,7 @@ const Node = React.createClass({
 
 		const portOffset = isCountermeasure
 			? -halfShapeSize
-			: -shapeSize;
+			: -context.theme.node.radius;
 
 		// DON'T TOUCH THIS!
 		// trying to 'clean this up' resulted in dragging edges
