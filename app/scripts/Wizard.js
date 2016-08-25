@@ -657,7 +657,7 @@ const Wizard = React.createClass({
 				renderFn: this.renderImport,
 			},
 			'patterns': {
-				icon: 'images/icons/import-01.svg',
+				icon: 'images/icons/network-01.svg',
 				tooltip: 'Model patterns',
 				handleClick: R.partial(this.selectWizardStep, ['patterns']),
 				renderFn: this.renderPatterns,
