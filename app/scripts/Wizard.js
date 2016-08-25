@@ -417,8 +417,8 @@ const Wizard = React.createClass({
 
 			{processes
 				.map((item) => {
+					// theme={theme}
 					return <JSONTree
-						theme={theme}
 						data={R.omit(['modelComponentType'], item)}
 						key={'process-'+item.id}
 					/>;
