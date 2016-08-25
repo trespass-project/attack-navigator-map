@@ -94,7 +94,8 @@ React.createClass({
 
 	fetchKbData(event) {
 		event.preventDefault();
-		this.props.dispatch( actionCreators.fetchKbData() );
+		const modelId = this.props.metadata.id;
+		this.props.dispatch( actionCreators.fetchKbData(modelId) );
 	},
 
 	saveDialogOnClose() {
