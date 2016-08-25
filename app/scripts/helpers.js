@@ -3,6 +3,7 @@ const $ = require('jquery');
 const reactDOM = require('react-dom');
 const shortid = require('shortid');
 const normalizr = require('normalizr');
+const slugify = require('mout/string/slugify');
 const trespassUtils = require('trespass.js').utils;
 
 
@@ -284,5 +285,7 @@ function handleStatus(taskStatusData) {
 const makeHumanReadable =
 module.exports.makeHumanReadable =
 function makeHumanReadable(item) {
-	return `${item.modelComponentType}__${(item.label || item.id).replace(/ +/g, '-')}`;
+	const type = item.modelComponentType;
+	const label = slugify(item.label || item.id);
+	return `${type}__${label}`;
 };
