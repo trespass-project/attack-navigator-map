@@ -91,10 +91,6 @@ const Tab = React.createClass({
 	render() {
 		const props = this.props;
 		const isSelected = (props.selectedSection === props.name);
-		// const imgSrc = (isSelected)
-		// 	? props.icon.replace('.svg', '-inverted.svg')
-		// 	: props.icon;
-		const imgSrc = props.icon;
 
 		const onClick = (!props.isDisabled)
 			? props.handleClick
@@ -109,7 +105,7 @@ const Tab = React.createClass({
 			)}
 			onClick={onClick}
 		>
-			<img src={imgSrc} />
+			<span className={props.icon} />
 		</div>;
 
 		return (!props.isDisabled)
@@ -651,61 +647,61 @@ const Wizard = React.createClass({
 
 		const wizardSteps = {
 			'import': {
-				icon: 'images/icons/import-01.svg',
+				icon: 'icon-import',
 				tooltip: 'Import / create model',
 				handleClick: R.partial(this.selectWizardStep, ['import']),
 				renderFn: this.renderImport,
 			},
 			'patterns': {
-				icon: 'images/icons/network-01.svg',
+				icon: 'icon-network',
 				tooltip: 'Model patterns',
 				handleClick: R.partial(this.selectWizardStep, ['patterns']),
 				renderFn: this.renderPatterns,
 			},
 			'locations': {
-				icon: 'images/icons/location-01.svg',
+				icon: 'icon-location',
 				tooltip: 'Locations',
 				handleClick: R.partial(this.selectWizardStep, ['locations']),
 				renderFn: this.renderLocations,
 			},
 			'assets': {
-				icon: 'images/icons/assets-01.svg',
+				icon: 'icon-assets',
 				tooltip: 'Assets',
 				handleClick: R.partial(this.selectWizardStep, ['assets']),
 				renderFn: this.renderAssets,
 			},
 			'actors': {
-				icon: 'images/icons/actors-01.svg',
+				icon: 'icon-actors',
 				tooltip: 'Actors',
 				handleClick: R.partial(this.selectWizardStep, ['actors']),
 				renderFn: this.renderActors,
 			},
 			'connections': {
-				icon: 'images/icons/edges-01.svg',
+				icon: 'icon-edges',
 				tooltip: 'Predicates',
 				handleClick: R.partial(this.selectWizardStep, ['connections']),
 				renderFn: this.renderConnections,
 			},
 			'policies': {
-				icon: 'images/icons/policies-01.svg',
+				icon: 'icon-policies',
 				tooltip: 'Policies',
 				handleClick: R.partial(this.selectWizardStep, ['policies']),
 				renderFn: this.renderPolicies,
 			},
 			'processes': {
-				icon: 'images/icons/connections-01.svg',
+				icon: 'icon-connections',
 				tooltip: 'Processes',
 				handleClick: R.partial(this.selectWizardStep, ['processes']),
 				renderFn: this.renderProcesses,
 			},
 			'attackerprofile': {
-				icon: 'images/icons/attacker_profile-01.svg',
+				icon: 'icon-attackerprofile',
 				tooltip: 'Attacker profile',
 				handleClick: R.partial(this.selectWizardStep, ['attackerprofile']),
 				renderFn: this.renderAttackerProfile,
 			},
 			'runanalysis': {
-				icon: 'images/icons/run-01.svg',
+				icon: 'icon-run',
 				tooltip: 'Run analysis',
 				handleClick: R.partial(this.selectWizardStep, ['runanalysis']),
 				renderFn: this.renderRunAnalysis,
