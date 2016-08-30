@@ -1,7 +1,8 @@
 const assert = require('assert');
+const path = require('path');
+const fs = require('fs');
 const R = require('ramda');
 const _ = require('lodash');
-
 
 const common = require('./common.js');
 
@@ -957,6 +958,27 @@ describe(common.f1('model-helpers.js'), () => {
 
 		it(common.f3('should rename ids in groups'), () => {
 			assert(R.equals(newGraph.groups['group1'].nodeIds, ['node__label', 'node__label-2']));
+		});
+	});
+});
+
+
+// ——————
+describe(common.f1('model-helpers.js'), () => {
+	describe(common.f2('predicates library'), () => {
+		const testFilePath = path.join('test', 'data', 'predicates-import.xml');
+		const xmlStr = fs.readFileSync(testFilePath).toString();
+		modelHelpers.xmlModelToGraph(xmlStr, (err, result) => {
+			const { predicates } = result;
+
+			it(common.f3('should get all pred. types from model'), () => {
+				assert(R.keys(predicates).length === 2);
+			});
+
+			it(common.f3('should create a label'), () => {
+				assert(predicates['has-values'].label === 'has values');
+				assert(predicates['is-empty'].label === 'is empty');
+			});
 		});
 	});
 });

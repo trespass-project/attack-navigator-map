@@ -606,7 +606,18 @@ function graphFromModel(model) {
 		graph.groups = _.merge(graph.groups, anmData.graph.groups);
 	}
 
-	return { graph, metadata, anmData };
+	const predicates = (model.system.predicates || [])
+		.reduce((acc, pred) => {
+			console.log(pred);
+			acc[pred.id] = R.pick(['id', 'arity'], pred);
+			acc[pred.id].label = (pred.label || pred.id)
+				.replace(/-/g, ' ');
+			// all predicates are
+			acc[pred.id].directed = true;
+			return acc;
+		}, {});
+
+	return { graph, metadata, anmData, predicates };
 };
 
 

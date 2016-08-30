@@ -748,6 +748,10 @@ function loadXML(xmlString, source) {
 			}
 
 			const { graph, metadata, anmData } = result;
+
+			const { predicates={} } = result;
+			// TODO: add predicates to predicates lib
+
 			return bla(graph, metadata, anmData);
 		});
 	};
