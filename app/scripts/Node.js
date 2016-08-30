@@ -190,7 +190,7 @@ const Node = React.createClass({
 		// types might not be loaded yet at this point?
 		const component = props.componentsLibMap[props.node.type];
 		const icon = (!component)
-			? undefined // icons['fa-question']
+			? undefined
 			: component.icon
 				.replace('https://github.com/encharm/Font-Awesome-SVG-PNG/blob/master/black/svg/', 'icons/font-awesome/');
 
