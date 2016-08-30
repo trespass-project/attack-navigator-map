@@ -86,8 +86,6 @@ const constants = {
 	ACTION_loadComponentTypes_DONE: 'ACTION_loadComponentTypes_DONE',
 	ACTION_loadModelPatterns: 'ACTION_loadModelPatterns',
 	ACTION_loadModelPatterns_DONE: 'ACTION_loadModelPatterns_DONE',
-	ACTION_loadRelationTypes: 'ACTION_loadRelationTypes',
-	ACTION_loadRelationTypes_DONE: 'ACTION_loadRelationTypes_DONE',
 
 	ACTION_showSaveDialog: 'ACTION_showSaveDialog',
 	ACTION_enableLayer: 'ACTION_enableLayer',
@@ -100,6 +98,8 @@ const constants = {
 	ACTION_resultsSelectTool: 'ACTION_resultsSelectTool',
 	ACTION_resultsSelectAttack: 'ACTION_resultsSelectAttack',
 	ACTION_resetAnalysis: 'ACTION_resetAnalysis',
+
+	ACTION_addPredicatesToRelationTypes: 'ACTION_addPredicatesToRelationTypes',
 
 	CLONE_OFFSET: 70,
 };

@@ -11,9 +11,7 @@ const knowledgebaseApi = api.knowledgebase;
 const constants = require('./constants.js');
 const modelHelpers = require('./model-helpers.js');
 const helpers = require('./helpers.js');
-
 const modelPatternLib = require('./pattern-lib.js');
-const relationsLib = require('./relation-lib.js');
 
 
 const modelFileName = 'model.xml';
@@ -151,7 +149,6 @@ function fetchKbData(modelId) {
 		// fake api
 		// TODO: should use kb
 		dispatch( loadModelPatterns(modelId) );
-		dispatch( loadRelationTypes(modelId) );
 	};
 };
 
@@ -748,6 +745,10 @@ function loadXML(xmlString, source) {
 			}
 
 			const { graph, metadata, anmData } = result;
+
+			const { predicates=[] } = result;
+			dispatch( addPredicatesToRelationTypes(predicates) );
+
 			return bla(graph, metadata, anmData);
 		});
 	};
@@ -931,6 +932,16 @@ function predicateChanged(predicateId, newProperties) {
 	return {
 		type: constants.ACTION_predicateChanged,
 		predicateId, newProperties
+	};
+};
+
+
+const addPredicatesToRelationTypes =
+module.exports.addPredicatesToRelationTypes =
+function addPredicatesToRelationTypes(predicates) {
+	return {
+		type: constants.ACTION_addPredicatesToRelationTypes,
+		predicates,
 	};
 };
 
@@ -1458,18 +1469,6 @@ function loadModelPatterns() {
 		dispatch({
 			type: constants.ACTION_loadModelPatterns_DONE,
 			modelPatterns: modelPatternLib
-		});
-	};
-};
-
-
-const loadRelationTypes =
-module.exports.loadRelationTypes =
-function loadRelationTypes() {
-	return (dispatch, getState) => {
-		dispatch({
-			type: constants.ACTION_loadRelationTypes_DONE,
-			relationTypes: relationsLib
 		});
 	};
 };

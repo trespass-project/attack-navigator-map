@@ -43,9 +43,7 @@ const getRelationTypes = (state) => state.relationTypes;
 
 const relationsMap = createSelector(
 	getRelationTypes,
-	(relationTypes) => {
-		return helpers.toHashMap('value', relationTypes);
-	}
+	(relationTypes) => helpers.toHashMap('value', relationTypes)
 );
 
 const hasOpenMap = createSelector(

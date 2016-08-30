@@ -406,7 +406,7 @@ function importFragment(graph, fragment, atXY=origin, cb=noop) {
 };
 
 
-const xmlModelToGraph = // TODO: test
+const xmlModelToGraph =
 module.exports.xmlModelToGraph =
 function xmlModelToGraph(xmlStr, done) {
 	trespass.model.parse(xmlStr, (err, model) => {
@@ -606,7 +606,18 @@ function graphFromModel(model) {
 		graph.groups = _.merge(graph.groups, anmData.graph.groups);
 	}
 
-	return { graph, metadata, anmData };
+	const predicates = (model.system.predicates || [])
+		.map((pred) => {
+			console.log(pred);
+			const predicate = R.pick(['id', 'arity'], pred);
+			predicate.label = (pred.label || pred.id)
+				.replace(/-/g, ' ');
+			// all predicates are
+			predicate.directed = true;
+			return predicate;
+		});
+
+	return { graph, metadata, anmData, predicates };
 };
 
 

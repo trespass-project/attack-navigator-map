@@ -4,6 +4,9 @@ module.exports = [
 		'value': 'connects',
 		'label': 'connects',
 		'directed': false,
+
+		// this is unused
+		// TODO: do s.th. with it?
 		'acceptsSource': ['location'],
 		'acceptsTarget': ['location']
 	},
