@@ -189,6 +189,11 @@ gulp.task('icons', () => {
 	gulp.src(appDir(iconsDir('font-awesome/*.svg')))
 		.pipe(gulp.dest(tempDir(iconsDir('font-awesome'))))
 		.pipe(gulp.dest(distDir(iconsDir('font-awesome'))));
+
+	// types
+	gulp.src(appDir(iconsDir('types/*.svg')))
+		.pipe(gulp.dest(tempDir(iconsDir('types'))))
+		.pipe(gulp.dest(distDir(iconsDir('types'))));
 });
 
 
