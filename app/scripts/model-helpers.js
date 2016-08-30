@@ -608,7 +608,6 @@ function graphFromModel(model) {
 
 	const predicates = (model.system.predicates || [])
 		.map((pred) => {
-			console.log(pred);
 			const predicate = R.pick(['id', 'arity'], pred);
 			predicate.label = (pred.label || pred.id)
 				.replace(/-/g, ' ');
