@@ -186,13 +186,13 @@ gulp.task('data', () => {
 
 gulp.task('icons', () => {
 	// fontawesome
-	gulp.src(iconsDir('font-awesome/*.svg'))
-		.pipe(gulp.dest(tempDir(iconsDir())))
-		.pipe(gulp.dest(distDir(iconsDir())));
+	gulp.src(appDir(iconsDir('font-awesome/*.svg')))
+		.pipe(gulp.dest(tempDir(iconsDir('font-awesome'))))
+		.pipe(gulp.dest(distDir(iconsDir('font-awesome'))));
 });
 
 
-gulp.task('extras', ['data', 'icons'], () => {
+gulp.task('extras', [/*'data',*/ 'icons'], () => {
 	return gulp.src([
 		appDir('*.*'),
 		`!${appDir('*.html')}`,
