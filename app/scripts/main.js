@@ -40,6 +40,12 @@ const getNodes = (state) => state.graph.nodes;
 const getEdges = (state) => state.graph.edges;
 const getModelId = (state) => state.metadata.id;
 const getRelationTypes = (state) => state.relationTypes;
+const getComponentsLib = (state) => state.componentsLib;
+
+const componentsLibMap = createSelector(
+	getComponentsLib,
+	(components) => helpers.toHashMap('type', components)
+);
 
 const relationsMap = createSelector(
 	getRelationTypes,
@@ -142,6 +148,7 @@ function mapStateToProps(_state) {
 
 	props.hasOpenMap = hasOpenMap(state);
 	props.relationsMap = relationsMap(state);
+	props.componentsLibMap = componentsLibMap(state);
 
 	// validation
 	props.validation = {
