@@ -156,11 +156,6 @@ gulp.task('fonts', () => {
 		.pipe(gulp.dest(tempDir(fontsDir())))
 		.pipe(gulp.dest(distDir(fontsDir())));
 
-	// fontawesome
-	gulp.src('node_modules/font-awesome-stylus/fonts/*.{eot,svg,ttf,woff,woff2}')
-		.pipe(gulp.dest(tempDir(fontsDir())))
-		.pipe(gulp.dest(distDir(fontsDir())));
-
 	// fontcustom
 	gulp.src(appDir(iconsDir('icons/*.{eot,svg,ttf,woff,woff2}')))
 		.pipe(gulp.dest(tempDir(fontsDir())))
@@ -184,7 +179,15 @@ gulp.task('data', () => {
 });
 
 
-gulp.task('extras', ['data'], () => {
+gulp.task('icons', () => {
+	// fontawesome
+	gulp.src(iconsDir('font-awesome/*.svg'))
+		.pipe(gulp.dest(tempDir(iconsDir())))
+		.pipe(gulp.dest(distDir(iconsDir())));
+});
+
+
+gulp.task('extras', ['data', 'icons'], () => {
 	return gulp.src([
 		appDir('*.*'),
 		`!${appDir('*.html')}`,
@@ -197,7 +200,7 @@ gulp.task('extras', ['data'], () => {
 gulp.task('clean', del.bind(null, [tempDir(), distDir()]));
 
 
-gulp.task('serve', ['scripts', 'styles', 'fonts'], () => {
+gulp.task('serve', ['scripts', 'styles', 'fonts', 'extras'], () => {
 	browserSync.create()
 		.init({
 			notify: false,

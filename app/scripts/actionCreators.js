@@ -1485,15 +1485,20 @@ function loadComponentTypes(modelId) {
 				// TODO: do preparation elsewhere
 				const kbTypeAttributes = types
 					.reduce((acc, type) => {
-						acc[type['@id']] = type['tkb:has_attribute']
+						// id → attributes map
+						const id = type['@id'];
+						acc[id] = type['tkb:has_attribute']
 							.reduce((attributes, attr) => {
-								return [...attributes, {
-									id: attr['@id'],
-									label: attr['@label'],
-									values: (!attr['tkb:mvalues'])
-										? null
-										: attr['tkb:mvalues']['@list'],
-								}];
+								return [
+									...attributes,
+									{
+										id: attr['@id'],
+										label: attr['@label'],
+										values: (!attr['tkb:mvalues'])
+											? null
+											: attr['tkb:mvalues']['@list'],
+									}
+								];
 							}, []);
 						return acc;
 					}, {});
@@ -1502,12 +1507,17 @@ function loadComponentTypes(modelId) {
 					.map((type) => {
 						const id = type['@id'];
 						const modelComponentType = type['tkb:tml_class'];
+						const icon = type['tkb:icon'];
+
+						// we only pick and choose whatever is
+						// relevant for the anm
 						const _type = {
 							id,
 							modelComponentType,
 							type: id,
 							label: type['@label'],
-							// TODO: rest
+							icon,
+							// TODO: rest?
 						};
 						return _type;
 					});
