@@ -7,8 +7,7 @@ const omitType = require('./reducer-utils.js').omitType;
 const constants = require('./constants.js');
 const helpers = require('./helpers.js');
 const theme = require('./graph-theme-default.js');
-
-
+const relationsLib = require('./relation-lib.js');
 const ValidationLayer = require('./ValidationLayer.js');
 const HighlightLayer = require('./HighlightLayer.js');
 const PredicateLayer = require('./PredicateLayer.js');
@@ -81,7 +80,7 @@ const initialState = {
 	toolChainId: null,
 	taskStatusCategorized: undefined,
 
-	relationTypes: [],
+	relationTypes: relationsLib,
 	kbTypeAttributes: {},
 	componentsLib: [],
 	modelComponentTypeToKbTypes: [],
@@ -374,11 +373,6 @@ function reducer(state=initialState, action) {
 		case constants.ACTION_loadModelPatterns_DONE: {
 			const { modelPatterns } = action;
 			return mergeWithState({ modelPatterns });
-		}
-
-		case constants.ACTION_loadRelationTypes_DONE: {
-			const { relationTypes } = action;
-			return mergeWithState({ relationTypes });
 		}
 
 		case constants.ACTION_showSaveDialog: {

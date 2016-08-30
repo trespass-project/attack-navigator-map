@@ -13,7 +13,6 @@ const modelHelpers = require('./model-helpers.js');
 const helpers = require('./helpers.js');
 
 const modelPatternLib = require('./pattern-lib.js');
-const relationsLib = require('./relation-lib.js');
 
 
 const modelFileName = 'model.xml';
@@ -151,7 +150,6 @@ function fetchKbData(modelId) {
 		// fake api
 		// TODO: should use kb
 		dispatch( loadModelPatterns(modelId) );
-		dispatch( loadRelationTypes(modelId) );
 	};
 };
 
@@ -1462,18 +1460,6 @@ function loadModelPatterns() {
 		dispatch({
 			type: constants.ACTION_loadModelPatterns_DONE,
 			modelPatterns: modelPatternLib
-		});
-	};
-};
-
-
-const loadRelationTypes =
-module.exports.loadRelationTypes =
-function loadRelationTypes() {
-	return (dispatch, getState) => {
-		dispatch({
-			type: constants.ACTION_loadRelationTypes_DONE,
-			relationTypes: relationsLib
 		});
 	};
 };
