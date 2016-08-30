@@ -22,13 +22,6 @@ const typeIcons = {
 
 
 const Node = React.createClass({
-	mixins: [SchleppMixin],
-
-	contextTypes: {
-		theme: React.PropTypes.object,
-		dispatch: React.PropTypes.func,
-	},
-
 	propTypes: {
 		x: React.PropTypes.number.isRequired,
 		y: React.PropTypes.number.isRequired,
@@ -42,7 +35,14 @@ const Node = React.createClass({
 		// editorTransformElem: React.PropTypes.object.isRequired,
 	},
 
-	getDefaultProps: function() {
+	contextTypes: {
+		theme: React.PropTypes.object,
+		dispatch: React.PropTypes.func,
+	},
+
+	mixins: [SchleppMixin],
+
+	getDefaultProps() {
 		return {
 			isSelected: false,
 			isHovered: false,
@@ -50,100 +50,7 @@ const Node = React.createClass({
 		};
 	},
 
-	renderIcon: function() {
-		const props = this.props;
-
-		if (!props.showNodeLabels) { return null; }
-
-		const icon = icons[typeIcons[props.node.modelComponentType]];
-
-		return <text
-			ref='icon'
-			className='icon fa'
-			x='0'
-			y='2'
-			dangerouslySetInnerHTML={{ __html: icon }}
-		/>;
-	},
-
-	renderLabel: function() {
-		const props = this.props;
-		const context = this.context;
-
-		if (!props.showNodeLabels) { return null; }
-
-		let label = props.node.label || 'no label';
-		label = helpers.ellipsize(15, label);
-
-		return <text
-			ref='label'
-			className='label'
-			x='0'
-			y={12 + context.theme.node.size*0.5}
-		>
-			{label}
-		</text>;
-	},
-
-	render: function() {
-		const props = this.props;
-		const context = this.context;
-		const radius = context.theme.node.size * 0.5;
-
-		// DON'T TOUCH THIS!
-		// trying to 'clean this up' resulted in dragging edges
-		// not working anymore, previously.
-		const portStyle = (!props.isHovered)
-			? { display: 'none' }
-			: {};
-
-		return (
-			<g
-				className='node-group'
-				transform={`translate(${props.x}, ${props.y})`}
-				onContextMenu={this._onContextMenu}
-				onClick={this._onClick}
-				onMouseEnter={this._handleHover}
-				onMouseLeave={this._handleHoverOut}
-			>
-				<g ref='dragRoot'>
-					<rect
-						className={classnames(
-							'node',
-							{
-								'hover': props.isHovered,
-								'selected': props.isSelected
-							}
-						)}
-						x={-radius}
-						y={-radius}
-						rx={context.theme.node.cornerRadius}
-						ry={context.theme.node.cornerRadius}
-						height={radius*2}
-						width={radius*2}
-					/>
-					{this.renderLabel()}
-					{this.renderIcon()}
-				</g>
-				{(props.editable)
-					? <Port
-						style={portStyle}
-						x={0}
-						y={-radius}
-						size={context.theme.port.size}
-						node={props.node}
-						editorElem={props.editorElem}
-						editorTransformElem={props.editorTransformElem}
-						hoverNodeId={props.hoverNodeId}
-						dragNodeId={props.dragNodeId}
-					/>
-					: null
-				}
-			</g>
-		);
-	},
-
-	_onContextMenu: function(event) {
+	_onContextMenu(event) {
 		const context = this.context;
 		const props = this.props;
 
@@ -172,7 +79,7 @@ const Node = React.createClass({
 		context.dispatch( actionCreators.showContextMenu(event, menuItems) );
 	},
 
-	_onClick: function(event) {
+	_onClick(event) {
 		event.preventDefault();
 		event.stopPropagation();
 		this.context.dispatch(
@@ -180,7 +87,7 @@ const Node = React.createClass({
 		);
 	},
 
-	_onDragStart: function(event) {
+	_onDragStart(event) {
 		const props = this.props;
 		const node = props.node;
 
@@ -194,20 +101,24 @@ const Node = React.createClass({
 		this.modelXYEventOrigin = helpers.unTransformFromTo(
 			props.editorElem,
 			props.editorTransformElem,
-			{ x: event.clientX,
-			  y: event.clientY }
+			{
+				x: event.clientX,
+				y: event.clientY
+			}
 		);
 	},
 
-	_onDragMove: function(event) {
+	_onDragMove(event) {
 		const props = this.props;
 
 		// get event coords in model space
 		const modelXYEvent = helpers.unTransformFromTo(
 			props.editorElem,
 			props.editorTransformElem,
-			{ x: event.clientX,
-			  y: event.clientY }
+			{
+				x: event.clientX,
+				y: event.clientY
+			}
 		);
 
 		const modelXYDelta = {
@@ -217,7 +128,8 @@ const Node = React.createClass({
 
 		this.context.dispatch(
 			actionCreators.moveNode(
-				props.node.id, {
+				props.node.id,
+				{
 					x: this.originalPositionX + modelXYDelta.x,
 					y: this.originalPositionY + modelXYDelta.y,
 				}
@@ -225,7 +137,7 @@ const Node = React.createClass({
 		);
 	},
 
-	_onDragEnd: function(event) {
+	_onDragEnd(event) {
 		// TODO: DRY (almost same code as in <Dropzone>)
 
 		// for every group
@@ -271,13 +183,127 @@ const Node = React.createClass({
 		context.dispatch( actionCreators.setDragNode(null) );
 	},
 
-	_handleHover: function(event) {
-		this.context.dispatch( actionCreators.setHoverNode(this.props.node.id) );
+	_handleHover(event) {
+		this.context.dispatch(
+			actionCreators.setHoverNode(this.props.node.id)
+		);
 	},
 
-	_handleHoverOut: function(event) {
-		this.context.dispatch( actionCreators.setHoverNode(null) );
-	}
+	_handleHoverOut(event) {
+		this.context.dispatch(
+			actionCreators.setHoverNode(null)
+		);
+	},
+
+	renderIcon() {
+		const props = this.props;
+
+		if (!props.showNodeLabels) { return null; }
+
+		const icon = icons[typeIcons[props.node.modelComponentType]];
+
+		return <text
+			ref='icon'
+			className='icon fa'
+			x='0'
+			y='2'
+			dangerouslySetInnerHTML={{ __html: icon }}
+		/>;
+	},
+
+	renderLabel(shapeSize) {
+		const props = this.props;
+
+		if (!props.showNodeLabels) { return null; }
+
+		let label = props.node.label || 'no label';
+		label = helpers.ellipsize(15, label);
+
+		return <text
+			ref='label'
+			className='label'
+			x='0'
+			y={12 + (shapeSize / 2)}
+		>
+			{label}
+		</text>;
+	},
+
+	render() {
+		const props = this.props;
+		const context = this.context;
+
+		const isCountermeasure = false;
+
+		const shapeSize = isCountermeasure
+			? context.theme.countermeasure.size
+			: context.theme.node.radius * 2;
+		const halfShapeSize = 0.5 * shapeSize;
+
+		const portOffset = isCountermeasure
+			? -halfShapeSize
+			: -context.theme.node.radius;
+
+		// DON'T TOUCH THIS!
+		// trying to 'clean this up' resulted in dragging edges
+		// not working anymore, previously.
+		const portStyle = (!props.isHovered)
+			? { display: 'none' }
+			: {};
+
+		const nodeClasses = classnames(
+			'node',
+			{
+				'hover': props.isHovered,
+				'selected': props.isSelected
+			}
+		);
+
+		const nodeShape = isCountermeasure
+			? <rect
+				className={nodeClasses}
+				x={-halfShapeSize}
+				y={-halfShapeSize}
+				rx={context.theme.node.cornerRadius * 0}
+				ry={context.theme.node.cornerRadius * 0}
+				height={context.theme.countermeasure.size}
+				width={context.theme.countermeasure.size}
+			/>
+			: <circle
+				className={nodeClasses}
+				cx={0}
+				cy={0}
+				r={context.theme.node.radius}
+			/>;
+
+		return <g
+			className='node-group'
+			transform={`translate(${props.x}, ${props.y})`}
+			onContextMenu={this._onContextMenu}
+			onClick={this._onClick}
+			onMouseEnter={this._handleHover}
+			onMouseLeave={this._handleHoverOut}
+		>
+			<g ref='dragRoot'>
+				{nodeShape}
+				{this.renderLabel(shapeSize)}
+				{this.renderIcon()}
+			</g>
+			{(props.editable) &&
+				<Port
+					style={portStyle}
+					x={0}
+					y={portOffset}
+					size={context.theme.port.size}
+					node={props.node}
+					editorElem={props.editorElem}
+					editorTransformElem={props.editorTransformElem}
+					hoverNodeId={props.hoverNodeId}
+					dragNodeId={props.dragNodeId}
+				/>
+			}
+		</g>;
+	},
 });
 
 

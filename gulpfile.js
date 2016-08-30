@@ -166,6 +166,11 @@ gulp.task('fonts', () => {
 		.pipe(gulp.dest(tempDir(fontsDir())))
 		.pipe(gulp.dest(distDir(fontsDir())));
 
+	// icomoon
+	gulp.src(appDir(imagesDir('icomoon/fonts/*.{eot,svg,ttf,woff,woff2}')))
+		.pipe(gulp.dest(tempDir(fontsDir())))
+		.pipe(gulp.dest(distDir(fontsDir())));
+
 	// source sans
 	gulp.src(appDir(fontsDir('SourceSansPro/**/*')))
 		.pipe(gulp.dest(tempDir(fontsDir('SourceSansPro'))))
