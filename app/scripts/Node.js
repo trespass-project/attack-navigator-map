@@ -8,19 +8,6 @@ const helpers = require('./helpers.js');
 const actionCreators = require('./actionCreators.js');
 
 
-const typeIcons = {
-	location: 'fa-square-o',
-	// asset: 'fa-file-o',
-	data: 'fa-file-o',
-	item: 'fa-laptop',
-	actor: 'fa-male',
-	// role: 'fa-user',
-	predicate: 'fa-tags',
-	process: 'fa-gears',
-	policy: 'fa-ban',
-};
-
-
 const Node = React.createClass({
 	propTypes: {
 		x: React.PropTypes.number.isRequired,
@@ -195,20 +182,33 @@ const Node = React.createClass({
 		);
 	},
 
-	renderIcon() {
+	renderIcon(shapeSizeScaled) {
 		const props = this.props;
 
 		if (!props.showNodeLabels) { return null; }
 
-		const icon = icons[typeIcons[props.node.modelComponentType]];
+		// types might not be loaded yet at this point?
+		const component = props.componentsLibMap[props.node.type];
+		const icon = (!component)
+			? undefined
+			: component.icon
+				.replace('https://github.com/encharm/Font-Awesome-SVG-PNG/blob/master/black/svg/', 'icons/font-awesome/');
 
-		return <text
-			ref='icon'
-			className='icon fa'
-			x='0'
-			y='2'
-			dangerouslySetInnerHTML={{ __html: icon }}
+		return <image
+			xlinkHref={icon}
+			x={-shapeSizeScaled / 2}
+			y={-shapeSizeScaled / 2}
+			width={shapeSizeScaled}
+			height={shapeSizeScaled}
 		/>;
+
+		// return <text
+		// 	ref='icon'
+		// 	className='icon fa'
+		// 	x='0'
+		// 	y='2'
+		// 	dangerouslySetInnerHTML={{ __html: icon }}
+		// />;
 	},
 
 	renderLabel(shapeSize) {
@@ -234,6 +234,8 @@ const Node = React.createClass({
 		const context = this.context;
 
 		const isCountermeasure = false;
+
+		const iconScaleFactor = 0.7;
 
 		const shapeSize = isCountermeasure
 			? context.theme.countermeasure.size
@@ -287,7 +289,7 @@ const Node = React.createClass({
 			<g ref='dragRoot'>
 				{nodeShape}
 				{this.renderLabel(shapeSize)}
-				{this.renderIcon()}
+				{this.renderIcon(shapeSize * iconScaleFactor)}
 			</g>
 			{(props.editable) &&
 				<Port

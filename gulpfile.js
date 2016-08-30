@@ -184,7 +184,15 @@ gulp.task('data', () => {
 });
 
 
-gulp.task('extras', ['data'], () => {
+gulp.task('icons', () => {
+	// fontawesome
+	gulp.src(iconsDir('font-awesome/*.svg'))
+		.pipe(gulp.dest(tempDir(iconsDir())))
+		.pipe(gulp.dest(distDir(iconsDir())));
+});
+
+
+gulp.task('extras', ['data', 'icons'], () => {
 	return gulp.src([
 		appDir('*.*'),
 		`!${appDir('*.html')}`,
@@ -197,7 +205,7 @@ gulp.task('extras', ['data'], () => {
 gulp.task('clean', del.bind(null, [tempDir(), distDir()]));
 
 
-gulp.task('serve', ['scripts', 'styles', 'fonts'], () => {
+gulp.task('serve', ['scripts', 'styles', 'fonts', 'extras'], () => {
 	browserSync.create()
 		.init({
 			notify: false,
