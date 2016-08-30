@@ -972,12 +972,13 @@ describe(common.f1('model-helpers.js'), () => {
 			const { predicates } = result;
 
 			it(common.f3('should get all pred. types from model'), () => {
-				assert(R.keys(predicates).length === 2);
+				assert(predicates.length === 2);
 			});
 
 			it(common.f3('should create a label'), () => {
-				assert(predicates['has-values'].label === 'has values');
-				assert(predicates['is-empty'].label === 'is empty');
+				const predicatesMap = helpers.toHashMap('id', predicates);
+				assert(predicatesMap['has-values'].label === 'has values');
+				assert(predicatesMap['is-empty'].label === 'is empty');
 			});
 		});
 	});
