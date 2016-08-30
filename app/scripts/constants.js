@@ -99,6 +99,8 @@ const constants = {
 	ACTION_resultsSelectAttack: 'ACTION_resultsSelectAttack',
 	ACTION_resetAnalysis: 'ACTION_resetAnalysis',
 
+	ACTION_addPredicatesToRelationTypes: 'ACTION_addPredicatesToRelationTypes',
+
 	CLONE_OFFSET: 70,
 };
 

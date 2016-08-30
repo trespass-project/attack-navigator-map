@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<system author="ciab-exportAsTML.py" date="2016-03-30T09:14:59.292151"
+	version="0.0" xmlns="https://www.trespass-project.eu/schemas/TREsPASS_model"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="https://www.trespass-project.eu/schemas/TREsPASS_model.xsd">
+	<title>predicates import test file</title>
+	<predicates>
+		<predicate arity="2" id="has-values">
+			<value>pw_big big</value>
+			<value>pw_terry terry</value>
+		</predicate>
+
+		<predicate arity="2" id="is-empty">
+			<!-- no values, but should still show up in lib -->
+		</predicate>
+	</predicates>
+</system>

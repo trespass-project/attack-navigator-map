@@ -407,6 +407,14 @@ function reducer(state=initialState, action) {
 			return mergeWithState({ highlightIds });
 		}
 
+		case constants.ACTION_addPredicatesToRelationTypes: {
+			const { predicates } = action;
+			const relationTypes = R.uniq(
+				[...state.relationTypes, ...predicates]
+			);
+			return mergeWithState({ relationTypes });
+		}
+
 		default:
 			return state;
 	}

@@ -607,15 +607,15 @@ function graphFromModel(model) {
 	}
 
 	const predicates = (model.system.predicates || [])
-		.reduce((acc, pred) => {
+		.map((pred) => {
 			console.log(pred);
-			acc[pred.id] = R.pick(['id', 'arity'], pred);
-			acc[pred.id].label = (pred.label || pred.id)
+			const predicate = R.pick(['id', 'arity'], pred);
+			predicate.label = (pred.label || pred.id)
 				.replace(/-/g, ' ');
 			// all predicates are
-			acc[pred.id].directed = true;
-			return acc;
-		}, {});
+			predicate.directed = true;
+			return predicate;
+		});
 
 	return { graph, metadata, anmData, predicates };
 };

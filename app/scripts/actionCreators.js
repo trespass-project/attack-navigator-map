@@ -11,7 +11,6 @@ const knowledgebaseApi = api.knowledgebase;
 const constants = require('./constants.js');
 const modelHelpers = require('./model-helpers.js');
 const helpers = require('./helpers.js');
-
 const modelPatternLib = require('./pattern-lib.js');
 
 
@@ -747,8 +746,8 @@ function loadXML(xmlString, source) {
 
 			const { graph, metadata, anmData } = result;
 
-			const { predicates={} } = result;
-			// TODO: add predicates to predicates lib
+			const { predicates=[] } = result;
+			dispatch( addPredicatesToRelationTypes(predicates) );
 
 			return bla(graph, metadata, anmData);
 		});
@@ -933,6 +932,16 @@ function predicateChanged(predicateId, newProperties) {
 	return {
 		type: constants.ACTION_predicateChanged,
 		predicateId, newProperties
+	};
+};
+
+
+const addPredicatesToRelationTypes =
+module.exports.addPredicatesToRelationTypes =
+function addPredicatesToRelationTypes(predicates) {
+	return {
+		type: constants.ACTION_addPredicatesToRelationTypes,
+		predicates,
 	};
 };
 
