@@ -156,6 +156,11 @@ gulp.task('fonts', () => {
 		.pipe(gulp.dest(tempDir(fontsDir())))
 		.pipe(gulp.dest(distDir(fontsDir())));
 
+	// fontawesome
+	gulp.src('node_modules/font-awesome-stylus/fonts/*.{eot,svg,ttf,woff,woff2}')
+		.pipe(gulp.dest(tempDir(fontsDir())))
+		.pipe(gulp.dest(distDir(fontsDir())));
+
 	// fontcustom
 	gulp.src(appDir(iconsDir('icons/*.{eot,svg,ttf,woff,woff2}')))
 		.pipe(gulp.dest(tempDir(fontsDir())))
