@@ -193,14 +193,14 @@ module.exports = [
 					'id': 'd',
 					'to': 'vm1',
 					'from': 'file1',
-					'relation': 'atLocation',
+					'relation': 'at-location',
 					'directed': true
 				},
 				{
 					'id': 'e',
 					'to': 'vm2',
 					'from': 'file2',
-					'relation': 'atLocation',
+					'relation': 'at-location',
 					'directed': true
 				}
 			],
@@ -418,14 +418,14 @@ module.exports = [
 					'directed': true,
 					'from': 'adminpin',
 					'id': 'id-4JW1F1Bo1W-edge',
-					'relation': 'atLocation',
+					'relation': 'at-location',
 					'to': 'admincard'
 				},
 				'id-4k7kYkSoJZ-edge': {
 					'directed': true,
 					'from': 'userpin',
 					'id': 'id-4k7kYkSoJZ-edge',
-					'relation': 'atLocation',
+					'relation': 'at-location',
 					'to': 'usercard'
 				}
 			},

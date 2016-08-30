@@ -43,9 +43,7 @@ const getRelationTypes = (state) => state.relationTypes;
 
 const relationsMap = createSelector(
 	getRelationTypes,
-	(relationTypes) => {
-		return helpers.toHashMap('value', relationTypes);
-	}
+	(relationTypes) => helpers.toHashMap('value', relationTypes)
 );
 
 const hasOpenMap = createSelector(
@@ -105,7 +103,7 @@ const getNodeWarnings = createSelector(
 				if (R.contains(node.modelComponentType, ['actor', 'item', 'data'])) {
 					const atLocationEdges = nodeEdges
 						.filter((edge) => (edge.from === node.id))
-						.filter((edge) => (edge.relation === 'atLocation'));
+						.filter((edge) => (edge.relation === 'at-location'));
 					if (!atLocationEdges.length) {
 						messages = [...messages, 'is not located anywhere'];
 					}

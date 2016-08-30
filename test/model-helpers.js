@@ -1,7 +1,8 @@
 const assert = require('assert');
+const path = require('path');
+const fs = require('fs');
 const R = require('ramda');
 const _ = require('lodash');
-
 
 const common = require('./common.js');
 
@@ -82,7 +83,7 @@ describe(common.f1('model-helpers.js'), () => {
 
 		it(common.f3('edges between items and locations should have type "atLocation"'), () => {
 			const edgeType = modelHelpers.inferEdgeType('item', 'location');
-			assert(edgeType === 'atLocation');
+			assert(edgeType === 'at-location');
 		});
 
 		// it(common.f3('spread operator test'), () => {
@@ -788,19 +789,19 @@ describe(common.f1('model-helpers.js'), () => {
 			},
 			{
 				id: 'edge-4',
-				relation: 'atLocation',
+				relation: 'at-location',
 				from: 'node-1',
 				to: 'node-2'
 			},
 			{
 				id: 'edge-6',
-				relation: 'atLocation',
+				relation: 'at-location',
 				from: 'node-2',
 				to: 'node-98'
 			},
 			{
 				id: 'edge-7',
-				relation: 'atLocation',
+				relation: 'at-location',
 				from: 'node-2',
 				to: 'node-99'
 			},
@@ -957,6 +958,28 @@ describe(common.f1('model-helpers.js'), () => {
 
 		it(common.f3('should rename ids in groups'), () => {
 			assert(R.equals(newGraph.groups['group1'].nodeIds, ['node__label', 'node__label-2']));
+		});
+	});
+});
+
+
+// ——————
+describe(common.f1('model-helpers.js'), () => {
+	describe(common.f2('predicates library'), () => {
+		const testFilePath = path.join('test', 'data', 'predicates-import.xml');
+		const xmlStr = fs.readFileSync(testFilePath).toString();
+		modelHelpers.xmlModelToGraph(xmlStr, (err, result) => {
+			const { predicates } = result;
+
+			it(common.f3('should get all pred. types from model'), () => {
+				assert(predicates.length === 2);
+			});
+
+			it(common.f3('should create a label'), () => {
+				const predicatesMap = helpers.toHashMap('id', predicates);
+				assert(predicatesMap['has-values'].label === 'has values');
+				assert(predicatesMap['is-empty'].label === 'is empty');
+			});
 		});
 	});
 });

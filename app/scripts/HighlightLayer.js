@@ -47,7 +47,7 @@ const HighlightLayer = React.createClass({
 		const nodes = props.highlightIds
 			.map((id) => props.graph.nodes[id]);
 
-		const r = theme.node.size + theme.node.cornerRadius;
+		const r = 45;
 		const yShift = 6; // TODO: get label font size
 
 		const inverseScale = 1 / props.scale;

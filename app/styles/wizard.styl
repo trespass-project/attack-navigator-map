@@ -17,50 +17,64 @@
 		justify-content: center
 
 		.step-icon
+			font-size: 32px
+			line-height: 0px
+			color: white
 			width: $wizard-tabWidth
-			// height: $wizard-tabWidth
+			margin-right: 4px
+			// margin-top: 1px
+			// margin-bottom: 1px
 			padding: 4px
-			padding-right: 0
+			// padding-right: 4px
+			// padding-top: 2px
+			// padding-bottom: 2px
 			z-index: 999
 			cursor: pointer
-			// ----
-			// word-wrap: break-word
-			// font-size: 10px
-			// line-height: 1em
-			margin-bottom: 5px
-			// ----
-			border-radius: ($wizard-tabWidth / 2) 0 0 ($wizard-tabWidth / 2)
+			$radius = ($wizard-tabWidth / 2)
+			border-radius: $radius
+			opacity: 1
 
 		.step-icon img
 			width: 100%
 
 		transition: opacity 0.5s
+
 		.step-icon.disabled
 			cursor: default
-			opacity: 0.0
+			opacity: 0.25
+			background-color: transparent !important
+
+		.step-icon.error
+			color: rgba($trespass_red, 0.5)
 
 		// currently selected one
 		.step-icon.selected
-			background-color: $wizard-selectedColor
-			img
-				opacity: 1
+			color: $wizard-selectedColor
 
 		// all the ones after selected one
 		.step-icon.selected ~ .step-icon
-			img
-				opacity: 1
+			//
 
 		// all the ones before selected one
 		.step-icon
-			background-color: white
-			img
-				opacity: 0.25
+			//
 
 		// visited ones: override everything else
 		.step-icon.visited
-			background-color: orange !important
+			// background-color: orange !important
 
 
 .tooltip
 	.tooltip-inner
 		font-size: $baseFontSize
+		background-color: white
+		color: $trespass_black
+
+	&.bottom .tooltip-arrow
+		border-bottom-color: white
+	&.top .tooltip-arrow
+		border-top-color: white
+	&.left .tooltip-arrow
+		border-left-color: white
+	&.right .tooltip-arrow
+		border-right-color: white

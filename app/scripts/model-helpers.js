@@ -406,7 +406,7 @@ function importFragment(graph, fragment, atXY=origin, cb=noop) {
 };
 
 
-const xmlModelToGraph = // TODO: test
+const xmlModelToGraph =
 module.exports.xmlModelToGraph =
 function xmlModelToGraph(xmlStr, done) {
 	trespass.model.parse(xmlStr, (err, model) => {
@@ -530,7 +530,7 @@ function graphFromModel(model) {
 								from: item.id,
 								to: loc,
 								directed: true,
-								relation: 'atLocation'
+								relation: 'at-location'
 							});
 							edges.push(edge);
 						});
@@ -606,7 +606,18 @@ function graphFromModel(model) {
 		graph.groups = _.merge(graph.groups, anmData.graph.groups);
 	}
 
-	return { graph, metadata, anmData };
+	const predicates = (model.system.predicates || [])
+		.map((pred) => {
+			console.log(pred);
+			const predicate = R.pick(['id', 'arity'], pred);
+			predicate.label = (pred.label || pred.id)
+				.replace(/-/g, ' ');
+			// all predicates are
+			predicate.directed = true;
+			return predicate;
+		});
+
+	return { graph, metadata, anmData, predicates };
 };
 
 
@@ -676,9 +687,7 @@ function modelFromGraph(graph, metadata={}, state={}) {
 				// certain edge relation types translate to s.th.
 				// specific in the model:
 
-				// TODO: use one or the other!
-				if (edge.relation === 'atLocation'
-					|| edge.relation === 'at-location') {
+				if (edge.relation === 'at-location') {
 					const fromNode = graph.nodes[edge.from];
 					if (fromNode) {
 						fromNode.atLocations = R.uniq(
@@ -1051,7 +1060,7 @@ function inferEdgeType(fromType, toType) {
 	} else if (fromType === 'item' && toType === 'item') {
 		return 'networkConnection';
 	} else if (fromType === 'item' && toType === 'location') { // TODO: is that always the case?
-		return 'atLocation';
+		return 'at-location';
 	} else {
 		return undefined;
 	}
