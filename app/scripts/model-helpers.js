@@ -406,7 +406,7 @@ function importFragment(graph, fragment, atXY=origin, cb=noop) {
 };
 
 
-const xmlModelToGraph = // TODO: test
+const xmlModelToGraph =
 module.exports.xmlModelToGraph =
 function xmlModelToGraph(xmlStr, done) {
 	trespass.model.parse(xmlStr, (err, model) => {
