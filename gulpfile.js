@@ -185,14 +185,14 @@ gulp.task('data', () => {
 
 
 gulp.task('icons', () => {
-	// fontawesome
-	gulp.src(iconsDir('font-awesome/*.svg'))
-		.pipe(gulp.dest(tempDir(iconsDir())))
-		.pipe(gulp.dest(distDir(iconsDir())));
+	// types
+	gulp.src(appDir(iconsDir('types/*.svg')))
+		.pipe(gulp.dest(tempDir(iconsDir('types'))))
+		.pipe(gulp.dest(distDir(iconsDir('types'))));
 });
 
 
-gulp.task('extras', ['data', 'icons'], () => {
+gulp.task('extras', [/*'data',*/ 'icons'], () => {
 	return gulp.src([
 		appDir('*.*'),
 		`!${appDir('*.html')}`,
