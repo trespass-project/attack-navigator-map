@@ -191,8 +191,7 @@ const Node = React.createClass({
 		const component = props.componentsLibMap[props.node.type];
 		const icon = (!component)
 			? undefined
-			: component.icon
-				.replace('https://github.com/encharm/Font-Awesome-SVG-PNG/blob/master/black/svg/', 'icons/font-awesome/');
+			: component.icon;
 
 		return <image
 			xlinkHref={icon}
@@ -235,7 +234,7 @@ const Node = React.createClass({
 
 		const isCountermeasure = false;
 
-		const iconScaleFactor = 0.7;
+		const iconScaleFactor = 1.0; // 0.7
 
 		const shapeSize = isCountermeasure
 			? context.theme.countermeasure.size
