@@ -289,11 +289,12 @@ const Node = React.createClass({
 
 		const needsFill = (!props.isHovered && !props.isSelected);
 		const scale = componentTypeColorScales[props.node.modelComponentType];
-		let scaleT = 0;
+		let scaleT = undefined;
 
 		// more fine-grained colors
 		const node = props.node;
-		const component = props.componentsLibMap && props.componentsLibMap[node.type];
+		const component = props.componentsLibMap
+			&& props.componentsLibMap[node.type];
 		if (component) {
 			const attribs = props.kbTypeAttributes[node.type];
 
@@ -313,7 +314,7 @@ const Node = React.createClass({
 			}
 		}
 
-		const fillColor = (needsFill && scale)
+		const fillColor = (scaleT !== undefined && needsFill && scale)
 			? scale(scaleT)
 			: undefined;
 
