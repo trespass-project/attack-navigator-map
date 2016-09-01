@@ -299,6 +299,28 @@ const Node = React.createClass({
 			const actorTypeAttrib = R.find(R.propEq('id', 'tkb:actor_type'))(attribs);
 			const type = R.find(R.propEq('@id', node['tkb:actor_type']))(actorTypeAttrib.values);
 			scaleT = type['tkb:soc_eng_probability'] / 100;
+		} else if (node['tkb:burglar_resistance'] && component) {
+			const attribs = props.kbTypeAttributes[node.type];
+			const actorTypeAttrib = R.find(R.propEq('id', 'tkb:burglar_resistance'))(attribs);
+			const type = R.find(R.propEq('@id', node['tkb:burglar_resistance']))(actorTypeAttrib.values);
+			switch (type['@id']) {
+				case 'tkb:burglar_resistance_class1': {
+					scaleT = 1;
+					break;
+				}
+				case 'tkb:burglar_resistance_class2': {
+					scaleT = 0.66;
+					break;
+				}
+				case 'tkb:burglar_resistance_class3': {
+					scaleT = 0.33;
+					break;
+				}
+				case 'tkb:burglar_resistance_class4': {
+					scaleT = 0;
+					break;
+				}
+			}
 		}
 
 		const fillColor = (needsFill && scale)
