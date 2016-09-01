@@ -584,6 +584,8 @@ const Wizard = React.createClass({
 		const isReadyToDownload = (missingForScenario.length === 0);
 		const isReadyToRun = (missingForAnalysis.length === 0);
 
+		const noProblems = (_.isEmpty(otherWarnings) && _.isEmpty(missingForAnalysis));
+
 		return <div>
 			<h2 className='title'>Run analysis</h2>
 			<hr />
@@ -595,7 +597,7 @@ const Wizard = React.createClass({
 			<hr />
 
 			<div className='problems-section'>
-				{(_.isEmpty(otherWarnings) && _.isEmpty(missingForAnalysis))
+				{(noProblems)
 					? null
 					: <h3>Problems</h3>
 				}
@@ -607,20 +609,17 @@ const Wizard = React.createClass({
 						.map(item => <li key={item}>{item}</li>)
 					}
 				</ul>
+				{(noProblems)
+					? null
+					: <hr />
+				}
 			</div>
 
-			<div
-				style={{
-					display: 'flex',
-					flexDirection: 'column',
-					alignItems: 'center',
-					justifyContent: 'center',
-				}}
-			>
+			<div>
 				<button
 					disabled={!isReadyToRun}
 					onClick={this.runAnalysis}
-					className='btn btn-primary custom-buttom'
+					className='btn btn-primary custom-button'
 				>
 					Run analysis
 				</button>
