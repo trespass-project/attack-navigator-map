@@ -168,18 +168,15 @@ const Wizard = React.createClass({
 		const props = this.props;
 
 		return <div>
-			<h2 className='title'>New</h2>
 			<button
 				onClick={this.clickCreateNew}
-				className='btn btn-default btn-xs'
+				className='btn btn-default custom-button'
 			>
 				Create new map
 			</button>
 
-			<br />
-			<br />
+			<div style={{ height: 10 }}></div>
 
-			<h2 className='title'>Import</h2>
 			<input
 				style={{ display: 'none' }}
 				ref='load-model'
@@ -187,12 +184,11 @@ const Wizard = React.createClass({
 				accept='.xml'
 				onChange={this.loadModelFile}
 			/>
-
 			<button
 				onClick={this.clickFileButton}
-				className='btn btn-default btn-xs'
+				className='btn btn-default custom-button'
 			>
-				Load model XML file
+				Import model file
 			</button>
 
 			<br />
@@ -535,17 +531,17 @@ const Wizard = React.createClass({
 		return <div>
 			<button
 				onClick={this.downloadModelXML}
-				className='btn btn-default btn-xs'
+				className='btn btn-default custom-button'
 			>
-				Save current model as XML
+				Download model
 			</button>
-			<br />
+			<div style={{ height: 10 }}></div>
 			<button
 				onClick={this.downloadZippedScenario}
 				disabled={!isReadyToDownload}
-				className='btn btn-default btn-xs'
+				className='btn btn-default custom-button'
 			>
-				Save model and scenario as ZIP
+				Download scenario
 			</button>
 		</div>;
 	},
@@ -624,9 +620,9 @@ const Wizard = React.createClass({
 				<button
 					disabled={!isReadyToRun}
 					onClick={this.runAnalysis}
-					className='btn btn-primary'
+					className='btn btn-primary custom-buttom'
 				>
-					<b>Run analysis</b>
+					Run analysis
 				</button>
 			</div>
 		</div>;
