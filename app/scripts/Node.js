@@ -294,21 +294,23 @@ const Node = React.createClass({
 		// more fine-grained colors
 		const node = props.node;
 		const component = props.componentsLibMap && props.componentsLibMap[node.type];
-		if (node['tkb:actor_type'] && component) {
+		if (component) {
 			const attribs = props.kbTypeAttributes[node.type];
-			const actorTypeAttrib = R.find(R.propEq('id', 'tkb:actor_type'))(attribs);
-			const type = R.find(R.propEq('@id', node['tkb:actor_type']))(actorTypeAttrib.values);
-			scaleT = type['tkb:soc_eng_probability'] / 100;
-		} else if (node['tkb:burglar_resistance'] && component) {
-			const attribs = props.kbTypeAttributes[node.type];
-			const actorTypeAttrib = R.find(R.propEq('id', 'tkb:burglar_resistance'))(attribs);
-			const type = R.find(R.propEq('@id', node['tkb:burglar_resistance']))(actorTypeAttrib.values);
-			scaleT = {
-				'tkb:burglar_resistance_class1': 1,
-				'tkb:burglar_resistance_class2': 0.66,
-				'tkb:burglar_resistance_class3': 0.33,
-				'tkb:burglar_resistance_class4': 0,
-			}[type['@id']] || 0.5;
+
+			if (node['tkb:actor_type']) {
+				const actorTypeAttrib = R.find(R.propEq('id', 'tkb:actor_type'))(attribs);
+				const type = R.find(R.propEq('@id', node['tkb:actor_type']))(actorTypeAttrib.values);
+				scaleT = type['tkb:soc_eng_probability'] / 100;
+			} else if (node['tkb:burglar_resistance']) {
+				const actorTypeAttrib = R.find(R.propEq('id', 'tkb:burglar_resistance'))(attribs);
+				const type = R.find(R.propEq('@id', node['tkb:burglar_resistance']))(actorTypeAttrib.values);
+				scaleT = {
+					'tkb:burglar_resistance_class1': 1,
+					'tkb:burglar_resistance_class2': 0.66,
+					'tkb:burglar_resistance_class3': 0.33,
+					'tkb:burglar_resistance_class4': 0,
+				}[type['@id']] || 0.5;
+			}
 		}
 
 		const fillColor = (needsFill && scale)
