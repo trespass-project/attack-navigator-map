@@ -8,6 +8,7 @@ const actionCreators = require('./actionCreators.js');
 const GraphMinimap = require('./GraphMinimap.js');
 const PropertiesPanel = require('./PropertiesPanel.js');
 const UsageHint = require('./UsageHint.js');
+const DividingSpace = require('./DividingSpace.js');
 const ComponentReference = require('./ComponentReference.js');
 // const GraphOutline = require('./GraphOutline.js');
 const Library = require('./components/Library/Library.js');
@@ -175,7 +176,7 @@ const Wizard = React.createClass({
 				Create new map
 			</button>
 
-			<div style={{ height: 10 }}></div>
+			<DividingSpace />
 
 			<input
 				style={{ display: 'none' }}
@@ -535,7 +536,7 @@ const Wizard = React.createClass({
 			>
 				Download model
 			</button>
-			<div style={{ height: 10 }}></div>
+			<DividingSpace />
 			<button
 				onClick={this.downloadZippedScenario}
 				disabled={!isReadyToDownload}
