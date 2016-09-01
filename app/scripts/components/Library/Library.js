@@ -88,6 +88,11 @@ const Library = React.createClass({
 		const state = this.state;
 		const itemsFiltered = state.itemsFiltered;
 
+		const style = {
+			lineHeight: 0,
+			fontSize: '1.5em',
+		};
+
 		return (
 			<div className='panel-section library-component'>
 				<h3 className='title' style={{ textTransform: 'capitalize' }}>{props.title}</h3>
@@ -95,7 +100,9 @@ const Library = React.createClass({
 					<div className='input-group'>
 						<input ref='searchInput' type='search' className='form-control' placeholder='search' onChange={this.search}></input>
 						<div className='btn input-group-addon' onClick={this.clearSearch}>
-							<span className='glyphicon glyphicon-remove'></span>
+							<span style={style}>
+								<strong>×</strong>
+							</span>
 						</div>
 					</div>
 				</div>

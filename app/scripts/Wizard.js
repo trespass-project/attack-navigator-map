@@ -8,6 +8,7 @@ const actionCreators = require('./actionCreators.js');
 const GraphMinimap = require('./GraphMinimap.js');
 const PropertiesPanel = require('./PropertiesPanel.js');
 const UsageHint = require('./UsageHint.js');
+const DividingSpace = require('./DividingSpace.js');
 const ComponentReference = require('./ComponentReference.js');
 // const GraphOutline = require('./GraphOutline.js');
 const Library = require('./components/Library/Library.js');
@@ -168,18 +169,15 @@ const Wizard = React.createClass({
 		const props = this.props;
 
 		return <div>
-			<h2 className='title'>New</h2>
 			<button
 				onClick={this.clickCreateNew}
-				className='btn btn-default btn-xs'
+				className='btn btn-default custom-button'
 			>
 				Create new map
 			</button>
 
-			<br />
-			<br />
+			<DividingSpace />
 
-			<h2 className='title'>Import</h2>
 			<input
 				style={{ display: 'none' }}
 				ref='load-model'
@@ -187,12 +185,11 @@ const Wizard = React.createClass({
 				accept='.xml'
 				onChange={this.loadModelFile}
 			/>
-
 			<button
 				onClick={this.clickFileButton}
-				className='btn btn-default btn-xs'
+				className='btn btn-default custom-button'
 			>
-				Load model XML file
+				Import model file
 			</button>
 
 			<br />
@@ -494,7 +491,7 @@ const Wizard = React.createClass({
 					.map(this.renderOption)
 				}
 			</select>
-			<br />
+			<DividingSpace />
 			<input
 				type='number'
 				className='form-control'
@@ -535,17 +532,17 @@ const Wizard = React.createClass({
 		return <div>
 			<button
 				onClick={this.downloadModelXML}
-				className='btn btn-default btn-xs'
+				className='btn btn-default custom-button'
 			>
-				Save current model as XML
+				Download model
 			</button>
-			<br />
+			<DividingSpace />
 			<button
 				onClick={this.downloadZippedScenario}
 				disabled={!isReadyToDownload}
-				className='btn btn-default btn-xs'
+				className='btn btn-default custom-button'
 			>
-				Save model and scenario as ZIP
+				Download scenario
 			</button>
 		</div>;
 	},
@@ -588,6 +585,8 @@ const Wizard = React.createClass({
 		const isReadyToDownload = (missingForScenario.length === 0);
 		const isReadyToRun = (missingForAnalysis.length === 0);
 
+		const noProblems = (_.isEmpty(otherWarnings) && _.isEmpty(missingForAnalysis));
+
 		return <div>
 			<h2 className='title'>Run analysis</h2>
 			<hr />
@@ -598,8 +597,8 @@ const Wizard = React.createClass({
 			{this.renderDownloadButtons(isReadyToDownload)}
 			<hr />
 
-			<div>
-				{(_.isEmpty(otherWarnings) || _.isEmpty(missingForAnalysis))
+			<div className='problems-section'>
+				{(noProblems)
 					? null
 					: <h3>Problems</h3>
 				}
@@ -611,22 +610,19 @@ const Wizard = React.createClass({
 						.map(item => <li key={item}>{item}</li>)
 					}
 				</ul>
+				{(noProblems)
+					? null
+					: <hr />
+				}
 			</div>
 
-			<div
-				style={{
-					display: 'flex',
-					flexDirection: 'column',
-					alignItems: 'center',
-					justifyContent: 'center',
-				}}
-			>
+			<div>
 				<button
 					disabled={!isReadyToRun}
 					onClick={this.runAnalysis}
-					className='btn btn-primary'
+					className='btn btn-primary custom-button'
 				>
-					<b>Run analysis</b>
+					Run analysis
 				</button>
 			</div>
 		</div>;
