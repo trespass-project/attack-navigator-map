@@ -599,7 +599,7 @@ const Wizard = React.createClass({
 			<hr />
 
 			<div className='problems-section'>
-				{(_.isEmpty(otherWarnings) || _.isEmpty(missingForAnalysis))
+				{(_.isEmpty(otherWarnings) && _.isEmpty(missingForAnalysis))
 					? null
 					: <h3>Problems</h3>
 				}
