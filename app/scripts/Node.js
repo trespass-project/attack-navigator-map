@@ -7,6 +7,19 @@ const icons = require('./icons.js');
 const helpers = require('./helpers.js');
 const actionCreators = require('./actionCreators.js');
 
+const { colorScales } = require('trespass-visualizations').color;
+const domain = [0, 1];
+const virtualScale = colorScales.virtual(domain);
+const physicalScale = colorScales.physical(domain);
+const componentTypeColorScales = {
+	location: physicalScale,
+	actor: physicalScale,
+	data: virtualScale,
+
+	// TODO: could be both
+	// item: physicalScale,
+};
+
 
 const Node = React.createClass({
 	propTypes: {
@@ -274,6 +287,24 @@ const Node = React.createClass({
 			}
 		);
 
+		const needsFill = (!props.isHovered && !props.isSelected);
+		const scale = componentTypeColorScales[props.node.modelComponentType];
+		let scaleT = 0;
+
+		// more fine-grained colors
+		const node = props.node;
+		const component = props.componentsLibMap && props.componentsLibMap[node.type];
+		if (node['tkb:actor_type'] && component) {
+			const attribs = props.kbTypeAttributes[node.type];
+			const actorTypeAttrib = R.find(R.propEq('id', 'tkb:actor_type'))(attribs);
+			const type = R.find(R.propEq('@id', node['tkb:actor_type']))(actorTypeAttrib.values);
+			scaleT = type['tkb:soc_eng_probability'] / 100;
+		}
+
+		const fillColor = (needsFill && scale)
+			? scale(scaleT)
+			: undefined;
+
 		const nodeShape = isCountermeasure
 			? <rect
 				className={nodeClasses}
@@ -289,6 +320,7 @@ const Node = React.createClass({
 				cx={0}
 				cy={0}
 				r={context.theme.node.radius}
+				style={{ fill: fillColor }}
 			/>;
 
 		return <g
