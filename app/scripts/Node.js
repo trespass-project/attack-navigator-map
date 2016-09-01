@@ -184,14 +184,28 @@ const Node = React.createClass({
 
 	renderIcon(shapeSizeScaled) {
 		const props = this.props;
+		const { node } = props;
+
 
 		if (!props.showNodeLabels) { return null; }
 
 		// types might not be loaded yet at this point?
-		const component = props.componentsLibMap[props.node.type];
-		const icon = (!component)
+		const component = props.componentsLibMap[node.type];
+		let icon = (!component)
 			? undefined
 			: component.icon;
+
+		// more fine-grained icons, depending on certain
+		// attribute values
+		if (node['tkb:actor_type']) {
+			// for instance "tkb:actor_management"
+			if (component) {
+				const attribs = props.kbTypeAttributes[node.type];
+				const actorTypeAttrib = R.find(R.propEq('id', 'tkb:actor_type'))(attribs);
+				const type = R.find(R.propEq('@id', node['tkb:actor_type']))(actorTypeAttrib.values);
+				icon = type['tkb:icon'] || icon;
+			}
+		}
 
 		return <image
 			xlinkHref={icon}

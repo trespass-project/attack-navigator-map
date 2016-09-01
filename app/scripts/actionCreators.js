@@ -1483,9 +1483,10 @@ function loadComponentTypes(modelId) {
 		knowledgebaseApi.getTypes(axios, modelId)
 			.then((types) => {
 				// TODO: do preparation elsewhere
+
+				// id → attributes map
 				const kbTypeAttributes = types
 					.reduce((acc, type) => {
-						// id → attributes map
 						const id = type['@id'];
 						acc[id] = type['tkb:has_attribute']
 							.reduce((attributes, attr) => {
@@ -1494,6 +1495,7 @@ function loadComponentTypes(modelId) {
 									{
 										id: attr['@id'],
 										label: attr['@label'],
+										icon: attr['tkb:icon'],
 										values: (!attr['tkb:mvalues'])
 											? null
 											: attr['tkb:mvalues']['@list'],
