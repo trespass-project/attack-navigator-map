@@ -598,7 +598,7 @@ const Wizard = React.createClass({
 			{this.renderDownloadButtons(isReadyToDownload)}
 			<hr />
 
-			<div>
+			<div className='problems-section'>
 				{(_.isEmpty(otherWarnings) || _.isEmpty(missingForAnalysis))
 					? null
 					: <h3>Problems</h3>
