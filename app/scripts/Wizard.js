@@ -491,7 +491,7 @@ const Wizard = React.createClass({
 					.map(this.renderOption)
 				}
 			</select>
-			<br />
+			<DividingSpace />
 			<input
 				type='number'
 				className='form-control'
