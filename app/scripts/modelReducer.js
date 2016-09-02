@@ -137,10 +137,12 @@ function reducer(state=initialState, action) {
 
 		case constants.ACTION_mergeFragment: {
 			const { fragment, cb=noop } = action;
+			console.log(fragment);
 			const newGraph = modelHelpers.combineFragments([
 				state.graph,
 				fragment
 			]);
+			console.log(newGraph);
 			cb(
 				state.metadata.id,
 				R.values(fragment.nodes)

@@ -332,6 +332,11 @@ function combineFragments(fragments) {
 				combined,
 				R.keys(fragment)
 					.reduce((acc, key) => {
+						// TODO: this is probably not the right place
+						// to ensure it's a hashmap
+						if (_.isArray(fragment[key])) {
+							fragment[key] = helpers.toHashMap('id', fragment[key]);
+						}
 						acc[key] = { $merge: (fragment[key] || {}) };
 						return acc;
 					}, {})
@@ -1124,10 +1129,10 @@ function addPolicy(graph, _policy) {
 const removePolicy = // TODO: test
 module.exports.removePolicy =
 function removePolicy(graph, policyId) {
-	const policy = graph.policies[policyId];
+	const policies = R.omit([policyId], graph.policies || {});
 	return update(
 		graph,
-		{ policies: { [policy.id]: { $set: policy } } }
+		{ policies: { $set: policies } }
 	);
 };
 

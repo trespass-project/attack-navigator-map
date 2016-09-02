@@ -924,6 +924,8 @@ function removePolicy(policyId) {
 			type: constants.ACTION_removePolicy,
 			policyId,
 		});
+		// TODO: we should probably update the model in the kb
+		// after this
 	};
 };
 
