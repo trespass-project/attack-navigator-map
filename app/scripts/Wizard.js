@@ -361,10 +361,16 @@ const Wizard = React.createClass({
 				.map((item) => {
 					// isLightTheme={true}
 					// theme={jsonTreeTheme}
-					return <JSONTree
-						key={item.id}
-						data={item}
-					/>;
+					return <div key={item.id}>
+						<JSONTree
+							data={item}
+						/>
+						<a
+							href='#'
+							onClick={(event) => { this.removePolicy(item.id, event); }}
+						>remove</a>
+						<hr />
+					</div>;
 				})
 			}
 		</div>;
@@ -383,6 +389,13 @@ const Wizard = React.createClass({
 			return;
 		}
 		textarea.value = '';
+	},
+
+	removePolicy(policyId, event) {
+		if (event) { event.preventDefault(); }
+		this.context.dispatch(
+			actionCreators.removePolicy(policyId)
+		);
 	},
 
 	addProcess(event) {

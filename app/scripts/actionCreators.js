@@ -917,6 +917,17 @@ function addPolicy(policy) {
 };
 
 
+module.exports.removePolicy =
+function removePolicy(policyId) {
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_removePolicy,
+			policyId,
+		});
+	};
+};
+
+
 module.exports.addPredicate =
 function addPredicate(predicate) {
 	return {

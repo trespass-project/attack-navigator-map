@@ -1121,6 +1121,17 @@ function addPolicy(graph, _policy) {
 };
 
 
+const removePolicy = // TODO: test
+module.exports.removePolicy =
+function removePolicy(graph, policyId) {
+	const policy = graph.policies[policyId];
+	return update(
+		graph,
+		{ policies: { [policy.id]: { $set: policy } } }
+	);
+};
+
+
 const addPredicate = // TODO: test
 module.exports.addPredicate =
 function addPredicate(graph, _predicate) {
