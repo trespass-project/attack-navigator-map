@@ -153,17 +153,30 @@ React.createClass({
 							>
 								edit knowledgebase files
 							</a>
+
 							<br />
+
 							<a
 								href='#'
 								onClick={this.fetchKbData}
 							>re-fetch knowledgebase data</a>
+
 							<br />
+
+							<a
+								href={`${knowledgebaseApi.host}tkb/files/zip?model_id=${modelId}`}
+								target='_blank'
+							>download knowledgebase files</a>
+
+							<br />
+
 							<a
 								href='#'
 								onClick={this.save}
 							>save map</a>
+
 							<br />
+
 							<a
 								href='#'
 								onClick={this.deleteModel}
