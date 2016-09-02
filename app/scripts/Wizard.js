@@ -334,7 +334,9 @@ const Wizard = React.createClass({
 	},
 
 	renderPolicies() {
-		const policies = R.values(this.props.graph.policies || {});
+		const policies = R.values(this.props.graph.policies || {})
+			.map(R.omit(['modelComponentType']));
+
 		return <div>
 			<h2 className='title'>Policies</h2>
 
@@ -342,7 +344,11 @@ const Wizard = React.createClass({
 			<div>
 				<div>
 					<textarea
-						style={{ width: '100%', maxWidth: '100%', fontSize: '12px' }}
+						style={{
+							width: '100%',
+							maxWidth: '100%',
+							fontSize: '12px'
+						}}
 						ref='new-policy'
 						cols='30'
 					></textarea>
@@ -355,10 +361,16 @@ const Wizard = React.createClass({
 				.map((item) => {
 					// isLightTheme={true}
 					// theme={jsonTreeTheme}
-					return <JSONTree
-						data={R.omit(['modelComponentType'], item)}
-						key={`policy-${item.id}`}
-					/>;
+					return <div key={item.id}>
+						<JSONTree
+							data={item}
+						/>
+						<a
+							href='#'
+							onClick={(event) => { this.removePolicy(item.id, event); }}
+						>remove</a>
+						<hr />
+					</div>;
 				})
 			}
 		</div>;
@@ -377,6 +389,13 @@ const Wizard = React.createClass({
 			return;
 		}
 		textarea.value = '';
+	},
+
+	removePolicy(policyId, event) {
+		if (event) { event.preventDefault(); }
+		this.context.dispatch(
+			actionCreators.removePolicy(policyId)
+		);
 	},
 
 	addProcess(event) {

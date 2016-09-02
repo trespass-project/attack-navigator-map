@@ -137,10 +137,12 @@ function reducer(state=initialState, action) {
 
 		case constants.ACTION_mergeFragment: {
 			const { fragment, cb=noop } = action;
+			console.log(fragment);
 			const newGraph = modelHelpers.combineFragments([
 				state.graph,
 				fragment
 			]);
+			console.log(newGraph);
 			cb(
 				state.metadata.id,
 				R.values(fragment.nodes)
@@ -308,6 +310,12 @@ function reducer(state=initialState, action) {
 		case constants.ACTION_addPolicy: {
 			const { policy } = action;
 			const newGraph = modelHelpers.addPolicy(state.graph, policy);
+			return mergeWithState({ graph: newGraph });
+		}
+
+		case constants.ACTION_removePolicy: {
+			const { policyId } = action;
+			const newGraph = modelHelpers.removePolicy(state.graph, policyId);
 			return mergeWithState({ graph: newGraph });
 		}
 

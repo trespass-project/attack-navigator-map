@@ -917,6 +917,19 @@ function addPolicy(policy) {
 };
 
 
+module.exports.removePolicy =
+function removePolicy(policyId) {
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_removePolicy,
+			policyId,
+		});
+		// TODO: we should probably update the model in the kb
+		// after this
+	};
+};
+
+
 module.exports.addPredicate =
 function addPredicate(predicate) {
 	return {

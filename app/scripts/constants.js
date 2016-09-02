@@ -65,6 +65,7 @@ const constants = {
 	ACTION_updateComponentProperties: 'ACTION_updateComponentProperties',
 	ACTION_addProcess: 'ACTION_addProcess',
 	ACTION_addPolicy: 'ACTION_addPolicy',
+	ACTION_removePolicy: 'ACTION_removePolicy',
 	ACTION_addPredicate: 'ACTION_addPredicate',
 	ACTION_predicateChanged: 'ACTION_predicateChanged',
 	ACTION_attackerProfileChanged: 'ACTION_attackerProfileChanged',
