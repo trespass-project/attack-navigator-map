@@ -334,7 +334,9 @@ const Wizard = React.createClass({
 	},
 
 	renderPolicies() {
-		const policies = R.values(this.props.graph.policies || {});
+		const policies = R.values(this.props.graph.policies || {})
+			.map(R.omit(['modelComponentType']));
+
 		return <div>
 			<h2 className='title'>Policies</h2>
 
@@ -342,7 +344,11 @@ const Wizard = React.createClass({
 			<div>
 				<div>
 					<textarea
-						style={{ width: '100%', maxWidth: '100%', fontSize: '12px' }}
+						style={{
+							width: '100%',
+							maxWidth: '100%',
+							fontSize: '12px'
+						}}
 						ref='new-policy'
 						cols='30'
 					></textarea>
@@ -356,8 +362,8 @@ const Wizard = React.createClass({
 					// isLightTheme={true}
 					// theme={jsonTreeTheme}
 					return <JSONTree
-						data={R.omit(['modelComponentType'], item)}
-						key={`policy-${item.id}`}
+						key={item.id}
+						data={item}
 					/>;
 				})
 			}
