@@ -310,7 +310,7 @@ const Node = React.createClass({
 					'tkb:burglar_resistance_class2': 0.66,
 					'tkb:burglar_resistance_class3': 0.33,
 					'tkb:burglar_resistance_class4': 0,
-				}[type['@id']] || 0.5;
+				}[type['@id']];
 			}
 		}
 
@@ -323,8 +323,8 @@ const Node = React.createClass({
 				className={nodeClasses}
 				x={-halfShapeSize}
 				y={-halfShapeSize}
-				rx={context.theme.node.cornerRadius * 0}
-				ry={context.theme.node.cornerRadius * 0}
+				rx={/*context.theme.node.cornerRadius * */0}
+				ry={/*context.theme.node.cornerRadius * */0}
 				height={context.theme.countermeasure.size}
 				width={context.theme.countermeasure.size}
 			/>

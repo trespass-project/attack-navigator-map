@@ -41,7 +41,7 @@
     "gulp-sourcemaps": "^1.6.0",
     "gulp-stylus": "^2.4.0",
     "gulp-uglify": "^1.5.4",
-    "gulp-useref": "^1.1.1",
+    "gulp-useref": "^3.1.2",
     "gulp-util": "^3.0.7",
     "gulp-watch": "^4.3.9",
     "node-notifier": "^4.2.3",
@@ -91,6 +91,6 @@
     "xml2js": "^0.4.16"
   },
   "name": "attack-navigator-map",
-  "version": "0.14.5",
+  "version": "0.14.6",
   "private": false
 }
