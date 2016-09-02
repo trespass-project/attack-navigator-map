@@ -108,26 +108,20 @@ gulp.task('styles', () => {
 			'include css': true
 		}))
 		.pipe($.autoprefixer({ browsers: ['last 2 versions'] }))
-		.pipe($.sourcemaps.write())
+		.pipe(sourcemaps.write('./'))
 		.pipe(gulp.dest(tempDir(stylesDir())))
+		.pipe(gulp.dest(distDir(stylesDir())))
 		/*.pipe(reload({ stream: true }))*/;
 });
 
 
-// gulp.task('styles', ['stylus']);
-
-
 gulp.task('html', ['styles'], () => {
-	const assets = $.useref.assets({
-		searchPath: [tempDir(), appDir(), '.']
-	});
-
 	return gulp.src([appDir('*.html'), tempDir('*.html')])
-		.pipe(assets)
+		.pipe($.useref({
+			searchPath: [tempDir(), appDir(), '.']
+		}))
 		// .pipe($.if('*.js', $.uglify()))
 		// .pipe($.if('*.css', $.minifyCss({ compatibility: '*'})))
-		.pipe(assets.restore())
-		.pipe($.useref())
 		// .pipe($.if('*.html', $.minifyHtml({ conditionals: true, loose: true })))
 		.pipe(gulp.dest(distDir()));
 });
