@@ -9,9 +9,10 @@ const modelHelpers = require('./model-helpers.js');
 const actionCreators = require('./actionCreators.js');
 
 
-const arrowSize = 10;
+const arrowSize = 13;
 const arrowShape = arrowHead(arrowSize);
-const arrowShapePath = <path d={arrowShape} />;
+const arrowShapePath = <path d={arrowShape} className='arrowhead' />;
+const arrowDist = 40;
 
 
 // const diagonal = d3.svg.diagonal()
@@ -31,7 +32,7 @@ function pathifyBezier(p1, c1, c2, p2) {
 
 function diagonalBezier(p1, p2) {
 	// const m = (p1.y + p2.y) / 2;
-	const m = p1.y + ((p2.y - p1.y) / 2);
+	// const m = p1.y + ((p2.y - p1.y) / 2);
 	// const c1 = { x: p1.x, y: m };
 	// const c2 = { x: p2.x, y: m };
 	return {
@@ -162,6 +163,7 @@ const Edge = React.createClass({
 		const isDirected = !R.contains(edge.relation, modelHelpers.nonDirectedRelationTypes);
 
 		let arrow = null;
+		let arrowPosition = undefined;
 		if (/*edge.directed*/ isDirected) {
 			const angle = vectorAngle(
 				edgeNodes.toNode.x - edgeNodes.fromNode.x,
@@ -170,8 +172,7 @@ const Edge = React.createClass({
 			const angleDeg = radians(angle);
 
 			// const arrowPosition = bezierPoint(p1, c1, c2, p2, 0.75);
-			const arrowDist = 45;
-			const arrowPosition = {
+			arrowPosition = {
 				x: p2.x + Math.cos(angle + Math.PI) * arrowDist,
 				y: p2.y + Math.sin(angle + Math.PI) * arrowDist,
 			};
@@ -179,7 +180,6 @@ const Edge = React.createClass({
 
 			arrow = <g
 				transform={`translate(${x}, ${y}) rotate(${angleDeg})`}
-				fill='white'
 			>
 				{arrowShapePath}
 			</g>;
@@ -200,10 +200,17 @@ const Edge = React.createClass({
 				onClick={this._onClick}
 				onContextMenu={this._onContextMenu}
 			>
-				<path
+				<line
+					className={pathClasses}
+					x1={p1.x}
+					y1={p1.y}
+					x2={(!!arrowPosition) ? arrowPosition.x : p2.x}
+					y2={(!!arrowPosition) ? arrowPosition.y : p2.y}
+				/>
+				{/*<path
 					className={pathClasses}
 					d={pathifyBezier(p1, c1, c2, p2)}
-				/>
+				/>*/}
 				{/*
 					stroke={(props.isPreview)
 						? context.theme.previewEdge.stroke
