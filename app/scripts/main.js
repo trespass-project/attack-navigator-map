@@ -1,4 +1,5 @@
 const R = require('ramda');
+const _ = require('lodash');
 import { createSelector } from 'reselect';
 const React = require('react');
 const reactDOM = require('react-dom');
@@ -94,6 +95,12 @@ const getNodeWarnings = createSelector(
 				if (node.modelComponentType === 'actor'
 					&& !node['tkb:actor_type']) {
 					messages = [...messages, 'is missing actor type'];
+				}
+
+				// data items need a value
+				if (node.modelComponentType === 'data'
+					&& _.isEmpty(node.data)) {
+					messages = [...messages, 'needs a value'];
 				}
 
 				// location is not connected to anything
