@@ -1062,8 +1062,11 @@ function inferEdgeType(fromType, toType) {
 		// TODO: or should it return all possible options, like
 		// ['connection', 'isContainedIn']? (directed-ness could play a role)
 	} else if (fromType === 'item' && toType === 'item') {
-		return 'networkConnection';
-	} else if (fromType === 'item' && toType === 'location') { // TODO: is that always the case?
+		return 'network';
+	} else if (fromType === 'item' && toType === 'location') {
+		// TODO: is that always the case?
+		return 'at-location';
+	} else if (fromType === 'data' && toType === 'item') {
 		return 'at-location';
 	} else {
 		return undefined;
