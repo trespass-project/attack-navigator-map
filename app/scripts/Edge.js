@@ -9,6 +9,11 @@ const modelHelpers = require('./model-helpers.js');
 const actionCreators = require('./actionCreators.js');
 
 
+const arrowSize = 10;
+const arrowShape = arrowHead(arrowSize);
+const arrowShapePath = <path d={arrowShape} />;
+
+
 // const diagonal = d3.svg.diagonal()
 // 	.source(function(d) { return d.fromNode; })
 // 	.target(function(d) { return d.toNode; });
@@ -153,20 +158,19 @@ const Edge = React.createClass({
 		let arrow = null;
 		if (/*edge.directed*/ isDirected) {
 			const arrowPosition = bezierPoint(p1, c1, c2, p2, 0.75);
-			const size = 10;
-			const x = arrowPosition.x;
-			const y = arrowPosition.y;
+			const { x, y } = arrowPosition;
 
-			const arrowShape = arrowHead(size);
-
-			let angleDeg = vectorAngle(edgeNodes.toNode.x - edgeNodes.fromNode.x, edgeNodes.toNode.y - edgeNodes.fromNode.y);
+			let angleDeg = vectorAngle(
+				edgeNodes.toNode.x - edgeNodes.fromNode.x,
+				edgeNodes.toNode.y - edgeNodes.fromNode.y
+			);
 			angleDeg = radians(angleDeg);
 
 			arrow = <g
 				transform={`translate(${x}, ${y}) rotate(${angleDeg})`}
 				fill='white'
 			>
-				<path d={arrowShape} />
+				{arrowShapePath}
 			</g>;
 		}
 
