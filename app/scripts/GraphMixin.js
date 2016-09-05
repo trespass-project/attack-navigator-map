@@ -95,16 +95,14 @@ const GraphMixin = {
 		/>;
 	},
 
-	renderPreviewEdge(edge, index) {
-		return this.renderEdge(edge, index, true);
-	},
-
-	renderEdge(edge, index, isPreview=false) {
+	_renderEdge(edge, index, flags={}) {
 		const props = this.props;
 		const context = this.context;
+
 		const showEdgeLabels = (props.isMinimap)
 			? false
 			: props.showEdgeLabels;
+
 		return <Edge
 			key={index}
 			theme={context.theme}
@@ -112,8 +110,29 @@ const GraphMixin = {
 			edge={edge}
 			showEdgeLabels={showEdgeLabels}
 			isSelected={edge.id === props.selectedId}
-			isPreview={isPreview}
+			isPreview={flags.isPreview}
+			isPredicate={flags.isPredicate}
 		/>;
+	},
+
+	renderPreviewEdge(edge, index) {
+		return this.renderEdge(edge, index, true);
+	},
+
+	renderEdge(edge, index, isPreview=false) {
+		return this._renderEdge(
+			edge,
+			index,
+			{ isPreview }
+		);
+	},
+
+	renderPredicateEdge(edge, index) {
+		return this._renderEdge(
+			edge,
+			index,
+			{ isPredicate: true }
+		);
 	},
 
 	renderNode(node, index) {
@@ -192,18 +211,22 @@ const GraphMixin = {
 				}
 
 				{(props.showEdges)
-					? props.regularEdges
-						.map((edge, index) => this.renderEdge(edge, index))
+					? <g className='edges'>
+						{props.regularEdges
+							.map((edge, index) => this.renderEdge(edge, index))}
+					</g>
 					: null
 				}
 				{(props.showPredicateEdges)
-					? props.predicateEdges
-						.map((edge, index) => this.renderEdge(edge, index))
+					? <g className='predicate-edges'>
+						{props.predicateEdges
+							.map((edge, index) => this.renderPredicateEdge(edge, index))}
+					</g>
 					: null
 				}
 				{(props.previewEdge && !props.isMinimap)
 					? [props.previewEdge]
-						.map(this.renderPreviewEdge)
+						.map((edge, index) => this.renderPreviewEdge(edge, index))
 					: null
 				}
 				{R.values(graph.nodes)

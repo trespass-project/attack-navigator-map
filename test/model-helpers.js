@@ -78,11 +78,16 @@ describe(common.f1('model-helpers.js'), () => {
 
 		it(common.f3('edges between items should have type "networkConnection"'), () => {
 			const edgeType = modelHelpers.inferEdgeType('item', 'item');
-			assert(edgeType === 'networkConnection');
+			assert(edgeType === 'network');
 		});
 
-		it(common.f3('edges between items and locations should have type "atLocation"'), () => {
+		it(common.f3('edges between items and locations should have type "at-location"'), () => {
 			const edgeType = modelHelpers.inferEdgeType('item', 'location');
+			assert(edgeType === 'at-location');
+		});
+
+		it(common.f3('edges between data and items should have type "at-location"'), () => {
+			const edgeType = modelHelpers.inferEdgeType('data', 'item');
 			assert(edgeType === 'at-location');
 		});
 
@@ -854,7 +859,7 @@ describe(common.f1('model-helpers.js'), () => {
 			assert(system.edges[2].target === 'b3');
 		});
 
-		it(common.f3('should convert `atLocation` type edges to `atLocations`'), () => {
+		it(common.f3('should convert `at-location` type edges to `atLocations`'), () => {
 			const itemAtLocations = system.items[0].atLocations;
 			assert(itemAtLocations.length === 1);
 			assert(R.contains('node-2', itemAtLocations));
