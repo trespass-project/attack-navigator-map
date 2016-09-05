@@ -11,6 +11,12 @@ const Node = require('./Node.js');
 const Edge = require('./Edge.js');
 
 
+const renderLayer = (layer, props) => {
+	const { Component, name } = layer;
+	return <Component {...props} key={name} />;
+};
+
+
 const GraphMixin = {
 	contextTypes: {
 		theme: React.PropTypes.object,
@@ -179,13 +185,10 @@ const GraphMixin = {
 					.map(this.renderGroup)
 				}
 
-				{(!props.isMinimap && activeLayersList.length)
-					? activeLayersList
-						.map((layer) => {
-							const { Component, name } = layer;
-							return <Component {...props} key={name} />;
-						})
-					: null
+				{(!props.isMinimap && activeLayersList.length) &&
+					activeLayersList
+						.filter((layer) => !layer.inForeground)
+						.map((layer) => renderLayer(layer, props))
 				}
 
 				{(props.showEdges)
@@ -207,6 +210,12 @@ const GraphMixin = {
 					.map(this.renderNode)
 				}
 				{this.renderVisibleRect()}
+
+				{(!props.isMinimap && activeLayersList.length) &&
+					activeLayersList
+						.filter((layer) => layer.inForeground)
+						.map((layer) => renderLayer(layer, props))
+				}
 			</g>
 		);
 	},

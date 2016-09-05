@@ -11,6 +11,10 @@ module.exports.name = 'HighlightLayer';
 module.exports.displayName = undefined;
 
 
+// const inForeground =
+module.exports.inForeground = true;
+
+
 // const adjustProps =
 module.exports.adjustProps = undefined
 /*function adjustProps(props) {
