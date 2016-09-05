@@ -99,7 +99,7 @@ const getNodeWarnings = createSelector(
 
 				// data items need a value
 				if (node.modelComponentType === 'data'
-					&& _.isEmpty(node.data)) {
+					&& _.isEmpty(node.value)) {
 					messages = [...messages, 'needs a value'];
 				}
 
