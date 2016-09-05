@@ -7,7 +7,8 @@ module.exports.name = 'HighlightLayer';
 
 
 // const displayName =
-module.exports.displayName = 'highlight layer';
+// module.exports.displayName = 'highlight layer';
+module.exports.displayName = undefined;
 
 
 // const adjustProps =
