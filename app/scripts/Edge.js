@@ -1,5 +1,4 @@
 const React = require('react');
-const reactDOM = require('react-dom');
 // const d3 = require('d3');
 const R = require('ramda');
 const mout = require('mout');
@@ -83,7 +82,7 @@ const Edge = React.createClass({
 		showEdgeLabels: React.PropTypes.bool,
 	},
 
-	getDefaultProps: function() {
+	getDefaultProps() {
 		return {
 			isPreview: false,
 			isSelected: false,
@@ -91,7 +90,7 @@ const Edge = React.createClass({
 		};
 	},
 
-	renderLabel: function(edgeNodes) {
+	renderLabel(edgeNodes) {
 		const props = this.props;
 		const edge = props.edge;
 
@@ -118,7 +117,7 @@ const Edge = React.createClass({
 		</text>;
 	},
 
-	_onClick: function(event) {
+	_onClick(event) {
 		event.preventDefault();
 		event.stopPropagation();
 		this.context.dispatch(
@@ -126,7 +125,7 @@ const Edge = React.createClass({
 		);
 	},
 
-	render: function() {
+	render() {
 		const context = this.context;
 		const props = this.props;
 		const edge = props.edge;
@@ -184,7 +183,7 @@ const Edge = React.createClass({
 		);
 	},
 
-	_onContextMenu: function(event) {
+	_onContextMenu(event) {
 		const context = this.context;
 		const props = this.props;
 		const menuItems = [
