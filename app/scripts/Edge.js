@@ -79,12 +79,14 @@ const Edge = React.createClass({
 		edge: React.PropTypes.object.isRequired,
 		isSelected: React.PropTypes.bool,
 		isPreview: React.PropTypes.bool,
+		isPredicate: React.PropTypes.bool,
 		showEdgeLabels: React.PropTypes.bool,
 	},
 
 	getDefaultProps() {
 		return {
 			isPreview: false,
+			isPredicate: false,
 			isSelected: false,
 			showEdgeLabels: true,
 		};
@@ -126,7 +128,7 @@ const Edge = React.createClass({
 	},
 
 	render() {
-		const context = this.context;
+		// const context = this.context;
 		const props = this.props;
 		const edge = props.edge;
 
@@ -162,21 +164,38 @@ const Edge = React.createClass({
 
 			arrow = <g
 				transform={`translate(${x}, ${y}) rotate(${angleDeg})`}
-				fill='white'>
+				fill='white'
+			>
 				<path d={arrowShape} />
 			</g>;
 		}
 
+		const pathClasses = classnames(
+			'edge',
+			{
+				'preview': props.isPreview,
+				'selected': props.isSelected,
+				'predicate': props.isPredicate
+			}
+		);
+
 		return (
-			<g className='edge-group'
+			<g
+				className='edge-group'
 				onClick={this._onClick}
 				onContextMenu={this._onContextMenu}
 			>
 				<path
-					className={classnames('edge', { 'preview': props.isPreview, 'selected': props.isSelected })}
+					className={pathClasses}
 					d={pathifyBezier(p1, c1, c2, p2)}
-					stroke={(props.isPreview) ? context.theme.previewEdge.stroke : context.theme.edge.stroke}
-					strokeWidth={context.theme.edge.strokeWidth} />
+				/>
+				{/*
+					stroke={(props.isPreview)
+						? context.theme.previewEdge.stroke
+						: context.theme.edge.stroke
+					}
+					strokeWidth={context.theme.edge.strokeWidth}
+				*/}
 				{arrow}
 				{this.renderLabel(edgeNodes)}
 			</g>
