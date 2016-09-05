@@ -250,7 +250,19 @@ function reducer(state=initialState, action) {
 				return state;
 			}
 
-			const newGraph = modelHelpers.addEdge(state.graph, edge, cb);
+			const fromNode = state.graph.nodes[edge.from];
+			const toNode = state.graph.nodes[edge.to];
+			const inferredType = modelHelpers.inferEdgeType(
+				fromNode.modelComponentType,
+				toNode.modelComponentType
+			);
+			const typedEdge = Object.assign(
+				{},
+				edge,
+				{ relation: inferredType }
+			);
+
+			const newGraph = modelHelpers.addEdge(state.graph, typedEdge, cb);
 			return mergeWithState({ graph: newGraph });
 		}
 

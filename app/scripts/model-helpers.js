@@ -1057,8 +1057,11 @@ function getGroupNodes(group, nodesMap) {
 const inferEdgeType =
 module.exports.inferEdgeType =
 function inferEdgeType(fromType, toType) {
+	// TODO: more combinations?
+
 	if (fromType === 'location' && toType === 'location') {
-		return 'connection';
+		// return 'connects';
+		return undefined;
 		// TODO: or should it return all possible options, like
 		// ['connection', 'isContainedIn']? (directed-ness could play a role)
 	} else if (fromType === 'item' && toType === 'item') {
@@ -1067,6 +1070,8 @@ function inferEdgeType(fromType, toType) {
 		// TODO: is that always the case?
 		return 'at-location';
 	} else if (fromType === 'data' && toType === 'item') {
+		return 'at-location';
+	} else if (fromType === 'actor' && toType === 'location') {
 		return 'at-location';
 	} else {
 		return undefined;
