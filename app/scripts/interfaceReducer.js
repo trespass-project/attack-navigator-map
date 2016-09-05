@@ -8,16 +8,21 @@ const constants = require('./constants.js');
 const helpers = require('./helpers.js');
 const theme = require('./graph-theme-default.js');
 const relationsLib = require('./relation-lib.js');
+
+
+// layers
 const ValidationLayer = require('./ValidationLayer.js');
 const HighlightLayer = require('./HighlightLayer.js');
 const PredicateLayer = require('./PredicateLayer.js');
 const GroupedComponentsLayer = require('./GroupedComponentsLayer.js');
+
 const availableLayersList = [
 	ValidationLayer,
 	PredicateLayer,
 	HighlightLayer,
 	GroupedComponentsLayer,
 ];
+
 const defaultActiveLayersList = [
 	ValidationLayer,
 	PredicateLayer,
