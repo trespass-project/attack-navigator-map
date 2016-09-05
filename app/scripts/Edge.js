@@ -32,9 +32,15 @@ function pathifyBezier(p1, c1, c2, p2) {
 function diagonalBezier(p1, p2) {
 	// const m = (p1.y + p2.y) / 2;
 	const m = p1.y + ((p2.y - p1.y) / 2);
-	const c1 = { x: p1.x, y: m };
-	const c2 = { x: p2.x, y: m };
-	return { p1, c1, c2, p2 };
+	// const c1 = { x: p1.x, y: m };
+	// const c2 = { x: p2.x, y: m };
+	return {
+		p1: p1,
+		c1: p1,
+		c2: p2,
+		p2: p2,
+	};
+	// return { p1, c1, c2, p2 };
 }
 
 
@@ -157,14 +163,19 @@ const Edge = React.createClass({
 
 		let arrow = null;
 		if (/*edge.directed*/ isDirected) {
-			const arrowPosition = bezierPoint(p1, c1, c2, p2, 0.75);
-			const { x, y } = arrowPosition;
-
-			let angleDeg = vectorAngle(
+			const angle = vectorAngle(
 				edgeNodes.toNode.x - edgeNodes.fromNode.x,
 				edgeNodes.toNode.y - edgeNodes.fromNode.y
 			);
-			angleDeg = radians(angleDeg);
+			const angleDeg = radians(angle);
+
+			// const arrowPosition = bezierPoint(p1, c1, c2, p2, 0.75);
+			const arrowDist = 45;
+			const arrowPosition = {
+				x: p2.x + Math.cos(angle + Math.PI) * arrowDist,
+				y: p2.y + Math.sin(angle + Math.PI) * arrowDist,
+			};
+			const { x, y } = arrowPosition;
 
 			arrow = <g
 				transform={`translate(${x}, ${y}) rotate(${angleDeg})`}
