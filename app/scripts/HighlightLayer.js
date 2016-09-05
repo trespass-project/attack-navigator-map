@@ -1,16 +1,21 @@
 const React = require('react');
-const R = require('ramda');
+// const R = require('ramda');
 
 
-const name =
+// const name =
 module.exports.name = 'HighlightLayer';
 
 
-const displayName =
-module.exports.displayName = 'highlight layer';
+// const displayName =
+// module.exports.displayName = 'highlight layer';
+module.exports.displayName = undefined;
 
 
-const adjustProps =
+// const inForeground =
+module.exports.inForeground = true;
+
+
+// const adjustProps =
 module.exports.adjustProps = undefined
 /*function adjustProps(props) {
 	return Object.assign(
@@ -39,7 +44,7 @@ const HighlightLayer = React.createClass({
 
 	render() {
 		const props = this.props;
-		const { theme } = this.context;
+		// const { theme } = this.context;
 
 		if (!props.highlightIds.length) {
 			return null;
@@ -70,7 +75,12 @@ const HighlightLayer = React.createClass({
 							key={node.id}
 							transform={`translate(${node.x}, ${node.y + yShift})`}
 						>
-							<circle r={r} cx='0' cy='0' fill='black' />
+							<circle
+								r={r}
+								cx='0'
+								cy='0'
+								fill='black'
+							/>
 						</g>;
 					})}
 				</mask>
