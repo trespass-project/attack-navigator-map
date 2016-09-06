@@ -12,7 +12,6 @@ const knowledgebaseApi = require('trespass.js').api.knowledgebase;
 // const ModelDebugView = require('./components/ModelDebugView/ModelDebugView.js');
 // const MainMenu = require('./MainMenu.js');
 const Wizard = require('./Wizard.js');
-// const UsageHint = require('./UsageHint.js');
 const GraphEditor = require('./GraphEditor.js');
 const AnalysisResultsOverlay = require('./AnalysisResultsOverlay.js');
 

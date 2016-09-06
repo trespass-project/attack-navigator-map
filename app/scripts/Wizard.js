@@ -7,7 +7,6 @@ const actionCreators = require('./actionCreators.js');
 
 const GraphMinimap = require('./GraphMinimap.js');
 const PropertiesPanel = require('./PropertiesPanel.js');
-const UsageHint = require('./UsageHint.js');
 const DividingSpace = require('./DividingSpace.js');
 const ComponentReference = require('./ComponentReference.js');
 // const GraphOutline = require('./GraphOutline.js');
@@ -488,7 +487,6 @@ const Wizard = React.createClass({
 			{this.renderAttackerActor()}
 			<hr />
 
-			<UsageHint>only presets work, currently</UsageHint>
 			<h2 className='title'>Attacker profile</h2>
 			<AttackerProfileEditor
 				profile={props.attackerProfile}
