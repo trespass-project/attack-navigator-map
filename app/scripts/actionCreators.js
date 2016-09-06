@@ -78,7 +78,7 @@ function initMap(modelId, metadata, anmData={}) {
 			});
 
 			dispatch( fetchKbData(modelId) );
-			dispatch( selectWizardStep('patterns') );
+			// dispatch( selectWizardStep('patterns') );
 
 			resolve();
 		});
@@ -632,6 +632,16 @@ function selectWizardStep(name) {
 // TODO: autoLayout
 
 
+function readFile(file, cb=noop) {
+	const reader = new FileReader();
+	reader.onload = (event) => {
+		const content = event.target.result;
+		cb(content);
+	};
+	reader.readAsText(file);
+}
+
+
 const loadModelFile =
 module.exports.loadModelFile =
 function loadModelFile(file) {
@@ -641,16 +651,68 @@ function loadModelFile(file) {
 			file,
 		});
 
-		// ———
-
-		const reader = new FileReader();
-		reader.onload = (event) => {
-			const content = event.target.result;
+		readFile(file, (content) => {
 			const source = 'file';
 			dispatch( loadXML(content, source) );
-		};
-		reader.readAsText(file);
+		});
 	};
+};
+
+
+const mergeModelFile =
+module.exports.mergeModelFile =
+function mergeModelFile(file) {
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_mergeModelFile,
+			file,
+		});
+
+		readFile(file, (xmlString) => {
+			// this is a simplified version of `loadXML`
+
+			// TODO: refactor into separate function
+			modelHelpers.xmlModelToGraph(xmlString, (err, result) => {
+				if (err) {
+					console.error(err.stack);
+					return;
+				}
+
+				const { graph/*, metadata, anmData*/ } = result;
+				const fragment = graph;
+
+				const group = modelHelpers.duplicateGroup({
+					nodeIds: R.keys(fragment.nodes),
+					label: file.name,
+				});
+				fragment.groups[group.id] = group;
+
+				const { predicates=[] } = result;
+				dispatch( addPredicatesToRelationTypes(predicates) );
+
+				R.values(fragment.nodes)
+					.forEach(setRandomDefaultPosition);
+
+				// `importFragment()` clones fragment entirely (all new ids)
+				dispatch( importFragment(fragment) );
+			});
+		});
+	};
+};
+
+
+const setRandomDefaultPosition = (node) => {
+	const twoPi = Math.PI * 2;
+	const offset = 100;
+	const maxRadius = 70;
+	node.x = node.x
+		|| offset + Math.cos(
+			Math.random() * twoPi
+		) * maxRadius;
+	node.y = node.y
+		|| offset + Math.sin(
+			Math.random() * twoPi
+		) * maxRadius;
 };
 
 
@@ -718,19 +780,7 @@ function loadXML(xmlString, source) {
 
 									// make sure all nodes have at least a default position
 									R.values(fragment.nodes)
-										.forEach((node) => {
-											const twoPi = Math.PI * 2;
-											const offset = 100;
-											const maxRadius = 70;
-											node.x = node.x
-												|| offset + Math.cos(
-													Math.random() * twoPi
-												) * maxRadius;
-											node.y = node.y
-												|| offset + Math.sin(
-													Math.random() * twoPi
-												) * maxRadius;
-										});
+										.forEach(setRandomDefaultPosition);
 
 									// `mergeFragment()` add everything "as is"
 									dispatch( mergeFragment(fragment) );
@@ -753,6 +803,9 @@ function loadXML(xmlString, source) {
 		});
 	};
 };
+
+
+
 
 
 const getXMLBlob =
