@@ -71,9 +71,9 @@ describe(common.f1('model-helpers.js'), () => {
 	});
 
 	describe(common.f2('inferEdgeType()'), () => {
-		it(common.f3('edges between locations should have type "connection"'), () => {
+		it(common.f3('edges between locations should have type `undefined`'), () => {
 			const edgeType = modelHelpers.inferEdgeType('location', 'location');
-			assert(edgeType === 'connection');
+			assert(edgeType === undefined);
 		});
 
 		it(common.f3('edges between items should have type "networkConnection"'), () => {
