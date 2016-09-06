@@ -63,7 +63,7 @@ function createFragment(data={}) {
 
 const _duplicate =
 module.exports._duplicate =
-function _duplicate(it={}, defaults, keepId=false, itsType) {
+function _duplicate(it={}, defaults={}, keepId=false, itsType) {
 	const id = (it.id && keepId === true)
 		? it.id
 		: helpers.makeId(itsType);
@@ -90,6 +90,22 @@ function duplicateEdge(edge={}, keepId=false) {
 };
 
 
+const duplicatePolicy =
+module.exports.duplicatePolicy =
+function duplicatePolicy(policy={}, keepId=false) {
+	const defaults = {};
+	return _duplicate(policy, defaults, keepId, 'policy');
+};
+
+
+const duplicateProcess =
+module.exports.duplicateProcess =
+function duplicateProcess(proc={}, keepId=false) {
+	const defaults = {};
+	return _duplicate(proc, defaults, keepId, 'process');
+};
+
+
 const duplicateGroup =
 module.exports.duplicateGroup =
 function duplicateGroup(group={}, keepId=false) {
@@ -109,47 +125,49 @@ const duplicateFragment =
 module.exports.duplicateFragment =
 function duplicateFragment(_fragment) {
 	const fragment = _.merge({}, _fragment);
+	const idReplacementMap = {};
 
-	const oldToNewNodeId = {};
+	// TODO: rewrite this more generically
+
 	fragment.nodes = R.values(fragment.nodes || {})
 		.reduce((acc, _node) => {
 			const node = duplicateNode(_node);
 			acc[node.id] = node;
-			oldToNewNodeId[_node.id] = node.id;
+			idReplacementMap[_node.id] = node.id;
 			return acc;
 		}, {});
 
 	fragment.edges = R.values(fragment.edges || {})
 		.reduce((acc, _edge) => {
-			const edge = duplicateEdge(_edge);
-			replaceIdInEdge(oldToNewNodeId, edge);
+			const edge = duplicateEdge(_edge, false);
+			replaceIdInEdge(idReplacementMap, edge);
 			acc[edge.id] = edge;
 			return acc;
 		}, {});
 
 	fragment.groups = R.values(fragment.groups || {})
 		.reduce((acc, _group) => {
-			const group = duplicateGroup(_group);
-			replaceIdInGroup(oldToNewNodeId, group);
+			const group = duplicateGroup(_group, false);
+			replaceIdInGroup(idReplacementMap, group);
 			acc[group.id] = group;
 			return acc;
 		}, {});
 
-	// import fragment policies, predicates, and processes
-	nonGraphCollectionNames
-		.forEach(name => {
-			fragment[name] = (fragment[name] || [])
-				.map(item => {
-					// string replace all old ids with the new ones
-					const s = R.keys(oldToNewNodeId)
-						.reduce((acc, oldId) => {
-							const re = new RegExp(`\"${oldId}\"`, 'g');
-							const newId = oldToNewNodeId[oldId];
-							return acc.replace(re, `"${newId}"`);
-						}, JSON.stringify(item));
-					return JSON.parse(s);
-				});
-		});
+	fragment.policies = R.values(fragment.policies || {})
+		.reduce((acc, _policy) => {
+			const policy = duplicatePolicy(_policy, false);
+			replaceIdInPolicy(idReplacementMap, policy);
+			acc[policy.id] = policy;
+			return acc;
+		}, {});
+
+	fragment.processes = R.values(fragment.processes || {})
+		.reduce((acc, _proc) => {
+			const proc = duplicateProcess(_proc, false);
+			replaceIdInProcess(idReplacementMap, proc);
+			acc[proc.id] = proc;
+			return acc;
+		}, {});
 
 	return fragment;
 };
@@ -276,6 +294,18 @@ function replaceIdInPolicy(mapping, policy) {
 		'credentials',
 		'enabled',
 		// TODO: more?
+	];
+	return replaceIdInObject(mapping, policy, reservedRootLevelKeys);
+};
+
+
+const replaceIdInProcess =
+module.exports.replaceIdInProcess =
+function replaceIdInProcess(mapping, policy) {
+	const reservedRootLevelKeys = [
+		'modelComponentType',
+		'id',
+		// TODO: more
 	];
 	return replaceIdInObject(mapping, policy, reservedRootLevelKeys);
 };

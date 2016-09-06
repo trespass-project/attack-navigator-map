@@ -342,31 +342,45 @@ describe(common.f1('model-helpers.js'), () => {
 			'edge-2': { id: 'edge-2', from: 'node-3', to: 'node-2' },
 			'edge-3': { id: 'edge-3', from: 'node-x', to: 'node-1' },
 		};
+		const policies = {
+			'policy-1': { id: 'policy-1' },
+			'policy-2': { id: 'policy-2' },
+			'policy-3': { id: 'policy-3' },
+		};
+		const processes = {
+			'process-1': { id: 'process-1' },
+			'process-2': { id: 'process-2' },
+			'process-3': { id: 'process-3' },
+		};
+
 		const fragment = { nodes, edges, groups };
+
 		const dupFragment = modelHelpers.duplicateFragment(fragment);
 		const dupEdges = R.values(dupFragment.edges);
 		const dupNodes = R.values(dupFragment.nodes);
 		const dupGroups = R.values(dupFragment.groups);
+		const dupPolicies = R.values(dupFragment.policies);
+		const dupProcesses = R.values(dupFragment.processes);
 
 		it(common.f3('should contain the right number of things'), () => {
-			assert(R.keys(dupFragment.nodes).length === R.keys(fragment.nodes).length);
-			assert(R.keys(dupFragment.edges).length === R.keys(fragment.edges).length);
-			assert(R.keys(dupFragment.groups).length === R.keys(fragment.groups).length);
+			assert(R.keys(dupNodes).length === R.keys(fragment.nodes).length);
+			assert(R.keys(dupEdges).length === R.keys(fragment.edges).length);
+			assert(R.keys(dupGroups).length === R.keys(fragment.groups).length);
+			assert(R.keys(dupPolicies).length === R.keys(fragment.policies).length);
+			assert(R.keys(dupProcesses).length === R.keys(fragment.processes).length);
 		});
 
 		it(common.f3('should create new ids for everything inside'), () => {
-			R.keys(dupFragment.nodes)
-				.forEach((key) => {
-					assert(nodes[key] === undefined);
-				});
-			R.keys(dupFragment.edges)
-				.forEach((key) => {
-					assert(edges[key] === undefined);
-				});
-			R.keys(dupFragment.groups)
-				.forEach((key) => {
-					assert(groups[key] === undefined);
-				});
+			R.keys(dupNodes)
+				.forEach((key) => assert(nodes[key] === undefined));
+			R.keys(dupEdges)
+				.forEach((key) => assert(edges[key] === undefined));
+			R.keys(dupGroups)
+				.forEach((key) => assert(groups[key] === undefined));
+			R.keys(dupPolicies)
+				.forEach((key) => assert(policies[key] === undefined));
+			R.keys(dupProcesses)
+				.forEach((key) => assert(processes[key] === undefined));
 		});
 
 		it(common.f3('should use new node ids in edges'), () => {
@@ -398,7 +412,11 @@ describe(common.f1('model-helpers.js'), () => {
 			groups: {
 				'group-1': { id: 'group-1' },
 				'group-2': { id: 'group-2' },
-			}
+			},
+			policies: {
+				'policy-1': { id: 'policy-1' },
+				'policy-2': { id: 'policy-2' },
+			},
 		};
 		const graph = {};
 		const newGraph = modelHelpers.importFragment(graph, fragment);
@@ -407,9 +425,11 @@ describe(common.f1('model-helpers.js'), () => {
 			assert(R.keys(newGraph.nodes).length === R.keys(fragment.nodes).length);
 			assert(R.keys(newGraph.edges).length === R.keys(fragment.edges).length);
 			assert(R.keys(newGraph.groups).length === R.keys(fragment.groups).length);
+			assert(R.keys(newGraph.policies).length === R.keys(fragment.policies).length);
 		});
 
-		// TODO: what else?
+		// TODO: processes
+		// TODO: predicates?
 	});
 
 	describe(common.f2('addNodeToGroup()'), () => {
