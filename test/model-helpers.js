@@ -71,9 +71,9 @@ describe(common.f1('model-helpers.js'), () => {
 	});
 
 	describe(common.f2('inferEdgeType()'), () => {
-		it(common.f3('edges between locations should have type "connection"'), () => {
+		it(common.f3('edges between locations should have type `undefined`'), () => {
 			const edgeType = modelHelpers.inferEdgeType('location', 'location');
-			assert(edgeType === 'connection');
+			assert(edgeType === undefined);
 		});
 
 		it(common.f3('edges between items should have type "networkConnection"'), () => {
@@ -905,6 +905,33 @@ describe(common.f1('model-helpers.js'), () => {
 					id: 'policy1',
 					label: 'label',
 					was: 'policy1',
+					// —————
+					'atLocations': [
+						'id'
+					],
+					'credentials': {
+						'credPredicate': [
+							{
+								'name': 'is-user-id-at',
+								'value': 'id',
+								'variable': 'X'
+							},
+							{
+								'name': 'is-password-of',
+								'variable': ['X', 'Y']
+							}
+						]
+					},
+					'enabled': {
+						'out': {
+							'loc': 'id',
+							'tuple': {
+								'value': 'get',
+								'wildcard': ['', '']
+							},
+							'variable': ['X', 'Y']
+						}
+					},
 				},
 			},
 
@@ -931,29 +958,12 @@ describe(common.f1('model-helpers.js'), () => {
 		};
 		const { newGraph/*, idReplacementMap*/ } = modelHelpers.humanizeModelIds(graph);
 
-		// TODO: revisit this for policies, processes, etc.
 
-		it(common.f3('should work'), () => {
+		it(common.f3('should rename node ids'), () => {
 			assert(
 				newGraph.nodes['node__label']
 				&& newGraph.nodes['node__label'].was === 'id'
 			);
-			// assert(
-			// 	newGraph.policies['policy__label']
-			// 	&& newGraph.policies['policy__label'].was === 'policy1'
-			// );
-			// assert(
-			// 	newGraph.edges['edge__label']
-			// 	&& newGraph.edges['edge__label'].was === 'edge1'
-			// );
-			// assert(
-			// 	newGraph.groups['group__label']
-			// 	&& newGraph.groups['group__label'].was === 'group1'
-			// );
-		});
-
-		it(common.f3('should make sure new labels remain unique'), () => {
-			assert(newGraph.nodes['node__label-2'].was === 'id-dup');
 		});
 
 		it(common.f3('should rename ids in edges'), () => {
@@ -963,6 +973,25 @@ describe(common.f1('model-helpers.js'), () => {
 
 		it(common.f3('should rename ids in groups'), () => {
 			assert(R.equals(newGraph.groups['group1'].nodeIds, ['node__label', 'node__label-2']));
+		});
+
+		// TODO: revisit this for processes
+		// predicates are covered by edges
+
+		it(common.f3('should rename ids in policies'), () => {
+			const p = newGraph.policies['policy1'];
+			assert(p.atLocations[0] === 'node__label');
+			assert(p.credentials.credPredicate[0].name === 'is-user-id-at');
+			assert(p.credentials.credPredicate[0].value === 'node__label');
+			assert(p.enabled.out.loc === 'node__label');
+		});
+
+		// it(common.f3('should rename ids in processes'), () => {
+		// 	assert(false);
+		// });
+
+		it(common.f3('should make sure new labels remain unique'), () => {
+			assert(newGraph.nodes['node__label-2'].was === 'id-dup');
 		});
 	});
 });
