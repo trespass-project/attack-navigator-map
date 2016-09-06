@@ -221,9 +221,7 @@ const replaceIdInGroup =
 module.exports.replaceIdInGroup =
 function replaceIdInGroup(mapping, group) {
 	group.nodeIds = (group.nodeIds || [])
-		.map((nodeId) => {
-			return (mapping[nodeId] || nodeId);
-		});
+		.map((nodeId) => (mapping[nodeId] || nodeId));
 	return group;
 };
 
@@ -241,6 +239,47 @@ function replaceIdInEdge(mapping, edge) {
 	return edge;
 };
 
+
+const replaceIdInObject =
+module.exports.replaceIdInObject =
+function replaceIdInObject(mapping, obj, reservedRootLevelKeys=[]) {
+	const oldIds = R.keys(mapping);
+	const objStr = JSON.stringify(obj, null, '');
+	const newObjStr = oldIds
+		.reduce((acc, oldId) => {
+			const re = new RegExp(`"${oldId}"`, 'g');
+			return acc.replace(re, `"${mapping[oldId]}"`);
+		}, objStr);
+
+	// restore certain fields, should they have been replaced
+	const newObj = reservedRootLevelKeys
+		.reduce((acc, key) => {
+			if (mapping[key]) {
+				acc[key] = obj[key];
+				delete acc[mapping[key]];
+			}
+			return acc;
+		}, JSON.parse(newObjStr));
+
+	return newObj;
+};
+
+
+const replaceIdInPolicy =
+module.exports.replaceIdInPolicy =
+function replaceIdInPolicy(mapping, policy) {
+	const reservedRootLevelKeys = [
+		'modelComponentType',
+		'id',
+		'label',
+		'atLocations',
+		'credentials',
+		'enabled',
+		// TODO: more?
+	];
+	return replaceIdInObject(mapping, policy, reservedRootLevelKeys);
+};
+
 /*
  * replace all ids in graph with human-readable versions
  */
@@ -249,7 +288,10 @@ module.exports.humanizeModelIds =
 function humanizeModelIds(graph, itemCb=noop) {
 	// build a map from current id to new one
 	const substituteCounter = {};
-	const idReplacementMap = ['nodes'/*, ...R.without(['edges'], collectionNames)*/]
+	const idReplacementMap = [
+		'nodes',
+		/*...R.without(['edges'], collectionNames)*/
+	]
 		.reduce((acc, collName) => {
 			const coll = graph[collName] || {};
 			return R.values(coll)
@@ -293,7 +335,12 @@ function humanizeModelIds(graph, itemCb=noop) {
 							break;
 						}
 
+						case 'predicates': {
+							// predicates are edges, remember?
+						}
+
 						default: {
+							// TODO: when would this ever happen?
 							newItem = _.merge({}, item, { id: newId });
 							itemCb(oldId, newItem);
 							break;
