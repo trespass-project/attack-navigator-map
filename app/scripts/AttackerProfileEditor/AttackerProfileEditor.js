@@ -144,7 +144,7 @@ const AttackerProfileEditor = React.createClass({
 
 				{/*<AttackerProfile profile={props.profile} />*/}
 				{(props.profile && props.profile.description)
-					? <div className='profile-descrioption'>
+					? <div className='profile-description'>
 						<br />
 						{props.profile.description}
 					</div>
