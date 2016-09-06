@@ -119,6 +119,7 @@ const AttackerProfileEditor = React.createClass({
 
 	render() {
 		const props = this.props;
+		const selectedPreset = props.profilePresets[props.selectedPresetId];
 
 		return (
 			<div className='attackerProfile-editor-language language'>
@@ -136,12 +137,12 @@ const AttackerProfileEditor = React.createClass({
 				</div>
 
 				{/*<AttackerProfile profile={props.profile} />*/}
-				{(props.profile && props.profile.description)
-					? <div className='profile-description'>
+
+				{(selectedPreset && selectedPreset.description) &&
+					<div className='profile-description'>
 						<br />
-						{props.profile.description}
+						{selectedPreset.description}
 					</div>
-					: null
 				}
 				<br />
 				<div>
