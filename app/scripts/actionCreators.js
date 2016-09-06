@@ -632,6 +632,16 @@ function selectWizardStep(name) {
 // TODO: autoLayout
 
 
+function readFile(file, cb=noop) {
+	const reader = new FileReader();
+	reader.onload = (event) => {
+		const content = event.target.result;
+		cb(content);
+	};
+	reader.readAsText(file);
+}
+
+
 const loadModelFile =
 module.exports.loadModelFile =
 function loadModelFile(file) {
@@ -641,15 +651,9 @@ function loadModelFile(file) {
 			file,
 		});
 
-		// ———
-
-		const reader = new FileReader();
-		reader.onload = (event) => {
-			const content = event.target.result;
+		readFile(file, (content) => {
 			const source = 'file';
 			dispatch( loadXML(content, source) );
-		};
-		reader.readAsText(file);
 	};
 };
 

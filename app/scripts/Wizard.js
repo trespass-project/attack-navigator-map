@@ -167,6 +167,10 @@ const Wizard = React.createClass({
 
 	renderImport() {
 		const props = this.props;
+		const inputProps = {
+			type: 'file',
+			accept: '.xml',
+		};
 
 		return <div>
 			<button
@@ -178,13 +182,13 @@ const Wizard = React.createClass({
 
 			<DividingSpace />
 
-			<input
-				style={{ display: 'none' }}
-				ref='load-model'
-				type='file'
-				accept='.xml'
-				onChange={this.loadModelFile}
-			/>
+			<div style={{ display: 'none' }}>
+				<input
+					ref='load-model'
+					onChange={this.loadModelFile}
+					{...inputProps}
+				/>
+			</div>
 			<button
 				onClick={this.clickFileButton}
 				className='btn btn-default custom-button'
@@ -809,14 +813,24 @@ const Wizard = React.createClass({
 
 	clickFileButton(event) {
 		event.preventDefault();
-		$(this.refs['load-model']).click();
+		const fileInput = this.refs['load-model'];
+		fileInput.onChange = this.loadModelFile;
+		$(fileInput).click();
+	},
+
+	getFileAndResetInput(ref) {
+		const fileInput = this.refs[ref];
+		const file = fileInput.files[0];
+
+		// reset, so that we can import the same file again, if needed
+		$(fileInput).val('');
+
+		return file;
 	},
 
 	loadModelFile(event) {
 		event.preventDefault();
-		const $fileInput = $(this.refs['load-model']);
-		const file = $fileInput[0].files[0];
-		$fileInput.val(''); // reset, so that we can import the same file again, if needed
+		const file = this.getFileAndResetInput('load-model');
 		this.context.dispatch( actionCreators.loadModelFile(file) );
 	},
 
