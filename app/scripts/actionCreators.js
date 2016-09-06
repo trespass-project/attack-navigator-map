@@ -1,4 +1,4 @@
-const isNodeEnvironment = require('detect-node');
+// const isNodeEnvironment = require('detect-node');
 const axios = require('axios');
 const R = require('ramda');
 const _ = require('lodash');
@@ -549,9 +549,9 @@ function addNodeToGroup(nodeId, groupId) {
 module.exports.removeNode =
 function removeNode(nodeId) {
 	return (dispatch, getState) => {
-		if (!isNodeEnvironment) {
-			// TODO: make kb call
-		}
+		// if (!isNodeEnvironment) {
+		// 	// TODO: make kb call
+		// }
 
 		dispatch({
 			type: constants.ACTION_removeNode,
@@ -560,6 +560,9 @@ function removeNode(nodeId) {
 				knowledgebaseApi.deleteItem(axios, modelId, itemId);
 			}
 		});
+
+		const modelId = getState().model.metadata.id;
+		dispatch( saveModelToKb(modelId) );
 	};
 };
 
@@ -908,9 +911,14 @@ function addEdge(edge) {
 const removeEdge =
 module.exports.removeEdge =
 function removeEdge(edgeId) {
-	return {
-		type: constants.ACTION_removeEdge,
-		edgeId
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_removeEdge,
+			edgeId
+		});
+
+		const modelId = getState().model.metadata.id;
+		dispatch( saveModelToKb(modelId) );
 	};
 };
 
@@ -928,12 +936,17 @@ function addGroup(group) {
 const removeGroup =
 module.exports.removeGroup =
 function removeGroup(groupId, removeNodes=false) {
-	return {
-		type: constants.ACTION_removeGroup,
-		groupId, removeNodes,
-		cb: (modelId, itemId) => {
-			knowledgebaseApi.deleteItem(axios, modelId, itemId);
-		}
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_removeGroup,
+			groupId, removeNodes,
+			cb: (modelId, itemId) => {
+				knowledgebaseApi.deleteItem(axios, modelId, itemId);
+			}
+		});
+
+		const modelId = getState().model.metadata.id;
+		dispatch( saveModelToKb(modelId) );
 	};
 };
 
@@ -988,8 +1001,9 @@ function removePolicy(policyId) {
 			type: constants.ACTION_removePolicy,
 			policyId,
 		});
-		// TODO: we should probably update the model in the kb
-		// after this
+
+		const modelId = getState().model.metadata.id;
+		dispatch( saveModelToKb(modelId) );
 	};
 };
 
