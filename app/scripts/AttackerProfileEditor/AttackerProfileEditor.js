@@ -3,8 +3,6 @@ const R = require('ramda');
 const _ = require('lodash');
 const classnames = require('classnames');
 
-const helpers = require('../helpers.js');
-
 // const AttackerProfile = require('../AttackerProfileEditor/AttackerProfile.js');
 const profileOptions = require('../../data/attacker-profiles.js').options;
 const SelectizeDropdown = require('../SelectizeDropdown.js');
@@ -29,13 +27,17 @@ const AttackerProfileEditor = React.createClass({
 	propTypes: {
 		handleUpdate: React.PropTypes.func,
 		profilePresets: React.PropTypes.object/*.isRequired*/,
-		profile: React.PropTypes.object/*.isRequired*/
+		selectedPresetId: React.PropTypes.string/*.isRequired*/,
+		isComplete: React.PropTypes.bool/*.isRequired*/,
+		profile: React.PropTypes.object/*.isRequired*/,
 	},
 
 	getDefaultProps() {
 		return {
 			handleUpdate: () => {},
 			profilePresets: {},
+			selectedPresetId: '',
+			isComplete: false,
 			profile: {},
 		};
 	},
@@ -43,28 +45,18 @@ const AttackerProfileEditor = React.createClass({
 	mergeWithCurrentProfile(partialProfile) {
 		return _.merge(
 			{},
-			R.omit(['description'], this.props.profile),
-			partialProfile
+			this.props.profile,
+			R.omit(
+				['id', 'description', 'codename'],
+				partialProfile
+			)
 		);
 	},
 
 	updateProfile(name, val) {
 		const props = this.props;
 		const attackerProfile = this.mergeWithCurrentProfile({ [name]: val });
-
-		// see if there is a preset that matches the current configuration
-		const matchingPreset = R.find(
-			(preset) => helpers.areAttackerProfilesEqual(attackerProfile, preset),
-			R.values(props.profilePresets)
-		);
-
-		//  if there is one, use its id
-		attackerProfile[profileIdAttribute] = (!matchingPreset)
-			? ''
-			: matchingPreset[profileIdAttribute];
-
-		// report to parent
-		props.handleUpdate(attackerProfile);
+		props.handleUpdate(attackerProfile); // report to parent
 	},
 
 	renderProfileParameterItem(item, index) {
@@ -135,10 +127,11 @@ const AttackerProfileEditor = React.createClass({
 					<select
 						name='presets'
 						onChange={this.handleSelectPreset}
-						value={props.profile[profileIdAttribute]}
+						value={props.selectedPresetId}
 					>
 						<option value=''>— none —</option>
-						{R.values(props.profilePresets).map(this.renderPresetOption)}
+						{R.values(props.profilePresets)
+							.map(this.renderPresetOption)}
 					</select>
 				</div>
 
@@ -163,13 +156,9 @@ const AttackerProfileEditor = React.createClass({
 
 	handleSelectPreset(event) {
 		const props = this.props;
-		// const preset = helpers.getItemByKey(profileIdAttribute, props.profilePresets, event.target.value);
 		const preset = props.profilePresets[event.target.value];
 		if (!!preset) {
-			const attackerProfile = _.merge(
-				this.mergeWithCurrentProfile(preset),
-				{ id: preset[profileIdAttribute] }
-			);
+			const attackerProfile = this.mergeWithCurrentProfile(preset);
 			props.handleUpdate(attackerProfile);
 		}
 	},

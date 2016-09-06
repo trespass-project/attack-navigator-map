@@ -159,7 +159,8 @@ function isRectInsideRect(r1, r2) {
 };
 
 
-const areAttackerProfilesEqual = module.exports.areAttackerProfilesEqual =
+const areAttackerProfilesEqual =
+module.exports.areAttackerProfilesEqual =
 function areAttackerProfilesEqual(p1, p2) {
 	// const outcomes1 = (p1.outcomes || []);
 	// const outcomes2 = (p2.outcomes || []);

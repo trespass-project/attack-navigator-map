@@ -491,6 +491,8 @@ const Wizard = React.createClass({
 			<AttackerProfileEditor
 				profile={props.attackerProfile}
 				profilePresets={props.attackerProfiles}
+				selectedPresetId={props.selectedAttackerProfileId}
+				isComplete={props.attackerProfileIsComplete}
 				handleUpdate={this.handleAttackerProfileUpdate}
 			/>
 		</div>;
