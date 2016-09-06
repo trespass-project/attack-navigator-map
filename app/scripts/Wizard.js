@@ -188,12 +188,27 @@ const Wizard = React.createClass({
 					onChange={this.loadModelFile}
 					{...inputProps}
 				/>
+				<input
+					ref='merge-model'
+					onChange={this.mergeModelFile}
+					{...inputProps}
+				/>
 			</div>
 			<button
 				onClick={this.clickFileButton}
 				className='btn btn-default custom-button'
 			>
 				Import model file
+			</button>
+
+			<DividingSpace />
+
+			<button
+				onClick={this.clickFileMergeButton}
+				className='btn btn-default custom-button'
+				disabled={!props.hasOpenMap}
+			>
+				Merge model (fragment) file
 			</button>
 
 			<br />
@@ -814,7 +829,12 @@ const Wizard = React.createClass({
 	clickFileButton(event) {
 		event.preventDefault();
 		const fileInput = this.refs['load-model'];
-		fileInput.onChange = this.loadModelFile;
+		$(fileInput).click();
+	},
+
+	clickFileMergeButton(event) {
+		event.preventDefault();
+		const fileInput = this.refs['merge-model'];
 		$(fileInput).click();
 	},
 
@@ -832,6 +852,12 @@ const Wizard = React.createClass({
 		event.preventDefault();
 		const file = this.getFileAndResetInput('load-model');
 		this.context.dispatch( actionCreators.loadModelFile(file) );
+	},
+
+	mergeModelFile(event) {
+		event.preventDefault();
+		const file = this.getFileAndResetInput('merge-model');
+		this.context.dispatch( actionCreators.mergeModelFile(file) );
 	},
 
 	loadModelFromKb(modelId) {

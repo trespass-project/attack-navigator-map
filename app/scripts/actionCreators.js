@@ -654,7 +654,58 @@ function loadModelFile(file) {
 		readFile(file, (content) => {
 			const source = 'file';
 			dispatch( loadXML(content, source) );
+		});
 	};
+};
+
+
+const mergeModelFile =
+module.exports.mergeModelFile =
+function mergeModelFile(file) {
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_mergeModelFile,
+			file,
+		});
+
+		readFile(file, (xmlString) => {
+			// this is a simplified version of `loadXML`
+
+			modelHelpers.xmlModelToGraph(xmlString, (err, result) => {
+				if (err) {
+					console.error(err.stack);
+					return;
+				}
+
+				const { graph/*, metadata, anmData*/ } = result;
+				const fragment = graph;
+
+				const { predicates=[] } = result;
+				dispatch( addPredicatesToRelationTypes(predicates) );
+
+				R.values(fragment.nodes)
+					.forEach(setRandomDefaultPosition);
+
+				// `importFragment()` clones fragment entirely (all new ids)
+				dispatch( importFragment(fragment) );
+			});
+		});
+	};
+};
+
+
+const setRandomDefaultPosition = (node) => {
+	const twoPi = Math.PI * 2;
+	const offset = 100;
+	const maxRadius = 70;
+	node.x = node.x
+		|| offset + Math.cos(
+			Math.random() * twoPi
+		) * maxRadius;
+	node.y = node.y
+		|| offset + Math.sin(
+			Math.random() * twoPi
+		) * maxRadius;
 };
 
 
@@ -722,19 +773,7 @@ function loadXML(xmlString, source) {
 
 									// make sure all nodes have at least a default position
 									R.values(fragment.nodes)
-										.forEach((node) => {
-											const twoPi = Math.PI * 2;
-											const offset = 100;
-											const maxRadius = 70;
-											node.x = node.x
-												|| offset + Math.cos(
-													Math.random() * twoPi
-												) * maxRadius;
-											node.y = node.y
-												|| offset + Math.sin(
-													Math.random() * twoPi
-												) * maxRadius;
-										});
+										.forEach(setRandomDefaultPosition);
 
 									// `mergeFragment()` add everything "as is"
 									dispatch( mergeFragment(fragment) );
@@ -757,6 +796,9 @@ function loadXML(xmlString, source) {
 		});
 	};
 };
+
+
+
 
 
 const getXMLBlob =
