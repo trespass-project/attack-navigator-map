@@ -294,7 +294,12 @@ function humanizeModelIds(graph, itemCb=noop) {
 							break;
 						}
 
+						case 'predicates': {
+							// predicates are edges, remember?
+						}
+
 						default: {
+							// TODO: when would this ever happen?
 							newItem = _.merge({}, item, { id: newId });
 							itemCb(oldId, newItem);
 							break;
