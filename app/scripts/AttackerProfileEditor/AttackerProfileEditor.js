@@ -26,6 +26,7 @@ function getClassName(option, value) {
 const AttackerProfileEditor = React.createClass({
 	propTypes: {
 		handleUpdate: React.PropTypes.func,
+		handleDeletion: React.PropTypes.func,
 		profilePresets: React.PropTypes.object/*.isRequired*/,
 		selectedPresetId: React.PropTypes.string/*.isRequired*/,
 		isComplete: React.PropTypes.bool/*.isRequired*/,
@@ -35,6 +36,7 @@ const AttackerProfileEditor = React.createClass({
 	getDefaultProps() {
 		return {
 			handleUpdate: () => {},
+			handleDeletion: () => {},
 			profilePresets: {},
 			selectedPresetId: '',
 			isComplete: false,
@@ -138,19 +140,33 @@ const AttackerProfileEditor = React.createClass({
 
 				{/*<AttackerProfile profile={props.profile} />*/}
 
-				{(selectedPreset && selectedPreset.description) &&
-					<div className='profile-description'>
+				{(selectedPreset)
+					? (selectedPreset.description) &&
+						<div className='profile-description'>
+							<br />
+							{selectedPreset.description}
+						</div>
+					: <div>
 						<br />
-						{selectedPreset.description}
+						TODO: save attacker profile to kb
 					</div>
 				}
+
 				<br />
+
 				<div>
 					<span><b>The attacker's</b></span>
 					<ul>
 						{profileOptions.map(this.renderProfileParameterItem)}
 					</ul>
 				</div>
+
+				{(selectedPreset) &&
+					<a
+						href='#'
+						onClick={this.handleDeletePreset}
+					>delete attacker profile</a>
+				}
 			</div>
 		);
 	},
@@ -161,6 +177,14 @@ const AttackerProfileEditor = React.createClass({
 		if (!!preset) {
 			const attackerProfile = this.mergeWithCurrentProfile(preset);
 			props.handleUpdate(attackerProfile);
+		}
+	},
+
+	handleDeletePreset(event) {
+		const props = this.props;
+		const preset = props.profilePresets[props.selectedPresetId];
+		if (!!preset) {
+			props.handleDeletion(preset.id);
 		}
 	},
 });

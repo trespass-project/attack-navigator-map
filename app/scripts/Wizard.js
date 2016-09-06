@@ -494,12 +494,17 @@ const Wizard = React.createClass({
 				selectedPresetId={props.selectedAttackerProfileId}
 				isComplete={props.attackerProfileIsComplete}
 				handleUpdate={this.handleAttackerProfileUpdate}
+				handleDeletion={this.handleAttackerProfileDeletion}
 			/>
 		</div>;
 	},
 
 	handleAttackerProfileUpdate(profile) {
 		this.context.dispatch( actionCreators.attackerProfileChanged(profile) );
+	},
+
+	handleAttackerProfileDeletion(profileId) {
+		this.context.dispatch( actionCreators.deleteAttackerProfile(profileId) );
 	},
 
 	handleAttackerProfitUpdate(event) {

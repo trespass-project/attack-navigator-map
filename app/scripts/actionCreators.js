@@ -976,6 +976,27 @@ function attackerProfileChanged(profile) {
 };
 
 
+const deleteAttackerProfile =
+module.exports.deleteAttackerProfile =
+function deleteAttackerProfile(profileId) {
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_deleteAttackerProfile,
+			profileId,
+		});
+
+		const modelId = getState().model.metadata.id;
+		knowledgebaseApi.deleteAttackerProfile(axios, modelId, profileId)
+			.catch((err) => {
+				console.error(err);
+			})
+			.then(() => {
+				dispatch( loadAttackerProfiles(modelId) );
+			});
+	};
+};
+
+
 module.exports.addProcess =
 function addProcess(process) {
 	return {
