@@ -221,9 +221,7 @@ const replaceIdInGroup =
 module.exports.replaceIdInGroup =
 function replaceIdInGroup(mapping, group) {
 	group.nodeIds = (group.nodeIds || [])
-		.map((nodeId) => {
-			return (mapping[nodeId] || nodeId);
-		});
+		.map((nodeId) => (mapping[nodeId] || nodeId));
 	return group;
 };
 
@@ -249,7 +247,10 @@ module.exports.humanizeModelIds =
 function humanizeModelIds(graph, itemCb=noop) {
 	// build a map from current id to new one
 	const substituteCounter = {};
-	const idReplacementMap = ['nodes'/*, ...R.without(['edges'], collectionNames)*/]
+	const idReplacementMap = [
+		'nodes',
+		/*...R.without(['edges'], collectionNames)*/
+	]
 		.reduce((acc, collName) => {
 			const coll = graph[collName] || {};
 			return R.values(coll)
