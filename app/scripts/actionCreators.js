@@ -762,9 +762,17 @@ function loadXML(xmlString, source) {
 									return;
 								} else {
 									const modelId = helpers.makeId('model');
+									const title = `${metadata.title} copy`;
 									return bla(
 										graph,
-										_.merge({}, metadata, { id: modelId }),
+										_.merge(
+											{},
+											metadata,
+											{
+												id: modelId,
+												title,
+											}
+										),
 										anmData
 									);
 								}
