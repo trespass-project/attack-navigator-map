@@ -905,6 +905,33 @@ describe(common.f1('model-helpers.js'), () => {
 					id: 'policy1',
 					label: 'label',
 					was: 'policy1',
+					// —————
+					'atLocations': [
+						'id'
+					],
+					'credentials': {
+						'credPredicate': [
+							{
+								'name': 'is-user-id-at',
+								'value': 'id',
+								'variable': 'X'
+							},
+							{
+								'name': 'is-password-of',
+								'variable': ['X', 'Y']
+							}
+						]
+					},
+					'enabled': {
+						'out': {
+							'loc': 'id',
+							'tuple': {
+								'value': 'get',
+								'wildcard': ['', '']
+							},
+							'variable': ['X', 'Y']
+						}
+					},
 				},
 			},
 
@@ -948,12 +975,16 @@ describe(common.f1('model-helpers.js'), () => {
 			assert(R.equals(newGraph.groups['group1'].nodeIds, ['node__label', 'node__label-2']));
 		});
 
-		// TODO: revisit this for processes, policies, etc.
+		// TODO: revisit this for processes
 		// predicates are covered by edges
 
-		// it(common.f3('should rename ids in policies'), () => {
-		// 	assert(false);
-		// });
+		it(common.f3('should rename ids in policies'), () => {
+			const p = newGraph.policies['policy1'];
+			assert(p.atLocations[0] === 'node__label');
+			assert(p.credentials.credPredicate[0].name === 'is-user-id-at');
+			assert(p.credentials.credPredicate[0].value === 'node__label');
+			assert(p.enabled.out.loc === 'node__label');
+		});
 
 		// it(common.f3('should rename ids in processes'), () => {
 		// 	assert(false);

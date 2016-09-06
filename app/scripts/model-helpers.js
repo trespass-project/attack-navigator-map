@@ -239,6 +239,47 @@ function replaceIdInEdge(mapping, edge) {
 	return edge;
 };
 
+
+const replaceIdInObject =
+module.exports.replaceIdInObject =
+function replaceIdInObject(mapping, obj, reservedRootLevelKeys=[]) {
+	const oldIds = R.keys(mapping);
+	const objStr = JSON.stringify(obj, null, '');
+	const newObjStr = oldIds
+		.reduce((acc, oldId) => {
+			const re = new RegExp(`"${oldId}"`, 'g');
+			return acc.replace(re, `"${mapping[oldId]}"`);
+		}, objStr);
+
+	// restore certain fields, should they have been replaced
+	const newObj = reservedRootLevelKeys
+		.reduce((acc, key) => {
+			if (mapping[key]) {
+				acc[key] = obj[key];
+				delete acc[mapping[key]];
+			}
+			return acc;
+		}, JSON.parse(newObjStr));
+
+	return newObj;
+};
+
+
+const replaceIdInPolicy =
+module.exports.replaceIdInPolicy =
+function replaceIdInPolicy(mapping, policy) {
+	const reservedRootLevelKeys = [
+		'modelComponentType',
+		'id',
+		'label',
+		'atLocations',
+		'credentials',
+		'enabled',
+		// TODO: more?
+	];
+	return replaceIdInObject(mapping, policy, reservedRootLevelKeys);
+};
+
 /*
  * replace all ids in graph with human-readable versions
  */
