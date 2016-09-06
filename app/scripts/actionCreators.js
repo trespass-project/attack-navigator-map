@@ -78,7 +78,7 @@ function initMap(modelId, metadata, anmData={}) {
 			});
 
 			dispatch( fetchKbData(modelId) );
-			dispatch( selectWizardStep('patterns') );
+			// dispatch( selectWizardStep('patterns') );
 
 			resolve();
 		});
