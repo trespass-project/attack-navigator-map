@@ -57,11 +57,14 @@ React.createClass({
 	},
 
 	handleBeforeUnload(event) {
+		// save last state of map / model
+		this.save(event);
+
 		// this whole message thing doesn't seem to work (anymore),
 		// but let's still interrupt here.
-		const msg = 'Are you sure?\nChanges you made may not be saved.';
-		event.returnValue = msg;
-		return msg;
+		// const msg = 'Are you sure?\nChanges you made may not be saved.';
+		// event.returnValue = msg;
+		// return msg;
 	},
 
 	saveHandler(event) {
