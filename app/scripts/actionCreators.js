@@ -671,6 +671,7 @@ function mergeModelFile(file) {
 		readFile(file, (xmlString) => {
 			// this is a simplified version of `loadXML`
 
+			// TODO: refactor into separate function
 			modelHelpers.xmlModelToGraph(xmlString, (err, result) => {
 				if (err) {
 					console.error(err.stack);
@@ -679,6 +680,12 @@ function mergeModelFile(file) {
 
 				const { graph/*, metadata, anmData*/ } = result;
 				const fragment = graph;
+
+				const group = modelHelpers.duplicateGroup({
+					nodeIds: R.keys(fragment.nodes),
+					label: file.name,
+				});
+				fragment.groups[group.id] = group;
 
 				const { predicates=[] } = result;
 				dispatch( addPredicatesToRelationTypes(predicates) );
