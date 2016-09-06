@@ -695,6 +695,9 @@ function mergeModelFile(file) {
 
 				// `importFragment()` clones fragment entirely (all new ids)
 				dispatch( importFragment(fragment) );
+
+				const modelId = getState().model.metadata.id;
+				dispatch( saveModelToKb(modelId) );
 			});
 		});
 	};
