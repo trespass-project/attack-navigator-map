@@ -337,6 +337,12 @@ function humanizeModelIds(graph, itemCb=noop) {
 
 						case 'predicates': {
 							// predicates are edges, remember?
+							break;
+						}
+
+						case 'policies': {
+							newItem = replaceIdInPolicy(idReplacementMap, _.merge({}, item));
+							break;
 						}
 
 						default: {
