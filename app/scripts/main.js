@@ -16,6 +16,7 @@ const DragDropContext = require('react-dnd').DragDropContext;
 
 const helpers = require('./helpers');
 const modelHelpers = require('./model-helpers');
+const trespass = require('trespass.js');
 
 
 function configureStore(initialState) {
@@ -44,6 +45,19 @@ const getRelationTypes = (state) => state.relationTypes;
 const getComponentsLib = (state) => state.componentsLib;
 const getAttackerProfile = (state) => state.attackerProfile;
 const getAttackerProfiles = (state) => state.attackerProfiles;
+const getResultsAttacktree = (state) => state.resultsAttacktree;
+
+const resultsAttacktreeIdHistogram = createSelector(
+	getResultsAttacktree,
+	(attacktree) => {
+		const { histogram } = (!!attacktree)
+			? helpers.getAllIdsFromTree(
+				trespass.attacktree.getRootNode(attacktree)
+			)
+			: {};
+		return histogram;
+	}
+);
 
 const componentsLibMap = createSelector(
 	getComponentsLib,
@@ -193,6 +207,8 @@ function mapStateToProps(_state) {
 	// attacker profile
 	props.selectedAttackerProfileId = selectedAttackerProfileId(state);
 	props.attackerProfileIsComplete = attackerProfileIsComplete(state);
+
+	props.resultsAttacktreeIdHistogram = resultsAttacktreeIdHistogram(state);
 
 	// validation
 	props.validation = {
