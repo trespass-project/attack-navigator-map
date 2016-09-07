@@ -2,12 +2,12 @@ const $ = require('jquery');
 const R = require('ramda');
 const _ = require('lodash');
 const React = require('react');
+const slugify = require('mout/string/slugify');
 const classnames = require('classnames');
 const actionCreators = require('./actionCreators.js');
 
 const GraphMinimap = require('./GraphMinimap.js');
 const PropertiesPanel = require('./PropertiesPanel.js');
-const UsageHint = require('./UsageHint.js');
 const DividingSpace = require('./DividingSpace.js');
 const ComponentReference = require('./ComponentReference.js');
 // const GraphOutline = require('./GraphOutline.js');
@@ -488,18 +488,36 @@ const Wizard = React.createClass({
 			{this.renderAttackerActor()}
 			<hr />
 
-			<UsageHint>only presets work, currently</UsageHint>
 			<h2 className='title'>Attacker profile</h2>
 			<AttackerProfileEditor
 				profile={props.attackerProfile}
 				profilePresets={props.attackerProfiles}
+				selectedPresetId={props.selectedAttackerProfileId}
+				isComplete={props.attackerProfileIsComplete}
 				handleUpdate={this.handleAttackerProfileUpdate}
+				handleSave={this.handleAttackerProfileSave}
+				handleDeletion={this.handleAttackerProfileDeletion}
 			/>
 		</div>;
 	},
 
 	handleAttackerProfileUpdate(profile) {
-		this.context.dispatch( actionCreators.attackerProfileChanged(profile) );
+		this.context.dispatch(
+			actionCreators.attackerProfileChanged(profile)
+		);
+	},
+
+	handleAttackerProfileDeletion(profileId) {
+		this.context.dispatch(
+			actionCreators.deleteAttackerProfile(profileId)
+		);
+	},
+
+	handleAttackerProfileSave(profile) {
+		profile.id = profile.id || slugify(profile.codename);
+		this.context.dispatch(
+			actionCreators.saveAttackerProfile(profile)
+		);
 	},
 
 	handleAttackerProfitUpdate(event) {

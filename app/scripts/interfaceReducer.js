@@ -71,10 +71,9 @@ const initialState = {
 
 	recentModels: [],
 
-	// this should not be here
-	attackerProfileIds: [],
-	attackerProfiles: {},
+	attackerProfiles: {}, // from kb
 	attackerProfile: undefined,
+
 	attackerGoalType: null,
 	attackerGoal: null,
 	attackerProfit: undefined,
@@ -362,7 +361,6 @@ function reducer(state=initialState, action) {
 		case constants.ACTION_loadAttackerProfiles_DONE: {
 			const { ids, items } = action.normalizedAttackerProfiles;
 			return mergeWithState({
-				attackerProfileIds: ids,
 				attackerProfiles: items,
 			});
 		}

@@ -5,7 +5,6 @@ const utils = require('../../utils.js');
 const React = require('react');
 
 const LibraryItem = require('./LibraryItem.js');
-const UsageHint = require('../../UsageHint.js');
 
 
 const Library = React.createClass({

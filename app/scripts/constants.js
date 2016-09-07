@@ -70,6 +70,8 @@ const constants = {
 	ACTION_addPredicate: 'ACTION_addPredicate',
 	ACTION_predicateChanged: 'ACTION_predicateChanged',
 	ACTION_attackerProfileChanged: 'ACTION_attackerProfileChanged',
+	ACTION_deleteAttackerProfile: 'ACTION_deleteAttackerProfile',
+	ACTION_saveAttackerProfile: 'ACTION_saveAttackerProfile',
 	ACTION_setAttackerActor: 'ACTION_setAttackerActor',
 	ACTION_setAttackerGoal: 'ACTION_setAttackerGoal',
 	ACTION_setAttackerProfit: 'ACTION_setAttackerProfit',

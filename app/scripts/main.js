@@ -42,6 +42,8 @@ const getEdges = (state) => state.graph.edges;
 const getModelId = (state) => state.metadata.id;
 const getRelationTypes = (state) => state.relationTypes;
 const getComponentsLib = (state) => state.componentsLib;
+const getAttackerProfile = (state) => state.attackerProfile;
+const getAttackerProfiles = (state) => state.attackerProfiles;
 
 const componentsLibMap = createSelector(
 	getComponentsLib,
@@ -135,6 +137,37 @@ const getNodeWarnings = createSelector(
 );
 
 
+const selectedAttackerProfileId = createSelector(
+	getAttackerProfile,
+	getAttackerProfiles,
+	(attackerProfile, profilePresets) => {
+		// see if there is a preset that matches the current configuration
+		const matchingPreset = R.find(
+			(preset) => helpers.areAttackerProfilesEqual(attackerProfile, preset),
+			R.values(profilePresets)
+		);
+
+		return (!matchingPreset)
+			? undefined // ''
+			: matchingPreset.id;
+	}
+);
+
+
+const attackerProfileIsComplete = createSelector(
+	getAttackerProfile,
+	(attackerProfile) => {
+		return (!attackerProfile)
+			? false
+			: (
+				!_.isEmpty(attackerProfile.budget) &&
+				!_.isEmpty(attackerProfile.time) &&
+				!_.isEmpty(attackerProfile.skill)
+			);
+	}
+);
+
+
 function mapStateToProps(_state) {
 	// flatten one level
 	const state = Object.assign.apply(
@@ -156,6 +189,10 @@ function mapStateToProps(_state) {
 	props.hasOpenMap = hasOpenMap(state);
 	props.relationsMap = relationsMap(state);
 	props.componentsLibMap = componentsLibMap(state);
+
+	// attacker profile
+	props.selectedAttackerProfileId = selectedAttackerProfileId(state);
+	props.attackerProfileIsComplete = attackerProfileIsComplete(state);
 
 	// validation
 	props.validation = {
