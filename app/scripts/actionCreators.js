@@ -976,6 +976,48 @@ function attackerProfileChanged(profile) {
 };
 
 
+const deleteAttackerProfile =
+module.exports.deleteAttackerProfile =
+function deleteAttackerProfile(profileId) {
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_deleteAttackerProfile,
+			profileId,
+		});
+
+		const modelId = getState().model.metadata.id;
+		knowledgebaseApi.deleteAttackerProfile(axios, modelId, profileId)
+			.catch((err) => {
+				console.error(err);
+			})
+			.then(() => {
+				dispatch( loadAttackerProfiles(modelId) );
+			});
+	};
+};
+
+
+const saveAttackerProfile =
+module.exports.saveAttackerProfile =
+function saveAttackerProfile(profile) {
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_saveAttackerProfile,
+			profile,
+		});
+
+		const modelId = getState().model.metadata.id;
+		knowledgebaseApi.saveAttackerProfile(axios, modelId, profile)
+			.catch((err) => {
+				console.error(err);
+			})
+			.then(() => {
+				dispatch( loadAttackerProfiles(modelId) );
+			});
+	};
+};
+
+
 module.exports.addProcess =
 function addProcess(process) {
 	return {
