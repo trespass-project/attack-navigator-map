@@ -834,7 +834,8 @@ const Wizard = React.createClass({
 		this.context.dispatch(
 			actionCreators.runAnalysis(
 				props.metadata.id,
-				props.toolChainId
+				props.toolChainId,
+				props.selectedAttackerProfileId
 			)
 		);
 	},
