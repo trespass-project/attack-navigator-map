@@ -51,6 +51,7 @@ const HeatmapLayer = React.createClass({
 		const yShift = 6; // TODO: get label font size
 
 		// TODO: color should depend on frequency?
+		const fillColor = 'rgba(255, 40, 0, 0.25)';
 
 		function renderItem(node) {
 			return <g
@@ -62,7 +63,7 @@ const HeatmapLayer = React.createClass({
 					cx={0}
 					cy={0}
 					r={r}
-					fill={'rgb(0, 255, 255)'}
+					fill={fillColor}
 				/>
 			</g>;
 		}
