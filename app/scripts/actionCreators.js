@@ -1315,7 +1315,7 @@ function retrieveAnalysisResults(taskStatusData) {
 			console.error(err.stack);
 		})
 		.then((items) => {
-			console.log(items); // [{ name, blob }]
+			// console.log(items); // [{ name, blob }]
 			return items
 				.reduce((acc, item) => {
 					acc[item.name] = item;
