@@ -4,7 +4,8 @@ const reactDOM = require('react-dom');
 const shortid = require('shortid');
 const normalizr = require('normalizr');
 const slugify = require('mout/string/slugify');
-const trespassUtils = require('trespass.js').utils;
+const trespass = require('trespass.js');
+const trespassUtils = trespass.utils;
 
 
 const getElemByRef = module.exports.getElemByRef =
@@ -289,4 +290,30 @@ function makeHumanReadable(item) {
 	const type = item.modelComponentType;
 	const label = slugify(item.label || item.id);
 	return `${type}__${label}`;
+};
+
+
+const getAllIdsFromTree =
+module.exports.getAllIdsFromTree =
+function getAllIdsFromTree(rootNode) {
+	const allIds = R.flatten(
+		trespass.attacktree.getAllNodes(rootNode)
+			.map(R.prop('label'))
+			.map(trespass.attacktree.getIdsFromLabel)
+	);
+
+	// create histogram
+	const histogramMap = R.countBy(R.identity, allIds);
+	const histogram = R.sortBy(
+		R.prop('count'),
+		R.toPairs(histogramMap)
+			.map((pair) =>
+				({ id: pair[0], count: pair[1] })
+			)
+	);
+
+	return {
+		ids: allIds,
+		histogram,
+	};
 };

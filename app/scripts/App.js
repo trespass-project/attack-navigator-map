@@ -141,6 +141,37 @@ React.createClass({
 					: null
 				}
 
+				{(props.resultsAttacktree) &&
+					<div id='heatmapControl'>
+						{(props.analysisRunning)
+							? <a
+								onClick={(event) => {
+									event.preventDefault();
+									props.dispatch(
+										actionCreators.enableLayer('HeatmapLayer', true)
+									);
+									props.dispatch(
+										actionCreators.setAnalysisRunning(false)
+									);
+								}}
+								href='#'
+							>highlight components on map</a>
+							: <a
+								href='#'
+								onClick={(event) => {
+									event.preventDefault();
+									props.dispatch(
+										actionCreators.setAnalysisRunning(true)
+									);
+									props.dispatch(
+										actionCreators.enableLayer('HeatmapLayer', false)
+									);
+								}}
+							>back to analysis results</a>
+						}
+					</div>
+				}
+
 				<div id='meta'>
 					{(props.hasOpenMap)
 						? <div>
