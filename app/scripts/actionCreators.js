@@ -1376,7 +1376,7 @@ function resetAnalysis() {
 
 const runAnalysis =
 module.exports.runAnalysis =
-function runAnalysis(modelId, toolChainId) {
+function runAnalysis(modelId, toolChainId, attackerProfileId) {
 	if (!modelId) {
 		throw new Error('missing model id');
 	}
@@ -1538,7 +1538,7 @@ function runAnalysis(modelId, toolChainId) {
 					axios,
 					modelId,
 					toolChainId,
-					state.interface.attackerProfile.id,
+					attackerProfileId,
 					callbacks || {}
 				)
 					.then((data) => {
