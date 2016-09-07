@@ -154,7 +154,7 @@ const getNodeWarnings = createSelector(
 const selectedAttackerProfileId = createSelector(
 	getAttackerProfile,
 	getAttackerProfiles,
-	(attackerProfile, profilePresets) => {
+	(attackerProfile={}, profilePresets=[]) => {
 		// see if there is a preset that matches the current configuration
 		const matchingPreset = R.find(
 			(preset) => helpers.areAttackerProfilesEqual(attackerProfile, preset),
