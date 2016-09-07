@@ -2,6 +2,7 @@ const $ = require('jquery');
 const R = require('ramda');
 const _ = require('lodash');
 const React = require('react');
+const slugify = require('mout/string/slugify');
 const classnames = require('classnames');
 const actionCreators = require('./actionCreators.js');
 
@@ -494,17 +495,29 @@ const Wizard = React.createClass({
 				selectedPresetId={props.selectedAttackerProfileId}
 				isComplete={props.attackerProfileIsComplete}
 				handleUpdate={this.handleAttackerProfileUpdate}
+				handleSave={this.handleAttackerProfileSave}
 				handleDeletion={this.handleAttackerProfileDeletion}
 			/>
 		</div>;
 	},
 
 	handleAttackerProfileUpdate(profile) {
-		this.context.dispatch( actionCreators.attackerProfileChanged(profile) );
+		this.context.dispatch(
+			actionCreators.attackerProfileChanged(profile)
+		);
 	},
 
 	handleAttackerProfileDeletion(profileId) {
-		this.context.dispatch( actionCreators.deleteAttackerProfile(profileId) );
+		this.context.dispatch(
+			actionCreators.deleteAttackerProfile(profileId)
+		);
+	},
+
+	handleAttackerProfileSave(profile) {
+		profile.id = profile.id || slugify(profile.codename);
+		this.context.dispatch(
+			actionCreators.saveAttackerProfile(profile)
+		);
 	},
 
 	handleAttackerProfitUpdate(event) {

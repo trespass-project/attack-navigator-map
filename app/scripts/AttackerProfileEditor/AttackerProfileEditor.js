@@ -6,6 +6,7 @@ const classnames = require('classnames');
 // const AttackerProfile = require('../AttackerProfileEditor/AttackerProfile.js');
 const profileOptions = require('../../data/attacker-profiles.js').options;
 const SelectizeDropdown = require('../SelectizeDropdown.js');
+const DividingSpace = require('../DividingSpace.js');
 
 
 const labelKey = 'title';
@@ -110,6 +111,32 @@ const AttackerProfileEditor = React.createClass({
 		</li>;
 	},
 
+	handleSelectPreset(event) {
+		const props = this.props;
+		const preset = props.profilePresets[event.target.value];
+		if (!!preset) {
+			const attackerProfile = this.mergeWithCurrentProfile(preset);
+			props.handleUpdate(attackerProfile);
+		}
+	},
+
+	handleDeletePreset(event) {
+		const props = this.props;
+		const preset = props.profilePresets[props.selectedPresetId];
+		if (!!preset) {
+			props.handleDeletion(preset.id);
+		}
+	},
+
+	handleSaveProfile(event) {
+		const props = this.props;
+		const profile = _.merge({}, props.profile, {
+			codename: this.refs['new-profile-title'].value,
+			description: this.refs['new-profile-description'].value,
+		});
+		props.handleSave(profile);
+	},
+
 	renderPresetOption(preset, index) {
 		return <option
 			key={preset[profileIdAttribute]}
@@ -140,15 +167,43 @@ const AttackerProfileEditor = React.createClass({
 
 				{/*<AttackerProfile profile={props.profile} />*/}
 
-				{(selectedPreset)
-					? (selectedPreset.description) &&
-						<div className='profile-description'>
-							<br />
-							{selectedPreset.description}
-						</div>
-					: <div>
+				{(selectedPreset && selectedPreset.description) &&
+					<div className='profile-description'>
 						<br />
-						TODO: save attacker profile to kb
+						{selectedPreset.description}
+					</div>
+				}
+				{(!selectedPreset && props.isComplete) &&
+					<div className='form-group'>
+						<br />
+						<div>
+							<b>new profile:</b>
+						</div>
+						<DividingSpace />
+						<div>
+							<input
+								ref='new-profile-title'
+								className='form-control'
+								type='text'
+								placeholder='title'
+							/>
+						</div>
+						<DividingSpace />
+						<div>
+							<textarea
+								ref='new-profile-description'
+								className='form-control'
+								rows='3'
+								placeholder='description'
+							/>
+						</div>
+						<DividingSpace />
+						<button
+							onClick={this.handleSaveProfile}
+							className='btn btn-default custom-button'
+						>
+							Save attacker profile
+						</button>
 					</div>
 				}
 
@@ -169,23 +224,6 @@ const AttackerProfileEditor = React.createClass({
 				}
 			</div>
 		);
-	},
-
-	handleSelectPreset(event) {
-		const props = this.props;
-		const preset = props.profilePresets[event.target.value];
-		if (!!preset) {
-			const attackerProfile = this.mergeWithCurrentProfile(preset);
-			props.handleUpdate(attackerProfile);
-		}
-	},
-
-	handleDeletePreset(event) {
-		const props = this.props;
-		const preset = props.profilePresets[props.selectedPresetId];
-		if (!!preset) {
-			props.handleDeletion(preset.id);
-		}
 	},
 });
 

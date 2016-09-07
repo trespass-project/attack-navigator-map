@@ -997,6 +997,27 @@ function deleteAttackerProfile(profileId) {
 };
 
 
+const saveAttackerProfile =
+module.exports.saveAttackerProfile =
+function saveAttackerProfile(profile) {
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_saveAttackerProfile,
+			profile,
+		});
+
+		const modelId = getState().model.metadata.id;
+		knowledgebaseApi.saveAttackerProfile(axios, modelId, profile)
+			.catch((err) => {
+				console.error(err);
+			})
+			.then(() => {
+				dispatch( loadAttackerProfiles(modelId) );
+			});
+	};
+};
+
+
 module.exports.addProcess =
 function addProcess(process) {
 	return {
