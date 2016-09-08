@@ -1301,28 +1301,98 @@ function setTaskStatusCategorized(taskStatusDataCategorized) {
 };
 
 
-const retrieveAnalysisResults =
-module.exports.retrieveAnalysisResults =
-function retrieveAnalysisResults(taskStatusData) {
-	const { analysisToolNames } = trespass.analysis;
-	const toolNames = [
-		'Treemaker',
-		'Attack Pattern Lib.',
-		...analysisToolNames,
-	];
-	return knowledgebaseApi.getAnalysisResults(axios, taskStatusData, toolNames)
-		.catch((err) => {
-			console.error(err.stack);
-		})
-		.then((items) => {
-			console.log(items); // [{ name, blob }]
-			return items
-				.reduce((acc, item) => {
-					acc[item.name] = item;
-					return acc;
-				}, {});
+const setAnalysisResultsSnapshots =
+module.exports.setAnalysisResultsSnapshots =
+function setAnalysisResultsSnapshots(snapshots) {
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_setAnalysisResultsSnapshots,
+			snapshots,
 		});
+	};
 };
+
+
+const selectAnalysisResultsSnapshot =
+module.exports.selectAnalysisResultsSnapshot =
+function selectAnalysisResultsSnapshot(snapshot) {
+	return (dispatch, getState) => {
+		const state = getState();
+		const modelId = state.model.metadata.id;
+		const toolchains = state.interface.toolChains;
+
+		// get toolchain, so that we can look up which tools have run
+		const toolchain = toolchains[snapshot.toolchainId];
+		if (!toolchain) {
+			throw new Error('toolchain not found.');
+		}
+		const toolNames = toolchain.tools.map(R.prop('name'));
+		// console.log('toolNames', toolNames);
+
+		// retrieve files
+		const promises = toolNames
+			.reduce((acc, toolName) => {
+				const toolInfo = trespass.analysis.analysisTools[toolName];
+				if (!toolInfo) { return acc; }
+				const fileName = toolInfo.outputFileName;
+
+				const fileHash = snapshot.tree[fileName];
+				// console.log(fileHash, snapshot.tree);
+				if (!fileHash) { return acc; }
+
+				const promise = new Promise((resolve, reject) => {
+					const asBlob = true;
+					knowledgebaseApi.getFile(axios, modelId, fileName, fileHash, asBlob)
+						.catch((err) => {
+							console.error(err);
+							reject(err);
+						})
+						.then((blob) => {
+							console.log(toolName, blob);
+							resolve({
+								name: toolName,
+								blob,
+							});
+						});
+				});
+
+				return [...acc, promise];
+			}, []);
+
+		return Promise.all(promises)
+			.catch((err) => {
+				console.error(err.stack);
+			})
+			.then((items) => {
+				// console.log(items); // [{ name, blob }]
+				return helpers.toHashMap('name', items);
+			});
+	};
+};
+
+
+// const retrieveAnalysisResults =
+// module.exports.retrieveAnalysisResults =
+// function retrieveAnalysisResults(taskStatusData) {
+// 	const { analysisToolNames } = trespass.analysis;
+// 	const toolNames = [
+// 		'Treemaker',
+// 		'Attack Pattern Lib.',
+// 		...analysisToolNames,
+// 	];
+// 	return knowledgebaseApi.getAnalysisResults(axios, taskStatusData, toolNames)
+// 		.catch((err) => {
+// 			console.error(err.stack);
+// 		})
+// 		.then((items) => {
+// 			// console.log(items); // [{ name, blob }]
+// 			return items
+// 				.reduce((acc, item) => {
+// 					acc[item.name] = item;
+// 					return acc;
+// 				}, {});
+// 		});
+// };
 
 
 const humanizeModelIds =
@@ -1481,16 +1551,19 @@ function runAnalysis(modelId, toolChainId, attackerProfileId) {
 						// console.log(item.name, blob);
 
 						const reader = new FileReader();
-						// for what we know, zip blob type could be any of these
+
 						const zipTypes = [
 							'application/zip',
-							'application/x-zip',
-							'application/x-zip-compressed',
-							'application/octet-stream',
-							'multipart/x-zip',
+							// 'application/x-zip',
+							// 'application/x-zip-compressed',
+							// 'application/octet-stream',
+							// 'multipart/x-zip',
 						];
-						if (blob.type === 'text/plain'
-							|| blob.type === 'application/xml') {
+						const textTypes = [
+							'text/plain',
+							'application/xml'
+						];
+						if (R.contains(blob.type, textTypes)) {
 							reader.onload = textHandler;
 							reader.readAsText(blob);
 						} else if (R.contains(blob.type, zipTypes)) {
@@ -1509,7 +1582,16 @@ function runAnalysis(modelId, toolChainId, attackerProfileId) {
 					// },
 					onToolChainEnd: (taskStatusData) => {
 						console.log('done', taskStatusData);
-						retrieveAnalysisResults(taskStatusData)
+
+						knowledgebaseApi.getAnalysisResultsSnapshots(axios, modelId)
+							.then((snapshots) => {
+								dispatch(
+									setAnalysisResultsSnapshots(snapshots)
+								);
+								return dispatch(
+									selectAnalysisResultsSnapshot(snapshots[0])
+								);
+							})
 							.then(analysisResults => {
 								const promises = R.values(analysisResults)
 									.map(prepareResult);
@@ -1519,13 +1601,33 @@ function runAnalysis(modelId, toolChainId, attackerProfileId) {
 										console.error(err);
 									})
 									.then((_results) => {
+										// combine into one object
 										const results = _results
 											.reduce((acc, item) => _.assign(acc, item), {});
+
 										dispatch(
 											setAnalysisResults(results)
 										);
 									});
 							});
+
+						// retrieveAnalysisResults(taskStatusData)
+						// 	.then(analysisResults => {
+						// 		const promises = R.values(analysisResults)
+						// 			.map(prepareResult);
+
+						// 		Promise.all(promises)
+						// 			.catch((err) => {
+						// 				console.error(err);
+						// 			})
+						// 			.then((_results) => {
+						// 				const results = _results
+						// 					.reduce((acc, item) => _.assign(acc, item), {});
+						// 				dispatch(
+						// 					setAnalysisResults(results)
+						// 				);
+						// 			});
+						// 	});
 					},
 					onTaskStatus: (taskStatusDataCategorized) => {
 						dispatch(

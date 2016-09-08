@@ -11,6 +11,7 @@ const initialState = {
 	resultsSelectedTool: undefined,
 	resultsSelectedAttackIndex: undefined,
 	resultsAttacktree: undefined,
+	analysisSnapshots: [],
 };
 
 
@@ -60,6 +61,13 @@ function reducer(state=initialState, action) {
 			return mergeWithState({
 				resultsSelectedAttackIndex: index,
 				resultsAttacktree: attacktree,
+			});
+		}
+
+		case constants.ACTION_setAnalysisResultsSnapshots: {
+			const { snapshots } = action;
+			return mergeWithState({
+				analysisSnapshots: snapshots,
 			});
 		}
 

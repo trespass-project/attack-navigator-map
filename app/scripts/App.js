@@ -290,6 +290,7 @@ React.createClass({
 						toolChain={props.toolChains[props.toolChainId]}
 						taskStatusCategorized={props.taskStatusCategorized}
 						analysisResults={props.analysisResults}
+						analysisSnapshots={props.analysisSnapshots}
 						resultsAttacktree={props.resultsAttacktree}
 						resultsSelectedTool={props.resultsSelectedTool}
 						resultsSelectedAttackIndex={props.resultsSelectedAttackIndex}

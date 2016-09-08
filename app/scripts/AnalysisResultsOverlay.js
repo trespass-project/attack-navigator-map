@@ -88,6 +88,7 @@ const AnalysisResultsOverlay = React.createClass({
 		resultsSelectedTool: React.PropTypes.string,
 		resultsSelectedAttackIndex: React.PropTypes.number,
 		resultsAttacktree: React.PropTypes.object,
+		analysisSnapshots: React.PropTypes.array.isRequired,
 		onClose: React.PropTypes.func,
 	},
 
@@ -98,6 +99,7 @@ const AnalysisResultsOverlay = React.createClass({
 	getDefaultProps() {
 		return {
 			onClose: () => {},
+			analysisSnapshots: [],
 		};
 	},
 
@@ -117,6 +119,14 @@ const AnalysisResultsOverlay = React.createClass({
 	onAttackSelect(item, index) {
 		this.context.dispatch(
 			actionCreators.resultsSelectAttack(index)
+		);
+	},
+
+	selectToolchainRun(event) {
+		const snapshotIndex = event.target.value;
+		const snapshot = this.props.analysisSnapshots[snapshotIndex];
+		this.context.dispatch(
+			actionCreators.selectAnalysisResultsSnapshot(snapshot)
 		);
 	},
 
@@ -224,6 +234,31 @@ const AnalysisResultsOverlay = React.createClass({
 			</div>
 
 			<div className={classnames('tools', { ready: resultsReady })}>
+				<div>
+					<span style={{ color: 'grey' }}>Toolchain run: </span>
+					<select
+						name='snapshots'
+						style={{
+							visibility: (!resultsReady)
+								? 'hidden'
+								: 'visible',
+						}}
+						onChange={this.selectToolchainRun}
+					>
+						{props.analysisSnapshots
+							.map((snapshot, index) => {
+								return <option
+									key={index}
+									value={index}
+								>
+									{snapshot.formattedToolchainRunDate}
+								</option>;
+							})
+						}
+					</select>
+					<hr />
+				</div>
+
 				<div className='clearfix' style={{ marginBottom: 5 }}>
 					<div style={{ float: 'left', color: 'grey' }}>
 						Tools

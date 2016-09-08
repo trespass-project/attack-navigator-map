@@ -104,6 +104,7 @@ const constants = {
 	ACTION_resetAnalysis: 'ACTION_resetAnalysis',
 
 	ACTION_addPredicatesToRelationTypes: 'ACTION_addPredicatesToRelationTypes',
+	ACTION_setAnalysisResultsSnapshots: 'ACTION_setAnalysisResultsSnapshots',
 
 	CLONE_OFFSET: 70,
 };
