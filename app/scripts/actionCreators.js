@@ -1301,6 +1301,18 @@ function setTaskStatusCategorized(taskStatusDataCategorized) {
 };
 
 
+const setAnalysisResultsSnapshots =
+module.exports.setAnalysisResultsSnapshots =
+function setAnalysisResultsSnapshots(snapshots) {
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_setAnalysisResultsSnapshots,
+			snapshots,
+		});
+	};
+};
+
+
 const selectAnalysisResultsSnapshot =
 module.exports.selectAnalysisResultsSnapshot =
 function selectAnalysisResultsSnapshot(snapshot) {
@@ -1359,28 +1371,28 @@ function selectAnalysisResultsSnapshot(snapshot) {
 };
 
 
-const retrieveAnalysisResults =
-module.exports.retrieveAnalysisResults =
-function retrieveAnalysisResults(taskStatusData) {
-	const { analysisToolNames } = trespass.analysis;
-	const toolNames = [
-		'Treemaker',
-		'Attack Pattern Lib.',
-		...analysisToolNames,
-	];
-	return knowledgebaseApi.getAnalysisResults(axios, taskStatusData, toolNames)
-		.catch((err) => {
-			console.error(err.stack);
-		})
-		.then((items) => {
-			// console.log(items); // [{ name, blob }]
-			return items
-				.reduce((acc, item) => {
-					acc[item.name] = item;
-					return acc;
-				}, {});
-		});
-};
+// const retrieveAnalysisResults =
+// module.exports.retrieveAnalysisResults =
+// function retrieveAnalysisResults(taskStatusData) {
+// 	const { analysisToolNames } = trespass.analysis;
+// 	const toolNames = [
+// 		'Treemaker',
+// 		'Attack Pattern Lib.',
+// 		...analysisToolNames,
+// 	];
+// 	return knowledgebaseApi.getAnalysisResults(axios, taskStatusData, toolNames)
+// 		.catch((err) => {
+// 			console.error(err.stack);
+// 		})
+// 		.then((items) => {
+// 			// console.log(items); // [{ name, blob }]
+// 			return items
+// 				.reduce((acc, item) => {
+// 					acc[item.name] = item;
+// 					return acc;
+// 				}, {});
+// 		});
+// };
 
 
 const humanizeModelIds =
@@ -1573,7 +1585,9 @@ function runAnalysis(modelId, toolChainId, attackerProfileId) {
 
 						knowledgebaseApi.getAnalysisResultsSnapshots(axios, modelId)
 							.then((snapshots) => {
-								// console.log('snapshots', snapshots);
+								dispatch(
+									setAnalysisResultsSnapshots(snapshots)
+								);
 								return dispatch(
 									selectAnalysisResultsSnapshot(snapshots[0])
 								);
