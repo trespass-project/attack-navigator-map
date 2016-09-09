@@ -64,6 +64,11 @@ let GraphEditor = React.createClass({
 					context.dispatch( actionCreators.resetTransformation() );
 				}
 			},
+			{ label: 'save as\npattern', icon: icons['fa-floppy-o'], action:
+				() => {
+					context.dispatch( actionCreators.saveMapAsModelPattern() );
+				}
+			},
 		];
 		context.dispatch( actionCreators.showContextMenu(event, menuItems) );
 	},

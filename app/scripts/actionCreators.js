@@ -4,6 +4,7 @@ const R = require('ramda');
 const _ = require('lodash');
 const JSZip = require('jszip');
 const saveAs = require('file-saver').saveAs;
+const slugify = require('mout/string/slugify');
 const trespass = require('trespass.js');
 const trespassModel = trespass.model;
 const api = trespass.api;
@@ -1693,6 +1694,37 @@ function loadAttackerProfiles(modelId) {
 				});
 			})
 			.catch(handleError);
+	};
+};
+
+
+const saveMapAsModelPattern =
+module.exports.saveMapAsModelPattern =
+function saveMapAsModelPattern() {
+	return (dispatch, getState) => {
+		const title = prompt('Enter pattern title');
+		if (!title || title.trim() === '') {
+			// cancelled, or nothing entered
+			return;
+		}
+
+		const state = getState();
+		const fragment = state.model.graph;
+
+		dispatch({
+			type: constants.ACTION_saveMapAsModelPattern,
+			fragment,
+		});
+
+		const modelId = state.model.metadata.id;
+		const patternId = slugify(title);
+		knowledgebaseApi.saveModelPattern(axios, modelId, fragment, title, patternId)
+			.then(() => {
+				console.info('pattern created.');
+			})
+			.catch((err) => {
+				console.error(err);
+			});
 	};
 };
 
