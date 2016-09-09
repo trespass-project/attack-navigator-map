@@ -1,6 +1,7 @@
 const update = require('react-addons-update');
 const $ = require('jquery');
 const R = require('ramda');
+const _ = require('lodash');
 const moment = require('moment');
 const mergeWith = require('./reducer-utils.js').mergeWith;
 const omitType = require('./reducer-utils.js').omitType;
@@ -377,7 +378,22 @@ function reducer(state=initialState, action) {
 
 		case constants.ACTION_loadModelPatterns_DONE: {
 			const { modelPatterns } = action;
-			return mergeWithState({ modelPatterns });
+			const patterns = modelPatterns
+				.map((pattern) => {
+					return _.merge(
+						{},
+						{
+							id: pattern.id,
+							label: pattern.name,
+							value: pattern.pattern,
+
+							// TODO: remove these:
+							type: 'template',
+							isFragment: true,
+						}
+					);
+				});
+			return mergeWithState({ modelPatterns: patterns });
 		}
 
 		case constants.ACTION_showSaveDialog: {

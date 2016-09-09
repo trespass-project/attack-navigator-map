@@ -12,7 +12,7 @@ const knowledgebaseApi = api.knowledgebase;
 const constants = require('./constants.js');
 const modelHelpers = require('./model-helpers.js');
 const helpers = require('./helpers.js');
-const modelPatternLib = require('./pattern-lib.js');
+// const modelPatternLib = require('./pattern-lib.js');
 
 
 const modelFileName = 'model.xml';
@@ -143,13 +143,10 @@ function fetchKbData(modelId) {
 	return (dispatch, getState) => {
 		// load model-specific stuff from knowledgebase
 		dispatch( loadComponentTypes(modelId) );
+		dispatch( loadModelPatterns(modelId) );
 		dispatch( loadAttackerProfiles(modelId) );
 		dispatch( loadToolChains(modelId) );
-		dispatch( getRecentFiles() );
-
-		// fake api
-		// TODO: should use kb
-		dispatch( loadModelPatterns(modelId) );
+		dispatch( getRecentFiles(modelId) );
 	};
 };
 
@@ -1721,6 +1718,7 @@ function saveMapAsModelPattern() {
 		knowledgebaseApi.saveModelPattern(axios, modelId, fragment, title, patternId)
 			.then(() => {
 				console.info('pattern created.');
+				dispatch( loadModelPatterns(modelId) );
 			})
 			.catch((err) => {
 				console.error(err);
@@ -1731,12 +1729,16 @@ function saveMapAsModelPattern() {
 
 const loadModelPatterns =
 module.exports.loadModelPatterns =
-function loadModelPatterns() {
+function loadModelPatterns(modelId) {
 	return (dispatch, getState) => {
-		dispatch({
-			type: constants.ACTION_loadModelPatterns_DONE,
-			modelPatterns: modelPatternLib
-		});
+		knowledgebaseApi.getModelPatterns(axios, modelId)
+			.then((patterns) => {
+				dispatch({
+					type: constants.ACTION_loadModelPatterns_DONE,
+					modelPatterns: patterns,
+				});
+			})
+			.catch(handleError);
 	};
 };
 
