@@ -234,37 +234,41 @@ const AnalysisResultsOverlay = React.createClass({
 			</div>
 
 			<div className={classnames('tools', { ready: resultsReady })}>
-				<div>
-					<span style={{ color: 'grey' }}>Toolchain run: </span>
-					<select
-						name='snapshots'
-						style={{
-							visibility: (!resultsReady)
-								? 'hidden'
-								: 'visible',
-						}}
-						onChange={this.selectToolchainRun}
-					>
-						{props.analysisSnapshots
-							.map((snapshot, index) => {
-								return <option
-									key={index}
-									value={index}
-								>
-									{snapshot.formattedToolchainRunDate}
-								</option>;
-							})
-						}
-					</select>
-					<hr />
-				</div>
-
-				<div className='clearfix' style={{ marginBottom: 5 }}>
-					<div style={{ float: 'left', color: 'grey' }}>
-						Tools
+				<div className='clearfix'>
+					<div style={{ float: 'left' }}>
+						<span style={{ color: 'grey' }}>Toolchain run: </span>
+						<select
+							name='snapshots'
+							style={{
+								visibility: (!resultsReady)
+									? 'hidden'
+									: 'visible',
+							}}
+							onChange={this.selectToolchainRun}
+						>
+							{props.analysisSnapshots
+								.map((snapshot, index) => {
+									return <option
+										key={index}
+										value={index}
+									>
+										{snapshot.formattedToolchainRunDate}
+									</option>;
+								})
+							}
+						</select>
 					</div>
+
 					<div style={{ float: 'right' }}>
 						{closeX}
+					</div>
+				</div>
+
+				<hr />
+
+				<div style={{ marginBottom: 5 }}>
+					<div style={{ color: 'grey' }}>
+						Tools
 					</div>
 				</div>
 
