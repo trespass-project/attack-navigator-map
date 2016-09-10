@@ -439,8 +439,8 @@ function offsetNodes(atXY, nodes) {
 	return R.values(nodes)
 		.reduce((acc, node, index) => {
 			const coords = {
-				x: (atXY.x || 0) + (node.x || index * xOffset),
-				y: (atXY.y || 0) + (node.y || index * yOffset),
+				x: (atXY.x || 0) + ((node.x + 1) || index * xOffset),
+				y: (atXY.y || 0) + ((node.y + 1) || index * yOffset),
 			};
 			acc[node.id] = update(node, { $merge: coords });
 			return acc;
@@ -451,30 +451,30 @@ function offsetNodes(atXY, nodes) {
 const importFragment =
 module.exports.importFragment =
 function importFragment(graph, fragment, atXY=origin, cb=noop) {
-	// TODO: still needed?
-	// prepare predicates
-	fragment.predicates = (fragment.predicates || [])
-		.reduce((acc, predicate) => {
-			const preds = predicate.value
-				.map(value => {
-					return {
-						id: helpers.makeId('predicate'),
-						type: predicate.id,
-						value,
-					};
-				});
-			return acc.concat(preds);
-		}, []);
+	// // TODO: still needed?
+	// // prepare predicates
+	// fragment.predicates = (fragment.predicates || [])
+	// 	.reduce((acc, predicate) => {
+	// 		const preds = predicate.value
+	// 			.map(value => {
+	// 				return {
+	// 					id: helpers.makeId('predicate'),
+	// 					type: predicate.id,
+	// 					value,
+	// 				};
+	// 			});
+	// 		return acc.concat(preds);
+	// 	}, []);
 
-	// TODO: remove this at some point
-	// (but the above code relies on this)
-	R.keys(fragment)
-		.forEach((key) => {
-			const item = fragment[key];
-			if (_.isArray(item)) {
-				fragment[key] = helpers.toHashMap('id', item);
-			}
-		});
+	// // TODO: remove this at some point
+	// // (but the above code relies on this)
+	// R.keys(fragment)
+	// 	.forEach((key) => {
+	// 		const item = fragment[key];
+	// 		if (_.isArray(item)) {
+	// 			fragment[key] = helpers.toHashMap('id', item);
+	// 		}
+	// 	});
 
 	cb(fragment.nodes);
 

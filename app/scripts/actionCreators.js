@@ -4,6 +4,7 @@ const R = require('ramda');
 const _ = require('lodash');
 const JSZip = require('jszip');
 const saveAs = require('file-saver').saveAs;
+const slugify = require('mout/string/slugify');
 const trespass = require('trespass.js');
 const trespassModel = trespass.model;
 const api = trespass.api;
@@ -11,7 +12,7 @@ const knowledgebaseApi = api.knowledgebase;
 const constants = require('./constants.js');
 const modelHelpers = require('./model-helpers.js');
 const helpers = require('./helpers.js');
-const modelPatternLib = require('./pattern-lib.js');
+// const modelPatternLib = require('./pattern-lib.js');
 
 
 const modelFileName = 'model.xml';
@@ -142,13 +143,10 @@ function fetchKbData(modelId) {
 	return (dispatch, getState) => {
 		// load model-specific stuff from knowledgebase
 		dispatch( loadComponentTypes(modelId) );
+		dispatch( loadModelPatterns(modelId) );
 		dispatch( loadAttackerProfiles(modelId) );
 		dispatch( loadToolChains(modelId) );
-		dispatch( getRecentFiles() );
-
-		// fake api
-		// TODO: should use kb
-		dispatch( loadModelPatterns(modelId) );
+		dispatch( getRecentFiles(modelId) );
 	};
 };
 
@@ -1697,14 +1695,60 @@ function loadAttackerProfiles(modelId) {
 };
 
 
+const saveMapAsModelPattern =
+module.exports.saveMapAsModelPattern =
+function saveMapAsModelPattern() {
+	return (dispatch, getState) => {
+		const title = prompt('Enter pattern title');
+		if (!title || title.trim() === '') {
+			// cancelled, or nothing entered
+			return;
+		}
+
+		const state = getState();
+		const fragment = _.merge({}, state.model.graph);
+
+		// adjust position coordinates, so that there is no offset
+		// when dragging pattern onto the map later
+		const fakeGroup = { nodeIds: R.keys(fragment.nodes) };
+		const { x, y } = helpers.getGroupBBox(fragment.nodes, fakeGroup);
+		R.values(fragment.nodes)
+			.forEach((node) => {
+				node.x -= x;
+				node.y -= y;
+			});
+
+		dispatch({
+			type: constants.ACTION_saveMapAsModelPattern,
+			fragment,
+		});
+
+		const modelId = state.model.metadata.id;
+		const patternId = slugify(title);
+		knowledgebaseApi.saveModelPattern(axios, modelId, fragment, title, patternId)
+			.then(() => {
+				console.info('pattern created.');
+				dispatch( loadModelPatterns(modelId) );
+			})
+			.catch((err) => {
+				console.error(err);
+			});
+	};
+};
+
+
 const loadModelPatterns =
 module.exports.loadModelPatterns =
-function loadModelPatterns() {
+function loadModelPatterns(modelId) {
 	return (dispatch, getState) => {
-		dispatch({
-			type: constants.ACTION_loadModelPatterns_DONE,
-			modelPatterns: modelPatternLib
-		});
+		knowledgebaseApi.getModelPatterns(axios, modelId)
+			.then((patterns) => {
+				dispatch({
+					type: constants.ACTION_loadModelPatterns_DONE,
+					modelPatterns: patterns,
+				});
+			})
+			.catch(handleError);
 	};
 };
 

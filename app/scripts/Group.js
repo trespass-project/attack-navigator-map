@@ -183,11 +183,6 @@ const Group = React.createClass({
 					context.dispatch( actionCreators.cloneGroup(props.group.id) );
 				}
 			},
-			{ label: 'save as\npattern', icon: icons['fa-floppy-o'], action:
-				() => {
-					// context.dispatch( actionCreators.cloneGroup(props.group.id) );
-				}
-			},
 			bgimg
 		];
 		context.dispatch( actionCreators.showContextMenu(event, menuItems) );
