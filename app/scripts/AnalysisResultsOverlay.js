@@ -1,7 +1,6 @@
-// const R = require('ramda');
 const React = require('react');
 const classnames = require('classnames');
-// const Loader = require('react-loader');
+const Loader = require('react-loader');
 const actionCreators = require('./actionCreators.js');
 const trespassVisualizations = require('trespass-visualizations');
 const { ATAnalyzerResults, ATEvaluatorResults, AttacktreeVisualization } = trespassVisualizations.components;
@@ -31,6 +30,7 @@ const ToolName = React.createClass({
 		const { item, pending, completed, selected, onClick } = this.props;
 		const hasResult = !!item.result_file_url;
 		const hasError = (item.status === 'error');
+		const isRunning = (!pending && !completed);
 
 		const style = {
 			padding: '5px',
@@ -49,7 +49,7 @@ const ToolName = React.createClass({
 			style.color = 'grey';
 		}
 
-		if (!pending && !completed) {
+		if (isRunning) {
 			style.color = 'red';
 			// style.fontWeight = 'bold';
 		}
@@ -64,7 +64,16 @@ const ToolName = React.createClass({
 			onClick={() => onClick(item.name)}
 		>
 			<div style={{ float: 'left' }}>
-				{item.name}
+				<span>{item.name} </span>
+				{(isRunning) &&
+					<Loader
+						loaded={false}
+						length={4}
+						width={2}
+						lines={10}
+						radius={4}
+					/>
+				}
 			</div>
 			<div style={{ float: 'right' }}>
 				{hasResult &&
@@ -234,37 +243,41 @@ const AnalysisResultsOverlay = React.createClass({
 			</div>
 
 			<div className={classnames('tools', { ready: resultsReady })}>
-				<div>
-					<span style={{ color: 'grey' }}>Toolchain run: </span>
-					<select
-						name='snapshots'
-						style={{
-							visibility: (!resultsReady)
-								? 'hidden'
-								: 'visible',
-						}}
-						onChange={this.selectToolchainRun}
-					>
-						{props.analysisSnapshots
-							.map((snapshot, index) => {
-								return <option
-									key={index}
-									value={index}
-								>
-									{snapshot.formattedToolchainRunDate}
-								</option>;
-							})
-						}
-					</select>
-					<hr />
-				</div>
-
-				<div className='clearfix' style={{ marginBottom: 5 }}>
-					<div style={{ float: 'left', color: 'grey' }}>
-						Tools
+				<div className='clearfix'>
+					<div style={{ float: 'left' }}>
+						<span style={{ color: 'grey' }}>Toolchain run: </span>
+						<select
+							name='snapshots'
+							style={{
+								visibility: (!resultsReady)
+									? 'hidden'
+									: 'visible',
+							}}
+							onChange={this.selectToolchainRun}
+						>
+							{props.analysisSnapshots
+								.map((snapshot, index) => {
+									return <option
+										key={index}
+										value={index}
+									>
+										{snapshot.formattedToolchainRunDate}
+									</option>;
+								})
+							}
+						</select>
 					</div>
+
 					<div style={{ float: 'right' }}>
 						{closeX}
+					</div>
+				</div>
+
+				<hr />
+
+				<div style={{ marginBottom: 5 }}>
+					<div style={{ color: 'grey' }}>
+						Tools
 					</div>
 				</div>
 
