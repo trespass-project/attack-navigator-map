@@ -20,7 +20,7 @@ const scenarioZipName = 'scenario.zip';
 
 
 const noop = () => {};
-const retryRate = 1000;
+const retryRate = 500;
 
 
 function handleError(err) {
