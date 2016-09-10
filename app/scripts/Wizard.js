@@ -19,6 +19,7 @@ const Tooltip = require('react-bootstrap').Tooltip;
 import JSONTree from 'react-json-tree';
 import { AutoSizer, FlexTable, FlexColumn/*, SortDirection*/ } from 'react-virtualized';
 
+const PolicyEditor = require('./PolicyEditor.js');
 const PredicateEditor = require('./PredicateEditor.js');
 const AttackerProfileEditor = require('./AttackerProfileEditor/AttackerProfileEditor.js');
 
@@ -353,13 +354,14 @@ const Wizard = React.createClass({
 	},
 
 	renderPolicies() {
+		// TODO: don't do this here
 		const policies = R.values(this.props.graph.policies || {})
 			.map(R.omit(['modelComponentType']));
 
 		return <div>
 			<h2 className='title'>Policies</h2>
 
-			<hr />
+			{/*<hr />
 			<div>
 				<div>
 					<textarea
@@ -373,21 +375,16 @@ const Wizard = React.createClass({
 					></textarea>
 				</div>
 				<button onClick={this.addPolicy}>add</button>
-			</div>
+			</div>*/}
 			<hr />
 
 			{policies
 				.map((item) => {
-					// isLightTheme={true}
-					// theme={jsonTreeTheme}
 					return <div key={item.id}>
-						<JSONTree
-							data={item}
+						<PolicyEditor
+							policy={item}
+							onRemove={() => { this.removePolicy(item.id); }}
 						/>
-						<a
-							href='#'
-							onClick={(event) => { this.removePolicy(item.id, event); }}
-						>remove</a>
 						<hr />
 					</div>;
 				})
@@ -410,8 +407,7 @@ const Wizard = React.createClass({
 		textarea.value = '';
 	},
 
-	removePolicy(policyId, event) {
-		if (event) { event.preventDefault(); }
+	removePolicy(policyId) {
 		this.context.dispatch(
 			actionCreators.removePolicy(policyId)
 		);
