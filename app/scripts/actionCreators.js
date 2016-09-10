@@ -1706,7 +1706,17 @@ function saveMapAsModelPattern() {
 		}
 
 		const state = getState();
-		const fragment = state.model.graph;
+		const fragment = _.merge({}, state.model.graph);
+
+		// adjust position coordinates, so that there is no offset
+		// when dragging pattern onto the map later
+		const fakeGroup = { nodeIds: R.keys(fragment.nodes) };
+		const { x, y } = helpers.getGroupBBox(fragment.nodes, fakeGroup);
+		R.values(fragment.nodes)
+			.forEach((node) => {
+				node.x -= x;
+				node.y -= y;
+			});
 
 		dispatch({
 			type: constants.ACTION_saveMapAsModelPattern,

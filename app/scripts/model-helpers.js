@@ -439,8 +439,8 @@ function offsetNodes(atXY, nodes) {
 	return R.values(nodes)
 		.reduce((acc, node, index) => {
 			const coords = {
-				x: (atXY.x || 0) + (node.x || index * xOffset),
-				y: (atXY.y || 0) + (node.y || index * yOffset),
+				x: (atXY.x || 0) + ((node.x + 1) || index * xOffset),
+				y: (atXY.y || 0) + ((node.y + 1) || index * yOffset),
 			};
 			acc[node.id] = update(node, { $merge: coords });
 			return acc;
