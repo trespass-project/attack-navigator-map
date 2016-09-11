@@ -383,6 +383,7 @@ const Wizard = React.createClass({
 					return <div key={item.id}>
 						<PolicyEditor
 							policy={item}
+							onChange={(updatedPolicy) => { console.log(updatedPolicy); }}
 							onRemove={() => { this.removePolicy(item.id); }}
 						/>
 						<hr />

@@ -1,6 +1,7 @@
 /* eslint react/no-multi-comp: 0 */
 
 const React = require('react');
+const _ = require('lodash');
 const SelectizeDropdown = require('./SelectizeDropdown.js');
 
 
@@ -21,7 +22,16 @@ const AtLocations = React.createClass({
 		const props = this.props;
 
 		return <div>
-			at locations
+			<div><b>at locations</b></div>
+			<div>
+				{JSON.stringify(props.locations)}
+				<SelectizeDropdown
+					multi={true}
+					name='locations'
+					value={props.locations}
+					options={[]}
+				/>
+			</div>
 		</div>;
 	},
 });
@@ -161,12 +171,23 @@ const PolicyEditor = React.createClass({
 		};
 	},
 
-	handleChange() {
-		// TODO: implement
+	handleChange(...args) {
+		this.props.onChange(...args);
 	},
 
 	handleRemove() {
 		this.props.onRemove();
+	},
+
+	addLocation(event) {
+		if (event) { event.preventDefault(); }
+		const { props } = this;
+		const updatedPolicy = _.merge({}, props.policy);
+		updatedPolicy.atLocations = [
+			...updatedPolicy.atLocations,
+			'', // TODO: what should this be?
+		];
+		this.handleChange(updatedPolicy);
 	},
 
 	render() {
@@ -175,11 +196,42 @@ const PolicyEditor = React.createClass({
 
 		return <div>
 			<div>
-				{policy.id}
+				<a href='#' onClick={this.handleRemove}>delete policy</a>
 			</div>
 			<div>
-				<a href='#' onClick={this.handleRemove}>delete</a>
+				{policy.id}
 			</div>
+
+			<div>
+				<div>
+					add credentials:
+				</div>
+				<div>
+					<a
+						href='#'
+						onClick={this.addLocation}
+					>add location</a>
+				</div>
+				<div>
+					<a
+						href='#'
+						onClick={this.addData}
+					>add data</a>
+				</div>
+				<div>
+					<a
+						href='#'
+						onClick={this.addItem}
+					>add item</a>
+				</div>
+				<div>
+					<a
+						href='#'
+						onClick={this.addPredicate}
+					>add predicate</a>
+				</div>
+			</div>
+
 			<div>
 				<AtLocations locations={policy.atLocations} />
 			</div>
