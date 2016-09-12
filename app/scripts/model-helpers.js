@@ -721,7 +721,7 @@ function relationConvertsToEdge(relation) {
 
 const modelFromGraph =
 module.exports.modelFromGraph =
-function modelFromGraph(graph, metadata={}, state={}) {
+function modelFromGraph(graph, metadata={}, state={}, debugData={}) {
 	if (_.isEmpty(metadata)) {
 		console.warn('metadata missing');
 	}
@@ -732,11 +732,16 @@ function modelFromGraph(graph, metadata={}, state={}) {
 	// + part of interface state
 	const interfaceState = (state.interface || {});
 	model.system.anm_data = JSON.stringify({
-		anmVersion,
+		// include arbitrary data for debugging purposes
+		debug: _.assign({ anmVersion }, debugData),
+
+		// part of the interface state
 		interface: R.pick(
 			interfaceReducer.anmDataPickFromState,
 			interfaceState
 		),
+
+		// the graph itself
 		graph,
 	});
 
