@@ -1258,6 +1258,7 @@ function addPredicate(graph, _predicate) {
 };
 
 
+// TODO: still needed?
 const updatePredicate =
 module.exports.updatePredicate =
 function updatePredicate(graph, predicateId, newProperties) {

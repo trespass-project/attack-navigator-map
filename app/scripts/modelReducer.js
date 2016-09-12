@@ -323,6 +323,17 @@ function reducer(state=initialState, action) {
 			return mergeWithState({ graph: newGraph });
 		}
 
+		case constants.ACTION_updatePolicy: {
+			const { policy } = action;
+			const newGraph = modelHelpers.updateComponentProperties(
+				state.graph,
+				'policy',
+				policy.id,
+				policy
+			);
+			return mergeWithState({ graph: newGraph });
+		}
+
 		case constants.ACTION_removePolicy: {
 			const { policyId } = action;
 			const newGraph = modelHelpers.removePolicy(state.graph, policyId);

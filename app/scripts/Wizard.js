@@ -361,6 +361,10 @@ const Wizard = React.createClass({
 		return <div>
 			<h2 className='title'>Policies</h2>
 
+			<div>
+				<a href='#' onClick={this.addPolicy}>add policy</a>
+			</div>
+
 			{/*<hr />
 			<div>
 				<div>
@@ -383,7 +387,7 @@ const Wizard = React.createClass({
 					return <div key={item.id}>
 						<PolicyEditor
 							policy={item}
-							onChange={(updatedPolicy) => { console.log(updatedPolicy); }}
+							onChange={this.updatePolicy}
 							onRemove={() => { this.removePolicy(item.id); }}
 						/>
 						<hr />
@@ -393,19 +397,32 @@ const Wizard = React.createClass({
 		</div>;
 	},
 
+	// addPolicy(event) {
+	// 	const textarea = this.refs['new-policy'];
+	// 	const policyJSON = textarea.value;
+	// 	try {
+	// 		const policy = JSON.parse(policyJSON);
+	// 		this.context.dispatch(
+	// 			actionCreators.addPolicy(policy)
+	// 		);
+	// 	} catch (e) {
+	// 		alert('Invalid JSON');
+	// 		return;
+	// 	}
+	// 	textarea.value = '';
+	// },
+
 	addPolicy(event) {
-		const textarea = this.refs['new-policy'];
-		const policyJSON = textarea.value;
-		try {
-			const policy = JSON.parse(policyJSON);
-			this.context.dispatch(
-				actionCreators.addPolicy(policy)
-			);
-		} catch (e) {
-			alert('Invalid JSON');
-			return;
-		}
-		textarea.value = '';
+		if (event) { event.preventDefault(); }
+		this.context.dispatch(
+			actionCreators.addPolicy()
+		);
+	},
+
+	updatePolicy(updatedPolicy) {
+		this.context.dispatch(
+			actionCreators.updatePolicy(updatedPolicy)
+		);
 	},
 
 	removePolicy(policyId) {

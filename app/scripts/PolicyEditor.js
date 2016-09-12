@@ -1,11 +1,52 @@
 /* eslint react/no-multi-comp: 0 */
 
 const React = require('react');
+const update = require('react-addons-update');
 const _ = require('lodash');
 const SelectizeDropdown = require('./SelectizeDropdown.js');
 
 
 const noop = () => {};
+
+
+const emptyCredLocation = { id: undefined };
+const emptyCredData = {};
+const emptyCredItem = {};
+const emptyCredPredicate = {};
+
+
+function defaultCredentials(credentials) {
+	return _.defaults(
+		credentials,
+		{
+			credLocation: [],
+			credData: [],
+			credItem: [],
+			credPredicate: [],
+		}
+	);
+}
+
+
+function _add(type, policy, data) {
+	const updateData = {
+		[type]: { $push: [data] },
+	};
+	console.log(updateData);
+
+	return update(
+		update(
+			policy,
+			{
+				// set defaults first, before we try to push stuff into it
+				credentials: { $set: defaultCredentials(policy.credentials) }
+			}
+		),
+		{
+			credentials: updateData,
+		}
+	);
+}
 
 
 const AtLocations = React.createClass({
@@ -15,6 +56,7 @@ const AtLocations = React.createClass({
 
 	getDefaultProps() {
 		return {
+			locations: []
 		};
 	},
 
@@ -44,6 +86,7 @@ const EnabledAction = React.createClass({
 
 	getDefaultProps() {
 		return {
+			actions: {}
 		};
 	},
 
@@ -64,6 +107,7 @@ const Credentials = React.createClass({
 
 	getDefaultProps() {
 		return {
+			credentials: {}
 		};
 	},
 
@@ -71,7 +115,8 @@ const Credentials = React.createClass({
 		const props = this.props;
 
 		return <div>
-			credentials
+			<div>credentials</div>
+			<div>{JSON.stringify(props.credentials)}</div>
 		</div>;
 	},
 });
@@ -181,12 +226,29 @@ const PolicyEditor = React.createClass({
 
 	addLocation(event) {
 		if (event) { event.preventDefault(); }
-		const { props } = this;
-		const updatedPolicy = _.merge({}, props.policy);
-		updatedPolicy.atLocations = [
-			...updatedPolicy.atLocations,
-			'', // TODO: what should this be?
-		];
+		const policy = this.props.policy;
+		const updatedPolicy = _add('credLocation', policy, emptyCredLocation);
+		this.handleChange(updatedPolicy);
+	},
+
+	addData(event) {
+		if (event) { event.preventDefault(); }
+		const policy = this.props.policy;
+		const updatedPolicy = _add('credData', policy, emptyCredData);
+		this.handleChange(updatedPolicy);
+	},
+
+	addItem(event) {
+		if (event) { event.preventDefault(); }
+		const policy = this.props.policy;
+		const updatedPolicy = _add('credItem', policy, emptyCredItem);
+		this.handleChange(updatedPolicy);
+	},
+
+	addPredicate(event) {
+		if (event) { event.preventDefault(); }
+		const policy = this.props.policy;
+		const updatedPolicy = _add('credPredicate', policy, emptyCredPredicate);
 		this.handleChange(updatedPolicy);
 	},
 
@@ -203,42 +265,39 @@ const PolicyEditor = React.createClass({
 			</div>
 
 			<div>
-				<div>
-					add credentials:
-				</div>
-				<div>
-					<a
-						href='#'
-						onClick={this.addLocation}
-					>add location</a>
-				</div>
-				<div>
-					<a
-						href='#'
-						onClick={this.addData}
-					>add data</a>
-				</div>
-				<div>
-					<a
-						href='#'
-						onClick={this.addItem}
-					>add item</a>
-				</div>
-				<div>
-					<a
-						href='#'
-						onClick={this.addPredicate}
-					>add predicate</a>
-				</div>
-			</div>
-
-			<div>
 				<AtLocations locations={policy.atLocations} />
 			</div>
 			<div>
 				<EnabledAction actions={policy.enabled} />
 			</div>
 			<div>
+				<div>
+					<div>
+						<a
+							href='#'
+							onClick={this.addLocation}
+						>add location</a>
+					</div>
+					<div>
+						<a
+							href='#'
+							onClick={this.addData}
+						>add data</a>
+					</div>
+					<div>
+						<a
+							href='#'
+							onClick={this.addItem}
+						>add item</a>
+					</div>
+					<div>
+						<a
+							href='#'
+							onClick={this.addPredicate}
+						>add predicate</a>
+					</div>
+				</div>
+
 				<Credentials credentials={policy.credentials} />
 			</div>
 		</div>;

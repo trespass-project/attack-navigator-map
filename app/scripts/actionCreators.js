@@ -1025,9 +1025,18 @@ function addProcess(process) {
 
 
 module.exports.addPolicy =
-function addPolicy(policy) {
+function addPolicy(policy={}) {
 	return {
 		type: constants.ACTION_addPolicy,
+		policy
+	};
+};
+
+
+module.exports.updatePolicy =
+function updatePolicy(policy) {
+	return {
+		type: constants.ACTION_updatePolicy,
 		policy
 	};
 };
