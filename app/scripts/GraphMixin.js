@@ -142,6 +142,7 @@ const GraphMixin = {
 			key={index}
 			isHovered={props.hoverNodeId && (node.id === props.hoverNodeId)}
 			isSelected={node.id === props.selectedId}
+			isCountermeasure={props.nodesWithPolicies && props.nodesWithPolicies[node.id]}
 			x={node.x}
 			y={node.y}
 			node={node}

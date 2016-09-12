@@ -8,6 +8,7 @@ const trespass = require('trespass.js');
 
 const getNodes = (state) => state.graph.nodes;
 const getEdges = (state) => state.graph.edges;
+const getPolicies = (state) => state.graph.policies;
 const getModelId = (state) => state.metadata.id;
 const getRelationTypes = (state) => state.relationTypes;
 const getComponentsLib = (state) => state.componentsLib;
@@ -182,5 +183,20 @@ module.exports.locationOptions = createSelector(
 				};
 			});
 		return options;
+	}
+);
+
+
+// const nodesWithPolicies =
+module.exports.nodesWithPolicies = createSelector(
+	getPolicies,
+	(policiesMap) => {
+		return R.values(policiesMap || {})
+			.reduce((acc, policy) => {
+				(policy.atLocations || []).forEach((locationId) => {
+					acc[locationId] = true;
+				});
+				return acc;
+			}, {});
 	}
 );

@@ -62,6 +62,7 @@ function mapStateToProps(_state) {
 	props.resultsAttacktreeIdHistogram = selectors.resultsAttacktreeIdHistogram(state);
 
 	props.locationOptions = selectors.locationOptions(state);
+	props.nodesWithPolicies = selectors.nodesWithPolicies(state);
 
 	// validation
 	props.validation = {
