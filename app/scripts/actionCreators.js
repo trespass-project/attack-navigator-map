@@ -817,9 +817,6 @@ function loadXML(xmlString, source) {
 };
 
 
-
-
-
 const getXMLBlob =
 module.exports.getXMLBlob =
 function getXMLBlob(xmlStr) {

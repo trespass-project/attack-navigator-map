@@ -7,6 +7,10 @@ const helpers = require('./helpers.js');
 const constants = require('./constants.js');
 const interfaceReducer = require('./interfaceReducer.js');
 
+const fs = require('fs');
+const pkg = JSON.parse(fs.readFileSync('./package.json').toString());
+const anmVersion = pkg.version;
+
 
 const collectionNames =
 module.exports.collectionNames =
@@ -728,7 +732,11 @@ function modelFromGraph(graph, metadata={}, state={}) {
 	// + part of interface state
 	const interfaceState = (state.interface || {});
 	model.system.anm_data = JSON.stringify({
-		interface: R.pick(interfaceReducer.anmDataPickFromState, interfaceState),
+		anmVersion,
+		interface: R.pick(
+			interfaceReducer.anmDataPickFromState,
+			interfaceState
+		),
 		graph,
 	});
 
