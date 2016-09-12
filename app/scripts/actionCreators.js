@@ -827,11 +827,12 @@ function getXMLBlob(xmlStr) {
 };
 
 
-function stateToModelXML(state) {
+function stateToModelXML(state, debugData={}) {
 	const model = modelHelpers.modelFromGraph(
 		state.model.graph,
 		state.model.metadata,
-		state
+		state,
+		debugData
 	);
 	const modelXmlStr = trespassModel.toXML(model);
 	return { modelXmlStr, model };
@@ -843,8 +844,9 @@ module.exports.downloadModelXML =
 function downloadModelXML() {
 	return (dispatch, getState) => {
 		dispatch( humanizeModelIds() )
-			.then(() => {
-				const { modelXmlStr, model } = stateToModelXML(getState());
+			.then((idReplacementMap) => {
+				const state = getState();
+				const { modelXmlStr, model } = stateToModelXML(state, { idReplacementMap });
 				const slugifiedTitle = model.system.title.replace(/\s/g, '-');
 				const blob = getXMLBlob(modelXmlStr);
 				const fileName = `${slugifiedTitle}.xml`;
@@ -859,9 +861,9 @@ module.exports.downloadZippedScenario =
 function downloadZippedScenario(modelId) {
 	return (dispatch, getState) => {
 		dispatch( humanizeModelIds() )
-			.then(() => {
+			.then((idReplacementMap) => {
 				const state = getState();
-				const { modelXmlStr/*, model*/ } = stateToModelXML(state);
+				const { modelXmlStr/*, model*/ } = stateToModelXML(state, { idReplacementMap });
 
 				const scenarioXmlStr = generateScenarioXML(
 					modelId,
@@ -1426,7 +1428,10 @@ function humanizeModelIds() {
 								console.warn('renaming item id failed');
 							});
 					});
-				return Promise.all(promises);
+				return Promise.all(promises)
+					.then(() => {
+						return idReplacementMap;
+					});
 			});
 	};
 };
@@ -1460,8 +1465,8 @@ function runAnalysis(modelId, toolChainId, attackerProfileId) {
 
 		// humanize ids
 		dispatch( humanizeModelIds() )
-			.then(() => {
-				const { modelXmlStr, model } = stateToModelXML(state);
+			.then((idReplacementMap) => {
+				const { modelXmlStr, model } = stateToModelXML(state, { idReplacementMap });
 
 				const validationErrors = trespass.model.validateModel(model);
 				if (validationErrors.length) {
