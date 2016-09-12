@@ -182,6 +182,32 @@ const attackerProfileIsComplete = createSelector(
 );
 
 
+const locationOptions = createSelector(
+	getNodes,
+	(nodesMap) => {
+		const locationCollectionNames = [
+			'actor',
+			'location',
+			'item',
+			'data',
+		];
+		const typeFilter = R.pipe(
+			R.prop('modelComponentType'),
+			R.contains(R.__, locationCollectionNames)
+		);
+		const options = R.values(nodesMap)
+			.filter(typeFilter)
+			.map((node) => {
+				return {
+					value: node.id,
+					label: node.label,
+				};
+			});
+		return options;
+	}
+);
+
+
 function mapStateToProps(_state) {
 	// flatten one level
 	const state = Object.assign.apply(
@@ -209,6 +235,8 @@ function mapStateToProps(_state) {
 	props.attackerProfileIsComplete = attackerProfileIsComplete(state);
 
 	props.resultsAttacktreeIdHistogram = resultsAttacktreeIdHistogram(state);
+
+	props.locationOptions = locationOptions(state);
 
 	// validation
 	props.validation = {

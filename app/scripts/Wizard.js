@@ -354,8 +354,10 @@ const Wizard = React.createClass({
 	},
 
 	renderPolicies() {
+		const props = this.props;
+
 		// TODO: don't do this here
-		const policies = R.values(this.props.graph.policies || {})
+		const policies = R.values(props.graph.policies || {})
 			.map(R.omit(['modelComponentType']));
 
 		return <div>
@@ -386,9 +388,11 @@ const Wizard = React.createClass({
 				.map((item) => {
 					return <div key={item.id}>
 						<PolicyEditor
+							nodes={props.graph.nodes}
 							policy={item}
 							onChange={this.updatePolicy}
 							onRemove={() => { this.removePolicy(item.id); }}
+							locationOptions={props.locationOptions}
 						/>
 						<hr />
 					</div>;

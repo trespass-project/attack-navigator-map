@@ -4,6 +4,7 @@ const React = require('react');
 const update = require('react-addons-update');
 const _ = require('lodash');
 const SelectizeDropdown = require('./SelectizeDropdown.js');
+const ComponentReference = require('./ComponentReference.js');
 
 
 const noop = () => {};
@@ -52,26 +53,47 @@ function _add(type, policy, data) {
 const AtLocations = React.createClass({
 	propTypes: {
 		locations: React.PropTypes.array.isRequired,
+		onChange: React.PropTypes.func,
+		nodes: React.PropTypes.object.isRequired,
 	},
 
 	getDefaultProps() {
 		return {
-			locations: []
+			locations: [],
+			onChange: noop,
+			nodes: {},
 		};
 	},
 
 	render() {
 		const props = this.props;
+		const locations = props.locations
+			.map((locationId) => {
+				return {
+					value: locationId,
+					label: locationId,
+				};
+			});
+
+		const renderValue = (item) => {
+			const node = props.nodes[item[/*valueKey*/ 'value']];
+			return <ComponentReference modelComponent={node}>
+				{node.label}
+			</ComponentReference>;
+		};
 
 		return <div>
 			<div><b>at locations</b></div>
 			<div>
-				{JSON.stringify(props.locations)}
 				<SelectizeDropdown
 					multi={true}
 					name='locations'
-					value={props.locations}
-					options={[]}
+					value={locations}
+					options={props.locationOptions}
+					valueKey='value'
+					labelKey='label'
+					onChange={props.onChange/*(name, values)*/}
+					extraProps={{ renderValue }}
 				/>
 			</div>
 		</div>;
@@ -205,14 +227,17 @@ const CredPredicate = React.createClass({
 const PolicyEditor = React.createClass({
 	propTypes: {
 		policy: React.PropTypes.object.isRequired,
+		locationOptions: React.PropTypes.array.isRequired,
 		onChange: React.PropTypes.func,
 		onRemove: React.PropTypes.func,
+		nodes: React.PropTypes.object.isRequired,
 	},
 
 	getDefaultProps() {
 		return {
 			onChange: noop,
 			onRemove: noop,
+			nodes: {},
 		};
 	},
 
@@ -252,6 +277,15 @@ const PolicyEditor = React.createClass({
 		this.handleChange(updatedPolicy);
 	},
 
+	atLocationsChanged(locationIds) {
+		const { policy } = this.props;
+		const updatedPolicy = update(
+			policy,
+			{ atLocations: { $set: locationIds } }
+		);
+		this.handleChange(updatedPolicy);
+	},
+
 	render() {
 		const props = this.props;
 		const { policy } = props;
@@ -265,7 +299,14 @@ const PolicyEditor = React.createClass({
 			</div>
 
 			<div>
-				<AtLocations locations={policy.atLocations} />
+				<AtLocations
+					nodes={props.nodes}
+					locations={policy.atLocations}
+					locationOptions={props.locationOptions}
+					onChange={(name, values) => {
+						this.atLocationsChanged(values);
+					}}
+				/>
 			</div>
 			<div>
 				<EnabledAction actions={policy.enabled} />
@@ -298,7 +339,10 @@ const PolicyEditor = React.createClass({
 					</div>
 				</div>
 
-				<Credentials credentials={policy.credentials} />
+				<Credentials
+					credentials={policy.credentials}
+					locationOptions={props.locationOptions}
+				/>
 			</div>
 		</div>;
 	},

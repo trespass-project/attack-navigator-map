@@ -1,6 +1,5 @@
 const React = require('react');
 const R = require('ramda');
-const helpers = require('./helpers.js');
 const actionCreators = require('./actionCreators.js');
 const ComponentReference = require('./ComponentReference.js');
 const SelectizeDropdown = require('./SelectizeDropdown.js');
