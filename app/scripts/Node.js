@@ -70,10 +70,27 @@ const Node = React.createClass({
 					context.dispatch( actionCreators.cloneNode(props.node.id) );
 				}
 			},
+
+			// TODO: only if node is actually in a group
 			{	label: 'remove\nfrom group',
 				icon: icons['fa-object-group'],
 				action: () => {
 					context.dispatch( actionCreators.ungroupNode(props.node.id) );
+				}
+			},
+
+			{	label: 'add\npolicy',
+				icon: icons['fa-plus'], // TODO: use custom icons
+				action: () => {
+					const policy = {
+						atLocations: [props.node.id],
+					};
+					context.dispatch(
+						actionCreators.addPolicy(policy)
+					);
+					context.dispatch(
+						actionCreators.selectWizardStep('policies')
+					);
 				}
 			},
 		];
