@@ -2,7 +2,7 @@
 
 const React = require('react');
 const update = require('react-addons-update');
-// const R = require('ramda');
+const R = require('ramda');
 const _ = require('lodash');
 const SelectizeDropdown = require('./SelectizeDropdown.js');
 const ComponentReference = require('./ComponentReference.js');
@@ -157,6 +157,18 @@ const Credentials = React.createClass({
 		onChange(updatedCredentials);
 	},
 
+	handleRemoveCredLocation(index) {
+		const { credentials, onChange } = this.props;
+		const updatedCredentials = Object.assign(
+			{},
+			credentials,
+			{
+				credLocation: R.remove(index, 1, credentials.credLocation)
+			}
+		);
+		onChange(updatedCredentials);
+	},
+
 	render() {
 		const props = this.props;
 		const credLocation = props.credentials.credLocation || [];
@@ -181,6 +193,9 @@ const Credentials = React.createClass({
 									index,
 									value
 								);
+							}}
+							onRemove={() => {
+								this.handleRemoveCredLocation(index);
 							}}
 						/>;
 					})}
@@ -233,12 +248,14 @@ const CredLocation = React.createClass({
 		locationOptions: React.PropTypes.array.isRequired,
 		nodes: React.PropTypes.object.isRequired,
 		onChange: React.PropTypes.func,
+		onRemove: React.PropTypes.func,
 	},
 
 	getDefaultProps() {
 		return {
 			locationOptions: [],
 			onChange: noop,
+			onRemove: noop,
 		};
 	},
 
@@ -270,6 +287,7 @@ const CredLocation = React.createClass({
 				onChange={props.onChange/*(name, values)*/}
 				extraProps={{ renderValue }}
 			/>
+			<span> <a href='#' onClick={props.onRemove}>remove</a></span>
 		</div>;
 	},
 });
