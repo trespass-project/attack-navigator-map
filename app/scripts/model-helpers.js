@@ -752,14 +752,17 @@ function modelFromGraph(graph, metadata={}, state={}, debugData={}) {
 		metadata
 	);
 
-	// TODO: use whitelisting instead of blacklisting
-	const keysToOmit = [
-		/*'name', */
-		'label',
-		'x', '_x',
-		'y', '_y',
-		'modelComponentType',
-		// 'type' // knowledgebase type
+	const keysWhitelist = [
+		'arity',
+		'directed',
+		'id',
+		'kind',
+		'loc',
+		'logged',
+		'name',
+		'namespace',
+		'type',
+		'value',
 	];
 	const tkbPrefixRe = new RegExp('^tkb:', 'i');
 
@@ -814,12 +817,12 @@ function modelFromGraph(graph, metadata={}, state={}, debugData={}) {
 
 	R.values(graph.policies || {})
 		.forEach((item) => {
-			model = trespass.model.addPolicy(model, R.omit(keysToOmit, item));
+			model = trespass.model.addPolicy(model, R.pick(keysWhitelist, item));
 		});
 
 	R.values(graph.processes || {})
 		.forEach((item) => {
-			model = trespass.model.addProcess(model, R.omit(keysToOmit, item));
+			model = trespass.model.addProcess(model, R.pick(keysWhitelist, item));
 		});
 
 	R.values(graph.nodes || {})
@@ -834,7 +837,7 @@ function modelFromGraph(graph, metadata={}, state={}, debugData={}) {
 			if (!addFn) {
 				console.warn(`${fnName}()`, 'not found');
 			} else {
-				let item = R.omit(keysToOmit, node);
+				let item = R.pick(keysWhitelist, node);
 				// also remove all kb stuff
 				item = R.pickBy(
 					(value, key) => !tkbPrefixRe.test(key),
