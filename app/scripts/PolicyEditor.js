@@ -34,7 +34,6 @@ function _add(type, policy, data) {
 	const updateData = {
 		[type]: { $push: [data] },
 	};
-	console.log(updateData);
 
 	return update(
 		update(
@@ -78,8 +77,10 @@ const AtLocations = React.createClass({
 				};
 			});
 
+		// TODO: DRY
 		const renderValue = (item) => {
 			const node = props.nodes[item[/*valueKey*/ 'value']];
+			if (!node) { return null; }
 			return <ComponentReference modelComponent={node}>
 				{node.label}
 			</ComponentReference>;
@@ -129,13 +130,31 @@ const Credentials = React.createClass({
 	propTypes: {
 		credentials: React.PropTypes.object.isRequired,
 		locationOptions: React.PropTypes.array.isRequired,
+		nodes: React.PropTypes.object.isRequired,
+		onChange: React.PropTypes.func,
 	},
 
 	getDefaultProps() {
 		return {
 			credentials: {},
 			locationOptions: [],
+			onChange: noop,
 		};
+	},
+
+	handleChangeCredLocation(index, locationId) {
+		const { credentials, onChange } = this.props;
+		const updatedCredentials = update(
+			credentials,
+			{
+				credLocation: {
+					[index]: {
+						id: { $set: locationId }
+					}
+				}
+			}
+		);
+		onChange(updatedCredentials);
 	},
 
 	render() {
@@ -150,44 +169,58 @@ const Credentials = React.createClass({
 
 			<div>
 				<div>cred. locations</div>
-				{credLocation.map((credLoc) => {
-					return <CredLocation
-						key={credLoc.id}
-						locationId={credLoc.id}
-						locationOptions={props.locationOptions}
-						onChange={/* TODO: */ noop}
-					/>;
-				})}
+				<div style={{ background: 'rgb(245, 245, 245)' }}>
+					{credLocation.map((credLoc, index) => {
+						return <CredLocation
+							key={index}
+							locationId={credLoc.id}
+							locationOptions={props.locationOptions}
+							nodes={props.nodes}
+							onChange={(name, value) => {
+								this.handleChangeCredLocation(
+									index,
+									value
+								);
+							}}
+						/>;
+					})}
+				</div>
 			</div>
 
 			<div>
 				<div>cred. predicates</div>
-				{credPredicate.map((credPred, index) => {
-					return <CredPredicate
-						key={index}
-						predicate={credPred}
-					/>;
-				})}
+				<div style={{ background: 'rgb(245, 245, 245)' }}>
+					{credPredicate.map((credPred, index) => {
+						return <CredPredicate
+							key={index}
+							predicate={credPred}
+						/>;
+					})}
+				</div>
 			</div>
 
 			<div>
 				<div>cred. data</div>
-				{credData.map((credData, index) => {
-					return <CredData
-						key={index}
-						data={credData}
-					/>;
-				})}
+				<div style={{ background: 'rgb(245, 245, 245)' }}>
+					{credData.map((credData, index) => {
+						return <CredData
+							key={index}
+							data={credData}
+						/>;
+					})}
+				</div>
 			</div>
 
 			<div>
 				<div>cred. item</div>
-				{credItem.map((credItem, index) => {
-					return <CredItem
-						key={index}
-						item={credItem}
-					/>;
-				})}
+				<div style={{ background: 'rgb(245, 245, 245)' }}>
+					{credItem.map((credItem, index) => {
+						return <CredItem
+							key={index}
+							item={credItem}
+						/>;
+					})}
+				</div>
 			</div>
 		</div>;
 	},
@@ -196,8 +229,9 @@ const Credentials = React.createClass({
 
 const CredLocation = React.createClass({
 	propTypes: {
-		locationId: React.PropTypes.string.isRequired,
+		locationId: React.PropTypes.string/*.isRequired*/,
 		locationOptions: React.PropTypes.array.isRequired,
+		nodes: React.PropTypes.object.isRequired,
 		onChange: React.PropTypes.func,
 	},
 
@@ -210,9 +244,32 @@ const CredLocation = React.createClass({
 
 	render() {
 		const props = this.props;
+		const { locationId } = props;
+
+		const location = {
+			value: locationId,
+			label: locationId,
+		};
+
+		const renderValue = (item) => {
+			const node = props.nodes[item[/*valueKey*/ 'value']];
+			if (!node) { return null; }
+			return <ComponentReference modelComponent={node}>
+				{node.label}
+			</ComponentReference>;
+		};
 
 		return <div>
-			cred location: {props.locationId}
+			<SelectizeDropdown
+				multi={false}
+				name='credLocation'
+				value={(locationId) ? location : undefined}
+				options={props.locationOptions}
+				valueKey='value'
+				labelKey='label'
+				onChange={props.onChange/*(name, values)*/}
+				extraProps={{ renderValue }}
+			/>
 		</div>;
 	},
 });
@@ -315,9 +372,9 @@ const PolicyEditor = React.createClass({
 	propTypes: {
 		policy: React.PropTypes.object.isRequired,
 		locationOptions: React.PropTypes.array.isRequired,
+		nodes: React.PropTypes.object.isRequired,
 		onChange: React.PropTypes.func,
 		onRemove: React.PropTypes.func,
-		nodes: React.PropTypes.object.isRequired,
 	},
 
 	getDefaultProps() {
@@ -371,6 +428,13 @@ const PolicyEditor = React.createClass({
 			{ atLocations: { $set: locationIds } }
 		);
 		this.handleChange(updatedPolicy);
+	},
+
+	credentialsChanged(credentials) {
+		const { policy } = this.props;
+		this.handleChange(
+			Object.assign({}, policy, { credentials })
+		);
 	},
 
 	render() {
@@ -429,6 +493,8 @@ const PolicyEditor = React.createClass({
 				<Credentials
 					credentials={policy.credentials}
 					locationOptions={props.locationOptions}
+					nodes={props.nodes}
+					onChange={this.credentialsChanged}
 				/>
 			</div>
 		</div>;
