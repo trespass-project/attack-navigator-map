@@ -2,6 +2,7 @@
 
 const React = require('react');
 const update = require('react-addons-update');
+const R = require('ramda');
 const _ = require('lodash');
 const SelectizeDropdown = require('./SelectizeDropdown.js');
 const ComponentReference = require('./ComponentReference.js');
@@ -53,6 +54,7 @@ function _add(type, policy, data) {
 const AtLocations = React.createClass({
 	propTypes: {
 		locations: React.PropTypes.array.isRequired,
+		locationOptions: React.PropTypes.array.isRequired,
 		onChange: React.PropTypes.func,
 		nodes: React.PropTypes.object.isRequired,
 	},
@@ -60,6 +62,7 @@ const AtLocations = React.createClass({
 	getDefaultProps() {
 		return {
 			locations: [],
+			locationOptions: [],
 			onChange: noop,
 			nodes: {},
 		};
@@ -116,7 +119,7 @@ const EnabledAction = React.createClass({
 		const props = this.props;
 
 		return <div>
-			enabled action
+			<b>enabled action</b>
 		</div>;
 	},
 });
@@ -125,20 +128,47 @@ const EnabledAction = React.createClass({
 const Credentials = React.createClass({
 	propTypes: {
 		credentials: React.PropTypes.object.isRequired,
+		locationOptions: React.PropTypes.array.isRequired,
 	},
 
 	getDefaultProps() {
 		return {
-			credentials: {}
+			credentials: {},
+			locationOptions: [],
 		};
 	},
 
 	render() {
 		const props = this.props;
+		const credLocation = props.credentials.credLocation || [];
+		const credPredicate = props.credentials.credPredicate || [];
 
 		return <div>
-			<div>credentials</div>
-			<div>{JSON.stringify(props.credentials)}</div>
+			<div><b>credentials</b></div>
+			<div>{JSON.stringify(R.omit(['credPredicate', 'credLocation'], props.credentials))}</div>
+
+			<div>
+				<div>cred. locations</div>
+				{credLocation.map((credLoc) => {
+					return <CredLocation
+						key={credLoc.id}
+						locationId={credLoc.id}
+						locationOptions={props.locationOptions}
+						onChange={/* TODO: */ noop}
+					/>;
+				})}
+			</div>
+
+			<div>
+				<div>cred. predicates</div>
+				{credPredicate.map((credPred, index) => {
+					return <CredPredicate
+						key={index}
+						predicate={credPred}
+					/>;
+				})}
+			</div>
+
 		</div>;
 	},
 });
@@ -146,11 +176,15 @@ const Credentials = React.createClass({
 
 const CredLocation = React.createClass({
 	propTypes: {
-		location: React.PropTypes.string.isRequired,
+		locationId: React.PropTypes.string.isRequired,
+		locationOptions: React.PropTypes.array.isRequired,
+		onChange: React.PropTypes.func,
 	},
 
 	getDefaultProps() {
 		return {
+			locationOptions: [],
+			onChange: noop,
 		};
 	},
 
@@ -158,7 +192,7 @@ const CredLocation = React.createClass({
 		const props = this.props;
 
 		return <div>
-			cred location: {props.location}
+			cred location: {props.locationId}
 		</div>;
 	},
 });
@@ -206,7 +240,7 @@ const CredItem = React.createClass({
 
 const CredPredicate = React.createClass({
 	propTypes: {
-		// location: React.PropTypes.string.isRequired,
+		predicate: React.PropTypes.object.isRequired,
 	},
 
 	getDefaultProps() {
@@ -216,9 +250,20 @@ const CredPredicate = React.createClass({
 
 	render() {
 		const props = this.props;
+		const { predicate } = props;
 
 		return <div>
-			cred item
+			<span style={{ background: 'grey' }}>
+				{`${predicate.values[0].type}: ${predicate.values[0].value}`}
+			</span>
+			<span> </span>
+			<span>
+				{predicate.relationType}
+			</span>
+			<span> </span>
+			<span style={{ background: 'grey' }}>
+				{`${predicate.values[1].type}: ${predicate.values[1].value}`}
+			</span>
 		</div>;
 	},
 });
@@ -317,25 +362,25 @@ const PolicyEditor = React.createClass({
 						<a
 							href='#'
 							onClick={this.addLocation}
-						>add location</a>
+						>add cred. location</a>
 					</div>
 					<div>
 						<a
 							href='#'
 							onClick={this.addData}
-						>add data</a>
+						>add cred. data</a>
 					</div>
 					<div>
 						<a
 							href='#'
 							onClick={this.addItem}
-						>add item</a>
+						>add cred. item</a>
 					</div>
 					<div>
 						<a
 							href='#'
 							onClick={this.addPredicate}
-						>add predicate</a>
+						>add cred. predicate</a>
 					</div>
 				</div>
 
