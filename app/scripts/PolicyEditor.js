@@ -2,7 +2,7 @@
 
 const React = require('react');
 const update = require('react-addons-update');
-const R = require('ramda');
+// const R = require('ramda');
 const _ = require('lodash');
 const SelectizeDropdown = require('./SelectizeDropdown.js');
 const ComponentReference = require('./ComponentReference.js');
@@ -142,10 +142,11 @@ const Credentials = React.createClass({
 		const props = this.props;
 		const credLocation = props.credentials.credLocation || [];
 		const credPredicate = props.credentials.credPredicate || [];
+		const credData = props.credentials.credData || [];
+		const credItem = props.credentials.credItem || [];
 
 		return <div>
 			<div><b>credentials</b></div>
-			<div>{JSON.stringify(R.omit(['credPredicate', 'credLocation'], props.credentials))}</div>
 
 			<div>
 				<div>cred. locations</div>
@@ -169,6 +170,25 @@ const Credentials = React.createClass({
 				})}
 			</div>
 
+			<div>
+				<div>cred. data</div>
+				{credData.map((credData, index) => {
+					return <CredData
+						key={index}
+						data={credData}
+					/>;
+				})}
+			</div>
+
+			<div>
+				<div>cred. item</div>
+				{credItem.map((credItem, index) => {
+					return <CredItem
+						key={index}
+						item={credItem}
+					/>;
+				})}
+			</div>
 		</div>;
 	},
 });
@@ -200,7 +220,7 @@ const CredLocation = React.createClass({
 
 const CredData = React.createClass({
 	propTypes: {
-		// location: React.PropTypes.string.isRequired,
+		data: React.PropTypes.object.isRequired,
 	},
 
 	getDefaultProps() {
@@ -210,9 +230,19 @@ const CredData = React.createClass({
 
 	render() {
 		const props = this.props;
+		const { data } = props;
 
 		return <div>
-			cred data
+			<span>{data.name}</span>
+			<span> </span>
+			{data.values.map((value, index) => {
+				return <span key={index}>
+					<span style={{ background: 'grey' }}>
+						{`${data.values[0].type}: ${data.values[0].value}`}
+					</span>
+					<span> </span>
+				</span>;
+			})}
 		</div>;
 	},
 });
@@ -220,7 +250,7 @@ const CredData = React.createClass({
 
 const CredItem = React.createClass({
 	propTypes: {
-		// location: React.PropTypes.string.isRequired,
+		item: React.PropTypes.object.isRequired,
 	},
 
 	getDefaultProps() {
@@ -230,9 +260,21 @@ const CredItem = React.createClass({
 
 	render() {
 		const props = this.props;
+		const { item } = props;
 
 		return <div>
-			cred item
+			<span>{item.name}</span>
+			<span> </span>
+			{item.values.map((value, index) => {
+				const component = {
+					credItem: <CredItem item={value} />,
+					credData: <CredData data={value} />,
+				}[value.type] || null;
+				return <span key={index}>
+					{component}
+					<span> </span>
+				</span>;
+			})}
 		</div>;
 	},
 });
