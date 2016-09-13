@@ -367,21 +367,6 @@ const Wizard = React.createClass({
 				<a href='#' onClick={this.addPolicy}>add policy</a>
 			</div>
 
-			{/*<hr />
-			<div>
-				<div>
-					<textarea
-						style={{
-							width: '100%',
-							maxWidth: '100%',
-							fontSize: '12px'
-						}}
-						ref='new-policy'
-						cols='30'
-					></textarea>
-				</div>
-				<button onClick={this.addPolicy}>add</button>
-			</div>*/}
 			<hr />
 
 			{policies
@@ -400,21 +385,6 @@ const Wizard = React.createClass({
 			}
 		</div>;
 	},
-
-	// addPolicy(event) {
-	// 	const textarea = this.refs['new-policy'];
-	// 	const policyJSON = textarea.value;
-	// 	try {
-	// 		const policy = JSON.parse(policyJSON);
-	// 		this.context.dispatch(
-	// 			actionCreators.addPolicy(policy)
-	// 		);
-	// 	} catch (e) {
-	// 		alert('Invalid JSON');
-	// 		return;
-	// 	}
-	// 	textarea.value = '';
-	// },
 
 	addPolicy(event) {
 		if (event) { event.preventDefault(); }
