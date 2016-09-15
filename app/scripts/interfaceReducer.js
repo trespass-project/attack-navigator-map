@@ -373,7 +373,11 @@ function reducer(state=initialState, action) {
 		// }
 		case constants.ACTION_loadComponentTypes_DONE: {
 			const { componentsLib, kbTypeAttributes, modelComponentTypeToKbTypes } = action;
-			return mergeWithState({ componentsLib, kbTypeAttributes, modelComponentTypeToKbTypes });
+			return mergeWithState({
+				componentsLib: R.sortBy(R.prop('label'), componentsLib),
+				kbTypeAttributes,
+				modelComponentTypeToKbTypes
+			});
 		}
 
 		case constants.ACTION_loadModelPatterns_DONE: {
