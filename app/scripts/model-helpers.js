@@ -65,6 +65,24 @@ function createFragment(data={}) {
 };
 
 
+const prepareFragment =
+/**
+ * mainly for making sure that everythings is turned
+ * into hashmaps
+ */
+module.exports.prepareFragment =
+function prepareFragment(fragment) {
+	return R.keys(fragment)
+		.reduce((acc, key) => {
+			// to ensure it's a hashmap
+			if (_.isArray(acc[key])) {
+				acc[key] = helpers.toHashMap('id', acc[key]);
+			}
+			return acc;
+		}, _.merge({}, fragment));
+};
+
+
 const _duplicate =
 module.exports._duplicate =
 function _duplicate(it={}, defaults={}, keepId=false, itsType) {
@@ -131,8 +149,6 @@ function duplicateFragment(_fragment) {
 	const fragment = _.merge({}, _fragment);
 	const idReplacementMap = {};
 
-	// TODO: rewrite this more generically
-
 	fragment.nodes = R.values(fragment.nodes || {})
 		.reduce((acc, _node) => {
 			const node = duplicateNode(_node);
@@ -141,37 +157,40 @@ function duplicateFragment(_fragment) {
 			return acc;
 		}, {});
 
-	fragment.edges = R.values(fragment.edges || {})
-		.reduce((acc, _edge) => {
-			const edge = duplicateEdge(_edge, false);
-			replaceIdInEdge(idReplacementMap, edge);
-			acc[edge.id] = edge;
-			return acc;
-		}, {});
+	[
+		{
+			collName: 'edges',
+			replacementFunc: replaceIdInEdge,
+			duplicateFunc: duplicateEdge,
+		},
+		{
+			collName: 'groups',
+			replacementFunc: replaceIdInGroup,
+			duplicateFunc: duplicateGroup,
+		},
+		{
+			collName: 'policies',
+			replacementFunc: replaceIdInPolicy,
+			duplicateFunc: duplicatePolicy,
+		},
+		{
+			collName: 'processes',
+			replacementFunc: replaceIdInProcess,
+			duplicateFunc: duplicateProcess,
+		},
+	].forEach((item) => {
+		const { collName, duplicateFunc, replacementFunc } = item;
+		fragment[collName] = R.values(fragment[collName] || {})
+			.reduce((acc, _elem) => {
+				const elem = replacementFunc(
+					idReplacementMap,
+					duplicateFunc(_elem)
+				);
+				acc[elem.id] = elem;
+				return acc;
+			}, {});
+	});
 
-	fragment.groups = R.values(fragment.groups || {})
-		.reduce((acc, _group) => {
-			const group = duplicateGroup(_group, false);
-			replaceIdInGroup(idReplacementMap, group);
-			acc[group.id] = group;
-			return acc;
-		}, {});
-
-	fragment.policies = R.values(fragment.policies || {})
-		.reduce((acc, _policy) => {
-			const policy = duplicatePolicy(_policy, false);
-			replaceIdInPolicy(idReplacementMap, policy);
-			acc[policy.id] = policy;
-			return acc;
-		}, {});
-
-	fragment.processes = R.values(fragment.processes || {})
-		.reduce((acc, _proc) => {
-			const proc = duplicateProcess(_proc, false);
-			replaceIdInProcess(idReplacementMap, proc);
-			acc[proc.id] = proc;
-			return acc;
-		}, {});
 
 	return fragment;
 };
@@ -379,6 +398,11 @@ function humanizeModelIds(graph, itemCb=noop) {
 							break;
 						}
 
+						case 'processes': {
+							newItem = replaceIdInProcess(idReplacementMap, _.merge({}, item));
+							break;
+						}
+
 						default: {
 							// TODO: when would this ever happen?
 							newItem = _.merge({}, item, { id: newId });
@@ -419,11 +443,6 @@ function combineFragments(fragments) {
 				combined,
 				R.keys(fragment)
 					.reduce((acc, key) => {
-						// TODO: this is probably not the right place
-						// to ensure it's a hashmap
-						if (_.isArray(fragment[key])) {
-							fragment[key] = helpers.toHashMap('id', fragment[key]);
-						}
 						acc[key] = { $merge: (fragment[key] || {}) };
 						return acc;
 					}, {})

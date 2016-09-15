@@ -326,12 +326,16 @@ function kbCreateNodes(modelId, addedNodes) {
 
 
 const importFragment =
+/**
+ * clones fragment entirely (all new ids)
+ * @type {[type]}
+ */
 module.exports.importFragment =
 function importFragment(fragment, xy) {
 	return (dispatch, getState) => {
 		dispatch({
 			type: constants.ACTION_importFragment,
-			fragment,
+			fragment: modelHelpers.prepareFragment(fragment),
 			xy,
 			cb: kbCreateNodes
 		});
@@ -340,12 +344,16 @@ function importFragment(fragment, xy) {
 
 
 const mergeFragment =
+/**
+ * adds fragment "as is"
+ * @type {[type]}
+ */
 module.exports.mergeFragment =
 function mergeFragment(fragment) {
 	return (dispatch, getState) => {
 		dispatch({
 			type: constants.ACTION_mergeFragment,
-			fragment,
+			fragment: modelHelpers.prepareFragment(fragment),
 			cb: kbCreateNodes
 		});
 	};
@@ -785,20 +793,22 @@ function loadXML(xmlString, source) {
 
 						return dispatch( initMap(modelId, metadata, anmData) )
 							.then(() => {
-								// import
-								// TODO: document
 								if (anmData) {
+									// if `anmData` is present, that means
+									// this file has been opened with anm
+									// before
 									const fragment = graph;
 
 									// make sure all nodes have at least a default position
 									R.values(fragment.nodes)
 										.forEach(setRandomDefaultPosition);
 
-									// `mergeFragment()` add everything "as is"
+									// add fragment "as is"
 									dispatch( mergeFragment(fragment) );
 								} else {
 									const fragment = modelHelpers.layoutGraphByType(graph);
-									// `importFragment()` clones fragment entirely (all new ids)
+
+									// clones fragment entirely (all new ids)
 									dispatch( importFragment(fragment) );
 								}
 								return dispatch( saveModelToKb(modelId) );
