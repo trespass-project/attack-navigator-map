@@ -718,16 +718,27 @@ function graphFromModel(model) {
 	}
 
 	const predicates = (model.system.predicates || [])
-		.map((pred) => {
-			const predicate = R.pick(['id', 'arity'], pred);
-			predicate.label = (pred.label || pred.id)
-				.replace(/-/g, ' ');
-			// all predicates are
-			predicate.directed = true;
-			return predicate;
-		});
+		.map(preparePredicate);
 
 	return { graph, metadata, anmData, predicates };
+};
+
+
+const preparePredicate =
+module.exports.preparePredicate =
+function preparePredicate(pred) {
+	return Object.assign(
+		{
+			arity: 2,
+			type: 'relation', // TODO: needed?
+		},
+		R.pick(['arity'], pred),
+		{
+			label: (pred.label || pred.id || pred.value).replace(/-/g, ' '),
+			directed: true, // all predicates are directed
+			value: pred.id,
+		}
+	);
 };
 
 
@@ -1304,6 +1315,22 @@ function removePolicy(graph, policyId) {
 		graph,
 		{ policies: { $set: policies } }
 	);
+};
+
+
+const getPredicatesFromPolicies =
+module.exports.getPredicatesFromPolicies =
+function getPredicatesFromPolicies(policiesMap={}) {
+	const relationTypes = R.values(policiesMap)
+		.map(R.prop('credentials'))
+		.map(R.prop('credPredicate'))
+		.reduce((acc, credPreds=[]) => {
+			return [
+				...acc,
+				...credPreds.map(R.prop('relationType'))
+			];
+		}, []);
+	return R.uniq(relationTypes);
 };
 
 

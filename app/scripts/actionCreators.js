@@ -696,8 +696,13 @@ function mergeModelFile(file) {
 				});
 				fragment.groups[group.id] = group;
 
-				const { predicates=[] } = result;
-				dispatch( addPredicatesToRelationTypes(predicates) );
+				const predicates = extractAndCombinePredicates(
+					result.predicates,
+					graph.policies
+				);
+				dispatch(
+					addPredicatesToRelationTypes(predicates)
+				);
 
 				R.values(fragment.nodes)
 					.forEach(setRandomDefaultPosition);
@@ -818,13 +823,32 @@ function loadXML(xmlString, source) {
 
 			const { graph, metadata, anmData } = result;
 
-			const { predicates=[] } = result;
-			dispatch( addPredicatesToRelationTypes(predicates) );
+			const predicates = extractAndCombinePredicates(
+				result.predicates,
+				graph.policies
+			);
+			dispatch(
+				addPredicatesToRelationTypes(predicates)
+			);
 
 			return bla(graph, metadata, anmData);
 		});
 	};
 };
+
+
+function extractAndCombinePredicates(predicates=[], policiesMap={}) {
+	const policyPredicates = modelHelpers
+		.getPredicatesFromPolicies(policiesMap)
+		.map((relType) => {
+			return { id: relType };
+		})
+		.map(modelHelpers.preparePredicate);
+	return [
+		...predicates,
+		...policyPredicates,
+	];
+}
 
 
 const getXMLBlob =
