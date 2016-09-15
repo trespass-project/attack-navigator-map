@@ -125,6 +125,24 @@ describe(common.f1('model-helpers.js'), () => {
 		});
 	});
 
+	describe(common.f2('replaceIdInPolicy()'), () => {
+		const policy = {
+			atLocations: [
+				'laptop',
+				'RoomDatacenter',
+			],
+		};
+		const mapping = {
+			'laptop': 'new-id',
+		};
+
+		it(common.f3('should change the ids'), () => {
+			const changedPolicy = modelHelpers.replaceIdInPolicy(mapping, policy);
+			assert(changedPolicy.atLocations[0] === 'new-id');
+			assert(changedPolicy.atLocations[1] === 'RoomDatacenter');
+		});
+	});
+
 	describe(common.f2('replaceIdInEdge()'), () => {
 		it(common.f3('should stay the same'), () => {
 			const mapping = {};
