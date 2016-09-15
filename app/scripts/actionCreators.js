@@ -12,7 +12,6 @@ const knowledgebaseApi = api.knowledgebase;
 const constants = require('./constants.js');
 const modelHelpers = require('./model-helpers.js');
 const helpers = require('./helpers.js');
-// const modelPatternLib = require('./pattern-lib.js');
 
 
 const modelFileName = 'model.xml';
