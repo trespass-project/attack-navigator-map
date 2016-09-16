@@ -54,6 +54,92 @@ function _add(type, policy, data) {
 }
 
 
+const VariableOrSelectize = React.createClass({
+	propTypes: {
+		data: React.PropTypes.object.isRequired,
+		onChange: React.PropTypes.func,
+		nodes: React.PropTypes.object.isRequired,
+	},
+
+	getDefaultProps() {
+		return {
+			data: {},
+			onChange: noop,
+			nodes: {},
+		};
+	},
+
+	toggleType(event) {
+		// if (event) { event.preventDefault(); }
+		const { props } = this;
+		const updated = (props.data.type === 'variable')
+			? update(props.data, { type: { $set: 'value' } })
+			: update(props.data, { type: { $set: 'variable' } });
+		props.onChange(updated);
+	},
+
+	updateValue(newVal) {
+		const { props } = this;
+		const updated = update(
+			props.data,
+			{ value: { $set: newVal } }
+		);
+		props.onChange(updated);
+	},
+
+	render() {
+		const props = this.props;
+		const isVariable = (props.data.type === 'variable');
+
+		const valueKey = 'id';
+		// TODO: DRY
+		const renderValue = (item) => {
+			const node = props.nodes[item[valueKey]];
+			if (!node) { return null; }
+			return <ComponentReference modelComponent={node}>
+				{node.label}
+			</ComponentReference>;
+		};
+
+		const variable = <span>
+			<input
+				type='text'
+				value={props.data.value}
+				onChange={(event) => {
+					const newVal = event.target.value;
+					this.updateValue(newVal);
+				}}
+			/>
+		</span>;
+		const selectize = <SelectizeDropdown
+			multi={false}
+			name='nodes'
+			value={props.nodes[props.data.value]}
+			options={R.values(props.nodes)}
+			valueKey={valueKey}
+			labelKey='label'
+			onChange={(name, value) => {
+				this.updateValue(value);
+			}}
+			extraProps={{ renderValue }}
+		/>;
+
+		return <div>
+			<input
+				type='checkbox'
+				checked={isVariable}
+				onChange={this.toggleType}
+			/>
+			<span> is variable </span>
+			{(isVariable)
+				? variable
+				: selectize
+			}
+		</div>;
+	},
+});
+
+
 const AtLocations = React.createClass({
 	propTypes: {
 		locations: React.PropTypes.array.isRequired,
@@ -240,6 +326,7 @@ const Credentials = React.createClass({
 							predicate={credPred}
 							relationTypes={props.relationTypes}
 							relationsMap={props.relationsMap}
+							nodes={props.nodes}
 							onChange={(updatedPredicate) => {
 								this.handleChangeCredPredicate(
 									index,
@@ -400,6 +487,7 @@ const CredPredicate = React.createClass({
 		predicate: React.PropTypes.object.isRequired,
 		relationTypes: React.PropTypes.array.isRequired,
 		relationsMap: React.PropTypes.object.isRequired,
+		nodes: React.PropTypes.object.isRequired,
 		onChange: React.PropTypes.func,
 		onRemove: React.PropTypes.func,
 	},
@@ -421,22 +509,38 @@ const CredPredicate = React.createClass({
 		props.onChange(updatedPredicate);
 	},
 
+	handleValueChange(updated, index) {
+		const props = this.props;
+		const { predicate } = props;
+		const updatedPredicate = update(
+			predicate,
+			{ values: { [index]: { $set: updated } } }
+		);
+		props.onChange(updatedPredicate);
+	},
+
 	render() {
 		const props = this.props;
 		const { predicate } = props;
 		const { relationTypes, relationsMap } = props;
 
-		const renderSubjObj = (value) => {
+		const renderSubjObj = (value, index) => {
 			return <span style={{ background: 'grey' }}>
 				{(!value)
-					? <span>(nothing)</span>
-					: <span>{`${value.type}: ${value.value}`}</span>
+					? <span>(TODO: remove this)</span>
+					: <VariableOrSelectize
+						data={value}
+						nodes={props.nodes}
+						onChange={(updated) => {
+							this.handleValueChange(updated, index);
+						}}
+					/>
 				}
 			</span>;
 		};
 
 		return <div>
-			{renderSubjObj(predicate.values[0])}
+			{renderSubjObj(predicate.values[0], 0)}
 			<span> </span>
 			<span>
 				<RelationSelectize
@@ -446,7 +550,7 @@ const CredPredicate = React.createClass({
 				/>
 			</span>
 			<span> </span>
-			{renderSubjObj(predicate.values[1])}
+			{renderSubjObj(predicate.values[1], 1)}
 			<span> <a href='#' onClick={props.onRemove}>remove</a></span>
 		</div>;
 	},
