@@ -15,7 +15,10 @@ const noop = () => {};
 const emptyCredLocation = { id: undefined };
 const emptyCredData = {};
 const emptyCredItem = {};
-const emptyCredPredicate = {};
+const emptyCredPredicate = {
+	relationType: undefined,
+	values: [],
+};
 
 
 function defaultCredentials(credentials) {
@@ -425,7 +428,10 @@ const CredPredicate = React.createClass({
 
 		const renderSubjObj = (value) => {
 			return <span style={{ background: 'grey' }}>
-				{`${value.type}: ${value.value}`}
+				{(!value)
+					? <span>(nothing)</span>
+					: <span>{`${value.type}: ${value.value}`}</span>
+				}
 			</span>;
 		};
 
