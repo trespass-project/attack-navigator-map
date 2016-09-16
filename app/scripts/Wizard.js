@@ -378,6 +378,8 @@ const Wizard = React.createClass({
 							onChange={this.updatePolicy}
 							onRemove={() => { this.removePolicy(item.id); }}
 							locationOptions={props.locationOptions}
+							relationTypes={props.relationTypes}
+							relationsMap={props.relationsMap}
 						/>
 						<hr />
 					</div>;

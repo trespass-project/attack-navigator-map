@@ -3,37 +3,7 @@ const R = require('ramda');
 const actionCreators = require('./actionCreators.js');
 const ComponentReference = require('./ComponentReference.js');
 const SelectizeDropdown = require('./SelectizeDropdown.js');
-
-
-const RelationSelectize = React.createClass({
-	render() {
-		const props = this.props;
-
-		// TODO: added ones are not persisted
-		const createFromSearch = (options, search) => {
-			if (!search || options.length) {
-				return null;
-			}
-			const result = {
-				label: search,
-				value: search
-					.toLowerCase()
-					.replace(/ +/g, '-'),
-			};
-			return result;
-		};
-
-		return <SelectizeDropdown
-			multi={false}
-			name='relation'
-			placeholder='relation'
-			valueKey='value'
-			labelKey='label'
-			extraProps={{ createFromSearch }}
-			{...props}
-		/>;
-	},
-});
+const RelationSelectize = require('./RelationSelectize.js');
 
 
 const SubjObjSelectize = React.createClass({
@@ -128,7 +98,7 @@ const PredicateEditor = React.createClass({
 		);
 	},
 
-	renderPredicate(edge, index, relationsOptions, relationsMap) {
+	renderPredicate(edge, index, relationTypes, relationsMap) {
 		const props = this.props;
 
 		const subj = <SubjObjSelectize
@@ -163,7 +133,7 @@ const PredicateEditor = React.createClass({
 		return <li key={index}>
 			<span>{subj} </span>
 			<RelationSelectize
-				options={relationsOptions}
+				options={relationTypes}
 				value={relationsMap[edge.relation]}
 				onChange={(name, relation) => {
 					this.edgeRelationChanged(name, relation, edge.id);

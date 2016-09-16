@@ -5,6 +5,7 @@ const update = require('react-addons-update');
 const R = require('ramda');
 const _ = require('lodash');
 const SelectizeDropdown = require('./SelectizeDropdown.js');
+const RelationSelectize = require('./RelationSelectize.js');
 const ComponentReference = require('./ComponentReference.js');
 
 
@@ -169,6 +170,19 @@ const Credentials = React.createClass({
 		onChange(updatedCredentials);
 	},
 
+	handleChangeCredPredicate(index, updatedPredicate) {
+		const { credentials, onChange } = this.props;
+		const updatedCredentials = update(
+			credentials,
+			{
+				credPredicate: {
+					[index]: { $set: updatedPredicate }
+				}
+			}
+		);
+		onChange(updatedCredentials);
+	},
+
 	render() {
 		const props = this.props;
 		const credLocation = props.credentials.credLocation || [];
@@ -209,6 +223,14 @@ const Credentials = React.createClass({
 						return <CredPredicate
 							key={index}
 							predicate={credPred}
+							relationTypes={props.relationTypes}
+							relationsMap={props.relationsMap}
+							onChange={(updatedPredicate) => {
+								this.handleChangeCredPredicate(
+									index,
+									updatedPredicate
+								);
+							}}
 						/>;
 					})}
 				</div>
@@ -358,29 +380,50 @@ const CredItem = React.createClass({
 const CredPredicate = React.createClass({
 	propTypes: {
 		predicate: React.PropTypes.object.isRequired,
+		relationTypes: React.PropTypes.array.isRequired,
+		relationsMap: React.PropTypes.object.isRequired,
+		onChange: React.PropTypes.func,
 	},
 
 	getDefaultProps() {
 		return {
+			onChange: noop,
 		};
+	},
+
+	handleRelationChange(name, relation) {
+		const props = this.props;
+		const { predicate } = props;
+		const updatedPredicate = update(
+			predicate,
+			{ relationType: { $set: relation } }
+		);
+		props.onChange(updatedPredicate);
 	},
 
 	render() {
 		const props = this.props;
 		const { predicate } = props;
+		const { relationTypes, relationsMap } = props;
+
+		const renderSubjObj = (value) => {
+			return <span style={{ background: 'grey' }}>
+				{`${value.type}: ${value.value}`}
+			</span>;
+		};
 
 		return <div>
-			<span style={{ background: 'grey' }}>
-				{`${predicate.values[0].type}: ${predicate.values[0].value}`}
-			</span>
+			{renderSubjObj(predicate.values[0])}
 			<span> </span>
 			<span>
-				{predicate.relationType}
+				<RelationSelectize
+					options={relationTypes}
+					value={relationsMap[predicate.relationType]}
+					onChange={this.handleRelationChange}
+				/>
 			</span>
 			<span> </span>
-			<span style={{ background: 'grey' }}>
-				{`${predicate.values[1].type}: ${predicate.values[1].value}`}
-			</span>
+			{renderSubjObj(predicate.values[1])}
 		</div>;
 	},
 });
@@ -390,6 +433,8 @@ const PolicyEditor = React.createClass({
 	propTypes: {
 		policy: React.PropTypes.object.isRequired,
 		locationOptions: React.PropTypes.array.isRequired,
+		relationTypes: React.PropTypes.array.isRequired,
+		relationsMap: React.PropTypes.object.isRequired,
 		nodes: React.PropTypes.object.isRequired,
 		onChange: React.PropTypes.func,
 		onRemove: React.PropTypes.func,
@@ -400,6 +445,7 @@ const PolicyEditor = React.createClass({
 			onChange: noop,
 			onRemove: noop,
 			nodes: {},
+			locationOptions: [],
 		};
 	},
 
@@ -511,6 +557,8 @@ const PolicyEditor = React.createClass({
 				<Credentials
 					credentials={policy.credentials}
 					locationOptions={props.locationOptions}
+					relationTypes={props.relationTypes}
+					relationsMap={props.relationsMap}
 					nodes={props.nodes}
 					onChange={this.credentialsChanged}
 				/>
