@@ -183,6 +183,18 @@ const Credentials = React.createClass({
 		onChange(updatedCredentials);
 	},
 
+	handleRemoveCredPredicate(index) {
+		const { credentials, onChange } = this.props;
+		const updatedCredentials = Object.assign(
+			{},
+			credentials,
+			{
+				credPredicate: R.remove(index, 1, credentials.credPredicate)
+			}
+		);
+		onChange(updatedCredentials);
+	},
+
 	render() {
 		const props = this.props;
 		const credLocation = props.credentials.credLocation || [];
@@ -230,6 +242,9 @@ const Credentials = React.createClass({
 									index,
 									updatedPredicate
 								);
+							}}
+							onRemove={() => {
+								this.handleRemoveCredPredicate(index);
 							}}
 						/>;
 					})}
@@ -383,11 +398,13 @@ const CredPredicate = React.createClass({
 		relationTypes: React.PropTypes.array.isRequired,
 		relationsMap: React.PropTypes.object.isRequired,
 		onChange: React.PropTypes.func,
+		onRemove: React.PropTypes.func,
 	},
 
 	getDefaultProps() {
 		return {
 			onChange: noop,
+			onRemove: noop,
 		};
 	},
 
@@ -424,6 +441,7 @@ const CredPredicate = React.createClass({
 			</span>
 			<span> </span>
 			{renderSubjObj(predicate.values[1])}
+			<span> <a href='#' onClick={props.onRemove}>remove</a></span>
 		</div>;
 	},
 });
