@@ -725,6 +725,34 @@ const CredItem = React.createClass({
 		props.onChange(updatedItem);
 	},
 
+	handleAddValueItem() {
+		const props = this.props;
+		const { item } = props;
+		const values = [
+			...item.values,
+			_.merge({ type: 'credItem' }, emptyCredItem)
+		];
+		const updatedItem = update(
+			item,
+			{ values: { $set: values } }
+		);
+		props.onChange(updatedItem);
+	},
+
+	handleAddValueData() {
+		const props = this.props;
+		const { item } = props;
+		const values = [
+			...item.values,
+			_.merge({ type: 'credData' }, emptyCredData)
+		];
+		const updatedItem = update(
+			item,
+			{ values: { $set: values } }
+		);
+		props.onChange(updatedItem);
+	},
+
 	render() {
 		const props = this.props;
 		const { item } = props;
@@ -765,6 +793,8 @@ const CredItem = React.createClass({
 					</div>;
 				})
 			}
+			<span> <a href='#' onClick={this.handleAddValueItem}>add item</a>,</span>
+			<span> <a href='#' onClick={this.handleAddValueData}>add data</a>,</span>
 			<span> <a href='#' onClick={props.onRemove}>remove</a></span>
 		</div>;
 	},
