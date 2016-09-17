@@ -83,8 +83,9 @@ function _add(type, policy, data) {
 const VariableOrSelectize = React.createClass({
 	propTypes: {
 		data: React.PropTypes.object.isRequired,
-		onChange: React.PropTypes.func,
 		nodes: React.PropTypes.object.isRequired,
+		onChange: React.PropTypes.func,
+		onRemove: React.PropTypes.func,
 	},
 
 	getDefaultProps() {
@@ -160,6 +161,9 @@ const VariableOrSelectize = React.createClass({
 			{(isVariable)
 				? variable
 				: selectize
+			}
+			{(props.onRemove) &&
+				<span> <a href='#' onClick={props.onRemove}>remove</a></span>
 			}
 		</div>;
 	},
@@ -618,6 +622,9 @@ const CredData = React.createClass({
 							onChange={(updated) => {
 								this.handleValueChange(updated, index);
 							}}
+							onRemove={() => {
+								this.handleRemoveValue(index);
+							}}
 						/>
 					</div>;
 				})
@@ -675,6 +682,9 @@ const CredItem = React.createClass({
 						credData: <CredData
 							data={value}
 							nodes={props.nodes}
+							onChange={(updated) => {
+								this.handleValueChange(updated, index);
+							}}
 						/>,
 					}[value.type] || null;
 
