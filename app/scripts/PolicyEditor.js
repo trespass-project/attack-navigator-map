@@ -283,6 +283,10 @@ const Credentials = React.createClass({
 		locationOptions: React.PropTypes.array.isRequired,
 		nodes: React.PropTypes.object.isRequired,
 		onChange: React.PropTypes.func,
+		addLocation: React.PropTypes.func.isRequired,
+		addPredicate: React.PropTypes.func.isRequired,
+		addItem: React.PropTypes.func.isRequired,
+		addData: React.PropTypes.func.isRequired,
 	},
 
 	getDefaultProps() {
@@ -394,7 +398,13 @@ const Credentials = React.createClass({
 
 			<div style={{ paddingLeft: 20 }}>
 				<div>
-					<div>cred. locations</div>
+					<div>
+						<span>cred. locations </span>
+						<a
+							href='#'
+							onClick={props.addLocation}
+						>add</a>
+					</div>
 					<div style={{ background: 'rgb(245, 245, 245)', paddingLeft: 20 }}>
 						{credLocation.map((credLoc, index) => {
 							return <CredLocation
@@ -417,7 +427,13 @@ const Credentials = React.createClass({
 				</div>
 
 				<div>
-					<div>cred. predicates</div>
+					<div>
+						<span>cred. predicates </span>
+						<a
+							href='#'
+							onClick={props.addPredicate}
+						>add</a>
+					</div>
 					<div style={{ background: 'rgb(245, 245, 245)', paddingLeft: 20 }}>
 						{credPredicate.map((credPred, index) => {
 							return <CredPredicate
@@ -441,7 +457,13 @@ const Credentials = React.createClass({
 				</div>
 
 				<div>
-					<div>cred. data</div>
+					<div>
+						<span>cred. data </span>
+						<a
+							href='#'
+							onClick={props.addData}
+						>add</a>
+					</div>
 					<div style={{ background: 'rgb(245, 245, 245)', paddingLeft: 20 }}>
 						{credData.map((credData, index) => {
 							return <CredData
@@ -463,7 +485,13 @@ const Credentials = React.createClass({
 				</div>
 
 				<div>
-					<div>cred. item</div>
+					<div>
+						<span>cred. item </span>
+						<a
+							href='#'
+							onClick={props.addItem}
+						>add</a>
+					</div>
 					<div style={{ background: 'rgb(245, 245, 245)', paddingLeft: 20 }}>
 						{credItem.map((credItem, index) => {
 							return <CredItem
@@ -857,33 +885,6 @@ const PolicyEditor = React.createClass({
 				}
 			</div>
 			<div>
-				<div>
-					<div>
-						<a
-							href='#'
-							onClick={this.addLocation}
-						>add cred. location</a>
-					</div>
-					<div>
-						<a
-							href='#'
-							onClick={this.addPredicate}
-						>add cred. predicate</a>
-					</div>
-					<div>
-						<a
-							href='#'
-							onClick={this.addData}
-						>add cred. data</a>
-					</div>
-					<div>
-						<a
-							href='#'
-							onClick={this.addItem}
-						>add cred. item</a>
-					</div>
-				</div>
-
 				<Credentials
 					credentials={policy.credentials}
 					locationOptions={props.locationOptions}
@@ -891,6 +892,10 @@ const PolicyEditor = React.createClass({
 					relationsMap={props.relationsMap}
 					nodes={props.nodes}
 					onChange={this.credentialsChanged}
+					addLocation={this.addLocation}
+					addPredicate={this.addPredicate}
+					addItem={this.addItem}
+					addData={this.addData}
 				/>
 			</div>
 		</div>;
