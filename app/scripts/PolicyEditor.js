@@ -15,16 +15,24 @@ const noop = () => {};
 const emptyCredLocation = {
 	id: undefined
 };
+const emptyCredPredicate = {
+	relationType: undefined,
+	values: [],
+};
 const emptyCredData = {
 	name: undefined,
 	values: [
 		{ type: 'variable' }
 	],
 };
-const emptyCredItem = {};
-const emptyCredPredicate = {
-	relationType: undefined,
-	values: [],
+const emptyCredItem = {
+	name: undefined,
+	values: [
+		_.merge(
+			{ type: 'credData' },
+			emptyCredData
+		)
+	],
 };
 
 
@@ -429,6 +437,7 @@ const Credentials = React.createClass({
 						return <CredItem
 							key={index}
 							item={credItem}
+							nodes={props.nodes}
 						/>;
 					})}
 				</div>
@@ -557,11 +566,27 @@ const CredData = React.createClass({
 const CredItem = React.createClass({
 	propTypes: {
 		item: React.PropTypes.object.isRequired,
+		nodes: React.PropTypes.object.isRequired,
+		onChange: React.PropTypes.func,
+		onRemove: React.PropTypes.func,
 	},
 
 	getDefaultProps() {
 		return {
+			onChange: noop,
+			onRemove: noop,
 		};
+	},
+
+	handleNameChange(event) {
+		const props = this.props;
+		const { item } = props;
+		const name = event.target.value;
+		const updatedItem = update(
+			item,
+			{ name: { $set: name } }
+		);
+		props.onChange(updatedItem);
 	},
 
 	render() {
@@ -569,18 +594,31 @@ const CredItem = React.createClass({
 		const { item } = props;
 
 		return <div>
-			<span>{item.name}</span>
+			<input
+				placeholder='name'
+				value={item.name || ''}
+				onChange={this.handleNameChange}
+			/>
 			<span> </span>
-			{item.values.map((value, index) => {
-				const component = {
-					credItem: <CredItem item={value} />,
-					credData: <CredData data={value} />,
-				}[value.type] || null;
-				return <span key={index}>
-					{component}
-					<span> </span>
-				</span>;
-			})}
+			{item.values
+				.map((value, index) => {
+					const component = {
+						credItem: <CredItem
+							item={value}
+							nodes={props.nodes}
+						/>,
+						credData: <CredData
+							data={value}
+							nodes={props.nodes}
+						/>,
+					}[value.type] || null;
+
+					return <div key={index}>
+						{component}
+						<span> </span>
+					</div>;
+				})
+			}
 		</div>;
 	},
 });
