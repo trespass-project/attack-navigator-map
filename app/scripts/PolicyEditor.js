@@ -12,8 +12,15 @@ const ComponentReference = require('./ComponentReference.js');
 const noop = () => {};
 
 
-const emptyCredLocation = { id: undefined };
-const emptyCredData = {};
+const emptyCredLocation = {
+	id: undefined
+};
+const emptyCredData = {
+	name: undefined,
+	values: [
+		{ type: 'variable' }
+	],
+};
 const emptyCredItem = {};
 const emptyCredPredicate = {
 	relationType: undefined,
@@ -326,6 +333,19 @@ const Credentials = React.createClass({
 		onChange(updatedCredentials);
 	},
 
+	handleChangeCredData(index, updatedData) {
+		const { credentials, onChange } = this.props;
+		const updatedCredentials = update(
+			credentials,
+			{
+				credData: {
+					[index]: { $set: updatedData }
+				}
+			}
+		);
+		onChange(updatedCredentials);
+	},
+
 	render() {
 		const props = this.props;
 		const credLocation = props.credentials.credLocation || [];
@@ -390,6 +410,13 @@ const Credentials = React.createClass({
 						return <CredData
 							key={index}
 							data={credData}
+							nodes={props.nodes}
+							onChange={(updatedData) => {
+								this.handleChangeCredData(
+									index,
+									updatedData
+								);
+							}}
 						/>;
 					})}
 				</div>
@@ -465,11 +492,37 @@ const CredLocation = React.createClass({
 const CredData = React.createClass({
 	propTypes: {
 		data: React.PropTypes.object.isRequired,
+		nodes: React.PropTypes.object.isRequired,
+		onChange: React.PropTypes.func,
+		onRemove: React.PropTypes.func,
 	},
 
 	getDefaultProps() {
 		return {
+			onChange: noop,
+			onRemove: noop,
 		};
+	},
+
+	handleValueChange(updated, index) {
+		const props = this.props;
+		const { data } = props;
+		const updatedData = update(
+			data,
+			{ values: { [index]: { $set: updated } } }
+		);
+		props.onChange(updatedData);
+	},
+
+	handleNameChange(event) {
+		const props = this.props;
+		const { data } = props;
+		const name = event.target.value;
+		const updatedData = update(
+			data,
+			{ name: { $set: name } }
+		);
+		props.onChange(updatedData);
 	},
 
 	render() {
@@ -477,16 +530,25 @@ const CredData = React.createClass({
 		const { data } = props;
 
 		return <div>
-			<span>{data.name}</span>
+			<input
+				placeholder='name'
+				value={data.name || ''}
+				onChange={this.handleNameChange}
+			/>
 			<span> </span>
-			{data.values.map((value, index) => {
-				return <span key={index}>
-					<span style={{ background: 'grey' }}>
-						{`${data.values[0].type}: ${data.values[0].value}`}
-					</span>
-					<span> </span>
-				</span>;
-			})}
+			{data.values
+				.map((value, index) => {
+					return <div key={index}>
+						<VariableOrSelectize
+							data={value}
+							nodes={props.nodes}
+							onChange={(updated) => {
+								this.handleValueChange(updated, index);
+							}}
+						/>
+					</div>;
+				})
+			}
 		</div>;
 	},
 });
@@ -732,6 +794,12 @@ const PolicyEditor = React.createClass({
 					<div>
 						<a
 							href='#'
+							onClick={this.addPredicate}
+						>add cred. predicate</a>
+					</div>
+					<div>
+						<a
+							href='#'
 							onClick={this.addData}
 						>add cred. data</a>
 					</div>
@@ -740,12 +808,6 @@ const PolicyEditor = React.createClass({
 							href='#'
 							onClick={this.addItem}
 						>add cred. item</a>
-					</div>
-					<div>
-						<a
-							href='#'
-							onClick={this.addPredicate}
-						>add cred. predicate</a>
 					</div>
 				</div>
 
