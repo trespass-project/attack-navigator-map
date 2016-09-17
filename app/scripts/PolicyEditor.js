@@ -17,12 +17,14 @@ const emptyCredLocation = {
 };
 const emptyCredPredicate = {
 	relationType: undefined,
-	values: [],
+	values: [
+		{ type: 'variable' },
+		{ type: 'variable' },
+	],
 };
 const emptyCredData = {
 	name: undefined,
 	values: [
-		{ type: 'variable' }
 	],
 };
 const emptyCredItem = {
@@ -684,16 +686,13 @@ const CredPredicate = React.createClass({
 
 		const renderSubjObj = (value, index) => {
 			return <span style={{ background: 'grey' }}>
-				{(!value)
-					? <span>(TODO: remove this)</span>
-					: <VariableOrSelectize
-						data={value}
-						nodes={props.nodes}
-						onChange={(updated) => {
-							this.handleValueChange(updated, index);
-						}}
-					/>
-				}
+				<VariableOrSelectize
+					data={value}
+					nodes={props.nodes}
+					onChange={(updated) => {
+						this.handleValueChange(updated, index);
+					}}
+				/>
 			</span>;
 		};
 
