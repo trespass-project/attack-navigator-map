@@ -25,6 +25,7 @@ const emptyCredPredicate = {
 const emptyCredData = {
 	name: undefined,
 	values: [
+		{ type: 'variable' },
 	],
 };
 const emptyCredItem = {
@@ -129,7 +130,7 @@ const VariableOrSelectize = React.createClass({
 		const variable = <span>
 			<input
 				type='text'
-				value={props.data.value}
+				value={props.data.value || ''}
 				onChange={(event) => {
 					const newVal = event.target.value;
 					this.updateValue(newVal);
