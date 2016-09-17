@@ -12,20 +12,24 @@ const ComponentReference = require('./ComponentReference.js');
 const noop = () => {};
 
 
+const emptyValue = {
+	type: 'variable',
+};
+
 const emptyCredLocation = {
 	id: undefined
 };
 const emptyCredPredicate = {
 	relationType: undefined,
 	values: [
-		{ type: 'variable' },
-		{ type: 'variable' },
+		emptyValue,
+		emptyValue,
 	],
 };
 const emptyCredData = {
 	name: undefined,
 	values: [
-		{ type: 'variable' },
+		emptyValue,
 	],
 };
 const emptyCredItem = {
@@ -617,6 +621,20 @@ const CredData = React.createClass({
 		props.onChange(updatedData);
 	},
 
+	handleAddValue() {
+		const props = this.props;
+		const { data } = props;
+		const values = [
+			...data.values,
+			emptyValue
+		];
+		const updatedData = update(
+			data,
+			{ values: { $set: values } }
+		);
+		props.onChange(updatedData);
+	},
+
 	handleNameChange(event) {
 		const props = this.props;
 		const { data } = props;
@@ -655,6 +673,7 @@ const CredData = React.createClass({
 					</div>;
 				})
 			}
+			<span> <a href='#' onClick={this.handleAddValue}>add value</a>,</span>
 			<span> <a href='#' onClick={props.onRemove}>remove</a></span>
 		</div>;
 	},
