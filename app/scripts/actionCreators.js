@@ -1058,8 +1058,14 @@ function addProcess(process) {
 };
 
 
+const emptyPolicy = {
+	enabled: [
+		{}
+	]
+};
+
 module.exports.addPolicy =
-function addPolicy(policy={}) {
+function addPolicy(policy=emptyPolicy) {
 	return {
 		type: constants.ACTION_addPolicy,
 		policy

@@ -21,6 +21,14 @@ const emptyCredPredicate = {
 };
 
 
+const actionTypes = [
+	'in',
+	'out',
+	'move',
+	'eval',
+];
+
+
 function defaultCredentials(credentials) {
 	return _.defaults(
 		credentials,
@@ -197,20 +205,54 @@ const AtLocations = React.createClass({
 
 const EnabledAction = React.createClass({
 	propTypes: {
-		actions: React.PropTypes.object.isRequired,
+		action: React.PropTypes.object.isRequired,
+		onChange: React.PropTypes.func,
 	},
 
 	getDefaultProps() {
 		return {
-			actions: {}
+			action: {},
+			onChange: noop,
 		};
 	},
 
+	getType() {
+		// should only have a single field
+		const actionType = R.keys(this.props.action)[0];
+		return actionType;
+	},
+
+	changeActionType(event) {
+		const type = event.target.value;
+		const { props } = this;
+		const { action } = props;
+		const newAction = {
+			[type]: action[this.getType()]
+		};
+		props.onChange(newAction);
+	},
+
 	render() {
-		const props = this.props;
+		const { props } = this;
+		const actionType = this.getType();
 
 		return <div>
-			<b>enabled action</b>
+			<div>
+				<b>enabled action</b>
+			</div>
+			<div>
+				<select
+					value={actionType}
+					onChange={this.changeActionType}
+				>
+					{actionTypes.map((type) => {
+						return <option
+							key={type}
+							value={type}
+						>{type}</option>;
+					})}
+				</select>
+			</div>
 		</div>;
 	},
 });
@@ -624,9 +666,24 @@ const PolicyEditor = React.createClass({
 
 	credentialsChanged(credentials) {
 		const { policy } = this.props;
-		this.handleChange(
-			Object.assign({}, policy, { credentials })
+		const updatedPolicy = update(
+			policy,
+			{ credentials: { $set: credentials } }
 		);
+		this.handleChange(updatedPolicy);
+	},
+
+	enabledActionChanged(index, action) {
+		const { policy } = this.props;
+		const updatedPolicy = update(
+			policy,
+			{
+				enabled: {
+					[index]: { $set: action }
+				}
+			}
+		);
+		this.handleChange(updatedPolicy);
 	},
 
 	render() {
@@ -652,7 +709,17 @@ const PolicyEditor = React.createClass({
 				/>
 			</div>
 			<div>
-				<EnabledAction actions={policy.enabled} />
+				{(policy.enabled || [])
+					.map((action, index) => {
+						return <EnabledAction
+							key={action}
+							action={action}
+							onChange={(action) => {
+								this.enabledActionChanged(index, action);
+							}}
+						/>;
+					})
+				}
 			</div>
 			<div>
 				<div>
