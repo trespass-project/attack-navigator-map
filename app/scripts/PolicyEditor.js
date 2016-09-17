@@ -354,6 +354,18 @@ const Credentials = React.createClass({
 		onChange(updatedCredentials);
 	},
 
+	handleRemoveCredData(index) {
+		const { credentials, onChange } = this.props;
+		const updatedCredentials = Object.assign(
+			{},
+			credentials,
+			{
+				credData: R.remove(index, 1, credentials.credData)
+			}
+		);
+		onChange(updatedCredentials);
+	},
+
 	render() {
 		const props = this.props;
 		const credLocation = props.credentials.credLocation || [];
@@ -424,6 +436,9 @@ const Credentials = React.createClass({
 									index,
 									updatedData
 								);
+							}}
+							onRemove={() => {
+								this.handleRemoveCredData(index);
 							}}
 						/>;
 					})}
@@ -558,6 +573,7 @@ const CredData = React.createClass({
 					</div>;
 				})
 			}
+			<span> <a href='#' onClick={props.onRemove}>remove</a></span>
 		</div>;
 	},
 });
