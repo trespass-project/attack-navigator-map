@@ -15,7 +15,6 @@ const noop = () => {};
 const emptyValue = {
 	type: 'variable',
 };
-
 const emptyCredLocation = {
 	id: undefined
 };
@@ -747,7 +746,8 @@ const CredItem = React.createClass({
 						onRemove: () => {
 							this.handleRemoveValue(index);
 						},
-					}
+					};
+
 					const component = {
 						credItem: <CredItem
 							item={value}
