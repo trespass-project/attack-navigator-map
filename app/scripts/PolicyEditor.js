@@ -378,6 +378,19 @@ const Credentials = React.createClass({
 		onChange(updatedCredentials);
 	},
 
+	handleChangeCredItem(index, updatedItem) {
+		const { credentials, onChange } = this.props;
+		const updatedCredentials = update(
+			credentials,
+			{
+				credItem: {
+					[index]: { $set: updatedItem }
+				}
+			}
+		);
+		onChange(updatedCredentials);
+	},
+
 	handleRemoveCredItem(index) {
 		const { credentials, onChange } = this.props;
 		const updatedCredentials = Object.assign(
@@ -502,6 +515,9 @@ const Credentials = React.createClass({
 								key={index}
 								item={credItem}
 								nodes={props.nodes}
+								onChange={(updated) => {
+									this.handleChangeCredItem(index, updated);
+								}}
 								onRemove={() => {
 									this.handleRemoveCredItem(index);
 								}}
@@ -591,6 +607,16 @@ const CredData = React.createClass({
 		props.onChange(updatedData);
 	},
 
+	handleRemoveValue(index) {
+		const props = this.props;
+		const { data } = props;
+		const updatedData = update(
+			data,
+			{ values: { $set: R.remove(index, 1, data.values) } }
+		);
+		props.onChange(updatedData);
+	},
+
 	handleNameChange(event) {
 		const props = this.props;
 		const { data } = props;
@@ -657,6 +683,16 @@ const CredItem = React.createClass({
 		const updatedItem = update(
 			item,
 			{ name: { $set: name } }
+		);
+		props.onChange(updatedItem);
+	},
+
+	handleValueChange(updated, index) {
+		const props = this.props;
+		const { item } = props;
+		const updatedItem = update(
+			item,
+			{ values: { [index]: { $set: updated } } }
 		);
 		props.onChange(updatedItem);
 	},
