@@ -716,6 +716,16 @@ const CredItem = React.createClass({
 		props.onChange(updatedItem);
 	},
 
+	handleRemoveValue(index) {
+		const props = this.props;
+		const { item } = props;
+		const updatedItem = update(
+			item,
+			{ values: { $set: R.remove(index, 1, item.values) } }
+		);
+		props.onChange(updatedItem);
+	},
+
 	render() {
 		const props = this.props;
 		const { item } = props;
@@ -729,17 +739,23 @@ const CredItem = React.createClass({
 			<span> </span>
 			{item.values
 				.map((value, index) => {
+					const commonProps = {
+						nodes: props.nodes,
+						onChange: (updated) => {
+							this.handleValueChange(updated, index);
+						},
+						onRemove: () => {
+							this.handleRemoveValue(index);
+						},
+					}
 					const component = {
 						credItem: <CredItem
 							item={value}
-							nodes={props.nodes}
+							{...commonProps}
 						/>,
 						credData: <CredData
 							data={value}
-							nodes={props.nodes}
-							onChange={(updated) => {
-								this.handleValueChange(updated, index);
-							}}
+							{...commonProps}
 						/>,
 					}[value.type] || null;
 
