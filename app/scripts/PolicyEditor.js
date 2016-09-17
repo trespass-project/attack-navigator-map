@@ -204,7 +204,7 @@ const AtLocations = React.createClass({
 
 		return <div>
 			<div><b>at locations</b></div>
-			<div>
+			<div style={{ paddingLeft: 20 }}>
 				<SelectizeDropdown
 					multi={true}
 					name='locations'
@@ -258,7 +258,8 @@ const EnabledAction = React.createClass({
 			<div>
 				<b>enabled action</b>
 			</div>
-			<div>
+
+			<div style={{ paddingLeft: 20 }}>
 				<select
 					value={actionType}
 					onChange={this.changeActionType}
@@ -391,88 +392,90 @@ const Credentials = React.createClass({
 		return <div>
 			<div><b>credentials</b></div>
 
-			<div>
-				<div>cred. locations</div>
-				<div style={{ background: 'rgb(245, 245, 245)' }}>
-					{credLocation.map((credLoc, index) => {
-						return <CredLocation
-							key={index}
-							locationId={credLoc.id}
-							locationOptions={props.locationOptions}
-							nodes={props.nodes}
-							onChange={(name, value) => {
-								this.handleChangeCredLocation(
-									index,
-									value
-								);
-							}}
-							onRemove={() => {
-								this.handleRemoveCredLocation(index);
-							}}
-						/>;
-					})}
+			<div style={{ paddingLeft: 20 }}>
+				<div>
+					<div>cred. locations</div>
+					<div style={{ background: 'rgb(245, 245, 245)', paddingLeft: 20 }}>
+						{credLocation.map((credLoc, index) => {
+							return <CredLocation
+								key={index}
+								locationId={credLoc.id}
+								locationOptions={props.locationOptions}
+								nodes={props.nodes}
+								onChange={(name, value) => {
+									this.handleChangeCredLocation(
+										index,
+										value
+									);
+								}}
+								onRemove={() => {
+									this.handleRemoveCredLocation(index);
+								}}
+							/>;
+						})}
+					</div>
 				</div>
-			</div>
 
-			<div>
-				<div>cred. predicates</div>
-				<div style={{ background: 'rgb(245, 245, 245)' }}>
-					{credPredicate.map((credPred, index) => {
-						return <CredPredicate
-							key={index}
-							predicate={credPred}
-							relationTypes={props.relationTypes}
-							relationsMap={props.relationsMap}
-							nodes={props.nodes}
-							onChange={(updatedPredicate) => {
-								this.handleChangeCredPredicate(
-									index,
-									updatedPredicate
-								);
-							}}
-							onRemove={() => {
-								this.handleRemoveCredPredicate(index);
-							}}
-						/>;
-					})}
+				<div>
+					<div>cred. predicates</div>
+					<div style={{ background: 'rgb(245, 245, 245)', paddingLeft: 20 }}>
+						{credPredicate.map((credPred, index) => {
+							return <CredPredicate
+								key={index}
+								predicate={credPred}
+								relationTypes={props.relationTypes}
+								relationsMap={props.relationsMap}
+								nodes={props.nodes}
+								onChange={(updatedPredicate) => {
+									this.handleChangeCredPredicate(
+										index,
+										updatedPredicate
+									);
+								}}
+								onRemove={() => {
+									this.handleRemoveCredPredicate(index);
+								}}
+							/>;
+						})}
+					</div>
 				</div>
-			</div>
 
-			<div>
-				<div>cred. data</div>
-				<div style={{ background: 'rgb(245, 245, 245)' }}>
-					{credData.map((credData, index) => {
-						return <CredData
-							key={index}
-							data={credData}
-							nodes={props.nodes}
-							onChange={(updatedData) => {
-								this.handleChangeCredData(
-									index,
-									updatedData
-								);
-							}}
-							onRemove={() => {
-								this.handleRemoveCredData(index);
-							}}
-						/>;
-					})}
+				<div>
+					<div>cred. data</div>
+					<div style={{ background: 'rgb(245, 245, 245)', paddingLeft: 20 }}>
+						{credData.map((credData, index) => {
+							return <CredData
+								key={index}
+								data={credData}
+								nodes={props.nodes}
+								onChange={(updatedData) => {
+									this.handleChangeCredData(
+										index,
+										updatedData
+									);
+								}}
+								onRemove={() => {
+									this.handleRemoveCredData(index);
+								}}
+							/>;
+						})}
+					</div>
 				</div>
-			</div>
 
-			<div>
-				<div>cred. item</div>
-				<div style={{ background: 'rgb(245, 245, 245)' }}>
-					{credItem.map((credItem, index) => {
-						return <CredItem
-							key={index}
-							item={credItem}
-							nodes={props.nodes}
-							onRemove={() => {
-								this.handleRemoveCredItem(index);
-							}}
-						/>;
-					})}
+				<div>
+					<div>cred. item</div>
+					<div style={{ background: 'rgb(245, 245, 245)', paddingLeft: 20 }}>
+						{credItem.map((credItem, index) => {
+							return <CredItem
+								key={index}
+								item={credItem}
+								nodes={props.nodes}
+								onRemove={() => {
+									this.handleRemoveCredItem(index);
+								}}
+							/>;
+						})}
+					</div>
 				</div>
 			</div>
 		</div>;
