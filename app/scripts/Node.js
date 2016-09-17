@@ -27,6 +27,7 @@ const Node = React.createClass({
 		y: React.PropTypes.number.isRequired,
 		isHovered: React.PropTypes.bool,
 		isSelected: React.PropTypes.bool,
+		isCountermeasure: React.PropTypes.bool,
 		showNodeLabels: React.PropTypes.bool,
 		node: React.PropTypes.object.isRequired,
 
@@ -47,6 +48,7 @@ const Node = React.createClass({
 			isSelected: false,
 			isHovered: false,
 			showNodeLabels: true,
+			isCountermeasure: false,
 		};
 	},
 
@@ -68,10 +70,27 @@ const Node = React.createClass({
 					context.dispatch( actionCreators.cloneNode(props.node.id) );
 				}
 			},
+
+			// TODO: only if node is actually in a group
 			{	label: 'remove\nfrom group',
 				icon: icons['fa-object-group'],
 				action: () => {
 					context.dispatch( actionCreators.ungroupNode(props.node.id) );
+				}
+			},
+
+			{	label: 'add\npolicy',
+				icon: icons['fa-plus'], // TODO: use custom icons
+				action: () => {
+					const policy = {
+						atLocations: [props.node.id],
+					};
+					context.dispatch(
+						actionCreators.addPolicy(policy)
+					);
+					context.dispatch(
+						actionCreators.selectWizardStep('policies')
+					);
 				}
 			},
 		];
@@ -259,16 +278,14 @@ const Node = React.createClass({
 		const props = this.props;
 		const context = this.context;
 
-		const isCountermeasure = false;
-
 		const iconScaleFactor = 1.0; // 0.7
 
-		const shapeSize = isCountermeasure
+		const shapeSize = props.isCountermeasure
 			? context.theme.countermeasure.size
 			: context.theme.node.radius * 2;
 		const halfShapeSize = 0.5 * shapeSize;
 
-		const portOffset = isCountermeasure
+		const portOffset = props.isCountermeasure
 			? -halfShapeSize
 			: -context.theme.node.radius;
 
@@ -318,7 +335,7 @@ const Node = React.createClass({
 			? scale(scaleT)
 			: undefined;
 
-		const nodeShape = isCountermeasure
+		const nodeShape = props.isCountermeasure
 			? <rect
 				className={nodeClasses}
 				x={-halfShapeSize}
