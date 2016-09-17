@@ -28,16 +28,16 @@ const emptyCredPredicate = {
 const emptyCredData = {
 	name: undefined,
 	values: [
-		emptyValue,
+		// emptyValue,
 	],
 };
 const emptyCredItem = {
 	name: undefined,
 	values: [
-		_.merge(
-			{ type: 'credData' },
-			emptyCredData
-		)
+		// _.merge(
+		// 	{ type: 'credData' },
+		// 	emptyCredData
+		// )
 	],
 };
 
