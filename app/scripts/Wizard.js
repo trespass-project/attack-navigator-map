@@ -19,6 +19,7 @@ const Tooltip = require('react-bootstrap').Tooltip;
 import JSONTree from 'react-json-tree';
 import { AutoSizer, FlexTable, FlexColumn/*, SortDirection*/ } from 'react-virtualized';
 
+const PolicyEditor = require('./PolicyEditor.js');
 const PredicateEditor = require('./PredicateEditor.js');
 const AttackerProfileEditor = require('./AttackerProfileEditor/AttackerProfileEditor.js');
 
@@ -353,41 +354,33 @@ const Wizard = React.createClass({
 	},
 
 	renderPolicies() {
-		const policies = R.values(this.props.graph.policies || {})
+		const props = this.props;
+
+		// TODO: don't do this here
+		const policies = R.values(props.graph.policies || {})
 			.map(R.omit(['modelComponentType']));
 
 		return <div>
 			<h2 className='title'>Policies</h2>
 
-			<hr />
 			<div>
-				<div>
-					<textarea
-						style={{
-							width: '100%',
-							maxWidth: '100%',
-							fontSize: '12px'
-						}}
-						ref='new-policy'
-						cols='30'
-					></textarea>
-				</div>
-				<button onClick={this.addPolicy}>add</button>
+				<a href='#' onClick={this.addPolicy}>add policy</a>
 			</div>
+
 			<hr />
 
 			{policies
 				.map((item) => {
-					// isLightTheme={true}
-					// theme={jsonTreeTheme}
 					return <div key={item.id}>
-						<JSONTree
-							data={item}
+						<PolicyEditor
+							nodes={props.graph.nodes}
+							policy={item}
+							onChange={this.updatePolicy}
+							onRemove={() => { this.removePolicy(item.id); }}
+							locationOptions={props.locationOptions}
+							relationTypes={props.relationTypes}
+							relationsMap={props.relationsMap}
 						/>
-						<a
-							href='#'
-							onClick={(event) => { this.removePolicy(item.id, event); }}
-						>remove</a>
 						<hr />
 					</div>;
 				})
@@ -396,22 +389,19 @@ const Wizard = React.createClass({
 	},
 
 	addPolicy(event) {
-		const textarea = this.refs['new-policy'];
-		const policyJSON = textarea.value;
-		try {
-			const policy = JSON.parse(policyJSON);
-			this.context.dispatch(
-				actionCreators.addPolicy(policy)
-			);
-		} catch (e) {
-			alert('Invalid JSON');
-			return;
-		}
-		textarea.value = '';
+		if (event) { event.preventDefault(); }
+		this.context.dispatch(
+			actionCreators.addPolicy()
+		);
 	},
 
-	removePolicy(policyId, event) {
-		if (event) { event.preventDefault(); }
+	updatePolicy(updatedPolicy) {
+		this.context.dispatch(
+			actionCreators.updatePolicy(updatedPolicy)
+		);
+	},
+
+	removePolicy(policyId) {
 		this.context.dispatch(
 			actionCreators.removePolicy(policyId)
 		);

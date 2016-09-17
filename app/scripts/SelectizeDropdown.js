@@ -29,7 +29,7 @@ const SelectizeDropdown = React.createClass({
 			options: [],
 			valueKey: 'value',
 			labelKey: 'label',
-			onChange: (name, value) => {},
+			onChange: (name, value/*(s)*/) => {},
 			extraProps: {},
 		};
 	},
@@ -42,6 +42,17 @@ const SelectizeDropdown = React.createClass({
 			(!selectedOption)
 				? ''
 				: selectedOption.value
+		);
+	},
+
+	onChangeMulti(selectedOptions) {
+		const props = this.props;
+		props.onChange(
+			props.name,
+			// TODO: maybe have a flag that allows deletion
+			(!selectedOptions)
+				? []
+				: selectedOptions.map(R.prop('value'))
 		);
 	},
 
@@ -89,6 +100,7 @@ const SelectizeDropdown = React.createClass({
 			placeholder={props.placeholder}
 			options={options}
 			onValueChange={this.onChange}
+			onValuesChange={this.onChangeMulti}
 			{...extraProps}
 			{...props.extraProps}
 		/>;
