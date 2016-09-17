@@ -248,11 +248,12 @@ const EnabledAction = React.createClass({
 	},
 
 	changeActionType(event) {
-		const type = event.target.value;
+		const newType = event.target.value;
 		const { props } = this;
 		const { action } = props;
+		const oldValue = action[this.getType()];
 		const newAction = {
-			[type]: action[this.getType()]
+			[newType]: oldValue || {},
 		};
 		props.onChange(newAction);
 	},
