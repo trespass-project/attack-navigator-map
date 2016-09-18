@@ -57,6 +57,26 @@ const actionTypes = [
 ];
 
 
+function updateFieldInObject(obj, fieldName, updatedValue) {
+	return update(
+		obj,
+		{ [fieldName]: { $set: updatedValue } }
+	);
+}
+
+
+function updateArrayIndexInObject(obj, fieldName, index, updatedValue) {
+	return update(
+		obj,
+		{
+			[fieldName]: {
+				[index]: { $set: updatedValue }
+			}
+		}
+	);
+}
+
+
 function defaultCredentials(credentials) {
 	return _.defaults(
 		credentials,
@@ -907,12 +927,13 @@ const PolicyEditor = React.createClass({
 
 	_add(event, type) {
 		if (event) { event.preventDefault(); }
-		const updatedPolicy = addToPolicy(
-			this.props.policy,
-			type,
-			empty[type]
+		this.handleChange(
+			addToPolicy(
+				this.props.policy,
+				type,
+				empty[type]
+			)
 		);
-		this.handleChange(updatedPolicy);
 	},
 
 	addLocation(event) {
@@ -932,11 +953,24 @@ const PolicyEditor = React.createClass({
 	},
 
 	_updateField(fieldName, updatedValue) {
-		const updatedPolicy = update(
-			this.props.policy,
-			{ [fieldName]: { $set: updatedValue } }
+		this.handleChange(
+			updateFieldInObject(
+				this.props.policy,
+				fieldName,
+				updatedValue
+			)
 		);
-		this.handleChange(updatedPolicy);
+	},
+
+	_updateArrayIndex(fieldName, index, updatedValue) {
+		this.handleChange(
+			updateArrayIndexInObject(
+				this.props.policy,
+				fieldName,
+				index,
+				updatedValue
+			)
+		);
 	},
 
 	atLocationsChanged(locationIds) {
@@ -948,16 +982,7 @@ const PolicyEditor = React.createClass({
 	},
 
 	enabledActionChanged(index, action) {
-		const { policy } = this.props;
-		const updatedPolicy = update(
-			policy,
-			{
-				enabled: {
-					[index]: { $set: action }
-				}
-			}
-		);
-		this.handleChange(updatedPolicy);
+		this._updateArrayIndex('enabled', index, action);
 	},
 
 	render() {
@@ -969,7 +994,7 @@ const PolicyEditor = React.createClass({
 				<a href='#' onClick={props.onRemove}>delete policy</a>
 			</div>
 			<div>
-				{policy.id}
+				id: {policy.id}
 			</div>
 
 			<div>
