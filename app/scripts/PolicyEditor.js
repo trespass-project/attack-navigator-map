@@ -11,6 +11,9 @@ const ComponentReference = require('./ComponentReference.js');
 
 const noop = () => {};
 
+const lightGrey = 'rgb(245, 245, 245)';
+const padding = 20;
+
 
 const emptyValue = {
 	type: 'variable',
@@ -41,6 +44,13 @@ const emptyCredItem = {
 	],
 };
 
+const empty = {
+	'credLocation': emptyCredLocation,
+	'credData': emptyCredData,
+	'credItem': emptyCredItem,
+	'credPredicate': emptyCredPredicate,
+};
+
 
 const actionTypes = [
 	'in',
@@ -48,6 +58,46 @@ const actionTypes = [
 	'move',
 	'eval',
 ];
+
+
+function updateFieldInObject(obj, fieldName, updatedValue) {
+	return update(
+		obj,
+		{ [fieldName]: { $set: updatedValue } }
+	);
+}
+
+
+function updateArrayIndexInObject(obj, fieldName, index, updatedValue) {
+	return update(
+		obj,
+		{
+			[fieldName]: {
+				[index]: { $set: updatedValue }
+			}
+		}
+	);
+}
+
+
+function __updateField(onChange, obj, params) {
+	onChange(
+		updateFieldInObject(
+			obj,
+			...params
+		)
+	);
+}
+
+
+function __updateArrayIndex(onChange, obj, params) {
+	onChange(
+		updateArrayIndexInObject(
+			obj,
+			...params
+		)
+	);
+}
 
 
 function defaultCredentials(credentials) {
@@ -63,7 +113,7 @@ function defaultCredentials(credentials) {
 }
 
 
-function _add(type, policy, data) {
+function addToPolicy(policy, type, data) {
 	const updateData = {
 		[type]: { $push: [data] },
 	};
@@ -73,14 +123,65 @@ function _add(type, policy, data) {
 			policy,
 			{
 				// set defaults first, before we try to push stuff into it
-				credentials: { $set: defaultCredentials(policy.credentials) }
+				credentials: {
+					$set: defaultCredentials(policy.credentials)
+				}
 			}
 		),
-		{
-			credentials: updateData,
-		}
+		{ credentials: updateData }
 	);
 }
+
+
+function _renderValue(nodes, valueKey='value', item) {
+	const node = nodes[item[valueKey]];
+	return (!node)
+		? null
+		: <ComponentReference modelComponent={node}>
+			{node.label}
+		</ComponentReference>;
+}
+
+
+const RemoveButton = React.createClass({
+	propTypes: {
+		onRemove: React.PropTypes.func.isRequired,
+	},
+
+	handleRemove(event) {
+		event.preventDefault();
+		this.props.onRemove();
+	},
+
+	render() {
+		return <a
+			href='#'
+			onClick={this.props.onRemove}
+		>remove</a>;
+	}
+});
+
+
+const NameInput = React.createClass({
+	propTypes: {
+		value: React.PropTypes.string,
+		onChange: React.PropTypes.func.isRequired,
+	},
+
+	render() {
+		const { props } = this;
+
+		return <input
+			type='text'
+			name='name'
+			value={props.value || ''}
+			onChange={(event) => {
+				const newVal = event.target.value;
+				props.onChange(newVal);
+			}}
+		/>;
+	}
+});
 
 
 const VariableOrSelectize = React.createClass({
@@ -101,20 +202,22 @@ const VariableOrSelectize = React.createClass({
 
 	toggleType(event) {
 		// if (event) { event.preventDefault(); }
-		const { props } = this;
-		const updated = (props.data.type === 'variable')
-			? update(props.data, { type: { $set: 'value' } })
-			: update(props.data, { type: { $set: 'variable' } });
-		props.onChange(updated);
+		const newType = (this.props.data.type === 'variable')
+			? 'value'
+			: 'variable';
+		this._updateField('type', newType);
 	},
 
 	updateValue(newVal) {
-		const { props } = this;
-		const updated = update(
-			props.data,
-			{ value: { $set: newVal } }
+		this._updateField('value', newVal);
+	},
+
+	_updateField(fieldName, updatedValue) {
+		__updateField(
+			this.props.onChange,
+			this.props.data,
+			[fieldName, updatedValue]
 		);
-		props.onChange(updated);
 	},
 
 	render() {
@@ -122,23 +225,15 @@ const VariableOrSelectize = React.createClass({
 		const isVariable = (props.data.type === 'variable');
 
 		const valueKey = 'id';
-		// TODO: DRY
-		const renderValue = (item) => {
-			const node = props.nodes[item[valueKey]];
-			if (!node) { return null; }
-			return <ComponentReference modelComponent={node}>
-				{node.label}
-			</ComponentReference>;
-		};
+		const renderValue = R.partial(
+			_renderValue,
+			[props.nodes, valueKey]
+		);
 
 		const variable = <span>
-			<input
-				type='text'
-				value={props.data.value || ''}
-				onChange={(event) => {
-					const newVal = event.target.value;
-					this.updateValue(newVal);
-				}}
+			<NameInput
+				value={props.data.value}
+				onChange={this.updateValue}
 			/>
 		</span>;
 		const selectize = <SelectizeDropdown
@@ -166,7 +261,7 @@ const VariableOrSelectize = React.createClass({
 				: selectize
 			}
 			{(props.onRemove) &&
-				<span> <a href='#' onClick={props.onRemove}>remove</a></span>
+				<span> <RemoveButton onRemove={props.onRemove} /></span>
 			}
 		</div>;
 	},
@@ -200,18 +295,15 @@ const AtLocations = React.createClass({
 				};
 			});
 
-		// TODO: DRY
-		const renderValue = (item) => {
-			const node = props.nodes[item[/*valueKey*/ 'value']];
-			if (!node) { return null; }
-			return <ComponentReference modelComponent={node}>
-				{node.label}
-			</ComponentReference>;
-		};
+		const valueKey = 'value';
+		const renderValue = R.partial(
+			_renderValue,
+			[props.nodes, valueKey]
+		);
 
 		return <div>
 			<div><b>at locations</b></div>
-			<div style={{ paddingLeft: 20 }}>
+			<div style={{ paddingLeft: padding }}>
 				<SelectizeDropdown
 					multi={true}
 					name='locations'
@@ -259,7 +351,6 @@ const EnabledAction = React.createClass({
 	},
 
 	render() {
-		const { props } = this;
 		const actionType = this.getType();
 
 		return <div>
@@ -267,7 +358,7 @@ const EnabledAction = React.createClass({
 				<b>enabled action</b>
 			</div>
 
-			<div style={{ paddingLeft: 20 }}>
+			<div style={{ paddingLeft: padding }}>
 				<select
 					value={actionType}
 					onChange={this.changeActionType}
@@ -306,105 +397,63 @@ const Credentials = React.createClass({
 	},
 
 	handleChangeCredLocation(index, locationId) {
-		const { credentials, onChange } = this.props;
-		const updatedCredentials = update(
-			credentials,
-			{
-				credLocation: {
-					[index]: {
-						id: { $set: locationId }
-					}
-				}
-			}
-		);
-		onChange(updatedCredentials);
+		this._updateArrayIndex('credLocation', index, locationId);
 	},
 
 	handleRemoveCredLocation(index) {
-		const { credentials, onChange } = this.props;
-		const updatedCredentials = Object.assign(
-			{},
-			credentials,
-			{
-				credLocation: R.remove(index, 1, credentials.credLocation)
-			}
+		this._updateField(
+			'credLocation',
+			R.remove(index, 1, this.props.credentials.credLocation)
 		);
-		onChange(updatedCredentials);
 	},
 
-	handleChangeCredPredicate(index, updatedPredicate) {
-		const { credentials, onChange } = this.props;
-		const updatedCredentials = update(
-			credentials,
-			{
-				credPredicate: {
-					[index]: { $set: updatedPredicate }
-				}
-			}
-		);
-		onChange(updatedCredentials);
+	handleChangeCredPredicate(index, updated) {
+		this._updateArrayIndex('credPredicate', index, updated);
 	},
 
 	handleRemoveCredPredicate(index) {
-		const { credentials, onChange } = this.props;
-		const updatedCredentials = Object.assign(
-			{},
-			credentials,
-			{
-				credPredicate: R.remove(index, 1, credentials.credPredicate)
-			}
+		this._updateField(
+			'credPredicate',
+			R.remove(index, 1, this.props.credentials.credPredicate)
 		);
-		onChange(updatedCredentials);
 	},
 
-	handleChangeCredData(index, updatedData) {
-		const { credentials, onChange } = this.props;
-		const updatedCredentials = update(
-			credentials,
-			{
-				credData: {
-					[index]: { $set: updatedData }
-				}
-			}
-		);
-		onChange(updatedCredentials);
+	handleChangeCredData(index, updated) {
+		this._updateArrayIndex('credData', index, updated);
 	},
 
 	handleRemoveCredData(index) {
-		const { credentials, onChange } = this.props;
-		const updatedCredentials = Object.assign(
-			{},
-			credentials,
-			{
-				credData: R.remove(index, 1, credentials.credData)
-			}
+		this._updateField(
+			'credData',
+			R.remove(index, 1, this.props.credentials.credData)
 		);
-		onChange(updatedCredentials);
 	},
 
-	handleChangeCredItem(index, updatedItem) {
-		const { credentials, onChange } = this.props;
-		const updatedCredentials = update(
-			credentials,
-			{
-				credItem: {
-					[index]: { $set: updatedItem }
-				}
-			}
-		);
-		onChange(updatedCredentials);
+	handleChangeCredItem(index, updated) {
+		this._updateArrayIndex('credItem', index, updated);
 	},
 
 	handleRemoveCredItem(index) {
-		const { credentials, onChange } = this.props;
-		const updatedCredentials = Object.assign(
-			{},
-			credentials,
-			{
-				credItem: R.remove(index, 1, credentials.credItem)
-			}
+		this._updateField(
+			'credItem',
+			R.remove(index, 1, this.props.credentials.credItem)
 		);
-		onChange(updatedCredentials);
+	},
+
+	_updateField(fieldName, updatedValue) {
+		__updateField(
+			this.props.onChange,
+			this.props.credentials,
+			[fieldName, updatedValue]
+		);
+	},
+
+	_updateArrayIndex(fieldName, index, updatedValue) {
+		__updateArrayIndex(
+			this.props.onChange,
+			this.props.credentials,
+			[fieldName, index, updatedValue]
+		);
 	},
 
 	render() {
@@ -417,7 +466,7 @@ const Credentials = React.createClass({
 		return <div>
 			<div><b>credentials</b></div>
 
-			<div style={{ paddingLeft: 20 }}>
+			<div style={{ paddingLeft: padding }}>
 				<div>
 					<div>
 						<span>cred. locations </span>
@@ -426,7 +475,7 @@ const Credentials = React.createClass({
 							onClick={props.addLocation}
 						>add</a>
 					</div>
-					<div style={{ background: 'rgb(245, 245, 245)', paddingLeft: 20 }}>
+					<div style={{ background: lightGrey, paddingLeft: padding }}>
 						{credLocation.map((credLoc, index) => {
 							return <CredLocation
 								key={index}
@@ -455,7 +504,7 @@ const Credentials = React.createClass({
 							onClick={props.addPredicate}
 						>add</a>
 					</div>
-					<div style={{ background: 'rgb(245, 245, 245)', paddingLeft: 20 }}>
+					<div style={{ background: lightGrey, paddingLeft: padding }}>
 						{credPredicate.map((credPred, index) => {
 							return <CredPredicate
 								key={index}
@@ -485,7 +534,7 @@ const Credentials = React.createClass({
 							onClick={props.addData}
 						>add</a>
 					</div>
-					<div style={{ background: 'rgb(245, 245, 245)', paddingLeft: 20 }}>
+					<div style={{ background: lightGrey, paddingLeft: padding }}>
 						{credData.map((credData, index) => {
 							return <CredData
 								key={index}
@@ -513,7 +562,7 @@ const Credentials = React.createClass({
 							onClick={props.addItem}
 						>add</a>
 					</div>
-					<div style={{ background: 'rgb(245, 245, 245)', paddingLeft: 20 }}>
+					<div style={{ background: lightGrey, paddingLeft: padding }}>
 						{credItem.map((credItem, index) => {
 							return <CredItem
 								key={index}
@@ -561,13 +610,11 @@ const CredLocation = React.createClass({
 			label: locationId,
 		};
 
-		const renderValue = (item) => {
-			const node = props.nodes[item[/*valueKey*/ 'value']];
-			if (!node) { return null; }
-			return <ComponentReference modelComponent={node}>
-				{node.label}
-			</ComponentReference>;
-		};
+		const valueKey = 'value';
+		const renderValue = R.partial(
+			_renderValue,
+			[props.nodes, valueKey]
+		);
 
 		return <div>
 			<SelectizeDropdown
@@ -580,7 +627,7 @@ const CredLocation = React.createClass({
 				onChange={props.onChange/*(name, values)*/}
 				extraProps={{ renderValue }}
 			/>
-			<span> <a href='#' onClick={props.onRemove}>remove</a></span>
+			<span> <RemoveButton onRemove={props.onRemove} /></span>
 		</div>;
 	},
 });
@@ -602,48 +649,42 @@ const CredData = React.createClass({
 	},
 
 	handleValueChange(updated, index) {
-		const props = this.props;
-		const { data } = props;
-		const updatedData = update(
-			data,
-			{ values: { [index]: { $set: updated } } }
-		);
-		props.onChange(updatedData);
+		this._updateArrayIndex('values', index, updated);
 	},
 
 	handleRemoveValue(index) {
-		const props = this.props;
-		const { data } = props;
-		const updatedData = update(
-			data,
-			{ values: { $set: R.remove(index, 1, data.values) } }
+		this._updateField(
+			'values',
+			R.remove(index, 1, this.props.data.values)
 		);
-		props.onChange(updatedData);
 	},
 
 	handleAddValue() {
-		const props = this.props;
-		const { data } = props;
 		const values = [
-			...data.values,
+			...this.props.data.values,
 			emptyValue
 		];
-		const updatedData = update(
-			data,
-			{ values: { $set: values } }
-		);
-		props.onChange(updatedData);
+		this._updateField('values', values);
 	},
 
-	handleNameChange(event) {
-		const props = this.props;
-		const { data } = props;
-		const name = event.target.value;
-		const updatedData = update(
-			data,
-			{ name: { $set: name } }
+	handleNameChange(name) {
+		this._updateField('name', name);
+	},
+
+	_updateField(fieldName, updatedValue) {
+		__updateField(
+			this.props.onChange,
+			this.props.data,
+			[fieldName, updatedValue]
 		);
-		props.onChange(updatedData);
+	},
+
+	_updateArrayIndex(fieldName, index, updatedValue) {
+		__updateArrayIndex(
+			this.props.onChange,
+			this.props.data,
+			[fieldName, index, updatedValue]
+		);
 	},
 
 	render() {
@@ -651,9 +692,8 @@ const CredData = React.createClass({
 		const { data } = props;
 
 		return <div>
-			<input
-				placeholder='name'
-				value={data.name || ''}
+			<NameInput
+				value={props.data.value}
 				onChange={this.handleNameChange}
 			/>
 			<span> </span>
@@ -674,7 +714,7 @@ const CredData = React.createClass({
 				})
 			}
 			<span> <a href='#' onClick={this.handleAddValue}>add value</a>,</span>
-			<span> <a href='#' onClick={props.onRemove}>remove</a></span>
+			<span> <RemoveButton onRemove={props.onRemove} /></span>
 		</div>;
 	},
 });
@@ -695,63 +735,51 @@ const CredItem = React.createClass({
 		};
 	},
 
-	handleNameChange(event) {
-		const props = this.props;
-		const { item } = props;
-		const name = event.target.value;
-		const updatedItem = update(
-			item,
-			{ name: { $set: name } }
-		);
-		props.onChange(updatedItem);
+	handleNameChange(name) {
+		this._updateField('name', name);
 	},
 
 	handleValueChange(updated, index) {
-		const props = this.props;
-		const { item } = props;
-		const updatedItem = update(
-			item,
-			{ values: { [index]: { $set: updated } } }
-		);
-		props.onChange(updatedItem);
+		this._updateArrayIndex('values', index, updated);
 	},
 
 	handleRemoveValue(index) {
-		const props = this.props;
-		const { item } = props;
-		const updatedItem = update(
-			item,
-			{ values: { $set: R.remove(index, 1, item.values) } }
+		this._updateField(
+			'values',
+			R.remove(index, 1, this.props.item.values)
 		);
-		props.onChange(updatedItem);
 	},
 
 	handleAddValueItem() {
-		const props = this.props;
-		const { item } = props;
-		const values = [
-			...item.values,
-			_.merge({ type: 'credItem' }, emptyCredItem)
-		];
-		const updatedItem = update(
-			item,
-			{ values: { $set: values } }
-		);
-		props.onChange(updatedItem);
+		this._handleAdd('credItem');
 	},
 
 	handleAddValueData() {
-		const props = this.props;
-		const { item } = props;
-		const values = [
-			...item.values,
-			_.merge({ type: 'credData' }, emptyCredData)
-		];
-		const updatedItem = update(
-			item,
-			{ values: { $set: values } }
+		this._handleAdd('credData');
+	},
+
+	_updateField(fieldName, updatedValue) {
+		__updateField(
+			this.props.onChange,
+			this.props.item,
+			[fieldName, updatedValue]
 		);
-		props.onChange(updatedItem);
+	},
+
+	_updateArrayIndex(fieldName, index, updatedValue) {
+		__updateArrayIndex(
+			this.props.onChange,
+			this.props.item,
+			[fieldName, index, updatedValue]
+		);
+	},
+
+	_handleAdd(type) {
+		const values = [
+			...this.props.item.values,
+			_.merge({ type }, empty[type])
+		];
+		this._updateField('values', values);
 	},
 
 	render() {
@@ -759,9 +787,8 @@ const CredItem = React.createClass({
 		const { item } = props;
 
 		return <div>
-			<input
-				placeholder='name'
-				value={item.name || ''}
+			<NameInput
+				value={props.data.value}
 				onChange={this.handleNameChange}
 			/>
 			<span> </span>
@@ -796,7 +823,7 @@ const CredItem = React.createClass({
 			}
 			<span> <a href='#' onClick={this.handleAddValueItem}>add item</a>,</span>
 			<span> <a href='#' onClick={this.handleAddValueData}>add data</a>,</span>
-			<span> <a href='#' onClick={props.onRemove}>remove</a></span>
+			<span> <RemoveButton onRemove={props.onRemove} /></span>
 		</div>;
 	},
 });
@@ -819,24 +846,28 @@ const CredPredicate = React.createClass({
 		};
 	},
 
-	handleRelationChange(name, relation) {
-		const props = this.props;
-		const { predicate } = props;
-		const updatedPredicate = update(
-			predicate,
-			{ relationType: { $set: relation } }
+	_updateField(fieldName, updatedValue) {
+		__updateField(
+			this.props.onChange,
+			this.props.predicate,
+			[fieldName, updatedValue]
 		);
-		props.onChange(updatedPredicate);
+	},
+
+	_updateArrayIndex(fieldName, index, updatedValue) {
+		__updateArrayIndex(
+			this.props.onChange,
+			this.props.predicate,
+			[fieldName, index, updatedValue]
+		);
+	},
+
+	handleRelationChange(name, relation) {
+		this._updateField('relationType', relation);
 	},
 
 	handleValueChange(updated, index) {
-		const props = this.props;
-		const { predicate } = props;
-		const updatedPredicate = update(
-			predicate,
-			{ values: { [index]: { $set: updated } } }
-		);
-		props.onChange(updatedPredicate);
+		this._updateArrayIndex('values', index, updated);
 	},
 
 	render() {
@@ -859,16 +890,14 @@ const CredPredicate = React.createClass({
 		return <div>
 			{renderSubjObj(predicate.values[0], 0)}
 			<span> </span>
-			<span>
-				<RelationSelectize
-					options={relationTypes}
-					value={relationsMap[predicate.relationType]}
-					onChange={this.handleRelationChange}
-				/>
-			</span>
+			<RelationSelectize
+				options={relationTypes}
+				value={relationsMap[predicate.relationType]}
+				onChange={this.handleRelationChange}
+			/>
 			<span> </span>
 			{renderSubjObj(predicate.values[1], 1)}
-			<span> <a href='#' onClick={props.onRemove}>remove</a></span>
+			<span> <RemoveButton onRemove={props.onRemove} /></span>
 		</div>;
 	},
 });
@@ -894,71 +923,59 @@ const PolicyEditor = React.createClass({
 		};
 	},
 
-	handleChange(...args) {
-		this.props.onChange(...args);
-	},
-
-	handleRemove() {
-		this.props.onRemove();
+	_add(event, type) {
+		if (event) { event.preventDefault(); }
+		this.props.onChange(
+			addToPolicy(
+				this.props.policy,
+				type,
+				empty[type]
+			)
+		);
 	},
 
 	addLocation(event) {
-		if (event) { event.preventDefault(); }
-		const policy = this.props.policy;
-		const updatedPolicy = _add('credLocation', policy, emptyCredLocation);
-		this.handleChange(updatedPolicy);
+		this._add(event, 'credLocation');
 	},
 
 	addData(event) {
-		if (event) { event.preventDefault(); }
-		const policy = this.props.policy;
-		const updatedPolicy = _add('credData', policy, emptyCredData);
-		this.handleChange(updatedPolicy);
+		this._add(event, 'credData');
 	},
 
 	addItem(event) {
-		if (event) { event.preventDefault(); }
-		const policy = this.props.policy;
-		const updatedPolicy = _add('credItem', policy, emptyCredItem);
-		this.handleChange(updatedPolicy);
+		this._add(event, 'credItem');
 	},
 
 	addPredicate(event) {
-		if (event) { event.preventDefault(); }
-		const policy = this.props.policy;
-		const updatedPolicy = _add('credPredicate', policy, emptyCredPredicate);
-		this.handleChange(updatedPolicy);
+		this._add(event, 'credPredicate');
+	},
+
+	_updateField(fieldName, updatedValue) {
+		__updateField(
+			this.props.onChange,
+			this.props.policy,
+			[fieldName, updatedValue]
+		);
+	},
+
+	_updateArrayIndex(fieldName, index, updatedValue) {
+		__updateArrayIndex(
+			this.props.onChange,
+			this.props.policy,
+			[fieldName, index, updatedValue]
+		);
 	},
 
 	atLocationsChanged(locationIds) {
-		const { policy } = this.props;
-		const updatedPolicy = update(
-			policy,
-			{ atLocations: { $set: locationIds } }
-		);
-		this.handleChange(updatedPolicy);
+		this._updateField('atLocations', locationIds);
 	},
 
 	credentialsChanged(credentials) {
-		const { policy } = this.props;
-		const updatedPolicy = update(
-			policy,
-			{ credentials: { $set: credentials } }
-		);
-		this.handleChange(updatedPolicy);
+		this._updateField('credentials', credentials);
 	},
 
 	enabledActionChanged(index, action) {
-		const { policy } = this.props;
-		const updatedPolicy = update(
-			policy,
-			{
-				enabled: {
-					[index]: { $set: action }
-				}
-			}
-		);
-		this.handleChange(updatedPolicy);
+		this._updateArrayIndex('enabled', index, action);
 	},
 
 	render() {
@@ -967,10 +984,10 @@ const PolicyEditor = React.createClass({
 
 		return <div>
 			<div>
-				<a href='#' onClick={this.handleRemove}>delete policy</a>
+				<a href='#' onClick={props.onRemove}>delete policy</a>
 			</div>
 			<div>
-				{policy.id}
+				id: {policy.id}
 			</div>
 
 			<div>
