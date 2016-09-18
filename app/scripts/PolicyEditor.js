@@ -147,20 +147,24 @@ const VariableOrSelectize = React.createClass({
 
 	toggleType(event) {
 		// if (event) { event.preventDefault(); }
-		const { props } = this;
-		const updated = (props.data.type === 'variable')
-			? update(props.data, { type: { $set: 'value' } })
-			: update(props.data, { type: { $set: 'variable' } });
-		props.onChange(updated);
+		const newType = (this.props.data.type === 'variable')
+			? 'value'
+			: 'variable';
+		this._updateField('type', newType);
 	},
 
 	updateValue(newVal) {
-		const { props } = this;
-		const updated = update(
-			props.data,
-			{ value: { $set: newVal } }
+		this._updateField('value', newVal);
+	},
+
+	_updateField(fieldName, updatedValue) {
+		this.props.onChange(
+			updateFieldInObject(
+				this.props.data,
+				fieldName,
+				updatedValue
+			)
 		);
-		props.onChange(updated);
 	},
 
 	render() {
@@ -305,7 +309,6 @@ const EnabledAction = React.createClass({
 	},
 
 	render() {
-		const { props } = this;
 		const actionType = this.getType();
 
 		return <div>
@@ -352,105 +355,68 @@ const Credentials = React.createClass({
 	},
 
 	handleChangeCredLocation(index, locationId) {
-		const { credentials, onChange } = this.props;
-		const updatedCredentials = update(
-			credentials,
-			{
-				credLocation: {
-					[index]: {
-						id: { $set: locationId }
-					}
-				}
-			}
-		);
-		onChange(updatedCredentials);
+		this._updateArrayIndex('credLocation', index, locationId);
 	},
 
 	handleRemoveCredLocation(index) {
-		const { credentials, onChange } = this.props;
-		const updatedCredentials = Object.assign(
-			{},
-			credentials,
-			{
-				credLocation: R.remove(index, 1, credentials.credLocation)
-			}
+		this._updateField(
+			'credLocation',
+			R.remove(index, 1, this.props.credentials.credLocation)
 		);
-		onChange(updatedCredentials);
 	},
 
-	handleChangeCredPredicate(index, updatedPredicate) {
-		const { credentials, onChange } = this.props;
-		const updatedCredentials = update(
-			credentials,
-			{
-				credPredicate: {
-					[index]: { $set: updatedPredicate }
-				}
-			}
-		);
-		onChange(updatedCredentials);
+	handleChangeCredPredicate(index, updated) {
+		this._updateArrayIndex('credPredicate', index, updated);
 	},
 
 	handleRemoveCredPredicate(index) {
-		const { credentials, onChange } = this.props;
-		const updatedCredentials = Object.assign(
-			{},
-			credentials,
-			{
-				credPredicate: R.remove(index, 1, credentials.credPredicate)
-			}
+		this._updateField(
+			'credPredicate',
+			R.remove(index, 1, this.props.credentials.credPredicate)
 		);
-		onChange(updatedCredentials);
 	},
 
-	handleChangeCredData(index, updatedData) {
-		const { credentials, onChange } = this.props;
-		const updatedCredentials = update(
-			credentials,
-			{
-				credData: {
-					[index]: { $set: updatedData }
-				}
-			}
-		);
-		onChange(updatedCredentials);
+	handleChangeCredData(index, updated) {
+		this._updateArrayIndex('credData', index, updated);
 	},
 
 	handleRemoveCredData(index) {
-		const { credentials, onChange } = this.props;
-		const updatedCredentials = Object.assign(
-			{},
-			credentials,
-			{
-				credData: R.remove(index, 1, credentials.credData)
-			}
+		this._updateField(
+			'credData',
+			R.remove(index, 1, this.props.credentials.credData)
 		);
-		onChange(updatedCredentials);
 	},
 
-	handleChangeCredItem(index, updatedItem) {
-		const { credentials, onChange } = this.props;
-		const updatedCredentials = update(
-			credentials,
-			{
-				credItem: {
-					[index]: { $set: updatedItem }
-				}
-			}
-		);
-		onChange(updatedCredentials);
+	handleChangeCredItem(index, updated) {
+		this._updateArrayIndex('credItem', index, updated);
 	},
 
 	handleRemoveCredItem(index) {
-		const { credentials, onChange } = this.props;
-		const updatedCredentials = Object.assign(
-			{},
-			credentials,
-			{
-				credItem: R.remove(index, 1, credentials.credItem)
-			}
+		this._updateField(
+			'credItem',
+			R.remove(index, 1, this.props.credentials.credItem)
 		);
-		onChange(updatedCredentials);
+	},
+
+	_updateField(fieldName, updatedValue) {
+		this.props.onChange(
+			updateFieldInObject(
+				this.props.credentials,
+				fieldName,
+				updatedValue
+			)
+		);
+	},
+
+	_updateArrayIndex(fieldName, index, updatedValue) {
+		this.props.onChange(
+			updateArrayIndexInObject(
+				this.props.credentials,
+				fieldName,
+				index,
+				updatedValue
+			)
+		);
 	},
 
 	render() {
@@ -648,48 +614,48 @@ const CredData = React.createClass({
 	},
 
 	handleValueChange(updated, index) {
-		const props = this.props;
-		const { data } = props;
-		const updatedData = update(
-			data,
-			{ values: { [index]: { $set: updated } } }
-		);
-		props.onChange(updatedData);
+		this._updateArrayIndex('values', index, updated);
 	},
 
 	handleRemoveValue(index) {
-		const props = this.props;
-		const { data } = props;
-		const updatedData = update(
-			data,
-			{ values: { $set: R.remove(index, 1, data.values) } }
+		this._updateField(
+			'values',
+			R.remove(index, 1, this.props.data.values)
 		);
-		props.onChange(updatedData);
 	},
 
 	handleAddValue() {
-		const props = this.props;
-		const { data } = props;
 		const values = [
-			...data.values,
+			...this.props.data.values,
 			emptyValue
 		];
-		const updatedData = update(
-			data,
-			{ values: { $set: values } }
-		);
-		props.onChange(updatedData);
+		this._updateField('values', values);
 	},
 
 	handleNameChange(event) {
-		const props = this.props;
-		const { data } = props;
 		const name = event.target.value;
-		const updatedData = update(
-			data,
-			{ name: { $set: name } }
+		this._updateField('name', name);
+	},
+
+	_updateField(fieldName, updatedValue) {
+		this.props.onChange(
+			updateFieldInObject(
+				this.props.data,
+				fieldName,
+				updatedValue
+			)
 		);
-		props.onChange(updatedData);
+	},
+
+	_updateArrayIndex(fieldName, index, updatedValue) {
+		this.props.onChange(
+			updateArrayIndexInObject(
+				this.props.data,
+				fieldName,
+				index,
+				updatedValue
+			)
+		);
 	},
 
 	render() {
@@ -742,62 +708,58 @@ const CredItem = React.createClass({
 	},
 
 	handleNameChange(event) {
-		const props = this.props;
-		const { item } = props;
 		const name = event.target.value;
-		const updatedItem = update(
-			item,
-			{ name: { $set: name } }
-		);
-		props.onChange(updatedItem);
+		this._updateField('name', name);
 	},
 
 	handleValueChange(updated, index) {
-		const props = this.props;
-		const { item } = props;
-		const updatedItem = update(
-			item,
-			{ values: { [index]: { $set: updated } } }
-		);
-		props.onChange(updatedItem);
+		this._updateArrayIndex('values', index, updated);
 	},
 
 	handleRemoveValue(index) {
-		const props = this.props;
-		const { item } = props;
-		const updatedItem = update(
-			item,
-			{ values: { $set: R.remove(index, 1, item.values) } }
+		this._updateField(
+			'values',
+			R.remove(index, 1, this.props.item.values)
 		);
-		props.onChange(updatedItem);
 	},
 
 	handleAddValueItem() {
-		const props = this.props;
-		const { item } = props;
-		const values = [
-			...item.values,
-			_.merge({ type: 'credItem' }, emptyCredItem)
-		];
-		const updatedItem = update(
-			item,
-			{ values: { $set: values } }
-		);
-		props.onChange(updatedItem);
+		this._handleAdd('credItem');
 	},
 
 	handleAddValueData() {
+		this._handleAdd('credData');
+	},
+
+	_updateField(fieldName, updatedValue) {
+		this.props.onChange(
+			updateFieldInObject(
+				this.props.item,
+				fieldName,
+				updatedValue
+			)
+		);
+	},
+
+	_updateArrayIndex(fieldName, index, updatedValue) {
+		this.props.onChange(
+			updateArrayIndexInObject(
+				this.props.item,
+				fieldName,
+				index,
+				updatedValue
+			)
+		);
+	},
+
+	_handleAdd(type) {
 		const props = this.props;
 		const { item } = props;
 		const values = [
 			...item.values,
-			_.merge({ type: 'credData' }, emptyCredData)
+			_.merge({ type }, empty[type])
 		];
-		const updatedItem = update(
-			item,
-			{ values: { $set: values } }
-		);
-		props.onChange(updatedItem);
+		this._updateField('values', values);
 	},
 
 	render() {
@@ -865,24 +827,33 @@ const CredPredicate = React.createClass({
 		};
 	},
 
-	handleRelationChange(name, relation) {
-		const props = this.props;
-		const { predicate } = props;
-		const updatedPredicate = update(
-			predicate,
-			{ relationType: { $set: relation } }
+	_updateField(fieldName, updatedValue) {
+		this.props.onChange(
+			updateFieldInObject(
+				this.props.predicate,
+				fieldName,
+				updatedValue
+			)
 		);
-		props.onChange(updatedPredicate);
+	},
+
+	_updateArrayIndex(fieldName, index, updatedValue) {
+		this.props.onChange(
+			updateArrayIndexInObject(
+				this.props.predicate,
+				fieldName,
+				index,
+				updatedValue
+			)
+		);
+	},
+
+	handleRelationChange(name, relation) {
+		this._updateField('relationType', relation);
 	},
 
 	handleValueChange(updated, index) {
-		const props = this.props;
-		const { predicate } = props;
-		const updatedPredicate = update(
-			predicate,
-			{ values: { [index]: { $set: updated } } }
-		);
-		props.onChange(updatedPredicate);
+		this._updateArrayIndex('values', index, updated);
 	},
 
 	render() {
