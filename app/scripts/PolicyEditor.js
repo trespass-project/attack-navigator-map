@@ -133,6 +133,16 @@ function addToPolicy(policy, type, data) {
 }
 
 
+function _renderValue(nodes, valueKey='value', item) {
+	const node = nodes[item[valueKey]];
+	return (!node)
+		? null
+		: <ComponentReference modelComponent={node}>
+			{node.label}
+		</ComponentReference>;
+}
+
+
 const RemoveButton = React.createClass({
 	propTypes: {
 		onRemove: React.PropTypes.func.isRequired,
@@ -193,14 +203,10 @@ const VariableOrSelectize = React.createClass({
 		const isVariable = (props.data.type === 'variable');
 
 		const valueKey = 'id';
-		// TODO: DRY
-		const renderValue = (item) => {
-			const node = props.nodes[item[valueKey]];
-			if (!node) { return null; }
-			return <ComponentReference modelComponent={node}>
-				{node.label}
-			</ComponentReference>;
-		};
+		const renderValue = R.partial(
+			_renderValue,
+			[props.nodes, valueKey]
+		);
 
 		const variable = <span>
 			<input
@@ -271,14 +277,11 @@ const AtLocations = React.createClass({
 				};
 			});
 
-		// TODO: DRY
-		const renderValue = (item) => {
-			const node = props.nodes[item[/*valueKey*/ 'value']];
-			if (!node) { return null; }
-			return <ComponentReference modelComponent={node}>
-				{node.label}
-			</ComponentReference>;
-		};
+		const valueKey = 'value';
+		const renderValue = R.partial(
+			_renderValue,
+			[props.nodes, valueKey]
+		);
 
 		return <div>
 			<div><b>at locations</b></div>
@@ -589,13 +592,11 @@ const CredLocation = React.createClass({
 			label: locationId,
 		};
 
-		const renderValue = (item) => {
-			const node = props.nodes[item[/*valueKey*/ 'value']];
-			if (!node) { return null; }
-			return <ComponentReference modelComponent={node}>
-				{node.label}
-			</ComponentReference>;
-		};
+		const valueKey = 'value';
+		const renderValue = R.partial(
+			_renderValue,
+			[props.nodes, valueKey]
+		);
 
 		return <div>
 			<SelectizeDropdown
