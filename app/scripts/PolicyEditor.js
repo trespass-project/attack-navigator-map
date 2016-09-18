@@ -77,6 +77,26 @@ function updateArrayIndexInObject(obj, fieldName, index, updatedValue) {
 }
 
 
+function __updateField(onChange, obj, params) {
+	onChange(
+		updateFieldInObject(
+			obj,
+			...params
+		)
+	);
+}
+
+
+function __updateArrayIndex(onChange, obj, params) {
+	onChange(
+		updateArrayIndexInObject(
+			obj,
+			...params
+		)
+	);
+}
+
+
 function defaultCredentials(credentials) {
 	return _.defaults(
 		credentials,
@@ -158,12 +178,10 @@ const VariableOrSelectize = React.createClass({
 	},
 
 	_updateField(fieldName, updatedValue) {
-		this.props.onChange(
-			updateFieldInObject(
-				this.props.data,
-				fieldName,
-				updatedValue
-			)
+		__updateField(
+			this.props.onChange,
+			this.props.data,
+			[fieldName, updatedValue]
 		);
 	},
 
@@ -399,23 +417,18 @@ const Credentials = React.createClass({
 	},
 
 	_updateField(fieldName, updatedValue) {
-		this.props.onChange(
-			updateFieldInObject(
-				this.props.credentials,
-				fieldName,
-				updatedValue
-			)
+		__updateField(
+			this.props.onChange,
+			this.props.credentials,
+			[fieldName, updatedValue]
 		);
 	},
 
 	_updateArrayIndex(fieldName, index, updatedValue) {
-		this.props.onChange(
-			updateArrayIndexInObject(
-				this.props.credentials,
-				fieldName,
-				index,
-				updatedValue
-			)
+		__updateArrayIndex(
+			this.props.onChange,
+			this.props.credentials,
+			[fieldName, index, updatedValue]
 		);
 	},
 
@@ -638,23 +651,18 @@ const CredData = React.createClass({
 	},
 
 	_updateField(fieldName, updatedValue) {
-		this.props.onChange(
-			updateFieldInObject(
-				this.props.data,
-				fieldName,
-				updatedValue
-			)
+		__updateField(
+			this.props.onChange,
+			this.props.data,
+			[fieldName, updatedValue]
 		);
 	},
 
 	_updateArrayIndex(fieldName, index, updatedValue) {
-		this.props.onChange(
-			updateArrayIndexInObject(
-				this.props.data,
-				fieldName,
-				index,
-				updatedValue
-			)
+		__updateArrayIndex(
+			this.props.onChange,
+			this.props.data,
+			[fieldName, index, updatedValue]
 		);
 	},
 
@@ -732,23 +740,18 @@ const CredItem = React.createClass({
 	},
 
 	_updateField(fieldName, updatedValue) {
-		this.props.onChange(
-			updateFieldInObject(
-				this.props.item,
-				fieldName,
-				updatedValue
-			)
+		__updateField(
+			this.props.onChange,
+			this.props.item,
+			[fieldName, updatedValue]
 		);
 	},
 
 	_updateArrayIndex(fieldName, index, updatedValue) {
-		this.props.onChange(
-			updateArrayIndexInObject(
-				this.props.item,
-				fieldName,
-				index,
-				updatedValue
-			)
+		__updateArrayIndex(
+			this.props.onChange,
+			this.props.item,
+			[fieldName, index, updatedValue]
 		);
 	},
 
@@ -828,23 +831,18 @@ const CredPredicate = React.createClass({
 	},
 
 	_updateField(fieldName, updatedValue) {
-		this.props.onChange(
-			updateFieldInObject(
-				this.props.predicate,
-				fieldName,
-				updatedValue
-			)
+		__updateField(
+			this.props.onChange,
+			this.props.predicate,
+			[fieldName, updatedValue]
 		);
 	},
 
 	_updateArrayIndex(fieldName, index, updatedValue) {
-		this.props.onChange(
-			updateArrayIndexInObject(
-				this.props.predicate,
-				fieldName,
-				index,
-				updatedValue
-			)
+		__updateArrayIndex(
+			this.props.onChange,
+			this.props.predicate,
+			[fieldName, index, updatedValue]
 		);
 	},
 
@@ -939,23 +937,18 @@ const PolicyEditor = React.createClass({
 	},
 
 	_updateField(fieldName, updatedValue) {
-		this.props.onChange(
-			updateFieldInObject(
-				this.props.policy,
-				fieldName,
-				updatedValue
-			)
+		__updateField(
+			this.props.onChange,
+			this.props.policy,
+			[fieldName, updatedValue]
 		);
 	},
 
 	_updateArrayIndex(fieldName, index, updatedValue) {
-		this.props.onChange(
-			updateArrayIndexInObject(
-				this.props.policy,
-				fieldName,
-				index,
-				updatedValue
-			)
+		__updateArrayIndex(
+			this.props.onChange,
+			this.props.policy,
+			[fieldName, index, updatedValue]
 		);
 	},
 
