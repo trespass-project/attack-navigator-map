@@ -110,6 +110,25 @@ function addToPolicy(policy, type, data) {
 }
 
 
+const RemoveButton = React.createClass({
+	propTypes: {
+		onRemove: React.PropTypes.func.isRequired,
+	},
+
+	handleRemove(event) {
+		event.preventDefault();
+		this.props.onRemove();
+	},
+
+	render() {
+		return <a
+			href='#'
+			onClick={this.props.onRemove}
+		>remove</a>;
+	}
+});
+
+
 const VariableOrSelectize = React.createClass({
 	propTypes: {
 		data: React.PropTypes.object.isRequired,
@@ -193,7 +212,7 @@ const VariableOrSelectize = React.createClass({
 				: selectize
 			}
 			{(props.onRemove) &&
-				<span> <a href='#' onClick={props.onRemove}>remove</a></span>
+				<span> <RemoveButton onRemove={props.onRemove} /></span>
 			}
 		</div>;
 	},
@@ -607,7 +626,7 @@ const CredLocation = React.createClass({
 				onChange={props.onChange/*(name, values)*/}
 				extraProps={{ renderValue }}
 			/>
-			<span> <a href='#' onClick={props.onRemove}>remove</a></span>
+			<span> <RemoveButton onRemove={props.onRemove} /></span>
 		</div>;
 	},
 });
@@ -701,7 +720,7 @@ const CredData = React.createClass({
 				})
 			}
 			<span> <a href='#' onClick={this.handleAddValue}>add value</a>,</span>
-			<span> <a href='#' onClick={props.onRemove}>remove</a></span>
+			<span> <RemoveButton onRemove={props.onRemove} /></span>
 		</div>;
 	},
 });
@@ -823,7 +842,7 @@ const CredItem = React.createClass({
 			}
 			<span> <a href='#' onClick={this.handleAddValueItem}>add item</a>,</span>
 			<span> <a href='#' onClick={this.handleAddValueData}>add data</a>,</span>
-			<span> <a href='#' onClick={props.onRemove}>remove</a></span>
+			<span> <RemoveButton onRemove={props.onRemove} /></span>
 		</div>;
 	},
 });
@@ -895,7 +914,7 @@ const CredPredicate = React.createClass({
 			</span>
 			<span> </span>
 			{renderSubjObj(predicate.values[1], 1)}
-			<span> <a href='#' onClick={props.onRemove}>remove</a></span>
+			<span> <RemoveButton onRemove={props.onRemove} /></span>
 		</div>;
 	},
 });
