@@ -931,22 +931,20 @@ const PolicyEditor = React.createClass({
 		this._add(event, 'credPredicate');
 	},
 
-	atLocationsChanged(locationIds) {
-		const { policy } = this.props;
+	_updateField(fieldName, updatedValue) {
 		const updatedPolicy = update(
-			policy,
-			{ atLocations: { $set: locationIds } }
+			this.props.policy,
+			{ [fieldName]: { $set: updatedValue } }
 		);
 		this.handleChange(updatedPolicy);
 	},
 
+	atLocationsChanged(locationIds) {
+		this._updateField('atLocations', locationIds);
+	},
+
 	credentialsChanged(credentials) {
-		const { policy } = this.props;
-		const updatedPolicy = update(
-			policy,
-			{ credentials: { $set: credentials } }
-		);
-		this.handleChange(updatedPolicy);
+		this._updateField('credentials', credentials);
 	},
 
 	enabledActionChanged(index, action) {
