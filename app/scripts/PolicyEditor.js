@@ -11,6 +11,9 @@ const ComponentReference = require('./ComponentReference.js');
 
 const noop = () => {};
 
+const lightGrey = 'rgb(245, 245, 245)';
+const padding = 20;
+
 
 const emptyValue = {
 	type: 'variable',
@@ -279,7 +282,7 @@ const AtLocations = React.createClass({
 
 		return <div>
 			<div><b>at locations</b></div>
-			<div style={{ paddingLeft: 20 }}>
+			<div style={{ paddingLeft: padding }}>
 				<SelectizeDropdown
 					multi={true}
 					name='locations'
@@ -334,7 +337,7 @@ const EnabledAction = React.createClass({
 				<b>enabled action</b>
 			</div>
 
-			<div style={{ paddingLeft: 20 }}>
+			<div style={{ paddingLeft: padding }}>
 				<select
 					value={actionType}
 					onChange={this.changeActionType}
@@ -442,7 +445,7 @@ const Credentials = React.createClass({
 		return <div>
 			<div><b>credentials</b></div>
 
-			<div style={{ paddingLeft: 20 }}>
+			<div style={{ paddingLeft: padding }}>
 				<div>
 					<div>
 						<span>cred. locations </span>
@@ -451,7 +454,7 @@ const Credentials = React.createClass({
 							onClick={props.addLocation}
 						>add</a>
 					</div>
-					<div style={{ background: 'rgb(245, 245, 245)', paddingLeft: 20 }}>
+					<div style={{ background: lightGrey, paddingLeft: padding }}>
 						{credLocation.map((credLoc, index) => {
 							return <CredLocation
 								key={index}
@@ -480,7 +483,7 @@ const Credentials = React.createClass({
 							onClick={props.addPredicate}
 						>add</a>
 					</div>
-					<div style={{ background: 'rgb(245, 245, 245)', paddingLeft: 20 }}>
+					<div style={{ background: lightGrey, paddingLeft: padding }}>
 						{credPredicate.map((credPred, index) => {
 							return <CredPredicate
 								key={index}
@@ -510,7 +513,7 @@ const Credentials = React.createClass({
 							onClick={props.addData}
 						>add</a>
 					</div>
-					<div style={{ background: 'rgb(245, 245, 245)', paddingLeft: 20 }}>
+					<div style={{ background: lightGrey, paddingLeft: padding }}>
 						{credData.map((credData, index) => {
 							return <CredData
 								key={index}
@@ -538,7 +541,7 @@ const Credentials = React.createClass({
 							onClick={props.addItem}
 						>add</a>
 					</div>
-					<div style={{ background: 'rgb(245, 245, 245)', paddingLeft: 20 }}>
+					<div style={{ background: lightGrey, paddingLeft: padding }}>
 						{credItem.map((credItem, index) => {
 							return <CredItem
 								key={index}
@@ -756,10 +759,8 @@ const CredItem = React.createClass({
 	},
 
 	_handleAdd(type) {
-		const props = this.props;
-		const { item } = props;
 		const values = [
-			...item.values,
+			...this.props.item.values,
 			_.merge({ type }, empty[type])
 		];
 		this._updateField('values', values);
@@ -874,13 +875,11 @@ const CredPredicate = React.createClass({
 		return <div>
 			{renderSubjObj(predicate.values[0], 0)}
 			<span> </span>
-			<span>
-				<RelationSelectize
-					options={relationTypes}
-					value={relationsMap[predicate.relationType]}
-					onChange={this.handleRelationChange}
-				/>
-			</span>
+			<RelationSelectize
+				options={relationTypes}
+				value={relationsMap[predicate.relationType]}
+				onChange={this.handleRelationChange}
+			/>
 			<span> </span>
 			{renderSubjObj(predicate.values[1], 1)}
 			<span> <RemoveButton onRemove={props.onRemove} /></span>
