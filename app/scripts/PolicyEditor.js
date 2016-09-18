@@ -41,6 +41,13 @@ const emptyCredItem = {
 	],
 };
 
+const empty = {
+	'credLocation': emptyCredLocation,
+	'credData': emptyCredData,
+	'credItem': emptyCredItem,
+	'credPredicate': emptyCredPredicate,
+};
+
 
 const actionTypes = [
 	'in',
@@ -63,7 +70,7 @@ function defaultCredentials(credentials) {
 }
 
 
-function _add(type, policy, data) {
+function addToPolicy(policy, type, data) {
 	const updateData = {
 		[type]: { $push: [data] },
 	};
@@ -73,12 +80,12 @@ function _add(type, policy, data) {
 			policy,
 			{
 				// set defaults first, before we try to push stuff into it
-				credentials: { $set: defaultCredentials(policy.credentials) }
+				credentials: {
+					$set: defaultCredentials(policy.credentials)
+				}
 			}
 		),
-		{
-			credentials: updateData,
-		}
+		{ credentials: updateData }
 	);
 }
 
@@ -898,36 +905,30 @@ const PolicyEditor = React.createClass({
 		this.props.onChange(...args);
 	},
 
-	handleRemove() {
-		this.props.onRemove();
+	_add(event, type) {
+		if (event) { event.preventDefault(); }
+		const updatedPolicy = addToPolicy(
+			this.props.policy,
+			type,
+			empty[type]
+		);
+		this.handleChange(updatedPolicy);
 	},
 
 	addLocation(event) {
-		if (event) { event.preventDefault(); }
-		const policy = this.props.policy;
-		const updatedPolicy = _add('credLocation', policy, emptyCredLocation);
-		this.handleChange(updatedPolicy);
+		this._add(event, 'credLocation');
 	},
 
 	addData(event) {
-		if (event) { event.preventDefault(); }
-		const policy = this.props.policy;
-		const updatedPolicy = _add('credData', policy, emptyCredData);
-		this.handleChange(updatedPolicy);
+		this._add(event, 'credData');
 	},
 
 	addItem(event) {
-		if (event) { event.preventDefault(); }
-		const policy = this.props.policy;
-		const updatedPolicy = _add('credItem', policy, emptyCredItem);
-		this.handleChange(updatedPolicy);
+		this._add(event, 'credItem');
 	},
 
 	addPredicate(event) {
-		if (event) { event.preventDefault(); }
-		const policy = this.props.policy;
-		const updatedPolicy = _add('credPredicate', policy, emptyCredPredicate);
-		this.handleChange(updatedPolicy);
+		this._add(event, 'credPredicate');
 	},
 
 	atLocationsChanged(locationIds) {
@@ -967,7 +968,7 @@ const PolicyEditor = React.createClass({
 
 		return <div>
 			<div>
-				<a href='#' onClick={this.handleRemove}>delete policy</a>
+				<a href='#' onClick={props.onRemove}>delete policy</a>
 			</div>
 			<div>
 				{policy.id}
