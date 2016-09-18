@@ -940,13 +940,9 @@ const PolicyEditor = React.createClass({
 		};
 	},
 
-	handleChange(...args) {
-		this.props.onChange(...args);
-	},
-
 	_add(event, type) {
 		if (event) { event.preventDefault(); }
-		this.handleChange(
+		this.props.onChange(
 			addToPolicy(
 				this.props.policy,
 				type,
@@ -972,7 +968,7 @@ const PolicyEditor = React.createClass({
 	},
 
 	_updateField(fieldName, updatedValue) {
-		this.handleChange(
+		this.props.onChange(
 			updateFieldInObject(
 				this.props.policy,
 				fieldName,
@@ -982,7 +978,7 @@ const PolicyEditor = React.createClass({
 	},
 
 	_updateArrayIndex(fieldName, index, updatedValue) {
-		this.handleChange(
+		this.props.onChange(
 			updateArrayIndexInObject(
 				this.props.policy,
 				fieldName,
