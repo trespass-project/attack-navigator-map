@@ -64,6 +64,8 @@ function mapStateToProps(_state) {
 	props.locationOptions = selectors.locationOptions(state);
 	props.nodesWithPolicies = selectors.nodesWithPolicies(state);
 
+	props.displayLayersList = selectors.displayLayersList(state);
+
 	// validation
 	props.validation = {
 		componentWarnings: selectors.getNodeWarnings(props),

@@ -15,6 +15,7 @@ const getComponentsLib = (state) => state.componentsLib;
 const getAttackerProfile = (state) => state.attackerProfile;
 const getAttackerProfiles = (state) => state.attackerProfiles;
 const getResultsAttacktree = (state) => state.resultsAttacktree;
+const getAvailableLayersList = (state) => state.availableLayersList;
 
 
 // const resultsAttacktreeIdHistogram =
@@ -198,5 +199,17 @@ module.exports.nodesWithPolicies = createSelector(
 				});
 				return acc;
 			}, {});
+	}
+);
+
+
+const notEmpty = R.complement(_.isEmpty);
+
+// const displayLayersList =
+module.exports.displayLayersList = createSelector(
+	getAvailableLayersList,
+	(layers) => {
+		return layers
+			.filter((item) => notEmpty(item.displayName));
 	}
 );
