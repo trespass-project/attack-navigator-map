@@ -10,6 +10,9 @@ let LibraryItem = React.createClass({
 	propTypes: {
 		data: React.PropTypes.object.isRequired,
 		showType: React.PropTypes.bool,
+		deletable: React.PropTypes.bool,
+		x: React.PropTypes.element,
+		onRemove: React.PropTypes.func,
 		// injected by react dnd:
 		isDragging: React.PropTypes.bool.isRequired,
 		connectDragSource: React.PropTypes.func.isRequired
@@ -23,25 +26,42 @@ let LibraryItem = React.createClass({
 	getDefaultProps() {
 		return {
 			showType: false,
+			deletable: false,
+			x: <span>delete</span>,
+			onRemove: () => {},
 		};
+	},
+
+	handleClickRemove(event) {
+		event.preventDefault();
+		this.props.onRemove();
 	},
 
 	renderType() {
 		const props = this.props;
 		if (!props.showType) { return null; }
 
-		return <div className='badge'>
+		return <span className='badge'>
 			{props.data.modelComponentType}
-		</div>;
+		</span>;
 	},
 
 	render() {
 		const props = this.props;
 		const connectDragSource = props.connectDragSource;
 		return connectDragSource(
-			<li key={props.data.label} className='list-group-item'>
-				{this.renderType()}
-				<div>{props.data.label}</div>
+			<li key={props.data.label} className='list-group-item clearfix'>
+				<div style={{ float: 'left' }}>
+					{this.renderType()}
+					<span>{props.data.label}</span>
+				</div>
+				<div
+					style={{ float: 'right' }}
+					className='remove'
+					onClick={this.handleClickRemove}
+				>
+					{(props.deletable) && props.x}
+				</div>
 			</li>
 		);
 	},

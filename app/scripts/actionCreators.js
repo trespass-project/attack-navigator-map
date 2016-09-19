@@ -1787,6 +1787,22 @@ function saveMapAsModelPattern() {
 };
 
 
+const deleteModelPattern =
+module.exports.deleteModelPattern =
+function deleteModelPattern(modelId, patternId) {
+	return (dispatch, getState) => {
+		knowledgebaseApi.deleteModelPattern(axios, modelId, patternId)
+			.then(() => {
+				console.info('removed pattern');
+				dispatch(
+					fetchKbData(modelId)
+				);
+			})
+			.catch(handleError);
+	};
+};
+
+
 const loadModelPatterns =
 module.exports.loadModelPatterns =
 function loadModelPatterns(modelId) {

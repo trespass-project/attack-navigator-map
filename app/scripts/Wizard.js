@@ -260,6 +260,15 @@ const Wizard = React.createClass({
 					items={props.modelPatterns}
 					key={'locations-patterns'}
 					title='patterns'
+					deletable={true}
+					onRemove={(id) => {
+						this.context.dispatch(
+							actionCreators.deleteModelPattern(
+								this.props.metadata.id,
+								id
+							)
+						);
+					}}
 				/>
 			</div>
 		</div>;
