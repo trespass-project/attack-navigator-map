@@ -162,7 +162,7 @@ const RemoveButton = React.createClass({
 });
 
 
-const NameInput = React.createClass({
+const TextInput = React.createClass({
 	propTypes: {
 		value: React.PropTypes.string,
 		onChange: React.PropTypes.func.isRequired,
@@ -173,7 +173,6 @@ const NameInput = React.createClass({
 
 		return <input
 			type='text'
-			name='name'
 			value={props.value || ''}
 			onChange={(event) => {
 				const newVal = event.target.value;
@@ -231,7 +230,7 @@ const VariableOrSelectize = React.createClass({
 		);
 
 		const variable = <span>
-			<NameInput
+			<TextInput
 				value={props.data.value}
 				onChange={this.updateValue}
 			/>
@@ -692,8 +691,8 @@ const CredData = React.createClass({
 		const { data } = props;
 
 		return <div>
-			<NameInput
-				value={props.data.value}
+			<TextInput
+				value={data.name}
 				onChange={this.handleNameChange}
 			/>
 			<span> </span>
@@ -787,8 +786,8 @@ const CredItem = React.createClass({
 		const { item } = props;
 
 		return <div>
-			<NameInput
-				value={props.data.value}
+			<TextInput
+				value={item.name}
 				onChange={this.handleNameChange}
 			/>
 			<span> </span>
