@@ -1,6 +1,5 @@
 const React = require('react');
 const $ = require('jquery');
-const _ = require('lodash');
 const R = require('ramda');
 const utils = require('../../utils.js');
 const LibraryItem = require('./LibraryItem.js');
@@ -12,16 +11,18 @@ const Library = React.createClass({
 		title: React.PropTypes.string.isRequired,
 		renderItem: React.PropTypes.func,
 		showFilter: React.PropTypes.bool,
-		// modelComponentTypes: React.PropTypes.array.isRequired,
-		// modelComponentTypesFilter: React.PropTypes.array.isRequired,
+
+		modelComponentTypes: React.PropTypes.array,
+		modelComponentTypesFilter: React.PropTypes.array,
 	},
 
 	getDefaultProps() {
 		return {
 			renderItem: this.renderListItem,
 			showFilter: false,
-			// modelComponentTypes: [],
-			// modelComponentTypesFilter: [],
+
+			modelComponentTypes: [],
+			modelComponentTypesFilter: [],
 		};
 	},
 
@@ -70,17 +71,9 @@ const Library = React.createClass({
 
 	renderListItem(item, index) {
 		const props = this.props;
-		let onClick = null;
-		if (_.isFunction(props.onClick)) {
-			onClick = (event) => {
-				props.onClick(item);
-			};
-		}
 
 		return (
 			<LibraryItem
-				{...props}
-				onClick={onClick}
 				key={item.id || index}
 				data={item}
 				showType={props.showFilter}
