@@ -4,6 +4,7 @@ const R = require('ramda');
 const mout = require('mout');
 const classnames = require('classnames');
 import { createSelector } from 'reselect';
+const PureRenderMixin = require('react-addons-pure-render-mixin');
 const icons = require('./icons.js');
 const helpers = require('./helpers.js');
 const modelHelpers = require('./model-helpers.js');
@@ -89,6 +90,8 @@ const Edge = React.createClass({
 		theme: React.PropTypes.object,
 		dispatch: React.PropTypes.func,
 	},
+
+	mixins: [PureRenderMixin],
 
 	propTypes: {
 		// TODO: remove graph dependency

@@ -46,7 +46,7 @@ const Node = React.createClass({
 		dispatch: React.PropTypes.func,
 	},
 
-	mixins: [SchleppMixin],
+	mixins: [PureRenderMixin, SchleppMixin],
 
 	getDefaultProps() {
 		return {
