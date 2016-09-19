@@ -214,7 +214,7 @@ function saveModelToKb(modelId) {
 			return Promise.resolve();
 		}
 
-		const state = getState();
+		const state = getState().present;
 		const { modelXmlStr } = stateToModelXML(state);
 		dispatch({
 			type: constants.ACTION_saveModelToKb,
@@ -300,7 +300,7 @@ function hideContextMenu(event, context, menuItems) {
 module.exports.dropModelFragment =
 function dropModelFragment(fragment, clientOffset) {
 	return (dispatch, getState) => {
-		const state = getState();
+		const state = getState().present;
 		const editorXY = helpers.coordsRelativeToElem(
 			state.interface.editorElem,
 			clientOffset
@@ -566,7 +566,7 @@ function removeNode(nodeId) {
 			}
 		});
 
-		const modelId = getState().model.metadata.id;
+		const modelId = getState().present.model.metadata.id;
 		dispatch( saveModelToKb(modelId) );
 	};
 };
@@ -709,7 +709,7 @@ function mergeModelFile(file) {
 				// `importFragment()` clones fragment entirely (all new ids)
 				dispatch( importFragment(fragment) );
 
-				const modelId = getState().model.metadata.id;
+				const modelId = getState().present.model.metadata.id;
 				dispatch( saveModelToKb(modelId) );
 			});
 		});
@@ -878,7 +878,7 @@ function downloadModelXML() {
 	return (dispatch, getState) => {
 		dispatch( humanizeModelIds() )
 			.then((idReplacementMap) => {
-				const state = getState();
+				const state = getState().present;
 				const { modelXmlStr, model } = stateToModelXML(state, { idReplacementMap });
 				const slugifiedTitle = model.system.title.replace(/\s/g, '-');
 				const blob = getXMLBlob(modelXmlStr);
@@ -895,7 +895,7 @@ function downloadZippedScenario(modelId) {
 	return (dispatch, getState) => {
 		dispatch( humanizeModelIds() )
 			.then((idReplacementMap) => {
-				const state = getState();
+				const state = getState().present;
 				const { modelXmlStr/*, model*/ } = stateToModelXML(state, { idReplacementMap });
 
 				const scenarioXmlStr = generateScenarioXML(
@@ -947,7 +947,7 @@ function removeEdge(edgeId) {
 			edgeId
 		});
 
-		const modelId = getState().model.metadata.id;
+		const modelId = getState().present.model.metadata.id;
 		dispatch( saveModelToKb(modelId) );
 	};
 };
@@ -975,7 +975,7 @@ function removeGroup(groupId, removeNodes=false) {
 			}
 		});
 
-		const modelId = getState().model.metadata.id;
+		const modelId = getState().present.model.metadata.id;
 		dispatch( saveModelToKb(modelId) );
 	};
 };
@@ -1015,7 +1015,7 @@ function deleteAttackerProfile(profileId) {
 			profileId,
 		});
 
-		const modelId = getState().model.metadata.id;
+		const modelId = getState().present.model.metadata.id;
 		knowledgebaseApi.deleteAttackerProfile(axios, modelId, profileId)
 			.catch((err) => {
 				console.error(err);
@@ -1036,7 +1036,7 @@ function saveAttackerProfile(profile) {
 			profile,
 		});
 
-		const modelId = getState().model.metadata.id;
+		const modelId = getState().present.model.metadata.id;
 		knowledgebaseApi.saveAttackerProfile(axios, modelId, profile)
 			.catch((err) => {
 				console.error(err);
@@ -1089,7 +1089,7 @@ function removePolicy(policyId) {
 			policyId,
 		});
 
-		const modelId = getState().model.metadata.id;
+		const modelId = getState().present.model.metadata.id;
 		dispatch( saveModelToKb(modelId) );
 	};
 };
@@ -1327,7 +1327,7 @@ const setTaskStatusCategorized =
 module.exports.setTaskStatusCategorized =
 function setTaskStatusCategorized(taskStatusDataCategorized) {
 	return (dispatch, getState) => {
-		// const state = getState();
+		// const state = getState().present;
 		// const oldtaskStatusCategorized = state.interface.taskStatusCategorized;
 		// if (oldtaskStatusCategorized) {
 		// 	const oldCompleted = oldtaskStatusCategorized.completed;
@@ -1362,7 +1362,7 @@ const selectAnalysisResultsSnapshot =
 module.exports.selectAnalysisResultsSnapshot =
 function selectAnalysisResultsSnapshot(snapshot) {
 	return (dispatch, getState) => {
-		const state = getState();
+		const state = getState().present;
 		const modelId = state.model.metadata.id;
 		const toolchains = state.interface.toolChains;
 
@@ -1458,7 +1458,7 @@ function humanizeModelIds() {
 			idReplacementMap
 		});
 
-		const modelId = getState().model.metadata.id;
+		const modelId = getState().present.model.metadata.id;
 		// first save new model to kb,
 		// then tell kb, that things have been renamed
 		return dispatch( saveModelToKb(modelId) )
@@ -1503,7 +1503,7 @@ function runAnalysis(modelId, toolChainId, attackerProfileId) {
 		// reset everything before running new analysis
 		dispatch( resetAnalysis() );
 
-		const state = getState();
+		const state = getState().present;
 		const toolChains = state.interface.toolChains;
 		const toolChainData = toolChains[toolChainId];
 
@@ -1755,7 +1755,7 @@ function saveMapAsModelPattern() {
 			return;
 		}
 
-		const state = getState();
+		const state = getState().present;
 		const fragment = _.merge({}, state.model.graph);
 
 		// adjust position coordinates, so that there is no offset
@@ -1903,7 +1903,7 @@ function enableLayer(layerName, isEnabled) {
 			layerName, isEnabled
 		});
 
-		const { availableLayersList } = getState().interface;
+		const { availableLayersList } = getState().present.interface;
 		const layer = R.find(R.propEq('name', layerName), availableLayersList);
 		const cb = (isEnabled)
 			? layer.onActivation
@@ -1937,7 +1937,7 @@ const clusterNodesByType =
 module.exports.clusterNodesByType =
 function clusterNodesByType() {
 	return (dispatch, getState) => {
-		const { graph } = getState().model;
+		const { graph } = getState().present.model;
 		const laidOut = modelHelpers.layoutGraphByType(graph);
 		// R.values(laidOut.nodes)
 		// 	.forEach((node) => {
@@ -1981,7 +1981,7 @@ const resultsSelectAttack =
 module.exports.resultsSelectAttack =
 function resultsSelectAttack(index) {
 	return (dispatch, getState) => {
-		const state = getState();
+		const state = getState().present;
 		const selectedTool = state.analysis.resultsSelectedTool;
 		let attacktree = undefined;
 

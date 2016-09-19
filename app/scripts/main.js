@@ -4,8 +4,21 @@ const reactDOM = require('react-dom');
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Provider, connect } from 'react-redux';
 import ReduxThunk from 'redux-thunk';
-
 import createLogger from 'redux-logger';
+import undoable from 'redux-undo';
+import { includeAction } from 'redux-undo';
+
+const modelReducer = require('./modelReducer.js');
+const interfaceReducer = require('./interfaceReducer.js');
+const analysisReducer = require('./analysisReducer.js');
+
+const selectors = require('./selectors.js');
+const constants = require('./constants.js');
+
+const HTML5Backend = require('react-dnd-html5-backend');
+const DragDropContext = require('react-dnd').DragDropContext;
+
+
 const blacklist = [
 	'ACTION_setEditorElem',
 	'ACTION_setMouseOverEditor',
@@ -34,15 +47,6 @@ const logger = createLogger({
 	}
 });
 
-const modelReducer = require('./modelReducer.js');
-const interfaceReducer = require('./interfaceReducer.js');
-const analysisReducer = require('./analysisReducer.js');
-
-const selectors = require('./selectors.js');
-
-const HTML5Backend = require('react-dnd-html5-backend');
-const DragDropContext = require('react-dnd').DragDropContext;
-
 
 function configureStore(initialState) {
 	const combinedReducers = combineReducers({
@@ -52,7 +56,37 @@ function configureStore(initialState) {
 	});
 
 	const store = createStore(
-		combinedReducers,
+		undoable(
+			combinedReducers,
+			{
+				limit: 10,
+				filter: includeAction([
+					// groups
+					constants.ACTION_addGroup,
+					constants.ACTION_cloneGroup,
+					constants.ACTION_removeGroupBackgroundImage,
+					constants.ACTION_addGroupBackgroundImage,
+
+					// nodes
+					constants.ACTION_cloneNode,
+					constants.ACTION_removeNode,
+					constants.ACTION_addNodeToGroup,
+					constants.ACTION_ungroupNode,
+
+					// edges
+					constants.ACTION_addEdge,
+					constants.ACTION_removeEdge,
+					constants.ACTION_predicateChanged,
+
+					constants.ACTION_importFragment,
+					constants.ACTION_mergeFragment,
+
+					constants.ACTION_addProcess,
+					constants.ACTION_addPolicy,
+					constants.ACTION_removePolicy,
+				]),
+			}
+		),
 		initialState,
 		applyMiddleware(ReduxThunk, logger)
 	);
@@ -66,7 +100,7 @@ function mapStateToProps(_state) {
 	// flatten one level
 	const state = Object.assign.apply(
 		null,
-		[{}, ...R.values(_state)]
+		[{}, ...R.values(_state.present)]
 	);
 
 	// layers get the chance to change props

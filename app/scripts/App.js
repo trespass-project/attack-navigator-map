@@ -1,5 +1,5 @@
 const React = require('react');
-
+import { ActionCreators as UndoActionCreators } from 'redux-undo';
 const fs = require('fs');
 const pkg = JSON.parse(fs.readFileSync('./package.json').toString());
 
@@ -42,12 +42,12 @@ React.createClass({
 		props.dispatch( actionCreators.setEditorElem(editorElem) );
 
 		window.addEventListener('beforeunload', this.handleBeforeUnload);
-		window.addEventListener('keydown', this.saveHandler);
+		window.addEventListener('keydown', this.keyHandler);
 	},
 
 	componentWillUnmount() {
 		window.removeEventListener('beforeunload', this.handleBeforeUnload);
-		window.removeEventListener('keydown', this.saveHandler);
+		window.removeEventListener('keydown', this.keyHandler);
 	},
 
 	handleBeforeUnload(event) {
@@ -61,11 +61,22 @@ React.createClass({
 		// return msg;
 	},
 
-	saveHandler(event) {
-		// if control or command key is pressed and the s key is pressed
-		if ((event.ctrlKey || event.metaKey) && event.keyCode === 83) {
+	keyHandler(event) {
+		const ctrlOrCmd = (event.ctrlKey || event.metaKey);
+		const shift = !!event.shiftKey;
+
+		if (ctrlOrCmd && event.keyCode === 83) {
+			// [control / command] + [s]
 			event.preventDefault();
 			this.save();
+		} else if (shift && ctrlOrCmd && event.keyCode === 90) {
+			// [shift] + [control / command] + [z]
+			event.preventDefault();
+			this.props.dispatch( UndoActionCreators.redo() );
+		} else if (ctrlOrCmd && event.keyCode === 90) {
+			// [control / command] + [z]
+			event.preventDefault();
+			this.props.dispatch( UndoActionCreators.undo() );
 		}
 	},
 
