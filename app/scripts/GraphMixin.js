@@ -106,7 +106,7 @@ const GraphMixin = {
 		return <Edge
 			key={index}
 			theme={context.theme}
-			graph={props.graph}
+			nodes={props.graph.nodes}
 			edge={edge}
 			showEdgeLabels={showEdgeLabels}
 			isSelected={edge.id === props.selectedId}
@@ -138,7 +138,6 @@ const GraphMixin = {
 	renderNode(node, index) {
 		const props = this.props;
 		return <Node
-			{...this.props}
 			key={node.id}
 			isHovered={props.hoverNodeId && (node.id === props.hoverNodeId)}
 			isSelected={node.id === props.selectedId}
@@ -146,6 +145,17 @@ const GraphMixin = {
 			x={node.x}
 			y={node.y}
 			node={node}
+
+			// {...this.props}
+			editorElem={props.editorElem}
+			editorTransformElem={props.editorTransformElem}
+			graph={props.graph}
+			showNodeLabels={props.showNodeLabels}
+			componentsLibMap={props.componentsLibMap}
+			kbTypeAttributes={props.kbTypeAttributes}
+			editable={props.editable}
+			hoverNodeId={props.hoverNodeId}
+			dragNodeId={props.dragNodeId}
 		/>;
 	},
 

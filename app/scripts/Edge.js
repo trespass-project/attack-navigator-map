@@ -94,8 +94,8 @@ const Edge = React.createClass({
 	mixins: [PureRenderMixin],
 
 	propTypes: {
-		// TODO: remove graph dependency
-		graph: React.PropTypes.object.isRequired,
+		// TODO: remove nodes dependency
+		nodes: React.PropTypes.object.isRequired,
 		edge: React.PropTypes.object.isRequired,
 		isSelected: React.PropTypes.bool,
 		isPreview: React.PropTypes.bool,
@@ -187,7 +187,7 @@ const Edge = React.createClass({
 		const edge = props.edge;
 
 		// look up actual nodes by id
-		const edgeNodes = modelHelpers.getEdgeNodes(edge, props.graph.nodes);
+		const edgeNodes = modelHelpers.getEdgeNodes(edge, props.nodes);
 		// in preview edges 'to' is not an id,
 		// an actual object, with x and y properties.
 		if (props.isPreview) {
