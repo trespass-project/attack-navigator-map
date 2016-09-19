@@ -218,7 +218,6 @@ const Node = React.createClass({
 		const props = this.props;
 		const { node } = props;
 
-
 		if (!props.showNodeLabels) { return null; }
 
 		// types might not be loaded yet at this point?
@@ -239,10 +238,11 @@ const Node = React.createClass({
 			}
 		}
 
+		const negHalfSizeScaled = -shapeSizeScaled / 2;
 		return <image
 			xlinkHref={icon}
-			x={-shapeSizeScaled / 2}
-			y={-shapeSizeScaled / 2}
+			x={negHalfSizeScaled}
+			y={negHalfSizeScaled}
 			width={shapeSizeScaled}
 			height={shapeSizeScaled}
 		/>;
