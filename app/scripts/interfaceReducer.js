@@ -97,7 +97,7 @@ const initialState = {
 	// ——————————
 
 	availableLayersList: availableLayersList,
-	activeLayers: helpers.toHashMap('name', defaultActiveLayersList),
+	activeLayersList: defaultActiveLayersList,
 };
 
 
@@ -407,24 +407,21 @@ function reducer(state=initialState, action) {
 
 		case constants.ACTION_enableLayer: {
 			const { layerName, isEnabled } = action;
-			const _activeLayersList = R.values(state.activeLayers);
 			const theLayer = R.find(R.propEq('name', layerName), availableLayersList);
 
 			let activeLayersList;
 			if (!isEnabled) {
 				activeLayersList = R.filter(
 					(layer) => (layer.name !== layerName),
-					_activeLayersList
+					state.activeLayersList
 				);
 			} else {
 				activeLayersList = [
-					..._activeLayersList,
+					...state.activeLayersList,
 					theLayer
 				];
 			}
-			return mergeWithState({
-				activeLayers: helpers.toHashMap('name', activeLayersList)
-			});
+			return mergeWithState({ activeLayersList });
 		}
 
 		case constants.ACTION_setHighlighted: {

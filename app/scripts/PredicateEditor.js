@@ -1,26 +1,26 @@
 const React = require('react');
-const R = require('ramda');
 const actionCreators = require('./actionCreators.js');
 const ComponentReference = require('./ComponentReference.js');
 const SelectizeDropdown = require('./SelectizeDropdown.js');
 const RelationSelectize = require('./RelationSelectize.js');
 
 
+// TODO: added ones are not persisted
+const createFromSearch = (options, search) => {
+	if (!search || options.length) {
+		return null;
+	}
+	const result = {
+		label: search,
+		value: search,
+	};
+	return result;
+};
+
+
 const SubjObjSelectize = React.createClass({
 	render() {
 		const props = this.props;
-
-		// TODO: added ones are not persisted
-		const createFromSearch = (options, search) => {
-			if (!search || options.length) {
-				return null;
-			}
-			const result = {
-				label: search,
-				value: search,
-			};
-			return result;
-		};
 
 		const renderValue = (item) => {
 			const node = props.nodes[item[props.valueKey]];
@@ -107,7 +107,7 @@ const PredicateEditor = React.createClass({
 			name='subject'
 			valueKey='id'
 			labelKey='label'
-			options={R.values(props.nodes)}
+			options={props.nodesList}
 			value={{ id: edge.from, label: edge.from }}
 			onChange={(name, value) => {
 				this.subjObjChanged(name, value, edge.id);
@@ -120,7 +120,7 @@ const PredicateEditor = React.createClass({
 			name='object'
 			valueKey='id'
 			labelKey='label'
-			options={R.values(props.nodes)}
+			options={props.nodesList}
 			value={{ id: edge.to, label: edge.to }}
 			onChange={(name, value) => {
 				this.subjObjChanged(name, value, edge.id);
@@ -146,39 +146,9 @@ const PredicateEditor = React.createClass({
 	render() {
 		const props = this.props;
 
-		// let subjObjOptions = props.predicates
-		// 	.reduce((options, predicate) => {
-		// 		const items = predicate.value
-		// 			.reduce((acc, val) => {
-		// 				// often it will be the id of a node ...
-		// 				const node = props.nodes[val];
-		// 				// ... otherwise it's just a name used in the predicate
-		// 				if (!node) {
-		// 					return [...acc, { label: val, id: val }];
-		// 				} else {
-		// 					return acc;
-		// 				}
-		// 			}, []);
-		// 		return options.concat(items);
-		// 	}, [])
-		// 	.concat(R.values(props.nodes));
-		// subjObjOptions = R.uniq(subjObjOptions);
-		// const subjObjOptionsMap = helpers.toHashMap('id', subjObjOptions);
-
 		return (
 			<div className='predicate-editor language'>
 				<div className='predicates'>
-					{/*<div className='add-new-container'>
-						add new:
-						<div>
-							<input ref='new-subject' type='text' placeholder='subject placeholder' />
-							<input ref='new-predicate' type='text' placeholder='predicate label' />
-							<input ref='new-object' type='text' placeholder='subject placeholder' />
-						</div>
-						<button onClick={this.addPredicate}>add</button>
-						<hr />
-					</div>*/}
-
 					<ul>
 						{props.edges
 							.map((edge, index) =>

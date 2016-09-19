@@ -15,6 +15,15 @@ const getComponentsLib = (state) => state.componentsLib;
 const getAttackerProfile = (state) => state.attackerProfile;
 const getAttackerProfiles = (state) => state.attackerProfiles;
 const getResultsAttacktree = (state) => state.resultsAttacktree;
+const getActiveLayersList = (state) => state.activeLayersList;
+const getAvailableLayersList = (state) => state.availableLayersList;
+
+
+// const nodesList =
+module.exports.nodesList = createSelector(
+	getNodes,
+	R.values
+);
 
 
 // const resultsAttacktreeIdHistogram =
@@ -33,13 +42,13 @@ module.exports.resultsAttacktreeIdHistogram = createSelector(
 // const componentsLibMap =
 module.exports.componentsLibMap = createSelector(
 	getComponentsLib,
-	(components) => helpers.toHashMap('type', components)
+	R.partial(helpers.toHashMap, ['type'])
 );
 
 // const relationsMap =
 module.exports.relationsMap = createSelector(
 	getRelationTypes,
-	(relationTypes) => helpers.toHashMap('value', relationTypes)
+	R.partial(helpers.toHashMap, ['value'])
 );
 
 // const hasOpenMap =
@@ -199,4 +208,22 @@ module.exports.nodesWithPolicies = createSelector(
 				return acc;
 			}, {});
 	}
+);
+
+
+const notEmpty = R.complement(_.isEmpty);
+
+// const displayLayersList =
+module.exports.displayLayersList = createSelector(
+	getAvailableLayersList,
+	(layers) => {
+		return layers
+			.filter((item) => notEmpty(item.displayName));
+	}
+);
+
+// const activeLayers =
+module.exports.activeLayers = createSelector(
+	getActiveLayersList,
+	R.partial(helpers.toHashMap, ['name'])
 );
