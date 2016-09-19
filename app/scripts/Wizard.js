@@ -295,11 +295,6 @@ const Wizard = React.createClass({
 	renderActors(props) {
 		return <div>
 			<h2 className='title'>Actors</h2>
-			{/*<div className='pattern-lib'>
-				<Library
-					key={'actors-patterns'}
-					title='patterns' />
-			</div>*/}
 			<div className='component-lib'>
 				<Library
 					key={'actors-components'}
