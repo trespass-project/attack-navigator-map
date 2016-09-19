@@ -25,7 +25,7 @@
 			li
 				background-color: rgb(245, 245, 245)
 				border-radius: 0
-				cursor: pointer
+				cursor: move
 				padding-left: 10px
 				padding-right: 10px
 				padding-top: 5px
@@ -36,5 +36,12 @@
 					font-weight: normal
 					margin-top: 0.15em
 
+			.remove
+				display: none
+				cursor: pointer
+
 			li:hover
 				background: $highlightColor
+
+				.remove
+					display: inline-block

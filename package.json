@@ -89,11 +89,11 @@
     "reselect": "^2.5.3",
     "shortid": "^2.2.4",
     "sifter": "^0.5.1",
-    "trespass.js": "^0.24.2",
+    "trespass.js": "^0.24.3",
     "tween.js": "^0.14.0",
     "xml2js": "^0.4.16"
   },
   "name": "attack-navigator-map",
-  "version": "0.22.1",
+  "version": "0.22.2",
   "private": false
 }

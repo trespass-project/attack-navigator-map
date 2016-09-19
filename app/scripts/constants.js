@@ -92,6 +92,7 @@ const constants = {
 	ACTION_loadModelPatterns: 'ACTION_loadModelPatterns',
 	ACTION_loadModelPatterns_DONE: 'ACTION_loadModelPatterns_DONE',
 	ACTION_saveMapAsModelPattern: 'ACTION_saveMapAsModelPattern',
+	ACTION_deleteModelPattern: 'ACTION_deleteModelPattern',
 
 	ACTION_showSaveDialog: 'ACTION_showSaveDialog',
 	ACTION_enableLayer: 'ACTION_enableLayer',
