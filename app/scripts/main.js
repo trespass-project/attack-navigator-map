@@ -5,6 +5,35 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Provider, connect } from 'react-redux';
 import ReduxThunk from 'redux-thunk';
 
+import createLogger from 'redux-logger';
+const blacklist = [
+	'ACTION_setEditorElem',
+	'ACTION_setMouseOverEditor',
+	'ACTION_hideContextMenu',
+	'ACTION_select',
+	'ACTION_setPanning',
+	'ACTION_setDrag',
+	'ACTION_setDragNode',
+	'ACTION_selectWizardStep',
+	'ACTION_setAttackerProfit',
+	'ACTION_moveNode',
+	'ACTION_moveGroup',
+	'ACTION_setHoverNode',
+	'ACTION_setHoverGroup',
+	'ACTION_setPreviewEdge',
+	'ACTION_setTransformation',
+	'ACTION_setTaskStatusCategorized',
+	'ACTION_updateComponentProperties',
+	'ACTION_setHighlighted',
+];
+const logger = createLogger({
+	timestamp: false,
+	collapsed: true,
+	predicate: (getState, action) => {
+		return !R.contains(action.type, blacklist);
+	}
+});
+
 const modelReducer = require('./modelReducer.js');
 const interfaceReducer = require('./interfaceReducer.js');
 const analysisReducer = require('./analysisReducer.js');
@@ -25,7 +54,7 @@ function configureStore(initialState) {
 	const store = createStore(
 		combinedReducers,
 		initialState,
-		applyMiddleware(ReduxThunk)
+		applyMiddleware(ReduxThunk, logger)
 	);
 
 	return store;
