@@ -1,6 +1,4 @@
 const React = require('react');
-const R = require('ramda');
-const _ = require('lodash');
 
 const fs = require('fs');
 const pkg = JSON.parse(fs.readFileSync('./package.json').toString());
@@ -14,9 +12,6 @@ const knowledgebaseApi = require('trespass.js').api.knowledgebase;
 const Wizard = require('./Wizard.js');
 const GraphEditor = require('./GraphEditor.js');
 const AnalysisResultsOverlay = require('./AnalysisResultsOverlay.js');
-
-
-const notEmpty = R.complement(_.isEmpty);
 
 
 module.exports =
@@ -125,8 +120,7 @@ React.createClass({
 
 				{(props.hasOpenMap)
 					? <div id='layersControl'>
-						{props.availableLayersList
-							.filter((item) => notEmpty(item.displayName))
+						{props.displayLayersList
 							.map((layer) => {
 								return <div key={layer.name}>
 									<input

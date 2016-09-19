@@ -1,6 +1,8 @@
 const R = require('ramda');
 const React = require('react');
 const classnames = require('classnames');
+import { createSelector } from 'reselect';
+const PureRenderMixin = require('react-addons-pure-render-mixin');
 const SchleppMixin = require('./SchleppMixin.js');
 const Port = require('./Port.js');
 const icons = require('./icons.js');
@@ -19,6 +21,9 @@ const componentTypeColorScales = {
 	// TODO: could be both
 	// item: physicalScale,
 };
+
+
+const getLabel = (node) => node.label || 'no label';
 
 
 const Node = React.createClass({
@@ -41,7 +46,7 @@ const Node = React.createClass({
 		dispatch: React.PropTypes.func,
 	},
 
-	mixins: [SchleppMixin],
+	mixins: [PureRenderMixin, SchleppMixin],
 
 	getDefaultProps() {
 		return {
@@ -50,6 +55,13 @@ const Node = React.createClass({
 			showNodeLabels: true,
 			isCountermeasure: false,
 		};
+	},
+
+	componentWillMount() {
+		this.makeLabel = createSelector(
+			getLabel,
+			(label) => helpers.ellipsize(15, label)
+		);
 	},
 
 	_onContextMenu(event) {
@@ -218,7 +230,6 @@ const Node = React.createClass({
 		const props = this.props;
 		const { node } = props;
 
-
 		if (!props.showNodeLabels) { return null; }
 
 		// types might not be loaded yet at this point?
@@ -239,10 +250,11 @@ const Node = React.createClass({
 			}
 		}
 
+		const negHalfSizeScaled = -shapeSizeScaled / 2;
 		return <image
 			xlinkHref={icon}
-			x={-shapeSizeScaled / 2}
-			y={-shapeSizeScaled / 2}
+			x={negHalfSizeScaled}
+			y={negHalfSizeScaled}
 			width={shapeSizeScaled}
 			height={shapeSizeScaled}
 		/>;
@@ -261,16 +273,13 @@ const Node = React.createClass({
 
 		if (!props.showNodeLabels) { return null; }
 
-		let label = props.node.label || 'no label';
-		label = helpers.ellipsize(15, label);
-
 		return <text
 			ref='label'
 			className='label'
 			x='0'
 			y={12 + (shapeSize / 2)}
 		>
-			{label}
+			{this.makeLabel(props.node)}
 		</text>;
 	},
 

@@ -106,7 +106,7 @@ const GraphMixin = {
 		return <Edge
 			key={index}
 			theme={context.theme}
-			graph={props.graph}
+			nodes={props.graph.nodes}
 			edge={edge}
 			showEdgeLabels={showEdgeLabels}
 			isSelected={edge.id === props.selectedId}
@@ -138,7 +138,6 @@ const GraphMixin = {
 	renderNode(node, index) {
 		const props = this.props;
 		return <Node
-			{...this.props}
 			key={node.id}
 			isHovered={props.hoverNodeId && (node.id === props.hoverNodeId)}
 			isSelected={node.id === props.selectedId}
@@ -146,6 +145,17 @@ const GraphMixin = {
 			x={node.x}
 			y={node.y}
 			node={node}
+
+			// {...this.props}
+			editorElem={props.editorElem}
+			editorTransformElem={props.editorTransformElem}
+			graph={props.graph}
+			showNodeLabels={props.showNodeLabels}
+			componentsLibMap={props.componentsLibMap}
+			kbTypeAttributes={props.kbTypeAttributes}
+			editable={props.editable}
+			hoverNodeId={props.hoverNodeId}
+			dragNodeId={props.dragNodeId}
 		/>;
 	},
 
@@ -188,8 +198,6 @@ const GraphMixin = {
 		const props = this.props;
 		const graph = props.graph;
 
-		const activeLayersList = R.values(props.activeLayers);
-
 		return (
 			<g
 				ref='map-group'
@@ -205,8 +213,8 @@ const GraphMixin = {
 					.map(this.renderGroup)
 				}
 
-				{(!props.isMinimap && activeLayersList.length) &&
-					activeLayersList
+				{(!props.isMinimap && props.activeLayersList.length) &&
+					props.activeLayersList
 						.filter((layer) => !layer.inForeground)
 						.map((layer) => renderLayer(layer, props))
 				}
@@ -230,13 +238,13 @@ const GraphMixin = {
 						.map((edge, index) => this.renderPreviewEdge(edge, index))
 					: null
 				}
-				{R.values(graph.nodes)
+				{props.nodesList
 					.map(this.renderNode)
 				}
 				{this.renderVisibleRect()}
 
-				{(!props.isMinimap && activeLayersList.length) &&
-					activeLayersList
+				{(!props.isMinimap && props.activeLayersList.length) &&
+					props.activeLayersList
 						.filter((layer) => layer.inForeground)
 						.map((layer) => renderLayer(layer, props))
 				}

@@ -239,7 +239,7 @@ const VariableOrSelectize = React.createClass({
 			multi={false}
 			name='nodes'
 			value={props.nodes[props.data.value]}
-			options={R.values(props.nodes)}
+			options={props.nodesList}
 			valueKey={valueKey}
 			labelKey='label'
 			onChange={(name, value) => {
@@ -1032,3 +1032,4 @@ const PolicyEditor = React.createClass({
 
 
 module.exports = PolicyEditor;
+

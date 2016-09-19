@@ -41,7 +41,7 @@ function mapStateToProps(_state) {
 	);
 
 	// layers get the chance to change props
-	const props = R.values(state.activeLayers)
+	const props = state.activeLayersList
 		.reduce(
 			(acc, layer) => (layer.adjustProps || R.identity)(acc),
 			state
@@ -64,10 +64,15 @@ function mapStateToProps(_state) {
 	props.locationOptions = selectors.locationOptions(state);
 	props.nodesWithPolicies = selectors.nodesWithPolicies(state);
 
+	props.activeLayers = selectors.activeLayers(state);
+	props.displayLayersList = selectors.displayLayersList(state);
+
 	// validation
 	props.validation = {
 		componentWarnings: selectors.getNodeWarnings(props),
 	};
+
+	props.nodesList = selectors.nodesList(state);
 
 	return props;
 }

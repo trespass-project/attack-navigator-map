@@ -33,7 +33,7 @@ const GraphMinimap = React.createClass({
 		if (!transform.scale) {
 			if (!this.size) { return null; }
 
-			const nodes = R.values(props.graph.nodes);
+			const nodes = props.nodesList;
 			const bbox = helpers.getNodesBBox(nodes);
 
 			// add some padding
