@@ -146,39 +146,9 @@ const PredicateEditor = React.createClass({
 	render() {
 		const props = this.props;
 
-		// let subjObjOptions = props.predicates
-		// 	.reduce((options, predicate) => {
-		// 		const items = predicate.value
-		// 			.reduce((acc, val) => {
-		// 				// often it will be the id of a node ...
-		// 				const node = props.nodes[val];
-		// 				// ... otherwise it's just a name used in the predicate
-		// 				if (!node) {
-		// 					return [...acc, { label: val, id: val }];
-		// 				} else {
-		// 					return acc;
-		// 				}
-		// 			}, []);
-		// 		return options.concat(items);
-		// 	}, [])
-		// 	.concat(props.nodesList);
-		// subjObjOptions = R.uniq(subjObjOptions);
-		// const subjObjOptionsMap = helpers.toHashMap('id', subjObjOptions);
-
 		return (
 			<div className='predicate-editor language'>
 				<div className='predicates'>
-					{/*<div className='add-new-container'>
-						add new:
-						<div>
-							<input ref='new-subject' type='text' placeholder='subject placeholder' />
-							<input ref='new-predicate' type='text' placeholder='predicate label' />
-							<input ref='new-object' type='text' placeholder='subject placeholder' />
-						</div>
-						<button onClick={this.addPredicate}>add</button>
-						<hr />
-					</div>*/}
-
 					<ul>
 						{props.edges
 							.map((edge, index) =>
