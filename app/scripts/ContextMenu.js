@@ -1,6 +1,7 @@
 const React = require('react');
 const d3 = require('d3');
 const classnames = require('classnames');
+const actionCreators = require('./actionCreators.js');
 const helpers = require('./helpers.js');
 
 
@@ -10,6 +11,7 @@ const arc = d3.svg.arc();
 
 const ContextMenu = React.createClass({
 	contextTypes: {
+		dispatch: React.PropTypes.func,
 		theme: React.PropTypes.object,
 	},
 
@@ -49,7 +51,13 @@ const ContextMenu = React.createClass({
 				<path
 					className='menu-item'
 					d={d}
-					onClick={item.action}
+					onClick={(event) => {
+						event.preventDefault();
+						this.context.dispatch(
+							actionCreators.hideContextMenu()
+						);
+						item.action();
+					}}
 				>
 				</path>
 				<g transform={translate}>
