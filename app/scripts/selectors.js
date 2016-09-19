@@ -19,6 +19,13 @@ const getActiveLayersList = (state) => state.activeLayersList;
 const getAvailableLayersList = (state) => state.availableLayersList;
 
 
+// const nodesList =
+module.exports.nodesList = createSelector(
+	getNodes,
+	R.values
+);
+
+
 // const resultsAttacktreeIdHistogram =
 module.exports.resultsAttacktreeIdHistogram = createSelector(
 	getResultsAttacktree,

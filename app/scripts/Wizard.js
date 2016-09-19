@@ -137,6 +137,7 @@ const Wizard = React.createClass({
 			id='minimap'
 			hasOpenMap={props.hasOpenMap}
 			graph={props.graph}
+			nodesList={props.nodesList}
 			theme={this.context.theme}
 			showEdges={true}
 		/>;
@@ -450,7 +451,7 @@ const Wizard = React.createClass({
 
 	renderAttackerActor() {
 		const props = this.props;
-		const actors = R.values(props.graph.nodes)
+		const actors = props.nodesList
 			.filter((item) => {
 				return item.modelComponentType === 'actor';
 			});
@@ -525,7 +526,7 @@ const Wizard = React.createClass({
 				onChange={this.setAttackerGoal}
 			>
 				<option value=''>— select goal —</option>
-				{R.values(props.graph.nodes)
+				{props.nodesList
 					.filter((item) => {
 						return item.modelComponentType === 'item' ||
 							item.modelComponentType === 'data';

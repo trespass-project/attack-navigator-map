@@ -228,7 +228,7 @@ const GraphMixin = {
 						.map((edge, index) => this.renderPreviewEdge(edge, index))
 					: null
 				}
-				{R.values(graph.nodes)
+				{props.nodesList
 					.map(this.renderNode)
 				}
 				{this.renderVisibleRect()}

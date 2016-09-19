@@ -107,7 +107,7 @@ const PredicateEditor = React.createClass({
 			name='subject'
 			valueKey='id'
 			labelKey='label'
-			options={R.values(props.nodes)}
+			options={props.nodesList}
 			value={{ id: edge.from, label: edge.from }}
 			onChange={(name, value) => {
 				this.subjObjChanged(name, value, edge.id);
@@ -120,7 +120,7 @@ const PredicateEditor = React.createClass({
 			name='object'
 			valueKey='id'
 			labelKey='label'
-			options={R.values(props.nodes)}
+			options={props.nodesList}
 			value={{ id: edge.to, label: edge.to }}
 			onChange={(name, value) => {
 				this.subjObjChanged(name, value, edge.id);
@@ -161,7 +161,7 @@ const PredicateEditor = React.createClass({
 		// 			}, []);
 		// 		return options.concat(items);
 		// 	}, [])
-		// 	.concat(R.values(props.nodes));
+		// 	.concat(props.nodesList);
 		// subjObjOptions = R.uniq(subjObjOptions);
 		// const subjObjOptionsMap = helpers.toHashMap('id', subjObjOptions);
 

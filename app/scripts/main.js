@@ -72,6 +72,8 @@ function mapStateToProps(_state) {
 		componentWarnings: selectors.getNodeWarnings(props),
 	};
 
+	props.nodesList = selectors.nodesList(state);
+
 	return props;
 }
 
