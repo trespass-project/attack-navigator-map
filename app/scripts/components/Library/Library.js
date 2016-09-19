@@ -5,12 +5,24 @@ const utils = require('../../utils.js');
 const LibraryItem = require('./LibraryItem.js');
 
 
+const x = <span
+	style={{
+		lineHeight: '20px',
+		fontSize: '1.5em',
+	}}
+>
+	<strong>×</strong>
+</span>;
+
+
 const Library = React.createClass({
 	propTypes: {
 		items: React.PropTypes.array.isRequired,
 		title: React.PropTypes.string.isRequired,
 		renderItem: React.PropTypes.func,
 		showFilter: React.PropTypes.bool,
+		deletable: React.PropTypes.bool,
+		onRemove: React.PropTypes.func,
 
 		modelComponentTypes: React.PropTypes.array,
 		modelComponentTypesFilter: React.PropTypes.array,
@@ -20,6 +32,8 @@ const Library = React.createClass({
 		return {
 			renderItem: this.renderListItem,
 			showFilter: false,
+			deletable: false,
+			onRemove: () => {},
 
 			modelComponentTypes: [],
 			modelComponentTypesFilter: [],
@@ -71,12 +85,18 @@ const Library = React.createClass({
 
 	renderListItem(item, index) {
 		const props = this.props;
+		const removeItem = () => {
+			props.onRemove(item.id);
+		};
 
 		return (
 			<LibraryItem
 				key={item.id || index}
 				data={item}
 				showType={props.showFilter}
+				deletable={props.deletable}
+				x={x}
+				onRemove={removeItem}
 			/>
 		);
 	},
@@ -85,11 +105,6 @@ const Library = React.createClass({
 		const props = this.props;
 		const state = this.state;
 		const itemsFiltered = state.itemsFiltered;
-
-		const style = {
-			lineHeight: 0,
-			fontSize: '1.5em',
-		};
 
 		return (
 			<div className='panel-section library-component'>
@@ -110,9 +125,7 @@ const Library = React.createClass({
 							className='btn input-group-addon'
 							onClick={this.clearSearch}
 						>
-							<span style={style}>
-								<strong>×</strong>
-							</span>
+							{x}
 						</div>
 					</div>
 				</div>

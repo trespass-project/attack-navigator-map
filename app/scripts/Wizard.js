@@ -260,6 +260,15 @@ const Wizard = React.createClass({
 					items={props.modelPatterns}
 					key={'locations-patterns'}
 					title='patterns'
+					deletable={true}
+					onRemove={(id) => {
+						this.context.dispatch(
+							actionCreators.deleteModelPattern(
+								this.props.metadata.id,
+								id
+							)
+						);
+					}}
 				/>
 			</div>
 		</div>;
@@ -295,11 +304,6 @@ const Wizard = React.createClass({
 	renderActors(props) {
 		return <div>
 			<h2 className='title'>Actors</h2>
-			{/*<div className='pattern-lib'>
-				<Library
-					key={'actors-patterns'}
-					title='patterns' />
-			</div>*/}
 			<div className='component-lib'>
 				<Library
 					key={'actors-components'}
