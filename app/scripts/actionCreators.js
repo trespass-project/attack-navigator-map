@@ -1791,6 +1791,8 @@ const deleteModelPattern =
 module.exports.deleteModelPattern =
 function deleteModelPattern(modelId, patternId) {
 	return (dispatch, getState) => {
+		const result = confirm('Are you sure?');
+		if (!result) { return; }
 		knowledgebaseApi.deleteModelPattern(axios, modelId, patternId)
 			.then(() => {
 				console.info('removed pattern');
