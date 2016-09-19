@@ -130,6 +130,8 @@ function mapStateToProps(_state) {
 	props.activeLayers = selectors.activeLayers(state);
 	props.displayLayersList = selectors.displayLayersList(state);
 
+	props.componentsLibCategorized = selectors.componentsLibCategorized(state);
+
 	// validation
 	props.validation = {
 		componentWarnings: selectors.getNodeWarnings(props),
