@@ -188,8 +188,6 @@ const GraphMixin = {
 		const props = this.props;
 		const graph = props.graph;
 
-		const activeLayersList = R.values(props.activeLayers);
-
 		return (
 			<g
 				ref='map-group'
@@ -205,8 +203,8 @@ const GraphMixin = {
 					.map(this.renderGroup)
 				}
 
-				{(!props.isMinimap && activeLayersList.length) &&
-					activeLayersList
+				{(!props.isMinimap && props.activeLayersList.length) &&
+					props.activeLayersList
 						.filter((layer) => !layer.inForeground)
 						.map((layer) => renderLayer(layer, props))
 				}
@@ -235,8 +233,8 @@ const GraphMixin = {
 				}
 				{this.renderVisibleRect()}
 
-				{(!props.isMinimap && activeLayersList.length) &&
-					activeLayersList
+				{(!props.isMinimap && props.activeLayersList.length) &&
+					props.activeLayersList
 						.filter((layer) => layer.inForeground)
 						.map((layer) => renderLayer(layer, props))
 				}

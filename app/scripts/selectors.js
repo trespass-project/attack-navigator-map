@@ -15,6 +15,7 @@ const getComponentsLib = (state) => state.componentsLib;
 const getAttackerProfile = (state) => state.attackerProfile;
 const getAttackerProfiles = (state) => state.attackerProfiles;
 const getResultsAttacktree = (state) => state.resultsAttacktree;
+const getActiveLayersList = (state) => state.activeLayersList;
 const getAvailableLayersList = (state) => state.availableLayersList;
 
 
@@ -211,5 +212,13 @@ module.exports.displayLayersList = createSelector(
 	(layers) => {
 		return layers
 			.filter((item) => notEmpty(item.displayName));
+	}
+);
+
+// const activeLayers =
+module.exports.activeLayers = createSelector(
+	getActiveLayersList,
+	(activeLayersList) => {
+		return helpers.toHashMap('name', activeLayersList);
 	}
 );
