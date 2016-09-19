@@ -1,26 +1,26 @@
 const React = require('react');
-const R = require('ramda');
 const actionCreators = require('./actionCreators.js');
 const ComponentReference = require('./ComponentReference.js');
 const SelectizeDropdown = require('./SelectizeDropdown.js');
 const RelationSelectize = require('./RelationSelectize.js');
 
 
+// TODO: added ones are not persisted
+const createFromSearch = (options, search) => {
+	if (!search || options.length) {
+		return null;
+	}
+	const result = {
+		label: search,
+		value: search,
+	};
+	return result;
+};
+
+
 const SubjObjSelectize = React.createClass({
 	render() {
 		const props = this.props;
-
-		// TODO: added ones are not persisted
-		const createFromSearch = (options, search) => {
-			if (!search || options.length) {
-				return null;
-			}
-			const result = {
-				label: search,
-				value: search,
-			};
-			return result;
-		};
 
 		const renderValue = (item) => {
 			const node = props.nodes[item[props.valueKey]];
