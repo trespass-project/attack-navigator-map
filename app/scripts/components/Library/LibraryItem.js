@@ -1,28 +1,32 @@
-'use strict';
-
+const React = require('react');
 const _ = require('lodash');
 const constants = require('../../constants.js');
-const helpers = require('../../helpers.js');
-const React = require('react');
 const DragSource = require('react-dnd').DragSource;
 const modelHelpers = require('../../model-helpers.js');
 const actionCreators = require('../../actionCreators.js');
 
 
 let LibraryItem = React.createClass({
-	contextTypes: {
-		// theme: React.PropTypes.object,
-		dispatch: React.PropTypes.func,
-	},
-
 	propTypes: {
 		data: React.PropTypes.object.isRequired,
+		showType: React.PropTypes.bool,
 		// injected by react dnd:
 		isDragging: React.PropTypes.bool.isRequired,
 		connectDragSource: React.PropTypes.func.isRequired
 	},
 
-	renderType: function() {
+	contextTypes: {
+		// theme: React.PropTypes.object,
+		dispatch: React.PropTypes.func,
+	},
+
+	getDefaultProps() {
+		return {
+			showType: false,
+		};
+	},
+
+	renderType() {
 		const props = this.props;
 		if (!props.showType) { return null; }
 
@@ -31,7 +35,7 @@ let LibraryItem = React.createClass({
 		</div>;
 	},
 
-	render: function() {
+	render() {
 		const props = this.props;
 		const connectDragSource = props.connectDragSource;
 		return connectDragSource(
@@ -45,12 +49,12 @@ let LibraryItem = React.createClass({
 
 
 const spec = {
-	beginDrag: function(props, monitor, component) {
+	beginDrag(props, monitor, component) {
 		// needs to be a copy
 		return _.merge({}, props.data);
 	},
 
-	endDrag: function(props, monitor, component) {
+	endDrag(props, monitor, component) {
 		if (monitor.didDrop()) {
 			const result = monitor.getDropResult();
 			if (result.target === constants.DND_TARGET_MAP /*||
@@ -82,6 +86,5 @@ function collect(connect, monitor) {
 
 // LibraryItem = DragSource(constants.DND_SOURCE_NODE, spec, collect)(LibraryItem);
 LibraryItem = DragSource(constants.DND_SOURCE_FRAGMENT, spec, collect)(LibraryItem);
-
 
 module.exports = LibraryItem;

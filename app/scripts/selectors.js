@@ -227,3 +227,23 @@ module.exports.activeLayers = createSelector(
 	getActiveLayersList,
 	R.partial(helpers.toHashMap, ['name'])
 );
+
+
+function componentTypesFilter(types) {
+	return (item) => R.contains(item.modelComponentType, types);
+}
+
+// const componentsLibFiltered =
+module.exports.componentsLibCategorized = createSelector(
+	getComponentsLib,
+	(componentsLib) => {
+		return {
+			'locations': componentsLib
+				.filter(componentTypesFilter(['location'])),
+			'assets': componentsLib
+				.filter(componentTypesFilter(['item', 'data'])),
+			'actors': componentsLib
+				.filter(componentTypesFilter(['actor'])),
+		};
+	}
+);

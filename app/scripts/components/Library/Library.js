@@ -1,9 +1,7 @@
+const React = require('react');
 const $ = require('jquery');
-const _ = require('lodash');
 const R = require('ramda');
 const utils = require('../../utils.js');
-const React = require('react');
-
 const LibraryItem = require('./LibraryItem.js');
 
 
@@ -12,19 +10,19 @@ const Library = React.createClass({
 		items: React.PropTypes.array.isRequired,
 		title: React.PropTypes.string.isRequired,
 		renderItem: React.PropTypes.func,
-
 		showFilter: React.PropTypes.bool,
-		// modelComponentTypes: React.PropTypes.array.isRequired,
-		// modelComponentTypesFilter: React.PropTypes.array.isRequired,
+
+		modelComponentTypes: React.PropTypes.array,
+		modelComponentTypesFilter: React.PropTypes.array,
 	},
 
 	getDefaultProps() {
 		return {
 			renderItem: this.renderListItem,
-
 			showFilter: false,
-			// modelComponentTypes: [],
-			// modelComponentTypesFilter: [],
+
+			modelComponentTypes: [],
+			modelComponentTypesFilter: [],
 		};
 	},
 
@@ -47,34 +45,35 @@ const Library = React.createClass({
 		const checked = R.contains(item, props.modelComponentTypesFilter);
 		return (
 			<label key={item}>
-				<input type='checkbox' value={item} checked={checked} className=''> {item}</input>
+				<input
+					type='checkbox'
+					value={item}
+					checked={checked}
+					className=''
+				> {item}</input>
 			</label>
 		);
 	},
 
 	renderFilter() {
 		const props = this.props;
-
 		if (!props.showFilter) { return null; }
 
-		return <form className='form-inline type-filter' onChange={this.filterType} onSubmit={this.onSubmit}>
-			{props.modelComponentTypes.map(this.renderFilterItem)}
+		return <form
+			className='form-inline type-filter'
+			onChange={this.filterType}
+			onSubmit={this.onSubmit}
+		>
+			{props.modelComponentTypes
+				.map(this.renderFilterItem)}
 		</form>;
 	},
 
 	renderListItem(item, index) {
 		const props = this.props;
-		let onClick = null;
-		if (_.isFunction(props.onClick)) {
-			onClick = (event) => {
-				props.onClick(item);
-			};
-		}
 
 		return (
 			<LibraryItem
-				{...props}
-				onClick={onClick}
 				key={item.id || index}
 				data={item}
 				showType={props.showFilter}
@@ -94,11 +93,23 @@ const Library = React.createClass({
 
 		return (
 			<div className='panel-section library-component'>
-				<h3 className='title' style={{ textTransform: 'capitalize' }}>{props.title}</h3>
+				<h3
+					className='title'
+					style={{ textTransform: 'capitalize' }}
+				>{props.title}</h3>
 				<div className='search form-group'>
 					<div className='input-group'>
-						<input ref='searchInput' type='search' className='form-control' placeholder='search' onChange={this.search}></input>
-						<div className='btn input-group-addon' onClick={this.clearSearch}>
+						<input
+							ref='searchInput'
+							type='search'
+							className='form-control'
+							placeholder='search'
+							onChange={this.search}
+						/>
+						<div
+							className='btn input-group-addon'
+							onClick={this.clearSearch}
+						>
 							<span style={style}>
 								<strong>×</strong>
 							</span>
