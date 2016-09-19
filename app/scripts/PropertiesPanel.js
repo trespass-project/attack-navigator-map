@@ -19,13 +19,13 @@ const PropertiesPanel = React.createClass({
 		relationTypes: React.PropTypes.array.isRequired,
 	},
 
-	getDefaultProps: function() {
+	getDefaultProps() {
 		return {
 			// relationTypes: []
 		};
 	},
 
-	onChange: function(selected, event) {
+	onChange(selected, event) {
 		const newProperties = { [event.target.name]: event.target.value };
 		this.context.dispatch(
 			actionCreators.updateComponentProperties(
@@ -36,11 +36,11 @@ const PropertiesPanel = React.createClass({
 		);
 	},
 
-	onSubmit: function(event) {
+	onSubmit(event) {
 		event.preventDefault();
 	},
 
-	renderTypeOptions: function() {
+	renderTypeOptions() {
 		const nonEdgeCollectionNames = R.without(['edges'], modelHelpers.collectionNames);
 		return nonEdgeCollectionNames
 			.map((typePlural) => {
@@ -49,7 +49,7 @@ const PropertiesPanel = React.createClass({
 			});
 	},
 
-	renderProperties: function(selectedItem, graphComponentType) {
+	renderProperties(selectedItem, graphComponentType) {
 		const props = this.props;
 
 		if (!selectedItem) {
@@ -202,7 +202,7 @@ const PropertiesPanel = React.createClass({
 		}
 	},
 
-	render: function() {
+	render() {
 		const props = this.props;
 
 		let selectedItem;
@@ -239,7 +239,7 @@ const PropertiesPanel = React.createClass({
 		);
 	},
 
-	renderKnowledgebase: function(selectedItem) {
+	renderKnowledgebase(selectedItem) {
 		const props = this.props;
 
 		if (props.selectedType !== 'node') {
