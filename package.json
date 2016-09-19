@@ -83,6 +83,7 @@
     "react-selectize": "^2.0.3",
     "react-virtualized": "^7.16.0",
     "redux": "^3.5.2",
+    "redux-logger": "^2.6.1",
     "redux-thunk": "^2.1.0",
     "reselect": "^2.5.3",
     "shortid": "^2.2.4",
@@ -92,6 +93,6 @@
     "xml2js": "^0.4.16"
   },
   "name": "attack-navigator-map",
-  "version": "0.21.3",
+  "version": "0.21.4",
   "private": false
 }

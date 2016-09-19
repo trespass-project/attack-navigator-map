@@ -42,9 +42,6 @@ module.exports.reducer =
 function reducer(state=initialState, action) {
 	const mergeWithState = R.partial(mergeWith, [state]);
 
-	// once, in the other reducer, is enough
-	// console.log(action);
-
 	switch (action.type) {
 		case constants.ACTION_initMap: {
 			const { modelId, metadata } = action;

@@ -4,7 +4,6 @@ const R = require('ramda');
 const _ = require('lodash');
 const moment = require('moment');
 const mergeWith = require('./reducer-utils.js').mergeWith;
-const omitType = require('./reducer-utils.js').omitType;
 const constants = require('./constants.js');
 const helpers = require('./helpers.js');
 const theme = require('./graph-theme-default.js');
@@ -149,46 +148,9 @@ function updateStateIds(idReplacementMap, state) {
 }
 
 
-const blacklist = [
-	constants.ACTION_setEditorElem,
-	constants.ACTION_setMouseOverEditor,
-	constants.ACTION_hideContextMenu,
-	constants.ACTION_select,
-	constants.ACTION_setPanning,
-	constants.ACTION_setDrag,
-	constants.ACTION_setDragNode,
-	constants.ACTION_selectWizardStep,
-	constants.ACTION_setAttackerProfit,
-	constants.ACTION_moveNode,
-	constants.ACTION_moveGroup,
-	constants.ACTION_setHoverNode,
-	constants.ACTION_setHoverGroup,
-	constants.ACTION_setPreviewEdge,
-	constants.ACTION_setTransformation,
-	constants.ACTION_setTaskStatusCategorized,
-	constants.ACTION_updateComponentProperties,
-	constants.ACTION_setHighlighted,
-];
-// const whitelist = [
-// 	constants.ACTION_loadModelFile,
-// 	constants.ACTION_loadXML,
-// 	constants.ACTION_attackerProfileChanged,
-// 	constants.ACTION_setAttackerGoal,
-// 	constants.ACTION_runAnalysis,
-// 	constants.ACTION_initMap,
-// ];
-
-
 module.exports.reducer =
 function reducer(state=initialState, action) {
 	const mergeWithState = R.partial(mergeWith, [state]);
-
-	if (!R.contains(action.type, blacklist)) {
-		console.log(action.type, omitType(action));
-	}
-	// if (R.contains(action.type, whitelist)) {
-	// 	console.log(action.type, omitType(action));
-	// }
 
 	switch (action.type) {
 		case constants.ACTION_setEditorElem: {
