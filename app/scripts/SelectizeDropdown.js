@@ -3,6 +3,12 @@ const R = require('ramda');
 const ReactSelectize = require('react-selectize');
 const SimpleSelect = ReactSelectize.SimpleSelect;
 const MultiSelect = ReactSelectize.MultiSelect;
+import { createSelector } from 'reselect';
+
+
+const getValueKey = (props) => props.valueKey;
+const getLabelKey = (props) => props.labelKey;
+const getOptions = (props) => props.options;
 
 
 const SelectizeDropdown = React.createClass({
@@ -32,6 +38,33 @@ const SelectizeDropdown = React.createClass({
 			onChange: (name, value/*(s)*/) => {},
 			extraProps: {},
 		};
+	},
+
+	componentWillMount() {
+		// memoize options
+		this.preparedOptions = createSelector(
+			getValueKey,
+			getLabelKey,
+			getOptions,
+			(valueKey, labelKey, options) => {
+				// options need `label` and `value` properties
+				return options
+					.map((option) => {
+						const omitKeys = [
+							valueKey,
+							labelKey,
+						];
+						return Object.assign(
+							{},
+							R.omit(omitKeys, option),
+							{
+								value: option[valueKey],
+								label: option[labelKey] || 'missing label',
+							}
+						);
+					});
+			}
+		);
 	},
 
 	onChange(selectedOption) {
@@ -78,28 +111,12 @@ const SelectizeDropdown = React.createClass({
 			}
 		}
 
-		// TODO: is this needed?
-		// options need `label` and `value` properties
-		const options = props.options
-			.map((option) => {
-				const omitKeys = [
-					props.valueKey,
-					props.labelKey,
-				];
-				return Object.assign(
-					{},
-					R.omit(omitKeys, option),
-					{
-						value: option[props.valueKey],
-						label: option[props.labelKey] || 'missing label',
-					}
-				);
-			});
+		const preparedOptions = this.preparedOptions(props);
 
 		return <Selectize
 			theme='bootstrap3'
 			placeholder={props.placeholder}
-			options={options}
+			options={preparedOptions}
 			onValueChange={this.onChange}
 			onValuesChange={this.onChangeMulti}
 			{...extraProps}
