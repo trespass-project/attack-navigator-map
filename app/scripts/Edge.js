@@ -3,11 +3,16 @@ const React = require('react');
 const R = require('ramda');
 const mout = require('mout');
 const classnames = require('classnames');
+import { createSelector } from 'reselect';
 const icons = require('./icons.js');
 const helpers = require('./helpers.js');
 const modelHelpers = require('./model-helpers.js');
 const actionCreators = require('./actionCreators.js');
 
+
+const getLabel = (edge) => edge.relation || '';
+const getEdgeNodes = R.prop('edgeNodes');
+const getP2 = R.prop('p2');
 
 const arrowSize = 13;
 const arrowShape = arrowHead(arrowSize);
@@ -104,6 +109,45 @@ const Edge = React.createClass({
 		};
 	},
 
+	componentWillMount() {
+		this.makeLabel = createSelector(
+			getLabel,
+			(label) => helpers.ellipsize(15, label)
+		);
+
+		this.calculateLinePoints = createSelector(
+			getEdgeNodes,
+			(edgeNodes) => diagonalBezier(edgeNodes.fromNode, edgeNodes.toNode)
+		);
+
+		this.calculateArrow = createSelector(
+			getEdgeNodes,
+			getP2,
+			(edgeNodes, p2) => {
+				const angle = vectorAngle(
+					edgeNodes.toNode.x - edgeNodes.fromNode.x,
+					edgeNodes.toNode.y - edgeNodes.fromNode.y
+				);
+				const angleDeg = radians(angle);
+
+				// const arrowPosition = bezierPoint(p1, c1, c2, p2, 0.75);
+				const arrowPosition = {
+					x: p2.x + Math.cos(angle + Math.PI) * arrowDist,
+					y: p2.y + Math.sin(angle + Math.PI) * arrowDist,
+				};
+				const { x, y } = arrowPosition;
+
+				const arrow = <g
+					transform={`translate(${x}, ${y}) rotate(${angleDeg})`}
+				>
+					{arrowShapePath}
+				</g>;
+
+				return { arrow, arrowPosition };
+			}
+		);
+	},
+
 	renderLabel(edgeNodes) {
 		const props = this.props;
 		const edge = props.edge;
@@ -116,18 +160,13 @@ const Edge = React.createClass({
 			y: mout.math.lerp(t, edgeNodes.fromNode.y, edgeNodes.toNode.y),
 		};
 
-		// TODO: look up label from `relationTypes`,
-		// instead of using id
-		let label = edge.relation || '';
-		label = helpers.ellipsize(15, label);
-
 		return <text
 			onClick={this._onClick}
 			className='label'
 			x={center.x}
 			y={center.y + 10}
 		>
-			{label}
+			{this.makeLabel(edge)}
 		</text>;
 	},
 
@@ -158,31 +197,16 @@ const Edge = React.createClass({
 			return null;
 		}
 
-		const { p1, c1, c2, p2 } = diagonalBezier(edgeNodes.fromNode, edgeNodes.toNode);
+		const { p1/*, c1, c2*/, p2 } = this.calculateLinePoints({ edgeNodes });
 
 		const isDirected = !R.contains(edge.relation, modelHelpers.nonDirectedRelationTypes);
 
 		let arrow = null;
 		let arrowPosition = undefined;
 		if (/*edge.directed*/ isDirected) {
-			const angle = vectorAngle(
-				edgeNodes.toNode.x - edgeNodes.fromNode.x,
-				edgeNodes.toNode.y - edgeNodes.fromNode.y
-			);
-			const angleDeg = radians(angle);
-
-			// const arrowPosition = bezierPoint(p1, c1, c2, p2, 0.75);
-			arrowPosition = {
-				x: p2.x + Math.cos(angle + Math.PI) * arrowDist,
-				y: p2.y + Math.sin(angle + Math.PI) * arrowDist,
-			};
-			const { x, y } = arrowPosition;
-
-			arrow = <g
-				transform={`translate(${x}, ${y}) rotate(${angleDeg})`}
-			>
-				{arrowShapePath}
-			</g>;
+			const a = this.calculateArrow({ edgeNodes, p2 });
+			arrow = a.arrow;
+			arrowPosition = a.arrowPosition;
 		}
 
 		const pathClasses = classnames(
