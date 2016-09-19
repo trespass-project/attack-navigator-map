@@ -62,18 +62,6 @@ const jsonTreeTheme = {
 };
 
 
-function handleAdd() {
-	console.log('here');
-}
-
-
-function componentTypesFilter(types) {
-	return (item) => {
-		return R.contains(item.modelComponentType, types);
-	};
-}
-
-
 const Tab = React.createClass({
 	propTypes: {
 		name: React.PropTypes.string.isRequired,
@@ -278,14 +266,13 @@ const Wizard = React.createClass({
 	},
 
 	renderLocations(props) {
-		const items = props.componentsLib.filter(componentTypesFilter(['location']));
 		return <div>
 			<h2 className='title'>Locations</h2>
 
 			<div className='component-lib'>
 				<Library
 					key={'locations-components'}
-					items={items}
+					items={props.componentsLibCategorized['locations']}
 					title='components'
 				/>
 			</div>
@@ -293,13 +280,12 @@ const Wizard = React.createClass({
 	},
 
 	renderAssets(props) {
-		const items = props.componentsLib.filter(componentTypesFilter(['item', 'data']));
 		return <div>
 			<h2 className='title'>Assets</h2>
 			<div className='component-lib'>
 				<Library
 					key={'assets-components'}
-					items={items}
+					items={props.componentsLibCategorized['assets']}
 					title='components'
 				/>
 			</div>
@@ -307,7 +293,6 @@ const Wizard = React.createClass({
 	},
 
 	renderActors(props) {
-		const items = props.componentsLib.filter(componentTypesFilter(['actor']));
 		return <div>
 			<h2 className='title'>Actors</h2>
 			{/*<div className='pattern-lib'>
@@ -318,7 +303,7 @@ const Wizard = React.createClass({
 			<div className='component-lib'>
 				<Library
 					key={'actors-components'}
-					items={items}
+					items={props.componentsLibCategorized['actors']}
 					title='components'
 				/>
 			</div>
