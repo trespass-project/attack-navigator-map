@@ -35,13 +35,13 @@ module.exports.resultsAttacktreeIdHistogram = createSelector(
 // const componentsLibMap =
 module.exports.componentsLibMap = createSelector(
 	getComponentsLib,
-	(components) => helpers.toHashMap('type', components)
+	R.partial(helpers.toHashMap, ['type'])
 );
 
 // const relationsMap =
 module.exports.relationsMap = createSelector(
 	getRelationTypes,
-	(relationTypes) => helpers.toHashMap('value', relationTypes)
+	R.partial(helpers.toHashMap, ['value'])
 );
 
 // const hasOpenMap =
@@ -218,7 +218,5 @@ module.exports.displayLayersList = createSelector(
 // const activeLayers =
 module.exports.activeLayers = createSelector(
 	getActiveLayersList,
-	(activeLayersList) => {
-		return helpers.toHashMap('name', activeLayersList);
-	}
+	R.partial(helpers.toHashMap, ['name'])
 );
