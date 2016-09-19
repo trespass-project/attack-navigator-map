@@ -356,10 +356,6 @@ const Wizard = React.createClass({
 	renderPolicies() {
 		const props = this.props;
 
-		// TODO: don't do this here
-		const policies = R.values(props.graph.policies || {})
-			.map(R.omit(['modelComponentType']));
-
 		return <div>
 			<h2 className='title'>Policies</h2>
 
@@ -369,7 +365,7 @@ const Wizard = React.createClass({
 
 			<hr />
 
-			{policies
+			{R.values(props.graph.policies || {})
 				.map((item) => {
 					return <div key={item.id}>
 						<PolicyEditor

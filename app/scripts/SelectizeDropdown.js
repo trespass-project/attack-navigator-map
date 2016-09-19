@@ -78,6 +78,7 @@ const SelectizeDropdown = React.createClass({
 			}
 		}
 
+		// TODO: is this needed?
 		// options need `label` and `value` properties
 		const options = props.options
 			.map((option) => {
