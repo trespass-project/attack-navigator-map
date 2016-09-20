@@ -183,6 +183,9 @@ gulp.task('icons', () => {
 	gulp.src(appDir(iconsDir('types/*.svg')))
 		.pipe(gulp.dest(tempDir(iconsDir('types'))))
 		.pipe(gulp.dest(distDir(iconsDir('types'))));
+	gulp.src(appDir(iconsDir('types_black/*.svg')))
+		.pipe(gulp.dest(tempDir(iconsDir('types_black'))))
+		.pipe(gulp.dest(distDir(iconsDir('types_black'))));
 });
 
 
