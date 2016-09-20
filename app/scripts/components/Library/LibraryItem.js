@@ -50,18 +50,22 @@ let LibraryItem = React.createClass({
 		const props = this.props;
 		const connectDragSource = props.connectDragSource;
 
+		const icon = (!!props.data.icon)
+			? <div className='iconContainer'>
+				<img
+					src={props.data.icon
+						.replace('/types/', '/types_black/')
+					}
+				/>
+			</div>
+			: null;
+
 		return connectDragSource(
 			<li key={props.data.label} className='list-group-item clearfix'>
 				<div style={{ float: 'left' }}>
 					<span>
 						{/*this.renderType()*/}
-						<div className='iconContainer'>
-							<img
-								src={props.data.icon
-									.replace('/types/', '/types_black/')
-								}
-							/>
-						</div>
+						{icon}
 						<span className='normal'>{props.data.label}</span>
 					</span>
 					<span className='draghint'>
