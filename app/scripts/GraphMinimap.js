@@ -1,8 +1,5 @@
-'use strict';
-
 const React = require('react');
 const reactDOM = require('react-dom');
-const R = require('ramda');
 const $ = require('jquery');
 const helpers = require('./helpers.js');
 const Graph = require('./Graph.js');
