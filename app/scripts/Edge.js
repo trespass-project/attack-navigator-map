@@ -212,6 +212,11 @@ const Edge = React.createClass({
 			arrowPosition = a.arrowPosition;
 		}
 
+		const groupClasses = classnames(
+			'edge-group',
+			{ 'selected': props.isSelected }
+		);
+
 		const pathClasses = classnames(
 			'edge',
 			{
@@ -223,7 +228,7 @@ const Edge = React.createClass({
 
 		return (
 			<g
-				className='edge-group'
+				className={groupClasses}
 				onClick={this._onClick}
 				onContextMenu={this._onContextMenu}
 			>
