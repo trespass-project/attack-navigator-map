@@ -15,12 +15,21 @@ const Dropzone = React.createClass({
 		y: React.PropTypes.number.isRequired,
 		group: React.PropTypes.object.isRequired,
 		radius: React.PropTypes.number.isRequired,
+		width: React.PropTypes.number.isRequired,
+		height: React.PropTypes.number.isRequired,
+		showGroupLabels: React.PropTypes.bool,
+		isHovered: React.PropTypes.bool,
+		isSelected: React.PropTypes.bool,
+		nodes: React.PropTypes.object,
 	},
 
-	// getDefaultProps() {
-	// 	return {
-	// 	};
-	// },
+	getDefaultProps() {
+		return {
+			showGroupLabels: true,
+			isHovered: false,
+			isSelected: false,
+		};
+	},
 
 	render() {
 		const props = this.props;
@@ -81,10 +90,7 @@ const Group = React.createClass({
 
 		if (props.dragNode
 			&& !R.contains(props.dragNodeId, props.group.nodeIds)) {
-			const dragNode = helpers.getItemById(
-				props.graph.nodes,
-				props.dragNodeId
-			);
+			const dragNode = props.nodes[props.dragNodeId];
 			const groupRect = {
 				x: props.x,
 				y: props.y,
@@ -116,8 +122,6 @@ const Group = React.createClass({
 	render() {
 		const props = this.props;
 		const context = this.context;
-
-		if (!props.showGroups) { return null; }
 
 		return (
 			<g

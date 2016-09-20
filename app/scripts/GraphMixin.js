@@ -83,7 +83,6 @@ const GraphMixin = {
 		}
 
 		return <Group
-			{...props}
 			key={group.id}
 			isHovered={props.hoverGroup && (group.id === props.hoverGroup.id)}
 			isSelected={group.id === props.selectedId}
@@ -92,6 +91,10 @@ const GraphMixin = {
 			y={bounds.minY}
 			width={bounds.maxX - bounds.minX}
 			height={bounds.maxY - bounds.minY}
+			nodes={props.nodes}
+			dragNodeId={props.dragNodeId}
+			editorElem={props.editorElem}
+			editorTransformElem={props.editorTransformElem}
 		/>;
 	},
 
@@ -209,7 +212,7 @@ const GraphMixin = {
 					})
 					.map(this.renderBgImage)
 				}
-				{R.values(graph.groups)
+				{(props.showGroups) && R.values(graph.groups)
 					.map(this.renderGroup)
 				}
 
