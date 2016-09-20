@@ -22,26 +22,57 @@
 			padding: 0
 			display: block
 
+			$pTop = 5px
+			$pBottom = $pTop
+			$pLeft = 10px
+			$pRight = $pLeft
+
 			li
 				background-color: rgb(245, 245, 245)
 				border-radius: 0
 				cursor: move
-				padding-left: 10px
-				padding-right: 10px
-				padding-top: 5px
-				padding-bottom: 5px
+				padding-left: $pLeft
+				padding-right: $pRight
+				padding-top: $pTop
+				padding-bottom: $pBottom
 
 				.badge
 					float: right
 					font-weight: normal
 					margin-top: 0.15em
 
+			.iconContainer
+				$dimension = 40px
+				display: inline-block
+				margin-left: - $pLeft
+				margin-top: - $pTop
+				margin-bottom: - $pBottom
+				margin-right: 5px
+				width: $dimension
+
+				img
+					height: $dimension
+					width: $dimension
+
+			.draghint
+				display: none
+				color: white
+
 			.remove
 				display: none
 				cursor: pointer
 
+			.normal
+				display: inline
+
 			li:hover
 				background: $highlightColor
+
+				.normal
+					display: none
+
+				.draghint
+					display: inline
 
 				.remove
 					display: inline-block
