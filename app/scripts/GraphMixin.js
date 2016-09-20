@@ -60,44 +60,15 @@ const GraphMixin = {
 		const props = this.props;
 		const context = this.context;
 
-		let bounds = null;
-		const extraPadding = 5;
-		const extraPaddingBottom = 20 - extraPadding;
-		const s = (context.theme.node.size * 0.5) + (2 * extraPadding);
-
-		if (group.nodeIds.length === 0) {
-			const xOffset = group.x || 0;
-			const yOffset = group.y || 0;
-			bounds = { // TODO: improve this
-				minX: xOffset + extraPadding,
-				minY: yOffset + extraPadding,
-				maxX: xOffset + s,
-				maxY: yOffset + s,
-			};
-		} else {
-			// TODO: do this inside <Group>
-			// and memoize bounds
-			bounds = helpers.getGroupBBox(props.graph.nodes, group);
-			bounds.minX -= s;
-			bounds.minY -= s;
-			bounds.maxX += s;
-			bounds.maxY += (s + extraPaddingBottom);
-		}
-
 		return <Group
 			key={group.id}
 			isHovered={props.hoverGroup && (group.id === props.hoverGroup.id)}
 			isSelected={group.id === props.selectedId}
 			group={group}
-			nodes={props.nodes}
+			nodes={props.graph.nodes}
 			dragNodeId={props.dragNodeId}
-
 			editorElem={props.editorElem}
 			editorTransformElem={props.editorTransformElem}
-			x={bounds.minX}
-			y={bounds.minY}
-			width={bounds.maxX - bounds.minX}
-			height={bounds.maxY - bounds.minY}
 		/>;
 	},
 

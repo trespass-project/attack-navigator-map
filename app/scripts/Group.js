@@ -56,10 +56,6 @@ const Group = React.createClass({
 	},
 
 	propTypes: {
-		x: React.PropTypes.number.isRequired,
-		y: React.PropTypes.number.isRequired,
-		width: React.PropTypes.number.isRequired,
-		height: React.PropTypes.number.isRequired,
 		group: React.PropTypes.object.isRequired,
 		isHovered: React.PropTypes.bool,
 		isSelected: React.PropTypes.bool,
@@ -74,17 +70,16 @@ const Group = React.createClass({
 		};
 	},
 
-	renderLabel() {
-		const props = this.props;
-		if (!props.showGroupLabels) { return null; }
+	renderLabel(x, y) {
 		return <text
-			dx={props.width*0.5}
-			dy={/*props.height*0.5 + 16*/ -10}
+			dx={x}
+			dy={y}
 			className='label'
-		>{props.group.label}</text>;
+		>{this.props.group.label}</text>;
 	},
 
 	renderDropzone() {
+		return null;
 		const props = this.props;
 		const context = this.context;
 
@@ -122,6 +117,35 @@ const Group = React.createClass({
 	render() {
 		const props = this.props;
 		const context = this.context;
+		const { group } = props;
+
+		let bounds = null;
+		const extraPadding = 5;
+		const extraPaddingBottom = 20 - extraPadding;
+		const s = (context.theme.node.size * 0.5) + (2 * extraPadding);
+
+		// TODO: memoize bounds
+		if (group.nodeIds.length === 0) {
+			const xOffset = group.x || 0;
+			const yOffset = group.y || 0;
+			bounds = { // TODO: improve this
+				minX: xOffset + extraPadding,
+				minY: yOffset + extraPadding,
+				maxX: xOffset + s,
+				maxY: yOffset + s,
+			};
+		} else {
+			bounds = helpers.getGroupBBox(props.nodes, group);
+			bounds.minX -= s;
+			bounds.minY -= s;
+			bounds.maxX += s;
+			bounds.maxY += (s + extraPaddingBottom);
+		}
+
+		const width = bounds.maxX - bounds.minX;
+		const height = bounds.maxY - bounds.minY;
+		const x = this._x = bounds.minX;
+		const y = this._y = bounds.minY;
 
 		return (
 			<g
@@ -130,7 +154,7 @@ const Group = React.createClass({
 				onContextMenu={this._onContextMenu}
 				onMouseEnter={this._handleHover}
 				onMouseLeave={this._handleHoverOut}
-				transform={`translate(${props.x}, ${props.y})`}
+				transform={`translate(${x}, ${y})`}
 			>
 				<rect
 					className={classnames(
@@ -139,11 +163,14 @@ const Group = React.createClass({
 					)}
 					rx={context.theme.group.cornerRadius}
 					ry={context.theme.group.cornerRadius}
-					width={props.width}
-					height={props.height}
+					width={width}
+					height={height}
 				>
 				</rect>
-				{this.renderLabel()}
+				{(props.showGroupLabels) && this.renderLabel(
+					width * 0.5,
+					/*height*0.5 + 16*/ -10
+				)}
 				{this.renderDropzone()}
 			</g>
 		);
@@ -252,8 +279,8 @@ const Group = React.createClass({
 	_onDragStart(event) {
 		const props = this.props;
 
-		this.originalPositionX = props.x;
-		this.originalPositionY = props.y;
+		this.originalPositionX = this._x;
+		this.originalPositionY = this._y;
 
 		this.modelXYEventOrigin = helpers.unTransformFromTo(
 			props.editorElem,
@@ -268,8 +295,8 @@ const Group = React.createClass({
 	_onDragMove(event) {
 		const props = this.props;
 
-		this.currentPositionX = props.x;
-		this.currentPositionY = props.y;
+		this.currentPositionX = this._x;
+		this.currentPositionY = this._y;
 
 		const modelXYEvent = helpers.unTransformFromTo(
 			props.editorElem,
