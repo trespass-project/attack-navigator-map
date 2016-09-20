@@ -276,13 +276,11 @@ const Wizard = React.createClass({
 
 	renderLocations(props) {
 		return <div>
-			<h2 className='title'>Locations</h2>
-
 			<div className='component-lib'>
 				<Library
 					key={'locations-components'}
 					items={props.componentsLibCategorized['locations']}
-					title='components'
+					title='locations'
 				/>
 			</div>
 		</div>;
@@ -290,12 +288,11 @@ const Wizard = React.createClass({
 
 	renderAssets(props) {
 		return <div>
-			<h2 className='title'>Assets</h2>
 			<div className='component-lib'>
 				<Library
 					key={'assets-components'}
 					items={props.componentsLibCategorized['assets']}
-					title='components'
+					title='assets'
 				/>
 			</div>
 		</div>;
@@ -303,12 +300,11 @@ const Wizard = React.createClass({
 
 	renderActors(props) {
 		return <div>
-			<h2 className='title'>Actors</h2>
 			<div className='component-lib'>
 				<Library
 					key={'actors-components'}
 					items={props.componentsLibCategorized['actors']}
-					title='components'
+					title='actors'
 				/>
 			</div>
 		</div>;
@@ -746,7 +742,7 @@ const Wizard = React.createClass({
 
 		return (
 			<div>
-				{this.renderMinimap(props)}
+				{/*this.renderMinimap(props)*/}
 				{this.renderOutline(props)}
 				{this.renderProperties(props)}
 				<hr />
