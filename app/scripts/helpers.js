@@ -8,7 +8,8 @@ const trespass = require('trespass.js');
 const trespassUtils = trespass.utils;
 
 
-const getElemByRef = module.exports.getElemByRef =
+const getElemByRef =
+module.exports.getElemByRef =
 function getElemByRef(component, refName) {
 	if (refName && component.refs[refName]) {
 		return component.refs[refName];
@@ -18,7 +19,8 @@ function getElemByRef(component, refName) {
 };
 
 
-const noop = module.exports.noop =
+const noop =
+module.exports.noop =
 function noop() {};
 
 
@@ -26,7 +28,8 @@ const toHashMap =
 module.exports.toHashMap = trespassUtils.toHashMap;
 
 
-const normalize = module.exports.normalize =
+const normalize =
+module.exports.normalize =
 function normalize(data, idAttribute='id') {
 	const name = 'collection';
 	const schema = new normalizr.Schema(name, { idAttribute });
@@ -40,15 +43,18 @@ function normalize(data, idAttribute='id') {
 };
 
 
-const getItemByKey = module.exports.getItemByKey =
+const getItemByKey =
+module.exports.getItemByKey =
 function getItemByKey(key, coll, value) {
 	return R.find( R.propEq(key, value) )(coll);
 };
-const getItemById = module.exports.getItemById = R.partial(getItemByKey, ['id']);
+const getItemById =
+module.exports.getItemById = R.partial(getItemByKey, ['id']);
 
 
 // TODO: test
-const getNodesBBox = module.exports.getNodesBBox =
+const getNodesBBox =
+module.exports.getNodesBBox =
 function getNodesBBox(nodes) {
 	const bounds = nodes.reduce(
 		(_bounds, node) => {
@@ -79,7 +85,8 @@ function getNodesBBox(nodes) {
 };
 
 
-const getGroupInitialPosition = module.exports.getGroupInitialPosition =
+const getGroupInitialPosition =
+module.exports.getGroupInitialPosition =
 function getGroupInitialPosition(group) {
 	return {
 		x: group.x || 0,
@@ -90,7 +97,8 @@ function getGroupInitialPosition(group) {
 
 // TODO: test
 // get bounding box for all nodes in group
-const getGroupBBox = module.exports.getGroupBBox =
+const getGroupBBox =
+module.exports.getGroupBBox =
 function getGroupBBox(nodesMap, group) {
 	const nodes = group.nodeIds.map(nodeId => nodesMap[nodeId]);
 	const bbox = getNodesBBox(nodes);
@@ -107,7 +115,8 @@ function getGroupBBox(nodesMap, group) {
 };
 
 
-const distBetweenPoints = module.exports.distBetweenPoints =
+const distBetweenPoints =
+module.exports.distBetweenPoints =
 function distBetweenPoints(a, b) {
 	const x = b.x - a.x;
 	const y = b.y - a.y;
@@ -115,13 +124,15 @@ function distBetweenPoints(a, b) {
 };
 
 
-const isBetween = module.exports.isBetween =
+const isBetween =
+module.exports.isBetween =
 function isBetween(what, low, high) {
 	return (what >= low) && (what <= high);
 };
 
 
-const isRectInsideRect = module.exports.isRectInsideRect =
+const isRectInsideRect =
+module.exports.isRectInsideRect =
 function isRectInsideRect(r1, r2) {
 	// expects a rect to have: x, y, width, height
 
@@ -189,13 +200,15 @@ function areAttackerProfilesEqual(p1, p2) {
 };
 
 
-const makeId = module.exports.makeId =
+const makeId =
+module.exports.makeId =
 function makeId(type) {
 	return ['id', /*Date.now(),*/ shortid(), type || ''].join('-');
 };
 
 
-const ellipsize = module.exports.ellipsize =
+const ellipsize =
+module.exports.ellipsize =
 function ellipsize(maxLen, s) {
 	const E = '…';
 	const len = s.length;
@@ -212,13 +225,15 @@ function ellipsize(maxLen, s) {
 
 
 const radFactor = Math.PI / 180;
-const degToRad = module.exports.degToRad =
+const degToRad =
+module.exports.degToRad =
 function degToRad(deg) {
 	return deg * radFactor;
 };
 
 
-const coordsRelativeToElem = module.exports.coordsRelativeToElem =
+const coordsRelativeToElem =
+module.exports.coordsRelativeToElem =
 function coordsRelativeToElem(elem, xy) {
 	const $elem = $(elem);
 	const elemOffset = $elem.offset();
@@ -230,7 +245,8 @@ function coordsRelativeToElem(elem, xy) {
 
 
 // https://code.google.com/p/chromium/issues/detail?id=524432#c3
-const getTransformToElement = module.exports.getTransformToElement =
+const getTransformToElement =
+module.exports.getTransformToElement =
 function getTransformToElement(element, target) {
 	try {
 		const mTargetInverse = target.getScreenCTM().inverse();
@@ -243,13 +259,15 @@ function getTransformToElement(element, target) {
 
 // http://stackoverflow.com/a/6084322/2839801
 // http://phrogz.net/svg/drag_under_transformation.xhtml
-const unTransform = module.exports.unTransform =
+const unTransform =
+module.exports.unTransform =
 function unTransform(point, ctm) {
 	return point.matrixTransform(ctm/*.inverse()*/);
 };
 
 
-const unTransformFromTo = module.exports.unTransformFromTo =
+const unTransformFromTo =
+module.exports.unTransformFromTo =
 function unTransformFromTo(fromElem, toElem, xy) {
 	const point = (fromElem.ownerSVGElement || fromElem).createSVGPoint();
 	point.x = xy.x;
