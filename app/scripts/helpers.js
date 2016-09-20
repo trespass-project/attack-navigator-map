@@ -58,6 +58,7 @@ module.exports.getNodesBBox =
 function getNodesBBox(nodes) {
 	const bounds = nodes.reduce(
 		(_bounds, node) => {
+			/* eslint no-param-reassign: 0 */
 			_bounds.minX = Math.min(_bounds.minX, node.x);
 			_bounds.minY = Math.min(_bounds.minY, node.y);
 			_bounds.maxX = Math.max(_bounds.maxX, node.x);
@@ -203,7 +204,12 @@ function areAttackerProfilesEqual(p1, p2) {
 const makeId =
 module.exports.makeId =
 function makeId(type) {
-	return ['id', /*Date.now(),*/ shortid(), type || ''].join('-');
+	return [
+		'id',
+		/*Date.now(),*/
+		shortid(),
+		type || ''
+	].join('-');
 };
 
 
