@@ -151,7 +151,7 @@ const Edge = React.createClass({
 		);
 	},
 
-	renderLabel(edgeNodes) {
+	renderLabel(edgeNodes, treatLikePredicate=true) {
 		const props = this.props;
 		const edge = props.edge;
 
@@ -167,7 +167,7 @@ const Edge = React.createClass({
 			onClick={this._onClick}
 			className='label'
 			x={center.x}
-			y={center.y + 10}
+			y={center.y + ((treatLikePredicate) ? 10 : 0)}
 		>
 			{this.makeLabel(edge)}
 		</text>;
@@ -206,10 +206,16 @@ const Edge = React.createClass({
 
 		let arrow = null;
 		let arrowPosition = undefined;
-		if (/*edge.directed*/ isDirected) {
+		if (isDirected) {
 			const a = this.calculateArrow({ edgeNodes, p2 });
 			arrow = a.arrow;
 			arrowPosition = a.arrowPosition;
+		}
+
+		let treatLikePredicate = props.isPredicate;
+		if (edge.relation === 'at-location') {
+			arrow = null;
+			treatLikePredicate = false;
 		}
 
 		const groupClasses = classnames(
@@ -222,7 +228,7 @@ const Edge = React.createClass({
 
 		const pathClasses = classnames(
 			'edge',
-			{ 'predicate': props.isPredicate }
+			{ 'predicate': treatLikePredicate }
 		);
 
 		return (
@@ -250,7 +256,7 @@ const Edge = React.createClass({
 					strokeWidth={context.theme.edge.strokeWidth}
 				*/}
 				{arrow}
-				{this.renderLabel(edgeNodes)}
+				{this.renderLabel(edgeNodes, treatLikePredicate)}
 			</g>
 		);
 	},
