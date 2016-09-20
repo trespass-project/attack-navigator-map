@@ -2,29 +2,32 @@
 	$previewEdgeWidth = 5
 
 	.edge
-		stroke-width: 15
 		stroke: rgb(170, 170, 167)
+		stroke-width: 15px
 		fill: none
-
-		&.preview
-			stroke-width: $previewEdgeWidth
-
-		&:hover, &.preview
-			stroke: $edgeStrokeSelected !important
-		&.selected
-			stroke: $edgeStrokeSelected !important
 
 	.edge.predicate
 		stroke-width: $previewEdgeWidth
-		// stroke: $edgeStroke
 		stroke: $nodeFill
 
 	.arrowhead
 		fill: $nodeFill
 
-	&.selected, &:hover
+	&.preview
+		.edge
+			stroke-width: $previewEdgeWidth
+
+	&:hover
 		.arrowhead
 			fill: $edgeStrokeSelected
+		.edge
+			stroke: $edgeStrokeSelected !important
+
+	&.selected
+		.arrowhead
+			fill: $edgeStrokeSelected
+		.edge
+			stroke: $edgeStrokeSelected !important
 
 	.label
 		font-size: 14px

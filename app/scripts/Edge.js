@@ -214,16 +214,15 @@ const Edge = React.createClass({
 
 		const groupClasses = classnames(
 			'edge-group',
-			{ 'selected': props.isSelected }
+			{
+				'preview': props.isPreview,
+				'selected': props.isSelected,
+			}
 		);
 
 		const pathClasses = classnames(
 			'edge',
-			{
-				'preview': props.isPreview,
-				'selected': props.isSelected,
-				'predicate': props.isPredicate
-			}
+			{ 'predicate': props.isPredicate }
 		);
 
 		return (
