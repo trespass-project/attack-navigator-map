@@ -49,12 +49,20 @@ let LibraryItem = React.createClass({
 	render() {
 		const props = this.props;
 		const connectDragSource = props.connectDragSource;
+
 		return connectDragSource(
 			<li key={props.data.label} className='list-group-item clearfix'>
 				<div style={{ float: 'left' }}>
-					<span className='normal'>
-						{this.renderType()}
-						<span>{props.data.label}</span>
+					<span>
+						{/*this.renderType()*/}
+						<div className='iconContainer'>
+							<img
+								src={props.data.icon
+									.replace('/types/', '/types_black/')
+								}
+							/>
+						</div>
+						<span className='normal'>{props.data.label}</span>
 					</span>
 					<span className='draghint'>
 						Drag me onto map
