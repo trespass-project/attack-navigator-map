@@ -75,6 +75,8 @@ const GraphMixin = {
 				maxY: yOffset + s,
 			};
 		} else {
+			// TODO: do this inside <Group>
+			// and memoize bounds
 			bounds = helpers.getGroupBBox(props.graph.nodes, group);
 			bounds.minX -= s;
 			bounds.minY -= s;
@@ -87,14 +89,15 @@ const GraphMixin = {
 			isHovered={props.hoverGroup && (group.id === props.hoverGroup.id)}
 			isSelected={group.id === props.selectedId}
 			group={group}
+			nodes={props.nodes}
+			dragNodeId={props.dragNodeId}
+
+			editorElem={props.editorElem}
+			editorTransformElem={props.editorTransformElem}
 			x={bounds.minX}
 			y={bounds.minY}
 			width={bounds.maxX - bounds.minX}
 			height={bounds.maxY - bounds.minY}
-			nodes={props.nodes}
-			dragNodeId={props.dragNodeId}
-			editorElem={props.editorElem}
-			editorTransformElem={props.editorTransformElem}
 		/>;
 	},
 
@@ -149,7 +152,6 @@ const GraphMixin = {
 			y={node.y}
 			node={node}
 
-			// {...this.props}
 			editorElem={props.editorElem}
 			editorTransformElem={props.editorTransformElem}
 			graph={props.graph}
@@ -184,7 +186,8 @@ const GraphMixin = {
 						className='minimap-visible-rect'
 						strokeWidth={context.theme.minimap.viewport.strokeWidth / props.constantScale}
 						width={props.visibleRect.width}
-						height={props.visibleRect.height}>
+						height={props.visibleRect.height}
+					>
 					</rect>
 				</g>
 			);
@@ -300,7 +303,8 @@ const GraphMixin = {
 				>
 					<g
 						ref='panZoom'
-						transform={`matrix(${scale}, 0, 0, ${scale}, ${panX}, ${panY})`}>
+						transform={`matrix(${scale}, 0, 0, ${scale}, ${panX}, ${panY})`}
+					>
 						{this._renderMap()}
 					</g>
 					{(props.editable)
