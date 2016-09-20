@@ -52,8 +52,13 @@ let LibraryItem = React.createClass({
 		return connectDragSource(
 			<li key={props.data.label} className='list-group-item clearfix'>
 				<div style={{ float: 'left' }}>
-					{this.renderType()}
-					<span>{props.data.label}</span>
+					<span className='normal'>
+						{this.renderType()}
+						<span>{props.data.label}</span>
+					</span>
+					<span className='draghint'>
+						Drag me onto map
+					</span>
 				</div>
 				<div
 					style={{ float: 'right' }}

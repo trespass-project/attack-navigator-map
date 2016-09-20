@@ -36,12 +36,25 @@
 					font-weight: normal
 					margin-top: 0.15em
 
+			.draghint
+				display: none
+				color: white
+
 			.remove
 				display: none
 				cursor: pointer
 
+			.normal
+				display: inline
+
 			li:hover
 				background: $highlightColor
+
+				.normal
+					display: none
+
+				.draghint
+					display: inline
 
 				.remove
 					display: inline-block
