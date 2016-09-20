@@ -1,5 +1,3 @@
-'use strict';
-
 const $ = require('jquery');
 const _ = require('lodash');
 const R = require('ramda');
@@ -73,15 +71,20 @@ const Group = React.createClass({
 		return <text
 			dx={props.width*0.5}
 			dy={/*props.height*0.5 + 16*/ -10}
-			className='label'>{props.group.label}</text>;
+			className='label'
+		>{props.group.label}</text>;
 	},
 
 	renderDropzone() {
 		const props = this.props;
 		const context = this.context;
 
-		if (props.dragNode && !R.contains(props.dragNodeId, props.group.nodeIds)) {
-			const dragNode = helpers.getItemById(props.graph.nodes, props.dragNodeId);
+		if (props.dragNode
+			&& !R.contains(props.dragNodeId, props.group.nodeIds)) {
+			const dragNode = helpers.getItemById(
+				props.graph.nodes,
+				props.dragNodeId
+			);
 			const groupRect = {
 				x: props.x,
 				y: props.y,
@@ -98,14 +101,12 @@ const Group = React.createClass({
 			if (helpers.isRectInsideRect(nodeRect, groupRect) ||
 				helpers.isRectInsideRect(groupRect, nodeRect) // or, when group is smaller than node
 				) {
-				return (
-					<Dropzone
-						group={props.group}
-						radius={context.theme.group.dropzoneRadius}
-						x={props.width*0.5}
-						y={props.height*0.5}
-					/>
-				);
+				return <Dropzone
+					group={props.group}
+					radius={context.theme.group.dropzoneRadius}
+					x={props.width*0.5}
+					y={props.height*0.5}
+				/>;
 			}
 		}
 
@@ -125,13 +126,18 @@ const Group = React.createClass({
 				onContextMenu={this._onContextMenu}
 				onMouseEnter={this._handleHover}
 				onMouseLeave={this._handleHoverOut}
-				transform={`translate(${props.x}, ${props.y})`}>
+				transform={`translate(${props.x}, ${props.y})`}
+			>
 				<rect
-					className={classnames('group', { 'selected': props.isSelected })}
+					className={classnames(
+						'group',
+						{ 'selected': props.isSelected }
+					)}
 					rx={context.theme.group.cornerRadius}
 					ry={context.theme.group.cornerRadius}
 					width={props.width}
-					height={props.height}>
+					height={props.height}
+				>
 				</rect>
 				{this.renderLabel()}
 				{this.renderDropzone()}
@@ -155,7 +161,7 @@ const Group = React.createClass({
 		const context = this.context;
 		const props = this.props;
 
-		let bgimg = {
+		const bgimg = {
 			label: 'background\nimage',
 			icon: icons['fa-plus'],
 			action: this.openFileDialog
@@ -163,7 +169,9 @@ const Group = React.createClass({
 		if (!_.isEmpty(props.group._bgImage)) {
 			bgimg.icon = icons['fa-remove'];
 			bgimg.action = () => {
-				context.dispatch( actionCreators.removeGroupBackgroundImage(props.group.id) );
+				context.dispatch(
+					actionCreators.removeGroupBackgroundImage(props.group.id)
+				);
 			};
 		}
 
@@ -195,7 +203,6 @@ const Group = React.createClass({
 	},
 
 	loadBackgroundFile(event) { // TODO: do this elsewhere
-		const that = this;
 		const props = this.props;
 
 		const file = $('#add-file')[0].files[0];
@@ -247,8 +254,10 @@ const Group = React.createClass({
 		this.modelXYEventOrigin = helpers.unTransformFromTo(
 			props.editorElem,
 			props.editorTransformElem,
-			{ x: event.clientX,
-			  y: event.clientY }
+			{
+				x: event.clientX,
+				y: event.clientY,
+			}
 		);
 	},
 
@@ -261,8 +270,10 @@ const Group = React.createClass({
 		const modelXYEvent = helpers.unTransformFromTo(
 			props.editorElem,
 			props.editorTransformElem,
-			{ x: event.clientX,
-			  y: event.clientY }
+			{
+				x: event.clientX,
+				y: event.clientY,
+			}
 		);
 
 		const modelXYDelta = {
