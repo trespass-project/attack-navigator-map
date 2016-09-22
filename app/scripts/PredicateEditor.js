@@ -1,4 +1,5 @@
 const React = require('react');
+const R = require('ramda');
 const actionCreators = require('./actionCreators.js');
 const ComponentReference = require('./ComponentReference.js');
 const SelectizeDropdown = require('./SelectizeDropdown.js');
@@ -33,8 +34,12 @@ const SubjObjSelectize = React.createClass({
 
 		return <SelectizeDropdown
 			multi={false}
+			options={props.nodesList}
+			{...R.omit(
+				['nodesList'],
+				props)
+			}
 			extraProps={{ createFromSearch, renderValue }}
-			{...props}
 		/>;
 	},
 });
@@ -45,6 +50,7 @@ const PredicateEditor = React.createClass({
 		handleCreate: React.PropTypes.func,
 		handleUpdate: React.PropTypes.func,
 		nodes: React.PropTypes.object.isRequired,
+		nodesList: React.PropTypes.array.isRequired,
 		edges: React.PropTypes.array.isRequired,
 		relationTypes: React.PropTypes.array.isRequired,
 		relationsMap: React.PropTypes.object.isRequired,
