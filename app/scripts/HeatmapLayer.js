@@ -1,5 +1,4 @@
 const React = require('react');
-const R = require('ramda');
 
 
 // const name =
@@ -7,7 +6,7 @@ module.exports.name = 'HeatmapLayer';
 
 
 // const displayName =
-module.exports.displayName = 'heatmap layer';
+module.exports.displayName = undefined; // 'heatmap layer';
 
 
 // const adjustProps =
