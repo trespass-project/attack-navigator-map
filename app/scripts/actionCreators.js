@@ -1516,14 +1516,14 @@ function runAnalysis(modelId, toolChainId, attackerProfileId) {
 			.then((idReplacementMap) => {
 				const { modelXmlStr, model } = stateToModelXML(state, { idReplacementMap });
 
-				const validationErrors = trespass.model.validateModel(model);
-				if (validationErrors.length) {
-					alert([
-						'Model validation failed:',
-						...(validationErrors.map(R.prop('message')))
-					].join('\n'));
-					return Promise.reject();
-				}
+				// const validationErrors = trespass.model.validateModel(model);
+				// if (validationErrors.length) {
+				// 	alert([
+				// 		'Model validation failed:',
+				// 		...(validationErrors.map(R.prop('message')))
+				// 	].join('\n'));
+				// 	return Promise.reject();
+				// }
 
 				const scenarioXmlStr = generateScenarioXML(
 					modelId,
