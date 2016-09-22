@@ -318,6 +318,7 @@ const Wizard = React.createClass({
 			<PredicateEditor
 				edges={props.predicateEdges}
 				nodes={props.graph.nodes}
+				nodesList={props.nodesList}
 				relationTypes={props.relationTypes}
 				relationsMap={props.relationsMap}
 				predicates={predicates}
