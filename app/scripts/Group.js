@@ -1,5 +1,3 @@
-'use strict';
-
 const $ = require('jquery');
 const _ = require('lodash');
 const R = require('ramda');
@@ -17,12 +15,21 @@ const Dropzone = React.createClass({
 		y: React.PropTypes.number.isRequired,
 		group: React.PropTypes.object.isRequired,
 		radius: React.PropTypes.number.isRequired,
+		width: React.PropTypes.number.isRequired,
+		height: React.PropTypes.number.isRequired,
+		showGroupLabels: React.PropTypes.bool,
+		isHovered: React.PropTypes.bool,
+		isSelected: React.PropTypes.bool,
+		nodes: React.PropTypes.object,
 	},
 
-	// getDefaultProps() {
-	// 	return {
-	// 	};
-	// },
+	getDefaultProps() {
+		return {
+			showGroupLabels: true,
+			isHovered: false,
+			isSelected: false,
+		};
+	},
 
 	render() {
 		const props = this.props;
@@ -49,10 +56,6 @@ const Group = React.createClass({
 	},
 
 	propTypes: {
-		x: React.PropTypes.number.isRequired,
-		y: React.PropTypes.number.isRequired,
-		width: React.PropTypes.number.isRequired,
-		height: React.PropTypes.number.isRequired,
 		group: React.PropTypes.object.isRequired,
 		isHovered: React.PropTypes.bool,
 		isSelected: React.PropTypes.bool,
@@ -67,21 +70,22 @@ const Group = React.createClass({
 		};
 	},
 
-	renderLabel() {
-		const props = this.props;
-		if (!props.showGroupLabels) { return null; }
+	renderLabel(x, y) {
 		return <text
-			dx={props.width*0.5}
-			dy={/*props.height*0.5 + 16*/ -10}
-			className='label'>{props.group.label}</text>;
+			dx={x}
+			dy={y}
+			className='label'
+		>{this.props.group.label}</text>;
 	},
 
 	renderDropzone() {
+		return null;
 		const props = this.props;
 		const context = this.context;
 
-		if (props.dragNode && !R.contains(props.dragNodeId, props.group.nodeIds)) {
-			const dragNode = helpers.getItemById(props.graph.nodes, props.dragNodeId);
+		if (props.dragNode
+			&& !R.contains(props.dragNodeId, props.group.nodeIds)) {
+			const dragNode = props.nodes[props.dragNodeId];
 			const groupRect = {
 				x: props.x,
 				y: props.y,
@@ -98,14 +102,12 @@ const Group = React.createClass({
 			if (helpers.isRectInsideRect(nodeRect, groupRect) ||
 				helpers.isRectInsideRect(groupRect, nodeRect) // or, when group is smaller than node
 				) {
-				return (
-					<Dropzone
-						group={props.group}
-						radius={context.theme.group.dropzoneRadius}
-						x={props.width*0.5}
-						y={props.height*0.5}
-					/>
-				);
+				return <Dropzone
+					group={props.group}
+					radius={context.theme.group.dropzoneRadius}
+					x={props.width*0.5}
+					y={props.height*0.5}
+				/>;
 			}
 		}
 
@@ -115,8 +117,35 @@ const Group = React.createClass({
 	render() {
 		const props = this.props;
 		const context = this.context;
+		const { group } = props;
 
-		if (!props.showGroups) { return null; }
+		let bounds = null;
+		const extraPadding = 5;
+		const extraPaddingBottom = 20 - extraPadding;
+		const s = (context.theme.node.size * 0.5) + (2 * extraPadding);
+
+		// TODO: memoize bounds
+		if (group.nodeIds.length === 0) {
+			const xOffset = group.x || 0;
+			const yOffset = group.y || 0;
+			bounds = { // TODO: improve this
+				minX: xOffset + extraPadding,
+				minY: yOffset + extraPadding,
+				maxX: xOffset + s,
+				maxY: yOffset + s,
+			};
+		} else {
+			bounds = helpers.getGroupBBox(props.nodes, group);
+			bounds.minX -= s;
+			bounds.minY -= s;
+			bounds.maxX += s;
+			bounds.maxY += (s + extraPaddingBottom);
+		}
+
+		const width = bounds.maxX - bounds.minX;
+		const height = bounds.maxY - bounds.minY;
+		const x = this._x = bounds.minX;
+		const y = this._y = bounds.minY;
 
 		return (
 			<g
@@ -125,15 +154,23 @@ const Group = React.createClass({
 				onContextMenu={this._onContextMenu}
 				onMouseEnter={this._handleHover}
 				onMouseLeave={this._handleHoverOut}
-				transform={`translate(${props.x}, ${props.y})`}>
+				transform={`translate(${x}, ${y})`}
+			>
 				<rect
-					className={classnames('group', { 'selected': props.isSelected })}
+					className={classnames(
+						'group',
+						{ 'selected': props.isSelected }
+					)}
 					rx={context.theme.group.cornerRadius}
 					ry={context.theme.group.cornerRadius}
-					width={props.width}
-					height={props.height}>
+					width={width}
+					height={height}
+				>
 				</rect>
-				{this.renderLabel()}
+				{(props.showGroupLabels) && this.renderLabel(
+					width * 0.5,
+					/*height*0.5 + 16*/ -10
+				)}
 				{this.renderDropzone()}
 			</g>
 		);
@@ -155,7 +192,7 @@ const Group = React.createClass({
 		const context = this.context;
 		const props = this.props;
 
-		let bgimg = {
+		const bgimg = {
 			label: 'background\nimage',
 			icon: icons['fa-plus'],
 			action: this.openFileDialog
@@ -163,7 +200,9 @@ const Group = React.createClass({
 		if (!_.isEmpty(props.group._bgImage)) {
 			bgimg.icon = icons['fa-remove'];
 			bgimg.action = () => {
-				context.dispatch( actionCreators.removeGroupBackgroundImage(props.group.id) );
+				context.dispatch(
+					actionCreators.removeGroupBackgroundImage(props.group.id)
+				);
 			};
 		}
 
@@ -195,7 +234,6 @@ const Group = React.createClass({
 	},
 
 	loadBackgroundFile(event) { // TODO: do this elsewhere
-		const that = this;
 		const props = this.props;
 
 		const file = $('#add-file')[0].files[0];
@@ -241,28 +279,32 @@ const Group = React.createClass({
 	_onDragStart(event) {
 		const props = this.props;
 
-		this.originalPositionX = props.x;
-		this.originalPositionY = props.y;
+		this.originalPositionX = this._x;
+		this.originalPositionY = this._y;
 
 		this.modelXYEventOrigin = helpers.unTransformFromTo(
 			props.editorElem,
 			props.editorTransformElem,
-			{ x: event.clientX,
-			  y: event.clientY }
+			{
+				x: event.clientX,
+				y: event.clientY,
+			}
 		);
 	},
 
 	_onDragMove(event) {
 		const props = this.props;
 
-		this.currentPositionX = props.x;
-		this.currentPositionY = props.y;
+		this.currentPositionX = this._x;
+		this.currentPositionY = this._y;
 
 		const modelXYEvent = helpers.unTransformFromTo(
 			props.editorElem,
 			props.editorTransformElem,
-			{ x: event.clientX,
-			  y: event.clientY }
+			{
+				x: event.clientX,
+				y: event.clientY,
+			}
 		);
 
 		const modelXYDelta = {
