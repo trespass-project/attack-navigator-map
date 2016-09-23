@@ -187,6 +187,7 @@ const VariableOrSelectize = React.createClass({
 	propTypes: {
 		data: React.PropTypes.object.isRequired,
 		nodes: React.PropTypes.object.isRequired,
+		nodesList: React.PropTypes.array.isRequired,
 		onChange: React.PropTypes.func,
 		onRemove: React.PropTypes.func,
 	},
@@ -380,6 +381,7 @@ const Credentials = React.createClass({
 		credentials: React.PropTypes.object.isRequired,
 		locationOptions: React.PropTypes.array.isRequired,
 		nodes: React.PropTypes.object.isRequired,
+		nodesList: React.PropTypes.array.isRequired,
 		onChange: React.PropTypes.func,
 		addLocation: React.PropTypes.func.isRequired,
 		addPredicate: React.PropTypes.func.isRequired,
@@ -511,6 +513,7 @@ const Credentials = React.createClass({
 								relationTypes={props.relationTypes}
 								relationsMap={props.relationsMap}
 								nodes={props.nodes}
+								nodesList={props.nodesList}
 								onChange={(updatedPredicate) => {
 									this.handleChangeCredPredicate(
 										index,
@@ -539,6 +542,7 @@ const Credentials = React.createClass({
 								key={index}
 								data={credData}
 								nodes={props.nodes}
+								nodesList={props.nodesList}
 								onChange={(updatedData) => {
 									this.handleChangeCredData(
 										index,
@@ -567,6 +571,7 @@ const Credentials = React.createClass({
 								key={index}
 								item={credItem}
 								nodes={props.nodes}
+								nodesList={props.nodesList}
 								onChange={(updated) => {
 									this.handleChangeCredItem(index, updated);
 								}}
@@ -636,6 +641,7 @@ const CredData = React.createClass({
 	propTypes: {
 		data: React.PropTypes.object.isRequired,
 		nodes: React.PropTypes.object.isRequired,
+		nodesList: React.PropTypes.array.isRequired,
 		onChange: React.PropTypes.func,
 		onRemove: React.PropTypes.func,
 	},
@@ -702,6 +708,7 @@ const CredData = React.createClass({
 						<VariableOrSelectize
 							data={value}
 							nodes={props.nodes}
+							nodesList={props.nodesList}
 							onChange={(updated) => {
 								this.handleValueChange(updated, index);
 							}}
@@ -723,6 +730,7 @@ const CredItem = React.createClass({
 	propTypes: {
 		item: React.PropTypes.object.isRequired,
 		nodes: React.PropTypes.object.isRequired,
+		nodesList: React.PropTypes.array.isRequired,
 		onChange: React.PropTypes.func,
 		onRemove: React.PropTypes.func,
 	},
@@ -795,6 +803,7 @@ const CredItem = React.createClass({
 				.map((value, index) => {
 					const commonProps = {
 						nodes: props.nodes,
+						nodesList: props.nodesList,
 						onChange: (updated) => {
 							this.handleValueChange(updated, index);
 						},
@@ -834,6 +843,7 @@ const CredPredicate = React.createClass({
 		relationTypes: React.PropTypes.array.isRequired,
 		relationsMap: React.PropTypes.object.isRequired,
 		nodes: React.PropTypes.object.isRequired,
+		nodesList: React.PropTypes.array.isRequired,
 		onChange: React.PropTypes.func,
 		onRemove: React.PropTypes.func,
 	},
@@ -879,6 +889,7 @@ const CredPredicate = React.createClass({
 				<VariableOrSelectize
 					data={value}
 					nodes={props.nodes}
+					nodesList={props.nodesList}
 					onChange={(updated) => {
 						this.handleValueChange(updated, index);
 					}}
@@ -1019,6 +1030,7 @@ const PolicyEditor = React.createClass({
 					relationTypes={props.relationTypes}
 					relationsMap={props.relationsMap}
 					nodes={props.nodes}
+					nodesList={props.nodesList}
 					onChange={this.credentialsChanged}
 					addLocation={this.addLocation}
 					addPredicate={this.addPredicate}
