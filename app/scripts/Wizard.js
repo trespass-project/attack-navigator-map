@@ -357,6 +357,7 @@ const Wizard = React.createClass({
 					return <div key={item.id}>
 						<PolicyEditor
 							nodes={props.graph.nodes}
+							nodesList={props.nodesList}
 							policy={item}
 							onChange={this.updatePolicy}
 							onRemove={() => { this.removePolicy(item.id); }}
