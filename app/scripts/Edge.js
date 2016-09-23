@@ -14,11 +14,17 @@ const actionCreators = require('./actionCreators.js');
 const getLabel = (edge) => edge.relation || '';
 const getEdgeNodes = R.prop('edgeNodes');
 const getP2 = R.prop('p2');
+const getTreatLikePredicate = R.prop('treatLikePredicate');
 
+const arrowDist = 40;
+const makeArrowHeadPath = (arrowShape) =>
+	<path d={arrowShape} className='arrowhead' />;
 const arrowSize = 13;
 const arrowShape = arrowHead(arrowSize);
-const arrowShapePath = <path d={arrowShape} className='arrowhead' />;
-const arrowDist = 40;
+const arrowShapePath = makeArrowHeadPath(arrowShape);
+const arrowSizeThick = 25;
+const arrowShapeThick = arrowHead(arrowSizeThick);
+const arrowShapePathThick = makeArrowHeadPath(arrowShapeThick);
 
 
 // const diagonal = d3.svg.diagonal()
@@ -126,12 +132,21 @@ const Edge = React.createClass({
 		this.calculateArrow = createSelector(
 			getEdgeNodes,
 			getP2,
-			(edgeNodes, p2) => {
+			getTreatLikePredicate,
+			(edgeNodes, p2, treatLikePredicate) => {
 				const angle = vectorAngle(
 					edgeNodes.toNode.x - edgeNodes.fromNode.x,
 					edgeNodes.toNode.y - edgeNodes.fromNode.y
 				);
 				const angleDeg = radians(angle);
+
+				const offset = (treatLikePredicate)
+					? 0
+					: -(arrowSizeThick / 2);
+				const offsetVec = {
+					x: Math.cos(angle + Math.PI) * offset,
+					y: Math.sin(angle + Math.PI) * offset,
+				};
 
 				// const arrowPosition = bezierPoint(p1, c1, c2, p2, 0.75);
 				const arrowPosition = {
@@ -143,10 +158,19 @@ const Edge = React.createClass({
 				const arrow = <g
 					transform={`translate(${x}, ${y}) rotate(${angleDeg})`}
 				>
-					{arrowShapePath}
+					{(treatLikePredicate)
+						? arrowShapePath
+						: arrowShapePathThick
+					}
 				</g>;
 
-				return { arrow, arrowPosition };
+				return {
+					arrow,
+					arrowPosition: {
+						x: x - offsetVec.x,
+						y: y - offsetVec.y,
+					},
+				};
 			}
 		);
 	},
@@ -204,18 +228,20 @@ const Edge = React.createClass({
 
 		const isDirected = !R.contains(edge.relation, modelHelpers.nonDirectedRelationTypes);
 
+		let treatLikePredicate = props.isPredicate;
+		if (edge.relation === 'at-location') {
+			// arrow = null;
+			treatLikePredicate = false;
+		}
+
 		let arrow = null;
 		let arrowPosition = undefined;
 		if (isDirected) {
-			const a = this.calculateArrow({ edgeNodes, p2 });
+			const a = this.calculateArrow(
+				{ edgeNodes, p2, treatLikePredicate }
+			);
 			arrow = a.arrow;
 			arrowPosition = a.arrowPosition;
-		}
-
-		let treatLikePredicate = props.isPredicate;
-		if (edge.relation === 'at-location') {
-			arrow = null;
-			treatLikePredicate = false;
 		}
 
 		const groupClasses = classnames(
@@ -223,6 +249,7 @@ const Edge = React.createClass({
 			{
 				'preview': props.isPreview,
 				'selected': props.isSelected,
+				'predicate': treatLikePredicate,
 			}
 		);
 

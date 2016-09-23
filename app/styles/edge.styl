@@ -6,12 +6,15 @@
 		stroke: rgba($nodeFill, 0.25)
 		fill: none
 
-	.edge.predicate
-		stroke-width: $previewEdgeWidth
-		stroke: $nodeFill
-
 	.arrowhead
-		fill: $nodeFill
+		fill: rgba($nodeFill, 0.25)
+
+	&.predicate
+		.arrowhead
+			fill: $nodeFill
+		.edge
+			stroke-width: $previewEdgeWidth
+			stroke: $nodeFill
 
 	&.preview
 		.edge
