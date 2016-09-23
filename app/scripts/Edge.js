@@ -17,12 +17,14 @@ const getP2 = R.prop('p2');
 const getTreatLikePredicate = R.prop('treatLikePredicate');
 
 const arrowDist = 40;
+const makeArrowHeadPath = (arrowShape) =>
+	<path d={arrowShape} className='arrowhead' />;
 const arrowSize = 13;
 const arrowShape = arrowHead(arrowSize);
-const arrowShapePath = <path d={arrowShape} className='arrowhead' />;
-const arrowSize2 = 25;
-const arrowShape2 = arrowHead(arrowSize2);
-const arrowShapePath2 = <path d={arrowShape2} className='arrowhead' />;
+const arrowShapePath = makeArrowHeadPath(arrowShape);
+const arrowSizeThick = 25;
+const arrowShapeThick = arrowHead(arrowSizeThick);
+const arrowShapePathThick = makeArrowHeadPath(arrowShapeThick);
 
 
 // const diagonal = d3.svg.diagonal()
@@ -140,7 +142,7 @@ const Edge = React.createClass({
 
 				const offset = (treatLikePredicate)
 					? 0
-					: -(arrowSize2 / 2);
+					: -(arrowSizeThick / 2);
 				const offsetVec = {
 					x: Math.cos(angle + Math.PI) * offset,
 					y: Math.sin(angle + Math.PI) * offset,
@@ -158,7 +160,7 @@ const Edge = React.createClass({
 				>
 					{(treatLikePredicate)
 						? arrowShapePath
-						: arrowShapePath2
+						: arrowShapePathThick
 					}
 				</g>;
 
