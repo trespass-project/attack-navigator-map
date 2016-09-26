@@ -293,6 +293,10 @@ const PropertiesPanel = React.createClass({
 			</tr>
 			{(attributes || [])
 				.map((attr) => {
+					if (attr.id === 'tkb:name') {
+						return null;
+					}
+
 					return <tr key={attr.id}>
 						<td><label>{attr.label}:</label> </td>
 						<td>
