@@ -56,7 +56,7 @@ const ValidationLayer = React.createClass({
 					<text className='errorText'>
 						{item.messages
 							.map((message, index) => {
-								return <tspan key={index} x='0' dy={index * 12}>{message}</tspan>;
+								return <tspan key={index} x='0' dy={index * 12}>· {message}</tspan>;
 							})
 						}
 					</text>
