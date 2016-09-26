@@ -66,9 +66,7 @@ const MapInfo = React.createClass({
 						<tbody>
 							<tr>
 								<td>
-									<span>
-										<strong>model id</strong>&nbsp;
-									</span>
+									<label>Model id:</label>
 								</td>
 								<td>
 									{modelId}
@@ -76,11 +74,10 @@ const MapInfo = React.createClass({
 							</tr>
 							<tr>
 								<td>
-									<strong>title</strong>&nbsp;
+									<label>Title:</label>
 								</td>
 								<td>
-									<span>{props.metadata.title} </span>
-									<a href='#' onClick={this.renameMap}>edit</a>
+									{props.metadata.title} <a href='#' onClick={this.renameMap}>edit</a>
 								</td>
 							</tr>
 						</tbody>
