@@ -226,7 +226,7 @@ const PropertiesPanel = React.createClass({
 		return (
 			<div id={props.id} className='panel-section'>
 				<h3 className='title'>
-					selection{(selectedItem) ? `: ${selectedType}` : ''}
+					Selection{/*(selectedItem) ? `: ${selectedType}` : ''*/}
 				</h3>
 				<form className='form' onSubmit={this.onSubmit}>{/* form-horizontal */}
 					<div className='form-group'>
