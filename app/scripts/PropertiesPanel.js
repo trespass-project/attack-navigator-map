@@ -69,9 +69,9 @@ const PropertiesPanel = React.createClass({
 		switch (props.selectedType) {
 			case 'node':
 				const node = selectedItem;
-				const groupNames = modelHelpers.getNodeGroups(node.id, props.graph.groups)
-					.map(R.prop('label'))
-					.join(', ');
+				// const groupNames = modelHelpers.getNodeGroups(node.id, props.graph.groups)
+				// 	.map(R.prop('label'))
+				// 	.join(', ');
 				return (
 					<table>
 						<tbody>
@@ -135,12 +135,14 @@ const PropertiesPanel = React.createClass({
 						<tbody>
 							<tr>
 								<td><label>name:</label></td>
-								<td><input
-									onChange={onChange}
-									type='text'
-									className='form-control'
-									name='label'
-									placeholder='label' value={group.label || ''} />
+								<td>
+									<input
+										onChange={onChange}
+										type='text'
+										className='form-control'
+										name='label'
+										placeholder='label' value={group.label || ''}
+									/>
 								</td>
 							</tr>
 							<tr>
@@ -149,7 +151,11 @@ const PropertiesPanel = React.createClass({
 							</tr>
 							<tr>
 								<td><label>bg image:</label></td>
-								<td><span>{(group._bgImage) ? group._bgImage.url : '—'}</span></td>
+								<td><span>{
+									(group._bgImage)
+										? group._bgImage.url
+										: '—'
+									}</span></td>
 							</tr>
 							{/*<tr>
 								<td><label>children:</label></td>
@@ -270,7 +276,7 @@ const PropertiesPanel = React.createClass({
 			<table><tbody>
 			<tr>
 				<td>
-					<label>KB Type: </label>
+					<label>{/*KB */}Type: </label>
 				</td>
 				<td>
 					<select
