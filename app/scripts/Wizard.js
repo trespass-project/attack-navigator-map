@@ -169,7 +169,7 @@ const Wizard = React.createClass({
 			<br />
 			<br />
 
-			<h2 className='title'>Recent models</h2>
+			<h3 className='title'>Recent models</h3>
 			<div className='recent-models'>
 				<AutoSizer>{
 					({ height, width }) => <FlexTable
@@ -279,7 +279,7 @@ const Wizard = React.createClass({
 		const props = this.props;
 		const predicates = R.values(props.graph.predicates || {});
 		return <div>
-			<h2 className='title'>Predicates</h2>
+			<h3 className='title'>Predicates</h3>
 			<PredicateEditor
 				edges={props.predicateEdges}
 				nodes={props.graph.nodes}
@@ -309,7 +309,7 @@ const Wizard = React.createClass({
 		const props = this.props;
 
 		return <div className='policies'>
-			<h2 className='title'>Policies</h2>
+			<h3 className='title'>Policies</h3>
 
 			{/*<DividingSpace />*/}
 
@@ -378,7 +378,7 @@ const Wizard = React.createClass({
 	renderProcesses() {
 		const processes = R.values(this.props.graph.processes || {});
 		return <div>
-			<h2 className='title'>Processes</h2>
+			<h3 className='title'>Processes</h3>
 
 			<hr />
 			<div>
@@ -431,7 +431,7 @@ const Wizard = React.createClass({
 			{this.renderAttackerActor()}
 			<hr />
 
-			<h2 className='title'>Attacker profile</h2>
+			<h3 className='title'>Attacker profile</h3>
 			<AttackerProfileEditor
 				profile={props.attackerProfile}
 				profilePresets={props.attackerProfiles}
@@ -587,7 +587,7 @@ const Wizard = React.createClass({
 		const noProblems = (_.isEmpty(otherWarnings) && _.isEmpty(missingForAnalysis));
 
 		return <div>
-			<h2 className='title'>Run analysis</h2>
+			<h3 className='title'>Run analysis</h3>
 			<hr />
 			{this.renderAttackerGoal()}
 			<hr />
