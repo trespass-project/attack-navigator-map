@@ -2,10 +2,9 @@ const React = require('react');
 import { ActionCreators as UndoActionCreators } from 'redux-undo';
 const fs = require('fs');
 const pkg = JSON.parse(fs.readFileSync('./package.json').toString());
-
+const classnames = require('classnames');
 const constants = require('./constants.js');
 const actionCreators = require('./actionCreators.js');
-const knowledgebaseApi = require('trespass.js').api.knowledgebase;
 
 // const ModelDebugView = require('./components/ModelDebugView/ModelDebugView.js');
 // const MainMenu = require('./MainMenu.js');
@@ -101,8 +100,12 @@ React.createClass({
 	render() {
 		const props = this.props;
 
+		const classNames = classnames(
+			{ 'open': props.hasOpenMap }
+		);
+
 		return (
-			<div id='container'>
+			<div id='container' className={classNames}>
 				<input type='file' accept='.svg' id='add-file' />
 
 				{(props.hasOpenMap)
