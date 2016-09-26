@@ -2,6 +2,8 @@ const React = require('react');
 const actionCreators = require('./actionCreators.js');
 const knowledgebaseApi = require('trespass.js').api.knowledgebase;
 const DividingSpace = require('./DividingSpace.js');
+const Accordion = require('react-bootstrap').Accordion;
+const Panel = require('react-bootstrap').Panel;
 
 
 const MapInfo = React.createClass({
@@ -102,29 +104,32 @@ const MapInfo = React.createClass({
 					</div>
 
 					<div>
-						<h4>Debug</h4>
-						<div style={{ fontSize: 14 }}>
-							<a
-								href={`${knowledgebaseApi.host}tkb/files/edit?model_id=${modelId}`}
-								target='_blank'
-							>
-								edit knowledgebase files
-							</a>
+						<Accordion>
+							<Panel header='Debug options' eventKey='1'>
+								<div style={{ fontSize: 14 }}>
+									<a
+										href={`${knowledgebaseApi.host}tkb/files/edit?model_id=${modelId}`}
+										target='_blank'
+									>
+										edit knowledgebase files
+									</a>
 
-							<br />
+									<br />
 
-							<a
-								href='#'
-								onClick={this.fetchKbData}
-							>re-fetch knowledgebase data</a>
+									<a
+										href='#'
+										onClick={this.fetchKbData}
+									>re-fetch knowledgebase data</a>
 
-							<br />
+									<br />
 
-							<a
-								href={`${knowledgebaseApi.host}tkb/files/zip?model_id=${modelId}`}
-								target='_blank'
-							>download knowledgebase files</a>
-						</div>
+									<a
+										href={`${knowledgebaseApi.host}tkb/files/zip?model_id=${modelId}`}
+										target='_blank'
+									>download knowledgebase files</a>
+								</div>
+							</Panel>
+						</Accordion>
 					</div>
 				</div>
 			}
