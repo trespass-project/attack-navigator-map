@@ -17,6 +17,8 @@ const PropertiesPanel = React.createClass({
 		selectedId: React.PropTypes.string/*.isRequired*/,
 		selectedType: React.PropTypes.string/*.isRequired*/,
 		relationTypes: React.PropTypes.array.isRequired,
+		kbTypeAttributes: React.PropTypes.object.isRequired,
+		modelComponentTypeToKbTypes: React.PropTypes.object.isRequired,
 	},
 
 	getDefaultProps() {
