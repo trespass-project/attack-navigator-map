@@ -162,7 +162,7 @@ const Wizard = React.createClass({
 				className='btn btn-default custom-button'
 				disabled={!props.hasOpenMap}
 			>
-				Merge model (fragment) file
+				Merge model file
 			</button>
 
 			<br />
