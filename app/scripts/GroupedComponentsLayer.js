@@ -6,7 +6,7 @@ module.exports.name = 'GroupedComponentsLayer';
 
 
 const displayName =
-module.exports.displayName = 'clustered components layer';
+module.exports.displayName = 'cluster components';
 
 
 const adjustProps =
