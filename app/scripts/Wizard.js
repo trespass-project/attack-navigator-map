@@ -587,8 +587,8 @@ const Wizard = React.createClass({
 		const noProblems = (_.isEmpty(otherWarnings) && _.isEmpty(missingForAnalysis));
 
 		return <div>
-			<h3 className='title'>Run analysis</h3>
-			<hr />
+			{/*<h3 className='title'>Run analysis</h3>
+			<hr />*/}
 			{this.renderAttackerGoal()}
 			<hr />
 			{this.renderToolChainSelection()}

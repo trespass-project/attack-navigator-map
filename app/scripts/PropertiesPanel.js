@@ -206,8 +206,9 @@ const PropertiesPanel = React.createClass({
 		// 	? props.selectedType || '(unknown type)'
 		// 	: '';
 
+		// className='panel-section'
 		return (
-			<div id={props.id} className='panel-section'>
+			<div id={props.id}>
 				<h3 className='title'>
 					Selection{/*(selectedItem) ? `: ${selectedType}` : ''*/}
 				</h3>
