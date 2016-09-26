@@ -120,10 +120,10 @@ const PropertiesPanel = React.createClass({
 								</tr>
 								: null
 							}
-							<tr>
+							{/*<tr>
 								<td><label>groups:</label></td>
 								<td><span>{groupNames}</span></td>
-							</tr>
+							</tr>*/}
 						</tbody>
 					</table>
 				);
