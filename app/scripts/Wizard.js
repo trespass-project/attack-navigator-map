@@ -307,32 +307,36 @@ const Wizard = React.createClass({
 	renderPolicies() {
 		const props = this.props;
 
-		return <div>
+		return <div className='policies'>
 			<h2 className='title'>Policies</h2>
 
-			<div>
-				<a href='#' onClick={this.addPolicy}>add policy</a>
-			</div>
+			{/*<DividingSpace />*/}
 
-			<hr />
+			<button
+				onClick={this.addPolicy}
+				className='btn btn-default custom-button'
+			>Add policy</button>
 
-			{R.values(props.graph.policies || {})
-				.map((item) => {
-					return <div key={item.id}>
-						<PolicyEditor
-							nodes={props.graph.nodes}
-							nodesList={props.nodesList}
-							policy={item}
-							onChange={this.updatePolicy}
-							onRemove={() => { this.removePolicy(item.id); }}
-							locationOptions={props.locationOptions}
-							relationTypes={props.relationTypes}
-							relationsMap={props.relationsMap}
-						/>
-						<hr />
-					</div>;
-				})
-			}
+			<DividingSpace />
+
+			<ul>
+				{R.values(props.graph.policies || {})
+					.map((item) => {
+						return <li key={item.id}>
+							<PolicyEditor
+								nodes={props.graph.nodes}
+								nodesList={props.nodesList}
+								policy={item}
+								onChange={this.updatePolicy}
+								onRemove={() => { this.removePolicy(item.id); }}
+								locationOptions={props.locationOptions}
+								relationTypes={props.relationTypes}
+								relationsMap={props.relationsMap}
+							/>
+						</li>;
+					})
+				}
+			</ul>
 		</div>;
 	},
 
