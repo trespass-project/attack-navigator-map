@@ -3,7 +3,6 @@ const R = require('ramda');
 const _ = require('lodash');
 const React = require('react');
 const slugify = require('mout/string/slugify');
-const classnames = require('classnames');
 const actionCreators = require('./actionCreators.js');
 
 const GraphMinimap = require('./GraphMinimap.js');
@@ -13,12 +12,10 @@ const ComponentReference = require('./ComponentReference.js');
 // const GraphOutline = require('./GraphOutline.js');
 const Library = require('./components/Library/Library.js');
 
-const OverlayTrigger = require('react-bootstrap').OverlayTrigger;
-const Tooltip = require('react-bootstrap').Tooltip;
-
 import JSONTree from 'react-json-tree';
 import { AutoSizer, FlexTable, FlexColumn/*, SortDirection*/ } from 'react-virtualized';
 
+const WizardTab = require('./WizardTab.js');
 const PolicyEditor = require('./PolicyEditor.js');
 const PredicateEditor = require('./PredicateEditor.js');
 const AttackerProfileEditor = require('./AttackerProfileEditor/AttackerProfileEditor.js');
@@ -60,51 +57,6 @@ const jsonTreeTheme = {
 	base0E: '#000000',
 	base0F: '#000000',
 };
-
-
-const Tab = React.createClass({
-	propTypes: {
-		name: React.PropTypes.string.isRequired,
-		selectedSection: React.PropTypes.string.isRequired,
-		icon: React.PropTypes.string.isRequired,
-		tooltip: React.PropTypes.string.isRequired,
-		handleClick: React.PropTypes.func.isRequired,
-		isDisabled: React.PropTypes.bool,
-	},
-
-	getDefaultProps() {
-		return {
-			isDisabled: false,
-		};
-	},
-
-	render() {
-		const props = this.props;
-		const isSelected = (props.selectedSection === props.name);
-
-		const onClick = (!props.isDisabled)
-			? props.handleClick
-			: () => {};
-
-		const tooltip = <Tooltip id={props.name}>{props.tooltip}</Tooltip>;
-		const tab = <div
-			className={classnames(
-				'step-icon',
-				{ selected: isSelected },
-				{ disabled: props.isDisabled }
-			)}
-			onClick={onClick}
-		>
-			<span className={props.icon} />
-		</div>;
-
-		return (!props.isDisabled)
-			? <OverlayTrigger placement='left' overlay={tooltip} >
-				{tab}
-			</OverlayTrigger>
-			: tab;
-	},
-});
 
 
 const Wizard = React.createClass({
@@ -755,7 +707,7 @@ const Wizard = React.createClass({
 							.map((stepName) => {
 								const step = wizardSteps[stepName];
 								const isDisabled = !props.hasOpenMap && (stepName !== 'import');
-								return <Tab
+								return <WizardTab
 									key={stepName}
 									name={stepName}
 									isDisabled={isDisabled}
@@ -871,8 +823,7 @@ const Wizard = React.createClass({
 	selectWizardStep(name, event) {
 		event.preventDefault();
 		this.context.dispatch( actionCreators.selectWizardStep(name) );
-	}
-
+	},
 });
 
 
