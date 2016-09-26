@@ -697,7 +697,7 @@ const Wizard = React.createClass({
 		return (
 			<div>
 				{/*this.renderMinimap(props)*/}
-				{this.renderOutline(props)}
+				{/*this.renderOutline(props)*/}
 				{this.renderProperties(props)}
 				<hr />
 
