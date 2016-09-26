@@ -4,21 +4,19 @@ const _ = require('lodash');
 const React = require('react');
 const slugify = require('mout/string/slugify');
 const actionCreators = require('./actionCreators.js');
-
-const GraphMinimap = require('./GraphMinimap.js');
+// const GraphMinimap = require('./GraphMinimap.js');
+// const GraphOutline = require('./GraphOutline.js');
 const PropertiesPanel = require('./PropertiesPanel.js');
 const DividingSpace = require('./DividingSpace.js');
 const ComponentReference = require('./ComponentReference.js');
-// const GraphOutline = require('./GraphOutline.js');
 const Library = require('./components/Library/Library.js');
-
-import JSONTree from 'react-json-tree';
-import { AutoSizer, FlexTable, FlexColumn/*, SortDirection*/ } from 'react-virtualized';
-
 const WizardTab = require('./WizardTab.js');
+const MapInfo = require('./MapInfo.js');
 const PolicyEditor = require('./PolicyEditor.js');
 const PredicateEditor = require('./PredicateEditor.js');
 const AttackerProfileEditor = require('./AttackerProfileEditor/AttackerProfileEditor.js');
+import JSONTree from 'react-json-tree';
+import { AutoSizer, FlexTable, FlexColumn/*, SortDirection*/ } from 'react-virtualized';
 
 
 // const colorMap = theme => ({
@@ -66,11 +64,12 @@ const Wizard = React.createClass({
 	},
 
 	propTypes: {
+		saveMap: React.PropTypes.func.isRequired,
 	},
 
-	// getDefaultProps() {
-	// 	return {};
-	// },
+	getDefaultProps() {
+		return {};
+	},
 
 	renderMinimap(props) {
 		return <GraphMinimap
@@ -89,6 +88,19 @@ const Wizard = React.createClass({
 		// 	<h3 className='title'>outline</h3>
 		// 	<GraphOutline graph={props.graph} />
 		// </div>;
+	},
+
+	renderMapInfo() {
+		const { props } = this;
+
+		return <div>
+			<h3 className='title'>Map</h3>
+			<MapInfo
+				hasOpenMap={props.hasOpenMap}
+				metadata={props.metadata}
+				saveMap={props.saveMap}
+			/>
+		</div>;
 	},
 
 	renderProperties(props) {
@@ -698,6 +710,7 @@ const Wizard = React.createClass({
 			<div>
 				{/*this.renderMinimap(props)*/}
 				{/*this.renderOutline(props)*/}
+				{this.renderMapInfo()}
 				{this.renderProperties(props)}
 				<hr />
 

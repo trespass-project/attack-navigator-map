@@ -52,7 +52,7 @@ React.createClass({
 
 	handleBeforeUnload(event) {
 		// save last state of map / model
-		this.save(event);
+		this.saveMap(event);
 
 		// this whole message thing doesn't seem to work (anymore),
 		// but let's still interrupt here.
@@ -80,35 +80,12 @@ React.createClass({
 		}
 	},
 
-	save(event) {
-		if (event) {
-			event.preventDefault();
-		}
+	saveMap(event) {
+		if (event) { event.preventDefault(); }
 		const modelId = this.props.metadata.id;
-		this.props.dispatch( actionCreators.saveModelToKb(modelId) );
-	},
-
-	renameMap() {
-		let newName = prompt('Enter new name');
-		if (!newName) { return; }
-		newName = newName.trim();
-		if (!newName) { return; }
-		const modelId = this.props.metadata.id;
-		this.props.dispatch( actionCreators.renameMap(modelId, newName) );
-	},
-
-	deleteModel(event) {
-		if (event) {
-			event.preventDefault();
-		}
-		const modelId = this.props.metadata.id;
-		this.props.dispatch( actionCreators.deleteModel(modelId) );
-	},
-
-	fetchKbData(event) {
-		event.preventDefault();
-		const modelId = this.props.metadata.id;
-		this.props.dispatch( actionCreators.fetchKbData(modelId) );
+		this.props.dispatch(
+			actionCreators.saveModelToKb(modelId)
+		);
 	},
 
 	saveDialogOnClose() {
@@ -123,7 +100,6 @@ React.createClass({
 
 	render() {
 		const props = this.props;
-		const modelId = props.metadata.id;
 
 		return (
 			<div id='container'>
@@ -178,57 +154,6 @@ React.createClass({
 				}
 
 				<div id='meta'>
-					{(props.hasOpenMap)
-						? <div>
-							<div>model id: {modelId}</div>
-							<div>
-								<span>title: {props.metadata.title} </span>
-								<a href='#' onClick={this.renameMap}>edit</a>
-							</div>
-						</div>
-						: ''
-					}
-
-					{(props.hasOpenMap)
-						? <div>
-							<a
-								href={`${knowledgebaseApi.host}tkb/files/edit?model_id=${modelId}`}
-								target='_blank'
-							>
-								edit knowledgebase files
-							</a>
-
-							<br />
-
-							<a
-								href='#'
-								onClick={this.fetchKbData}
-							>re-fetch knowledgebase data</a>
-
-							<br />
-
-							<a
-								href={`${knowledgebaseApi.host}tkb/files/zip?model_id=${modelId}`}
-								target='_blank'
-							>download knowledgebase files</a>
-
-							<br />
-
-							<a
-								href='#'
-								onClick={this.save}
-							>save map</a>
-
-							<br />
-
-							<a
-								href='#'
-								onClick={this.deleteModel}
-							>delete map</a>
-						</div>
-						: ''
-					}
-
 					<span>ANM {pkg.version}</span>
 					{(props.hasOpenMap)
 						? <span> · <a href={constants.manualUrl} target='_blank'>manual</a> · <a href={constants.issueTrackerUrl} target='_blank'>issue tracker</a></span>
@@ -286,7 +211,10 @@ React.createClass({
 				</div>*/}
 
 				<div id='panel-container'>
-					<Wizard hasOpenMap={props.hasOpenMap} {...props} />
+					<Wizard
+						{...props}
+						saveMap={this.saveMap}
+					/>
 				</div>
 
 				{(props.analysisRunning) &&
