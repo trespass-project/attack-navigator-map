@@ -92,7 +92,7 @@ const PropertiesPanel = React.createClass({
 								<td><label>id:</label></td>
 								<td><span>{node.id}</span></td>
 							</tr>
-							<tr>
+							{/*<tr>
 								<td><label>type:</label></td>
 								<td>
 									<select
@@ -104,7 +104,7 @@ const PropertiesPanel = React.createClass({
 										{this.renderTypeOptions()}
 									</select>
 								</td>
-							</tr>
+							</tr>*/}
 							{(node.modelComponentType === 'data')
 								? <tr>
 									<td><label>value:</label></td>
