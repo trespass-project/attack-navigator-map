@@ -57,6 +57,9 @@ const MapInfo = React.createClass({
 		const modelId = props.metadata.id;
 
 		return <div className='map-info'>
+			{(!props.hasOpenMap) &&
+				<span className='disabled'>no map open</span>
+			}
 			{(props.hasOpenMap) &&
 				<div>
 					<table>
