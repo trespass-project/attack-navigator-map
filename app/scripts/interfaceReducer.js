@@ -89,7 +89,7 @@ const initialState = {
 	relationTypes: relationsLib,
 	kbTypeAttributes: {},
 	componentsLib: [],
-	modelComponentTypeToKbTypes: [],
+	modelComponentTypeToKbTypes: {},
 
 	modelPatterns: [], // pre-made fragments
 
