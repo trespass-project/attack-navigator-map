@@ -72,14 +72,15 @@ const Wizard = React.createClass({
 	},
 
 	renderMinimap(props) {
-		return <GraphMinimap
-			id='minimap'
-			hasOpenMap={props.hasOpenMap}
-			graph={props.graph}
-			nodesList={props.nodesList}
-			theme={this.context.theme}
-			showEdges={true}
-		/>;
+		return null;
+		// return <GraphMinimap
+		// 	id='minimap'
+		// 	hasOpenMap={props.hasOpenMap}
+		// 	graph={props.graph}
+		// 	nodesList={props.nodesList}
+		// 	theme={this.context.theme}
+		// 	showEdges={true}
+		// />;
 	},
 
 	renderOutline(props) {
