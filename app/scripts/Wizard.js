@@ -572,10 +572,10 @@ const Wizard = React.createClass({
 					.map((message, index) => {
 						const hoverable = <ComponentReference
 							modelComponent={node}
-						>
-							{`${node.modelComponentType} "${node.label}"`}
-						</ComponentReference>;
-						return <li key={`${node.id}-${index}`}>{hoverable} {message}</li>;
+						>{node.label}</ComponentReference>;
+						return <li key={`${node.id}-${index}`}>
+							{/*node.modelComponentType*/} {hoverable} {message}
+						</li>;
 					});
 			})
 			.reduce((acc, messages) => [...acc, ...messages], []);
