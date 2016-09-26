@@ -17,6 +17,8 @@ const PropertiesPanel = React.createClass({
 		selectedId: React.PropTypes.string/*.isRequired*/,
 		selectedType: React.PropTypes.string/*.isRequired*/,
 		relationTypes: React.PropTypes.array.isRequired,
+		kbTypeAttributes: React.PropTypes.object.isRequired,
+		modelComponentTypeToKbTypes: React.PropTypes.object.isRequired,
 	},
 
 	getDefaultProps() {
@@ -65,140 +67,129 @@ const PropertiesPanel = React.createClass({
 			: null;
 
 		switch (props.selectedType) {
-			case 'node':
+			case 'node': {
 				const node = selectedItem;
-				const groupNames = modelHelpers.getNodeGroups(node.id, props.graph.groups)
-					.map(R.prop('label'))
-					.join(', ');
-				return (
-					<table>
-						<tbody>
-							<tr>
-								<td><label>label:</label></td>
-								<td>
-									<input
-										onChange={onChange}
-										type='text'
-										className='form-control'
-										name='label'
-										placeholder='label'
-										value={node.label || ''}
-									/>
-								</td>
-							</tr>
-							<tr>
-								<td><label>id:</label></td>
-								<td><span>{node.id}</span></td>
-							</tr>
-							<tr>
-								<td><label>type:</label></td>
-								<td>
-									<select
-										onChange={onChange}
-										name='modelComponentType'
-										className='form-control'
-										value={node.modelComponentType}
-									>
-										{this.renderTypeOptions()}
-									</select>
-								</td>
-							</tr>
-							{(node.modelComponentType === 'data')
-								? <tr>
-									<td><label>value:</label></td>
-									<td>
-										<input
-											onChange={onChange}
-											name='value'
-											type='text'
-											className='form-control'
-											value={node.value || ''}
-										/>
-									</td>
-								</tr>
-								: null
-							}
-							<tr>
-								<td><label>groups:</label></td>
-								<td><span>{groupNames}</span></td>
-							</tr>
-						</tbody>
-					</table>
-				);
-
-			case 'group':
-				const group = selectedItem;
-				return (
-					<table>
-						<tbody>
-							<tr>
-								<td><label>name:</label></td>
-								<td><input
+				// const groupNames = modelHelpers.getNodeGroups(node.id, props.graph.groups)
+				// 	.map(R.prop('label'))
+				// 	.join(', ');
+				return [
+					<tr key='property-label'>
+						<td><label>Label:</label></td>
+						<td>
+							<input
+								onChange={onChange}
+								type='text'
+								className='form-control'
+								name='label'
+								placeholder='label'
+								value={node.label || ''}
+							/>
+						</td>
+					</tr>,
+					<tr key='property-id'>
+						<td><label>Id:</label></td>
+						<td><span>{node.id}</span></td>
+					</tr>,
+					/*<tr>
+						<td><label>Type:</label></td>
+						<td>
+							<select
+								onChange={onChange}
+								name='modelComponentType'
+								className='form-control'
+								value={node.modelComponentType}
+							>
+								{this.renderTypeOptions()}
+							</select>
+						</td>
+					</tr>,*/
+					(node.modelComponentType === 'data')
+						? <tr key='property-value'>
+							<td><label>Value:</label></td>
+							<td>
+								<input
 									onChange={onChange}
+									name='value'
 									type='text'
 									className='form-control'
-									name='label'
-									placeholder='label' value={group.label || ''} />
-								</td>
-							</tr>
-							<tr>
-								<td><label>id:</label></td>
-								<td><span>{group.id}</span></td>
-							</tr>
-							<tr>
-								<td><label>bg image:</label></td>
-								<td><span>{(group._bgImage) ? group._bgImage.url : '—'}</span></td>
-							</tr>
-							{/*<tr>
-								<td><label>children:</label></td>
-								<td><span>TODO</span></td>
-							</tr>*/}
-						</tbody>
-					</table>
-				);
+									value={node.value || ''}
+								/>
+							</td>
+						</tr>
+						: null,
+				];
+			}
 
-			case 'edge':
+			case 'group': {
+				const group = selectedItem;
+				return [
+					<tr key='property-label'>
+						<td><label>Name:</label></td>
+						<td>
+							<input
+								onChange={onChange}
+								type='text'
+								className='form-control'
+								name='label'
+								placeholder='label' value={group.label || ''}
+							/>
+						</td>
+					</tr>,
+					<tr key='property-id'>
+						<td><label>Id:</label></td>
+						<td><span>{group.id}</span></td>
+					</tr>,
+					<tr key='property-bgimg'>
+						<td><label>Bg image:</label></td>
+						<td><span>{
+							(group._bgImage)
+								? group._bgImage.url
+								: '—'
+							}</span></td>
+					</tr>,
+				];
+			}
+
+			case 'edge': {
 				const edge = selectedItem;
 
 				// look up actual nodes by id
 				const edgeNodes = modelHelpers.getEdgeNodes(edge, props.graph.nodes);
 
-				return (
-					<table>
-						<tbody>
-							<tr>
-								<td><label>from:</label></td>
-								<td><span>{edgeNodes.fromNode.label}</span></td>
-							</tr>
-							<tr>
-								<td><label>relation:</label></td>
-								<td>
-									<select
-										onChange={onChange}
-										name='relation'
-										value={edge.relation || ''}
+				return [
+					<tr key='property-from'>
+						<td><label>From:</label></td>
+						<td><span>{edgeNodes.fromNode.label}</span></td>
+					</tr>,
+					<tr key='property-relation'>
+						<td><label>Relation:</label></td>
+						<td>
+							<select
+								onChange={onChange}
+								name='relation'
+								value={edge.relation || ''}
+							>
+								{props.relationTypes.map((relation) => {
+									return <option
+										key={relation.label}
+										value={relation.value}
 									>
-										{props.relationTypes.map((relation) => {
-											return <option
-												key={relation.label}
-												value={relation.value}
-											>
-												{relation.label}
-											</option>;
-										})}
-									</select>
-								</td>
-							</tr>
-							<tr>
-								<td><label>to:</label></td>
-								<td><span>{edgeNodes.toNode.label}</span></td>
-							</tr>
-						</tbody>
-					</table>
-				);
+										{relation.label}
+									</option>;
+								})}
+							</select>
+						</td>
+					</tr>,
+					<tr key='property-to'>
+						<td><label>To:</label></td>
+						<td><span>{edgeNodes.toNode.label}</span></td>
+					</tr>
+				];
+			}
 
-			default:
-				return (<div>TODO</div>);
+			default: {
+				return <tr key='todo'><td>TODO</td></tr>;
+			}
 		}
 	},
 
@@ -211,30 +202,25 @@ const PropertiesPanel = React.createClass({
 			selectedItem = props.graph[collectionName][props.selectedId];
 		}
 
-		const selectedType = (selectedItem)
-			? props.selectedType || '(unknown type)'
-			: '';
+		// const selectedType = (selectedItem)
+		// 	? props.selectedType || '(unknown type)'
+		// 	: '';
 
 		return (
 			<div id={props.id} className='panel-section'>
 				<h3 className='title'>
-					selection{(selectedItem) ? `: ${selectedType}` : ''}
+					Selection{/*(selectedItem) ? `: ${selectedType}` : ''*/}
 				</h3>
-				<form className='form' onSubmit={this.onSubmit}>{/* form-horizontal */}
-					<div className='form-group'>
-						<span className='disabled'>
-							{(!selectedItem)
-								? 'nothing selected'
-								: this.renderProperties(selectedItem, props.selectedType)}
-						</span>
-						{(!selectedItem)
-							? null
-							: <div className='kb'>
-								{/*Knowledge base:<br/>*/}
-								{this.renderKnowledgebase(selectedItem)}
-							</div>}
-					</div>
-				</form>
+
+				{(!selectedItem)
+					? <span className='disabled'>nothing selected</span>
+					: <table>
+						<tbody>
+							{this.renderProperties(selectedItem, props.selectedType)}
+							{this.renderKnowledgebase(selectedItem)}
+						</tbody>
+					</table>
+				}
 			</div>
 		);
 	},
@@ -264,11 +250,10 @@ const PropertiesPanel = React.createClass({
 			? R.partial(this.onChange, [arg])
 			: null;
 
-		return <div>
-			<table><tbody>
-			<tr>
+		return [
+			<tr key='kb-type'>
 				<td>
-					<label>KB Type: </label>
+					<label>{/*KB */}Type: </label>
 				</td>
 				<td>
 					<select
@@ -279,53 +264,62 @@ const PropertiesPanel = React.createClass({
 						onChange={onChange}
 					>
 						<option value=''>— select —</option>
-						{options.map(item => <option key={item.type} value={item.type}>{item.label}</option>)}
+						{options
+							.map(item => {
+								return <option
+									key={item.type}
+									value={item.type}
+								>{item.label}</option>;
+							})
+						}
 					</select>
 				</td>
-			</tr>
-			{(attributes || [])
+			</tr>,
+			(attributes || [])
 				.map((attr) => {
+					if (attr.id === 'tkb:name') {
+						return null;
+					}
+
 					return <tr key={attr.id}>
 						<td><label>{attr.label}:</label> </td>
 						<td>
-						{(!!attr.values)
-							? <select
-								className='form-control'
-								onChange={onChange}
-								name={attr.id}
-								value={selectedItem[attr.id]}
-								key={`${attr.id}-values`}
-							>
-								<option value=''>— select —</option>
-								{(attr.values || [])
-									.map((value) => {
-										return <option
-											key={value['@id']}
-											value={value['@id']}
-										>
-											{value['@label']}
-										</option>;
-									})
-								}
-							</select>
-							: <input
-								className='form-control'
-								type='text'
-								onChange={onChange}
-								name={attr.id}
-								readOnly={(attr.id === 'tkb:name')}
-								value={(attr.id === 'tkb:name' || attr.id === 'tkb:actor_name')
-									? selectedItem.label
-									: selectedItem[attr.id]
-								}
-							/>
-						}
+							{(!!attr.values)
+								? <select
+									className='form-control'
+									onChange={onChange}
+									name={attr.id}
+									value={selectedItem[attr.id]}
+									key={`${attr.id}-values`}
+								>
+									<option value=''>— select —</option>
+									{(attr.values || [])
+										.map((value) => {
+											return <option
+												key={value['@id']}
+												value={value['@id']}
+											>
+												{value['@label']}
+											</option>;
+										})
+									}
+								</select>
+								: <input
+									className='form-control'
+									type='text'
+									onChange={onChange}
+									name={attr.id}
+									readOnly={(attr.id === 'tkb:name')}
+									value={(attr.id === 'tkb:name' || attr.id === 'tkb:actor_name')
+										? selectedItem.label
+										: selectedItem[attr.id]
+									}
+								/>
+							}
 						</td>
 					</tr>;
 				})
-			}
-			</tbody></table>
-		</div>;
+		];
 	},
 });
 

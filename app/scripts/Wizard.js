@@ -3,25 +3,20 @@ const R = require('ramda');
 const _ = require('lodash');
 const React = require('react');
 const slugify = require('mout/string/slugify');
-const classnames = require('classnames');
 const actionCreators = require('./actionCreators.js');
-
-const GraphMinimap = require('./GraphMinimap.js');
+// const GraphMinimap = require('./GraphMinimap.js');
+// const GraphOutline = require('./GraphOutline.js');
 const PropertiesPanel = require('./PropertiesPanel.js');
 const DividingSpace = require('./DividingSpace.js');
 const ComponentReference = require('./ComponentReference.js');
-// const GraphOutline = require('./GraphOutline.js');
 const Library = require('./components/Library/Library.js');
-
-const OverlayTrigger = require('react-bootstrap').OverlayTrigger;
-const Tooltip = require('react-bootstrap').Tooltip;
-
-import JSONTree from 'react-json-tree';
-import { AutoSizer, FlexTable, FlexColumn/*, SortDirection*/ } from 'react-virtualized';
-
+const WizardTab = require('./WizardTab.js');
+const MapInfo = require('./MapInfo.js');
 const PolicyEditor = require('./PolicyEditor.js');
 const PredicateEditor = require('./PredicateEditor.js');
 const AttackerProfileEditor = require('./AttackerProfileEditor/AttackerProfileEditor.js');
+import JSONTree from 'react-json-tree';
+import { AutoSizer, FlexTable, FlexColumn/*, SortDirection*/ } from 'react-virtualized';
 
 
 // const colorMap = theme => ({
@@ -62,51 +57,6 @@ const jsonTreeTheme = {
 };
 
 
-const Tab = React.createClass({
-	propTypes: {
-		name: React.PropTypes.string.isRequired,
-		selectedSection: React.PropTypes.string.isRequired,
-		icon: React.PropTypes.string.isRequired,
-		tooltip: React.PropTypes.string.isRequired,
-		handleClick: React.PropTypes.func.isRequired,
-		isDisabled: React.PropTypes.bool,
-	},
-
-	getDefaultProps() {
-		return {
-			isDisabled: false,
-		};
-	},
-
-	render() {
-		const props = this.props;
-		const isSelected = (props.selectedSection === props.name);
-
-		const onClick = (!props.isDisabled)
-			? props.handleClick
-			: () => {};
-
-		const tooltip = <Tooltip id={props.name}>{props.tooltip}</Tooltip>;
-		const tab = <div
-			className={classnames(
-				'step-icon',
-				{ selected: isSelected },
-				{ disabled: props.isDisabled }
-			)}
-			onClick={onClick}
-		>
-			<span className={props.icon} />
-		</div>;
-
-		return (!props.isDisabled)
-			? <OverlayTrigger placement='left' overlay={tooltip} >
-				{tab}
-			</OverlayTrigger>
-			: tab;
-	},
-});
-
-
 const Wizard = React.createClass({
 	contextTypes: {
 		theme: React.PropTypes.object,
@@ -114,21 +64,23 @@ const Wizard = React.createClass({
 	},
 
 	propTypes: {
+		saveMap: React.PropTypes.func.isRequired,
 	},
 
-	// getDefaultProps() {
-	// 	return {};
-	// },
+	getDefaultProps() {
+		return {};
+	},
 
 	renderMinimap(props) {
-		return <GraphMinimap
-			id='minimap'
-			hasOpenMap={props.hasOpenMap}
-			graph={props.graph}
-			nodesList={props.nodesList}
-			theme={this.context.theme}
-			showEdges={true}
-		/>;
+		return null;
+		// return <GraphMinimap
+		// 	id='minimap'
+		// 	hasOpenMap={props.hasOpenMap}
+		// 	graph={props.graph}
+		// 	nodesList={props.nodesList}
+		// 	theme={this.context.theme}
+		// 	showEdges={true}
+		// />;
 	},
 
 	renderOutline(props) {
@@ -137,6 +89,19 @@ const Wizard = React.createClass({
 		// 	<h3 className='title'>outline</h3>
 		// 	<GraphOutline graph={props.graph} />
 		// </div>;
+	},
+
+	renderMapInfo() {
+		const { props } = this;
+
+		return <div>
+			<h3 className='title'>Map</h3>
+			<MapInfo
+				hasOpenMap={props.hasOpenMap}
+				metadata={props.metadata}
+				saveMap={props.saveMap}
+			/>
+		</div>;
 	},
 
 	renderProperties(props) {
@@ -198,13 +163,13 @@ const Wizard = React.createClass({
 				className='btn btn-default custom-button'
 				disabled={!props.hasOpenMap}
 			>
-				Merge model (fragment) file
+				Merge model file
 			</button>
 
 			<br />
 			<br />
 
-			<h2 className='title'>Recent models</h2>
+			<h3 className='title'>Recent models</h3>
 			<div className='recent-models'>
 				<AutoSizer>{
 					({ height, width }) => <FlexTable
@@ -314,7 +279,7 @@ const Wizard = React.createClass({
 		const props = this.props;
 		const predicates = R.values(props.graph.predicates || {});
 		return <div>
-			<h2 className='title'>Predicates</h2>
+			<h3 className='title'>Predicates</h3>
 			<PredicateEditor
 				edges={props.predicateEdges}
 				nodes={props.graph.nodes}
@@ -343,32 +308,36 @@ const Wizard = React.createClass({
 	renderPolicies() {
 		const props = this.props;
 
-		return <div>
-			<h2 className='title'>Policies</h2>
+		return <div className='policies'>
+			<h3 className='title'>Policies</h3>
 
-			<div>
-				<a href='#' onClick={this.addPolicy}>add policy</a>
-			</div>
+			{/*<DividingSpace />*/}
 
-			<hr />
+			<button
+				onClick={this.addPolicy}
+				className='btn btn-default custom-button'
+			>Add policy</button>
 
-			{R.values(props.graph.policies || {})
-				.map((item) => {
-					return <div key={item.id}>
-						<PolicyEditor
-							nodes={props.graph.nodes}
-							nodesList={props.nodesList}
-							policy={item}
-							onChange={this.updatePolicy}
-							onRemove={() => { this.removePolicy(item.id); }}
-							locationOptions={props.locationOptions}
-							relationTypes={props.relationTypes}
-							relationsMap={props.relationsMap}
-						/>
-						<hr />
-					</div>;
-				})
-			}
+			<DividingSpace />
+
+			<ul>
+				{R.values(props.graph.policies || {})
+					.map((item) => {
+						return <li key={item.id}>
+							<PolicyEditor
+								nodes={props.graph.nodes}
+								nodesList={props.nodesList}
+								policy={item}
+								onChange={this.updatePolicy}
+								onRemove={() => { this.removePolicy(item.id); }}
+								locationOptions={props.locationOptions}
+								relationTypes={props.relationTypes}
+								relationsMap={props.relationsMap}
+							/>
+						</li>;
+					})
+				}
+			</ul>
 		</div>;
 	},
 
@@ -409,7 +378,7 @@ const Wizard = React.createClass({
 	renderProcesses() {
 		const processes = R.values(this.props.graph.processes || {});
 		return <div>
-			<h2 className='title'>Processes</h2>
+			<h3 className='title'>Processes</h3>
 
 			<hr />
 			<div>
@@ -462,7 +431,7 @@ const Wizard = React.createClass({
 			{this.renderAttackerActor()}
 			<hr />
 
-			<h2 className='title'>Attacker profile</h2>
+			<h3 className='title'>Attacker profile</h3>
 			<AttackerProfileEditor
 				profile={props.attackerProfile}
 				profilePresets={props.attackerProfiles}
@@ -604,10 +573,10 @@ const Wizard = React.createClass({
 					.map((message, index) => {
 						const hoverable = <ComponentReference
 							modelComponent={node}
-						>
-							{`${node.modelComponentType} "${node.label}"`}
-						</ComponentReference>;
-						return <li key={`${node.id}-${index}`}>{hoverable} {message}</li>;
+						>{node.label}</ComponentReference>;
+						return <li key={`${node.id}-${index}`}>
+							{/*node.modelComponentType*/} {hoverable} {message}
+						</li>;
 					});
 			})
 			.reduce((acc, messages) => [...acc, ...messages], []);
@@ -618,7 +587,7 @@ const Wizard = React.createClass({
 		const noProblems = (_.isEmpty(otherWarnings) && _.isEmpty(missingForAnalysis));
 
 		return <div>
-			<h2 className='title'>Run analysis</h2>
+			<h3 className='title'>Run analysis</h3>
 			<hr />
 			{this.renderAttackerGoal()}
 			<hr />
@@ -745,7 +714,8 @@ const Wizard = React.createClass({
 		return (
 			<div>
 				{/*this.renderMinimap(props)*/}
-				{this.renderOutline(props)}
+				{/*this.renderOutline(props)*/}
+				{this.renderMapInfo()}
 				{this.renderProperties(props)}
 				<hr />
 
@@ -755,7 +725,7 @@ const Wizard = React.createClass({
 							.map((stepName) => {
 								const step = wizardSteps[stepName];
 								const isDisabled = !props.hasOpenMap && (stepName !== 'import');
-								return <Tab
+								return <WizardTab
 									key={stepName}
 									name={stepName}
 									isDisabled={isDisabled}
@@ -871,8 +841,7 @@ const Wizard = React.createClass({
 	selectWizardStep(name, event) {
 		event.preventDefault();
 		this.context.dispatch( actionCreators.selectWizardStep(name) );
-	}
-
+	},
 });
 
 

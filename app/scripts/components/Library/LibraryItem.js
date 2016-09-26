@@ -69,7 +69,7 @@ let LibraryItem = React.createClass({
 						<span className='normal'>{props.data.label}</span>
 					</span>
 					<span className='draghint'>
-						Drag me onto map
+						← Drag me onto map
 					</span>
 				</div>
 				<div

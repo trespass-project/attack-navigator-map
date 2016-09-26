@@ -95,7 +95,7 @@ module.exports = [
 	{
 		'type': 'relation',
 		'value': 'logical-access',
-		'label': 'logical acces',
+		'label': 'logical access',
 		'directed': true,
 		// 'acceptsSource': ['actor'],
 		// 'acceptsTarget': ['location']
