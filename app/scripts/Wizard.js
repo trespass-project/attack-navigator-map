@@ -587,8 +587,8 @@ const Wizard = React.createClass({
 		const noProblems = (_.isEmpty(otherWarnings) && _.isEmpty(missingForAnalysis));
 
 		return <div>
-			<h3 className='title'>Run analysis</h3>
-			<hr />
+			{/*<h3 className='title'>Run analysis</h3>
+			<hr />*/}
 			{this.renderAttackerGoal()}
 			<hr />
 			{this.renderToolChainSelection()}
@@ -711,37 +711,38 @@ const Wizard = React.createClass({
 				|| defaultRenderFn
 			: defaultRenderFn;
 
-		return (
-			<div>
+		return <div id='wiz'>
+			<div className='info-and-properties'>
 				{/*this.renderMinimap(props)*/}
 				{/*this.renderOutline(props)*/}
 				{this.renderMapInfo()}
 				{this.renderProperties(props)}
-				<hr />
-
-				<div id='wizard-container'>
-					<div id='steps-container'>
-						{R.keys(wizardSteps)
-							.map((stepName) => {
-								const step = wizardSteps[stepName];
-								const isDisabled = !props.hasOpenMap && (stepName !== 'import');
-								return <WizardTab
-									key={stepName}
-									name={stepName}
-									isDisabled={isDisabled}
-									selectedSection={wizardSelectedSection}
-									icon={step.icon}
-									tooltip={step.tooltip}
-									handleClick={step.handleClick}
-								/>;
-							})
-						}
-					</div>
-
-					{renderFn(props)}
-				</div>
 			</div>
-		);
+
+			<hr id='divider' />
+
+			<div id='wizard-container'>
+				<div id='steps-container'>
+					{R.keys(wizardSteps)
+						.map((stepName) => {
+							const step = wizardSteps[stepName];
+							const isDisabled = !props.hasOpenMap && (stepName !== 'import');
+							return <WizardTab
+								key={stepName}
+								name={stepName}
+								isDisabled={isDisabled}
+								selectedSection={wizardSelectedSection}
+								icon={step.icon}
+								tooltip={step.tooltip}
+								handleClick={step.handleClick}
+							/>;
+						})
+					}
+				</div>
+
+				{renderFn(props)}
+			</div>
+		</div>;
 	},
 
 	setAttackerActor(event) {
