@@ -107,14 +107,17 @@ React.createClass({
 
 				{(props.hasOpenMap)
 					? <div id='layersControl'>
+						<strong>Layers</strong>
 						{props.displayLayersList
 							.map((layer) => {
 								return <div key={layer.name}>
-									<input
-										type='checkbox'
-										checked={!!props.activeLayers[layer.name]}
-										onChange={(event) => this.handleLayerChange(layer, event.target.checked)}
-									/> {layer.displayName}
+									<label style={{ margin: 0, fontWeight: 'normal', cursor: 'pointer' }}>
+										<input
+											type='checkbox'
+											checked={!!props.activeLayers[layer.name]}
+											onChange={(event) => this.handleLayerChange(layer, event.target.checked)}
+										/> {layer.displayName}
+									</label>
 								</div>;
 							})
 						}
