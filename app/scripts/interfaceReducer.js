@@ -393,7 +393,8 @@ function reducer(state=initialState, action) {
 
 		case constants.ACTION_addPredicatesToRelationTypes: {
 			const { predicates } = action;
-			const relationTypes = R.uniq(
+			const relationTypes = R.uniqBy(
+				R.prop('value'),
 				[...state.relationTypes, ...predicates]
 			);
 			return mergeWithState({ relationTypes });
