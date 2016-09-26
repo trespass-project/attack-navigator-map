@@ -56,7 +56,7 @@ const MapInfo = React.createClass({
 		const { props } = this;
 		const modelId = props.metadata.id;
 
-		return <div>
+		return <div className='map-info'>
 			{(props.hasOpenMap) &&
 				<div>
 					<table>
@@ -107,6 +107,8 @@ const MapInfo = React.createClass({
 						<Accordion>
 							<Panel header='Debug options' eventKey='1'>
 								<div style={{ fontSize: 14 }}>
+									<DividingSpace />
+
 									<a
 										href={`${knowledgebaseApi.host}tkb/files/edit?model_id=${modelId}`}
 										target='_blank'
