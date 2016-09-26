@@ -1323,6 +1323,7 @@ module.exports.getPredicatesFromPolicies =
 function getPredicatesFromPolicies(policiesMap={}) {
 	const relationTypes = R.values(policiesMap)
 		.map(R.prop('credentials'))
+		.filter((credentials) => !! credentials)
 		.map(R.prop('credPredicate'))
 		.reduce((acc, credPreds=[]) => {
 			return [
