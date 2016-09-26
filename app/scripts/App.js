@@ -5,7 +5,6 @@ const pkg = JSON.parse(fs.readFileSync('./package.json').toString());
 const classnames = require('classnames');
 const constants = require('./constants.js');
 const actionCreators = require('./actionCreators.js');
-
 // const ModelDebugView = require('./components/ModelDebugView/ModelDebugView.js');
 // const MainMenu = require('./MainMenu.js');
 const Wizard = require('./Wizard.js');
