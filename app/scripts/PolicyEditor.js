@@ -305,8 +305,7 @@ const AtLocations = React.createClass({
 		);
 
 		return <div>
-			<div><b>at locations</b></div>
-			<div style={{ paddingLeft: padding }}>
+			<div style={{ /*paddingLeft: padding*/ }}>
 				<SelectizeDropdown
 					multi={true}
 					name='locations'
@@ -357,11 +356,7 @@ const EnabledAction = React.createClass({
 		const actionType = this.getType();
 
 		return <div>
-			<div>
-				<b>enabled action</b>
-			</div>
-
-			<div style={{ paddingLeft: padding }}>
+			<div style={{ /*paddingLeft: padding*/ }}>
 				<select
 					value={actionType}
 					onChange={this.changeActionType}
@@ -468,9 +463,7 @@ const Credentials = React.createClass({
 		const credItem = props.credentials.credItem || [];
 
 		return <div>
-			<div><b>credentials</b></div>
-
-			<div style={{ paddingLeft: padding }}>
+			<div style={{ /*paddingLeft: padding*/ }}>
 				<div>
 					<div>
 						<span>cred. locations </span>
@@ -997,52 +990,76 @@ const PolicyEditor = React.createClass({
 		const props = this.props;
 		const { policy } = props;
 
-		return <div>
+		return <div className='policy'>
 			<div>
 				<a href='#' onClick={props.onRemove}>delete policy</a>
 			</div>
-			<div>
-				id: {policy.id}
-			</div>
 
-			<div>
-				<AtLocations
-					nodes={props.nodes}
-					locations={policy.atLocations}
-					locationOptions={props.locationOptions}
-					onChange={(name, values) => {
-						this.atLocationsChanged(values);
-					}}
-				/>
-			</div>
-			<div>
-				{(policy.enabled || [])
-					.map((action, index) => {
-						return <EnabledAction
-							key={action}
-							action={action}
-							onChange={(updatedAction) => {
-								this.enabledActionChanged(index, updatedAction);
-							}}
-						/>;
-					})
-				}
-			</div>
-			<div>
-				<Credentials
-					credentials={policy.credentials}
-					locationOptions={props.locationOptions}
-					relationTypes={props.relationTypes}
-					relationsMap={props.relationsMap}
-					nodes={props.nodes}
-					nodesList={props.nodesList}
-					onChange={this.credentialsChanged}
-					addLocation={this.addLocation}
-					addPredicate={this.addPredicate}
-					addItem={this.addItem}
-					addData={this.addData}
-				/>
-			</div>
+			<table>
+				<tbody>
+					<tr>
+						<td>
+							<label>Id:</label>
+						</td>
+						<td>
+							<span className='disabled'>{policy.id}</span>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<label>Locations:</label>
+						</td>
+						<td>
+							<AtLocations
+								nodes={props.nodes}
+								locations={policy.atLocations}
+								locationOptions={props.locationOptions}
+								onChange={(name, values) => {
+									this.atLocationsChanged(values);
+								}}
+							/>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<label>Action{/*(s)*/}:</label>
+						</td>
+						<td>
+							{(policy.enabled || [])
+								.map((action, index) => {
+									return <EnabledAction
+										key={action}
+										action={action}
+										onChange={(updatedAction) => {
+											this.enabledActionChanged(index, updatedAction);
+										}}
+									/>;
+								})
+							}
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<label>Credentials:</label>
+						</td>
+						<td>
+							<Credentials
+								credentials={policy.credentials}
+								locationOptions={props.locationOptions}
+								relationTypes={props.relationTypes}
+								relationsMap={props.relationsMap}
+								nodes={props.nodes}
+								nodesList={props.nodesList}
+								onChange={this.credentialsChanged}
+								addLocation={this.addLocation}
+								addPredicate={this.addPredicate}
+								addItem={this.addItem}
+								addData={this.addData}
+							/>
+						</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>;
 	},
 });
