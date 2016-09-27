@@ -90,7 +90,7 @@
     "shortid": "^2.2.4",
     "sifter": "^0.5.1",
     "trespass.js": "^0.24.3",
-    "trespass-visualizations": "^0.13.2",
+    "trespass-visualizations": "latest",
     "tween.js": "^0.14.0",
     "xml2js": "^0.4.16"
   },
