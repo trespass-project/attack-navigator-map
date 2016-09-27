@@ -156,7 +156,7 @@ const RemoveButton = React.createClass({
 	render() {
 		return <a
 			href='#'
-			onClick={this.props.onRemove}
+			onClick={this.handleRemove}
 		>remove</a>;
 	}
 });
