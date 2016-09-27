@@ -1,4 +1,5 @@
 /* eslint react/no-multi-comp: 0 */
+/* eslint react/jsx-boolean-value: 0 */
 
 const React = require('react');
 const update = require('react-addons-update');
@@ -137,9 +138,9 @@ function _renderValue(nodes, valueKey='value', item) {
 	const node = nodes[item[valueKey]];
 	return (!node)
 		? null
-		: <ComponentReference modelComponent={node}>
-			{node.label}
-		</ComponentReference>;
+		: <ComponentReference
+			modelComponent={node}
+		>{node.label}</ComponentReference>;
 }
 
 
@@ -177,8 +178,7 @@ const TextInput = React.createClass({
 			value={props.value || ''}
 			placeholder={props.placeholder || ''}
 			onChange={(event) => {
-				const newVal = event.target.value;
-				props.onChange(newVal);
+				props.onChange(event.target.value);
 			}}
 		/>;
 	}
@@ -890,7 +890,7 @@ const CredPredicate = React.createClass({
 		const { relationTypes, relationsMap } = props;
 
 		const renderSubjObj = (value, index) => {
-			return <span style={{ background: 'grey' }}>
+			return <span style={{ background: lightGrey }}>
 				<VariableOrSelectize
 					data={value}
 					nodes={props.nodes}
@@ -989,8 +989,8 @@ const PolicyEditor = React.createClass({
 		this._updateField('credentials', credentials);
 	},
 
-	enabledActionChanged(index, action) {
-		this._updateArrayIndex('enabled', index, action);
+	enabledActionChanged(index, updatedAction) {
+		this._updateArrayIndex('enabled', index, updatedAction);
 	},
 
 	render() {
@@ -1021,8 +1021,8 @@ const PolicyEditor = React.createClass({
 						return <EnabledAction
 							key={action}
 							action={action}
-							onChange={(action) => {
-								this.enabledActionChanged(index, action);
+							onChange={(updatedAction) => {
+								this.enabledActionChanged(index, updatedAction);
 							}}
 						/>;
 					})
