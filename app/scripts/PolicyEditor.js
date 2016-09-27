@@ -13,7 +13,7 @@ const ComponentReference = require('./ComponentReference.js');
 const noop = () => {};
 
 const lightGrey = 'rgb(245, 245, 245)';
-const padding = 20;
+const padding = 25;
 
 
 const emptyValue = {
@@ -174,6 +174,7 @@ const TextInput = React.createClass({
 		const { props } = this;
 
 		return <input
+			className='form-control'
 			type='text'
 			value={props.value || ''}
 			placeholder={props.placeholder || ''}
@@ -463,122 +464,148 @@ const Credentials = React.createClass({
 		const credItem = props.credentials.credItem || [];
 
 		return <div>
-			<div style={{ /*paddingLeft: padding*/ }}>
-				<div>
-					<div>
-						<span>cred. locations </span>
-						<a
-							href='#'
-							onClick={props.addLocation}
-						>add</a>
-					</div>
-					<div style={{ background: lightGrey, paddingLeft: padding }}>
-						{credLocation.map((credLoc, index) => {
-							return <CredLocation
-								key={index}
-								locationId={credLoc.id}
-								locationOptions={props.locationOptions}
-								nodes={props.nodes}
-								onChange={(name, value) => {
-									this.handleChangeCredLocation(
-										index,
-										value
-									);
-								}}
-								onRemove={() => {
-									this.handleRemoveCredLocation(index);
-								}}
-							/>;
-						})}
-					</div>
-				</div>
+			<table>
+				<tbody>
+					{/*LOCATION*/}
+					<tr>
+						<td>
+							<label>Location:</label>
+						</td>
+						<td>
+							<a
+								href='#'
+								onClick={props.addLocation}
+							>add</a>
+						</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>
+							{credLocation.map((credLoc, index) => {
+								return <CredLocation
+									key={index}
+									locationId={credLoc.id}
+									locationOptions={props.locationOptions}
+									nodes={props.nodes}
+									onChange={(name, value) => {
+										this.handleChangeCredLocation(
+											index,
+											value
+										);
+									}}
+									onRemove={() => {
+										this.handleRemoveCredLocation(index);
+									}}
+								/>;
+							})}
+						</td>
+					</tr>
 
-				<div>
-					<div>
-						<span>cred. predicates </span>
-						<a
-							href='#'
-							onClick={props.addPredicate}
-						>add</a>
-					</div>
-					<div style={{ background: lightGrey, paddingLeft: padding }}>
-						{credPredicate.map((credPred, index) => {
-							return <CredPredicate
-								key={index}
-								predicate={credPred}
-								relationTypes={props.relationTypes}
-								relationsMap={props.relationsMap}
-								nodes={props.nodes}
-								nodesList={props.nodesList}
-								onChange={(updatedPredicate) => {
-									this.handleChangeCredPredicate(
-										index,
-										updatedPredicate
-									);
-								}}
-								onRemove={() => {
-									this.handleRemoveCredPredicate(index);
-								}}
-							/>;
-						})}
-					</div>
-				</div>
+					{/*PREDICATE*/}
+					<tr>
+						<td>
+							<label>Predicate:</label>
+						</td>
+						<td>
+							<a
+								href='#'
+								onClick={props.addPredicate}
+							>add</a>
+						</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>
+							{credPredicate.map((credPred, index) => {
+								return <CredPredicate
+									key={index}
+									predicate={credPred}
+									relationTypes={props.relationTypes}
+									relationsMap={props.relationsMap}
+									nodes={props.nodes}
+									nodesList={props.nodesList}
+									onChange={(updatedPredicate) => {
+										this.handleChangeCredPredicate(
+											index,
+											updatedPredicate
+										);
+									}}
+									onRemove={() => {
+										this.handleRemoveCredPredicate(index);
+									}}
+								/>;
+							})}
+						</td>
+					</tr>
 
-				<div>
-					<div>
-						<span>cred. data </span>
-						<a
-							href='#'
-							onClick={props.addData}
-						>add</a>
-					</div>
-					<div style={{ background: lightGrey, paddingLeft: padding }}>
-						{credData.map((credData, index) => {
-							return <CredData
-								key={index}
-								data={credData}
-								nodes={props.nodes}
-								nodesList={props.nodesList}
-								onChange={(updatedData) => {
-									this.handleChangeCredData(
-										index,
-										updatedData
-									);
-								}}
-								onRemove={() => {
-									this.handleRemoveCredData(index);
-								}}
-							/>;
-						})}
-					</div>
-				</div>
+					{/*DATA*/}
+					<tr>
+						<td>
+							<label>Data:</label>
+						</td>
+						<td>
+							<a
+								href='#'
+								onClick={props.addData}
+							>add</a>
+						</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>
+							{credData.map((credData, index) => {
+								return <CredData
+									key={index}
+									data={credData}
+									nodes={props.nodes}
+									nodesList={props.nodesList}
+									onChange={(updatedData) => {
+										this.handleChangeCredData(
+											index,
+											updatedData
+										);
+									}}
+									onRemove={() => {
+										this.handleRemoveCredData(index);
+									}}
+								/>;
+							})}
+						</td>
+					</tr>
 
-				<div>
-					<div>
-						<span>cred. item </span>
-						<a
-							href='#'
-							onClick={props.addItem}
-						>add</a>
-					</div>
-					<div style={{ background: lightGrey, paddingLeft: padding }}>
-						{credItem.map((credItem, index) => {
-							return <CredItem
-								key={index}
-								item={credItem}
-								nodes={props.nodes}
-								nodesList={props.nodesList}
-								onChange={(updated) => {
-									this.handleChangeCredItem(index, updated);
-								}}
-								onRemove={() => {
-									this.handleRemoveCredItem(index);
-								}}
-							/>;
-						})}
-					</div>
-				</div>
-			</div>
+				{/*ITEM*/}
+					<tr>
+						<td>
+							<label>Item:</label>
+						</td>
+						<td>
+							<a
+								href='#'
+								onClick={props.addItem}
+							>add</a>
+						</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>
+							{credItem.map((credItem, index) => {
+								return <CredItem
+									key={index}
+									item={credItem}
+									nodes={props.nodes}
+									nodesList={props.nodesList}
+									onChange={(updated) => {
+										this.handleChangeCredItem(index, updated);
+									}}
+									onRemove={() => {
+										this.handleRemoveCredItem(index);
+									}}
+								/>;
+							})}
+						</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>;
 	},
 });
@@ -1039,10 +1066,12 @@ const PolicyEditor = React.createClass({
 						</td>
 					</tr>
 					<tr>
-						<td>
+						<td colSpan='2'>
 							<label>Credentials:</label>
 						</td>
-						<td>
+					</tr>
+					<tr>
+						<td colSpan='2' style={{ paddingLeft: padding }}>
 							<Credentials
 								credentials={policy.credentials}
 								locationOptions={props.locationOptions}
