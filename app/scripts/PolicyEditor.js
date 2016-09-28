@@ -1,4 +1,5 @@
 /* eslint react/no-multi-comp: 0 */
+/* eslint react/jsx-boolean-value: 0 */
 
 const React = require('react');
 const update = require('react-addons-update');
@@ -7,20 +8,18 @@ const _ = require('lodash');
 const SelectizeDropdown = require('./SelectizeDropdown.js');
 const RelationSelectize = require('./RelationSelectize.js');
 const ComponentReference = require('./ComponentReference.js');
+const DividingSpace = require('./DividingSpace.js');
 
 
 const noop = () => {};
 
-const lightGrey = 'rgb(245, 245, 245)';
-const padding = 20;
+const padding = 25;
 
 
 const emptyValue = {
 	type: 'variable',
 };
-const emptyCredLocation = {
-	id: undefined
-};
+const emptyCredLocation = undefined;
 const emptyCredPredicate = {
 	relationType: undefined,
 	values: [
@@ -137,10 +136,35 @@ function _renderValue(nodes, valueKey='value', item) {
 	const node = nodes[item[valueKey]];
 	return (!node)
 		? null
-		: <ComponentReference modelComponent={node}>
-			{node.label}
-		</ComponentReference>;
+		: <ComponentReference
+			modelComponent={node}
+		>{node.label}</ComponentReference>;
 }
+
+
+const InnerTable = React.createClass({
+	propTypes: {
+		onRemove: React.PropTypes.func.isRequired,
+	},
+
+	render() {
+		const { props } = this;
+		const style = {
+			background: 'white',
+			padding: 5,
+			width: '100%',
+		};
+		const remove = <RemoveButton onRemove={props.onRemove} />;
+		return <table style={{ marginBottom: 5 }}>
+			<tbody>
+				<tr>
+					<td style={style}>{props.children}</td>
+					<td>{remove}</td>
+				</tr>
+			</tbody>
+		</table>;
+	}
+});
 
 
 const RemoveButton = React.createClass({
@@ -156,8 +180,11 @@ const RemoveButton = React.createClass({
 	render() {
 		return <a
 			href='#'
-			onClick={this.props.onRemove}
-		>remove</a>;
+			onClick={this.handleRemove}
+			style={{ marginLeft: 5 }}
+		>
+			<span className='icon fa fa-minus-circle' />
+		</a>;
 	}
 });
 
@@ -173,12 +200,12 @@ const TextInput = React.createClass({
 		const { props } = this;
 
 		return <input
+			className='form-control input-sm'
 			type='text'
 			value={props.value || ''}
 			placeholder={props.placeholder || ''}
 			onChange={(event) => {
-				const newVal = event.target.value;
-				props.onChange(newVal);
+				props.onChange(event.target.value);
 			}}
 		/>;
 	}
@@ -210,6 +237,12 @@ const VariableOrSelectize = React.createClass({
 		this._updateField('type', newType);
 	},
 
+	typeSelected(event) {
+		// if (event) { event.preventDefault(); }
+		const newType = event.target.value;
+		this._updateField('type', newType);
+	},
+
 	updateValue(newVal) {
 		this._updateField('value', newVal);
 	},
@@ -232,13 +265,12 @@ const VariableOrSelectize = React.createClass({
 			[props.nodes, valueKey]
 		);
 
-		const variable = <span>
-			<TextInput
-				value={props.data.value}
-				placeholder='variable name'
-				onChange={this.updateValue}
-			/>
-		</span>;
+		const variable = <TextInput
+			value={props.data.value}
+			placeholder='variable name'
+			onChange={this.updateValue}
+		/>;
+
 		const selectize = <SelectizeDropdown
 			multi={false}
 			name='nodes'
@@ -252,17 +284,39 @@ const VariableOrSelectize = React.createClass({
 			extraProps={{ renderValue }}
 		/>;
 
-		return <div>
-			<input
-				type='checkbox'
-				checked={isVariable}
-				onChange={this.toggleType}
-			/>
-			<span> is variable </span>
-			{(isVariable)
-				? variable
-				: selectize
-			}
+		return <div
+			style={{
+				display: 'flex',
+				alignItems: 'center',
+			}}
+		>
+			<div
+				style={{
+					flexGrow: 0,
+					flexShrink: 0,
+					marginRight: '5px',
+				}}
+			>
+				<select
+					onChange={this.typeSelected}
+				>
+					<option value='variable'>Var</option>
+					<option value='value'>Comp</option>
+				</select>
+			</div>
+
+			<div
+				style={{
+					flexGrow: 1,
+					flexShrink: 1,
+				}}
+			>
+				{(isVariable)
+					? variable
+					: selectize
+				}
+			</div>
+
 			{(props.onRemove) &&
 				<span> <RemoveButton onRemove={props.onRemove} /></span>
 			}
@@ -305,8 +359,7 @@ const AtLocations = React.createClass({
 		);
 
 		return <div>
-			<div><b>at locations</b></div>
-			<div style={{ paddingLeft: padding }}>
+			<div>
 				<SelectizeDropdown
 					multi={true}
 					name='locations'
@@ -358,10 +411,6 @@ const EnabledAction = React.createClass({
 
 		return <div>
 			<div>
-				<b>enabled action</b>
-			</div>
-
-			<div style={{ paddingLeft: padding }}>
 				<select
 					value={actionType}
 					onChange={this.changeActionType}
@@ -468,124 +517,164 @@ const Credentials = React.createClass({
 		const credItem = props.credentials.credItem || [];
 
 		return <div>
-			<div><b>credentials</b></div>
+			<table>
+				<tbody>
+					{/*LOCATION*/}
+					<tr>
+						<td colSpan='2'>
+							<label>Location:</label>
+							<span> </span>
+							<a
+								href='#'
+								onClick={props.addLocation}
+							>
+								<span className='icon fa fa-plus-circle' />
+							</a>
+						</td>
+					</tr>
+					<tr>
+						<td colSpan='2'>
+							{credLocation.map((credLoc, index) => {
+								const content = <CredLocation
+									locationId={credLoc}
+									locationOptions={props.locationOptions}
+									nodes={props.nodes}
+									onChange={(name, value) => {
+										this.handleChangeCredLocation(
+											index,
+											value
+										);
+									}}
+								/>;
+								return <InnerTable
+									key={index}
+									onRemove={() => {
+										this.handleRemoveCredLocation(index);
+									}}
+								>
+									{content}
+								</InnerTable>;
+							})}
+						</td>
+					</tr>
 
-			<div style={{ paddingLeft: padding }}>
-				<div>
-					<div>
-						<span>cred. locations </span>
-						<a
-							href='#'
-							onClick={props.addLocation}
-						>add</a>
-					</div>
-					<div style={{ background: lightGrey, paddingLeft: padding }}>
-						{credLocation.map((credLoc, index) => {
-							return <CredLocation
-								key={index}
-								locationId={credLoc.id}
-								locationOptions={props.locationOptions}
-								nodes={props.nodes}
-								onChange={(name, value) => {
-									this.handleChangeCredLocation(
-										index,
-										value
-									);
-								}}
-								onRemove={() => {
-									this.handleRemoveCredLocation(index);
-								}}
-							/>;
-						})}
-					</div>
-				</div>
+					{/*PREDICATE*/}
+					<tr>
+						<td colSpan='2'>
+							<label>Predicate:</label>
+							<span> </span>
+							<a
+								href='#'
+								onClick={props.addPredicate}
+							>
+								<span className='icon fa fa-plus-circle' />
+							</a>
+						</td>
+					</tr>
+					<tr>
+						<td colSpan='2'>
+							{credPredicate.map((credPred, index) => {
+								const content = <CredPredicate
+									predicate={credPred}
+									relationTypes={props.relationTypes}
+									relationsMap={props.relationsMap}
+									nodes={props.nodes}
+									nodesList={props.nodesList}
+									onChange={(updatedPredicate) => {
+										this.handleChangeCredPredicate(
+											index,
+											updatedPredicate
+										);
+									}}
+								/>;
+								return <InnerTable
+									key={index}
+									onRemove={() => {
+										this.handleRemoveCredPredicate(index);
+									}}
+								>
+									{content}
+								</InnerTable>;
+							})}
+						</td>
+					</tr>
 
-				<div>
-					<div>
-						<span>cred. predicates </span>
-						<a
-							href='#'
-							onClick={props.addPredicate}
-						>add</a>
-					</div>
-					<div style={{ background: lightGrey, paddingLeft: padding }}>
-						{credPredicate.map((credPred, index) => {
-							return <CredPredicate
-								key={index}
-								predicate={credPred}
-								relationTypes={props.relationTypes}
-								relationsMap={props.relationsMap}
-								nodes={props.nodes}
-								nodesList={props.nodesList}
-								onChange={(updatedPredicate) => {
-									this.handleChangeCredPredicate(
-										index,
-										updatedPredicate
-									);
-								}}
-								onRemove={() => {
-									this.handleRemoveCredPredicate(index);
-								}}
-							/>;
-						})}
-					</div>
-				</div>
+					{/*DATA*/}
+					<tr>
+						<td colSpan='2'>
+							<label>Data:</label>
+							<span> </span>
+							<a
+								href='#'
+								onClick={props.addData}
+							>
+								<span className='icon fa fa-plus-circle' />
+							</a>
+						</td>
+					</tr>
+					<tr>
+						<td colSpan='2'>
+							{credData.map((credData, index) => {
+								const content = <CredData
+									data={credData}
+									nodes={props.nodes}
+									nodesList={props.nodesList}
+									onChange={(updatedData) => {
+										this.handleChangeCredData(
+											index,
+											updatedData
+										);
+									}}
+								/>;
+								return <InnerTable
+									key={index}
+									onRemove={() => {
+										this.handleRemoveCredData(index);
+									}}
+								>
+									{content}
+								</InnerTable>;
+							})}
+						</td>
+					</tr>
 
-				<div>
-					<div>
-						<span>cred. data </span>
-						<a
-							href='#'
-							onClick={props.addData}
-						>add</a>
-					</div>
-					<div style={{ background: lightGrey, paddingLeft: padding }}>
-						{credData.map((credData, index) => {
-							return <CredData
-								key={index}
-								data={credData}
-								nodes={props.nodes}
-								nodesList={props.nodesList}
-								onChange={(updatedData) => {
-									this.handleChangeCredData(
-										index,
-										updatedData
-									);
-								}}
-								onRemove={() => {
-									this.handleRemoveCredData(index);
-								}}
-							/>;
-						})}
-					</div>
-				</div>
-
-				<div>
-					<div>
-						<span>cred. item </span>
-						<a
-							href='#'
-							onClick={props.addItem}
-						>add</a>
-					</div>
-					<div style={{ background: lightGrey, paddingLeft: padding }}>
-						{credItem.map((credItem, index) => {
-							return <CredItem
-								key={index}
-								item={credItem}
-								nodes={props.nodes}
-								nodesList={props.nodesList}
-								onChange={(updated) => {
-									this.handleChangeCredItem(index, updated);
-								}}
-								onRemove={() => {
-									this.handleRemoveCredItem(index);
-								}}
-							/>;
-						})}
-					</div>
-				</div>
-			</div>
+				{/*ITEM*/}
+					<tr>
+						<td colSpan='2'>
+							<label>Item:</label>
+							<span> </span>
+							<a
+								href='#'
+								onClick={props.addItem}
+							>
+								<span className='icon fa fa-plus-circle' />
+							</a>
+						</td>
+					</tr>
+					<tr>
+						<td colSpan='2'>
+							{credItem.map((credItem, index) => {
+								const content = <CredItem
+									item={credItem}
+									nodes={props.nodes}
+									nodesList={props.nodesList}
+									onChange={(updated) => {
+										this.handleChangeCredItem(index, updated);
+									}}
+								/>;
+								return <InnerTable
+									key={index}
+									onRemove={() => {
+										this.handleRemoveCredItem(index);
+									}}
+								>
+									{content}
+								</InnerTable>;
+							})}
+						</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>;
 	},
 });
@@ -597,14 +686,12 @@ const CredLocation = React.createClass({
 		locationOptions: React.PropTypes.array.isRequired,
 		nodes: React.PropTypes.object.isRequired,
 		onChange: React.PropTypes.func,
-		onRemove: React.PropTypes.func,
 	},
 
 	getDefaultProps() {
 		return {
 			locationOptions: [],
 			onChange: noop,
-			onRemove: noop,
 		};
 	},
 
@@ -623,19 +710,16 @@ const CredLocation = React.createClass({
 			[props.nodes, valueKey]
 		);
 
-		return <div>
-			<SelectizeDropdown
-				multi={false}
-				name='credLocation'
-				value={(locationId) ? location : undefined}
-				options={props.locationOptions}
-				valueKey='value'
-				labelKey='label'
-				onChange={props.onChange/*(name, values)*/}
-				extraProps={{ renderValue }}
-			/>
-			<span> <RemoveButton onRemove={props.onRemove} /></span>
-		</div>;
+		return <SelectizeDropdown
+			multi={false}
+			name='credLocation'
+			value={(locationId) ? location : undefined}
+			options={props.locationOptions}
+			valueKey='value'
+			labelKey='label'
+			onChange={props.onChange/*(name, values)*/}
+			extraProps={{ renderValue }}
+		/>;
 	},
 });
 
@@ -646,13 +730,11 @@ const CredData = React.createClass({
 		nodes: React.PropTypes.object.isRequired,
 		nodesList: React.PropTypes.array.isRequired,
 		onChange: React.PropTypes.func,
-		onRemove: React.PropTypes.func,
 	},
 
 	getDefaultProps() {
 		return {
 			onChange: noop,
-			onRemove: noop,
 		};
 	},
 
@@ -667,7 +749,8 @@ const CredData = React.createClass({
 		);
 	},
 
-	handleAddValue() {
+	handleAddValue(event) {
+		if (event) { event.preventDefault(); }
 		const values = [
 			...this.props.data.values,
 			emptyValue
@@ -700,31 +783,40 @@ const CredData = React.createClass({
 		const { data } = props;
 
 		return <div>
-			<TextInput
-				value={data.name}
-				placeholder='name'
-				onChange={this.handleNameChange}
-			/>
-			<span> </span>
-			{data.values
-				.map((value, index) => {
-					return <div key={index}>
-						<VariableOrSelectize
-							data={value}
-							nodes={props.nodes}
-							nodesList={props.nodesList}
-							onChange={(updated) => {
-								this.handleValueChange(updated, index);
-							}}
-							onRemove={() => {
-								this.handleRemoveValue(index);
-							}}
-						/>
-					</div>;
-				})
-			}
-			<span> <a href='#' onClick={this.handleAddValue}>add value</a>,</span>
-			<span> <RemoveButton onRemove={props.onRemove} /></span>
+			<div>
+				<TextInput
+					value={data.name}
+					placeholder='name'
+					onChange={this.handleNameChange}
+				/>
+			</div>
+
+			<DividingSpace />
+
+			<div>
+				<label>Value:</label> <a href='#' onClick={this.handleAddValue}><span className='icon fa fa-plus-circle' /></a>
+			</div>
+
+			<div>
+				{data.values
+					.map((value, index) => {
+						return <div key={index}>
+							<DividingSpace />
+							<VariableOrSelectize
+								data={value}
+								nodes={props.nodes}
+								nodesList={props.nodesList}
+								onChange={(updated) => {
+									this.handleValueChange(updated, index);
+								}}
+								onRemove={() => {
+									this.handleRemoveValue(index);
+								}}
+							/>
+						</div>;
+					})
+				}
+			</div>
 		</div>;
 	},
 });
@@ -736,13 +828,11 @@ const CredItem = React.createClass({
 		nodes: React.PropTypes.object.isRequired,
 		nodesList: React.PropTypes.array.isRequired,
 		onChange: React.PropTypes.func,
-		onRemove: React.PropTypes.func,
 	},
 
 	getDefaultProps() {
 		return {
 			onChange: noop,
-			onRemove: noop,
 		};
 	},
 
@@ -761,11 +851,13 @@ const CredItem = React.createClass({
 		);
 	},
 
-	handleAddValueItem() {
+	handleAddValueItem(event) {
+		if (event) { event.preventDefault(); }
 		this._handleAdd('credItem');
 	},
 
-	handleAddValueData() {
+	handleAddValueData(event) {
+		if (event) { event.preventDefault(); }
 		this._handleAdd('credData');
 	},
 
@@ -793,50 +885,92 @@ const CredItem = React.createClass({
 		this._updateField('values', values);
 	},
 
+	renderItem(value, index, type) {
+		if (value.type !== type) { return null; }
+
+		const { props } = this;
+
+		const commonProps = {
+			nodes: props.nodes,
+			nodesList: props.nodesList,
+			onChange: (updated) => {
+				this.handleValueChange(updated, index);
+			},
+			onRemove: () => {
+				this.handleRemoveValue(index);
+			},
+		};
+
+		const component = {
+			credItem: <CredItem
+				item={value}
+				{...commonProps}
+			/>,
+			credData: <CredData
+				data={value}
+				{...commonProps}
+			/>,
+		}[value.type] || null;
+
+		const style = {
+			padding: 5,
+			// paddingLeft: padding,
+			// border: 'solid 1px black'
+		};
+		// if (value.type === 'credData') {
+			style.backgroundColor = '#ededeb';
+		// }
+
+		return <div key={index}>
+			<DividingSpace />
+			<div style={style}>
+				<InnerTable
+					onRemove={() => {
+						this.handleRemoveValue(index);
+					}}
+				>
+					{component}
+				</InnerTable>
+			</div>
+		</div>;
+	},
+
 	render() {
 		const props = this.props;
 		const { item } = props;
 
 		return <div>
-			<TextInput
-				value={item.name}
-				placeholder='name'
-				onChange={this.handleNameChange}
-			/>
-			<span> </span>
-			{item.values
-				.map((value, index) => {
-					const commonProps = {
-						nodes: props.nodes,
-						nodesList: props.nodesList,
-						onChange: (updated) => {
-							this.handleValueChange(updated, index);
-						},
-						onRemove: () => {
-							this.handleRemoveValue(index);
-						},
-					};
+			<div>
+				<TextInput
+					value={item.name}
+					placeholder='name'
+					onChange={this.handleNameChange}
+				/>
+			</div>
 
-					const component = {
-						credItem: <CredItem
-							item={value}
-							{...commonProps}
-						/>,
-						credData: <CredData
-							data={value}
-							{...commonProps}
-						/>,
-					}[value.type] || null;
+			<DividingSpace />
 
-					return <div key={index}>
-						{component}
-						<span> </span>
-					</div>;
-				})
-			}
-			<span> <a href='#' onClick={this.handleAddValueItem}>add item</a>,</span>
-			<span> <a href='#' onClick={this.handleAddValueData}>add data</a>,</span>
-			<span> <RemoveButton onRemove={props.onRemove} /></span>
+			<div>
+				<label>Data:</label> <a href='#' onClick={this.handleAddValueData}><span className='icon fa fa-plus-circle' /></a>
+			</div>
+
+			<div>
+				{item.values.map((it, index) => {
+					return this.renderItem(it, index, 'credData');
+				})}
+			</div>
+
+			<DividingSpace />
+
+			<div>
+				<label>Item:</label> <a href='#' onClick={this.handleAddValueItem}><span className='icon fa fa-plus-circle' /></a>
+			</div>
+
+			<div>
+				{item.values.map((it, index) => {
+					return this.renderItem(it, index, 'credItem');
+				})}
+			</div>
 		</div>;
 	},
 });
@@ -850,13 +984,11 @@ const CredPredicate = React.createClass({
 		nodes: React.PropTypes.object.isRequired,
 		nodesList: React.PropTypes.array.isRequired,
 		onChange: React.PropTypes.func,
-		onRemove: React.PropTypes.func,
 	},
 
 	getDefaultProps() {
 		return {
 			onChange: noop,
-			onRemove: noop,
 		};
 	},
 
@@ -890,16 +1022,14 @@ const CredPredicate = React.createClass({
 		const { relationTypes, relationsMap } = props;
 
 		const renderSubjObj = (value, index) => {
-			return <span style={{ background: 'grey' }}>
-				<VariableOrSelectize
-					data={value}
-					nodes={props.nodes}
-					nodesList={props.nodesList}
-					onChange={(updated) => {
-						this.handleValueChange(updated, index);
-					}}
-				/>
-			</span>;
+			return <VariableOrSelectize
+				data={value}
+				nodes={props.nodes}
+				nodesList={props.nodesList}
+				onChange={(updated) => {
+					this.handleValueChange(updated, index);
+				}}
+			/>;
 		};
 
 		return <div>
@@ -912,7 +1042,6 @@ const CredPredicate = React.createClass({
 			/>
 			<span> </span>
 			{renderSubjObj(predicate.values[1], 1)}
-			<span> <RemoveButton onRemove={props.onRemove} /></span>
 		</div>;
 	},
 });
@@ -989,59 +1118,92 @@ const PolicyEditor = React.createClass({
 		this._updateField('credentials', credentials);
 	},
 
-	enabledActionChanged(index, action) {
-		this._updateArrayIndex('enabled', index, action);
+	enabledActionChanged(index, updatedAction) {
+		this._updateArrayIndex('enabled', index, updatedAction);
 	},
 
 	render() {
 		const props = this.props;
 		const { policy } = props;
 
-		return <div>
-			<div>
-				<a href='#' onClick={props.onRemove}>delete policy</a>
-			</div>
-			<div>
-				id: {policy.id}
-			</div>
+		return <div className='policy'>
+			<table>
+				<tbody>
+					<tr>
+						<td>
+							<label>Id:</label>
+						</td>
+						<td>
+							{/*<span className='disabled'>{policy.id}</span>*/}
+							{policy.id}
+						</td>
+					</tr>
+					<tr>
+						<td style={{ verticalAlign: 'middle' }}>
+							<label>Locations:</label>
+						</td>
+						<td>
+							<AtLocations
+								nodes={props.nodes}
+								locations={policy.atLocations}
+								locationOptions={props.locationOptions}
+								onChange={(name, values) => {
+									this.atLocationsChanged(values);
+								}}
+							/>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<label>Action{/*(s)*/}:</label>
+						</td>
+						<td>
+							{(policy.enabled || [])
+								.map((action, index) => {
+									return <EnabledAction
+										key={action}
+										action={action}
+										onChange={(updatedAction) => {
+											this.enabledActionChanged(index, updatedAction);
+										}}
+									/>;
+								})
+							}
+						</td>
+					</tr>
+					<tr>
+						<td colSpan='2'>
+							<label>Credentials:</label>
+						</td>
+					</tr>
+					<tr>
+						<td colSpan='2' style={{ paddingLeft: padding }}>
+							<Credentials
+								credentials={policy.credentials}
+								locationOptions={props.locationOptions}
+								relationTypes={props.relationTypes}
+								relationsMap={props.relationsMap}
+								nodes={props.nodes}
+								nodesList={props.nodesList}
+								onChange={this.credentialsChanged}
+								addLocation={this.addLocation}
+								addPredicate={this.addPredicate}
+								addItem={this.addItem}
+								addData={this.addData}
+							/>
+						</td>
+					</tr>
+				</tbody>
+			</table>
 
 			<div>
-				<AtLocations
-					nodes={props.nodes}
-					locations={policy.atLocations}
-					locationOptions={props.locationOptions}
-					onChange={(name, values) => {
-						this.atLocationsChanged(values);
+				<a
+					href='#'
+					onClick={(event) => {
+						event.preventDefault();
+						props.onRemove();
 					}}
-				/>
-			</div>
-			<div>
-				{(policy.enabled || [])
-					.map((action, index) => {
-						return <EnabledAction
-							key={action}
-							action={action}
-							onChange={(action) => {
-								this.enabledActionChanged(index, action);
-							}}
-						/>;
-					})
-				}
-			</div>
-			<div>
-				<Credentials
-					credentials={policy.credentials}
-					locationOptions={props.locationOptions}
-					relationTypes={props.relationTypes}
-					relationsMap={props.relationsMap}
-					nodes={props.nodes}
-					nodesList={props.nodesList}
-					onChange={this.credentialsChanged}
-					addLocation={this.addLocation}
-					addPredicate={this.addPredicate}
-					addItem={this.addItem}
-					addData={this.addData}
-				/>
+				>remove policy</a>
 			</div>
 		</div>;
 	},

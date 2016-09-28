@@ -52,7 +52,7 @@ body
 #layersControl
 	position: fixed
 	top: 0
-	right: $panelWidth
+	right: $panelWidth + 50px
 	padding-top: 0.5em
 	padding-right: 0.5em
 	font-size: 12px
@@ -440,6 +440,9 @@ svg.graph
 		color: $trespass_red !important
 		font-size: 18px !important
 
+		.panel-title a
+			cursor: pointer
+
 	.panel-body
 		border: none !important
 		padding: 0px !important
@@ -451,10 +454,29 @@ hr#divider
 	margin-right: - $panelPadding;
 	padding-right: $panelPadding;
 	border: none !important
-	height: 10px
+	height: 6px
 	background-color: $trespass_grey_medium
 	transition: background-color $transitionDuration
 
 #container.open
 	hr#divider
 		background-color: $bgcolor
+
+
+
+.policies
+	.policy
+		table
+			width: 100%
+
+			td:first-child
+				vertical-align: top
+			// td:last-child
+			// 	padding-left: 0.5em
+
+			td.no-padding
+				padding: 0px !important
+
+			label
+				margin-bottom: 0px
+
