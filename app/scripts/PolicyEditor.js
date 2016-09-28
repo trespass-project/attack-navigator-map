@@ -180,6 +180,7 @@ const RemoveButton = React.createClass({
 		return <a
 			href='#'
 			onClick={this.handleRemove}
+			style={{ marginLeft: 5 }}
 		>
 			<span className='icon fa fa-minus-circle' />
 		</a>;
@@ -1080,7 +1081,7 @@ const PolicyEditor = React.createClass({
 						</td>
 					</tr>
 					<tr>
-						<td>
+						<td style={{ verticalAlign: 'middle' }}>
 							<label>Locations:</label>
 						</td>
 						<td>
