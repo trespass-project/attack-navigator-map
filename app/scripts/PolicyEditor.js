@@ -144,6 +144,30 @@ function _renderValue(nodes, valueKey='value', item) {
 }
 
 
+const InnerTable = React.createClass({
+	propTypes: {
+		onRemove: React.PropTypes.func.isRequired,
+	},
+
+	render() {
+		const { props } = this;
+		const style = {
+			background: 'white',
+			padding: 5
+		};
+		const remove = <RemoveButton onRemove={props.onRemove} />;
+		return <table>
+			<tbody>
+				<tr>
+					<td style={style}>{props.children}</td>
+					<td>{remove}</td>
+				</tr>
+			</tbody>
+		</table>;
+	}
+});
+
+
 const RemoveButton = React.createClass({
 	propTypes: {
 		onRemove: React.PropTypes.func.isRequired,
@@ -158,7 +182,9 @@ const RemoveButton = React.createClass({
 		return <a
 			href='#'
 			onClick={this.handleRemove}
-		>remove</a>;
+		>
+			<span className='icon fa fa-minus-circle' />
+		</a>;
 	}
 });
 
@@ -258,32 +284,33 @@ const VariableOrSelectize = React.createClass({
 			extraProps={{ renderValue }}
 		/>;
 
-		return <div style={{
+		return <div
+			style={{
 				display: 'flex',
-				marginLeft: '-60px',
 				alignItems: 'center',
-			}}>
-			<div style={{
-				width: '65px',
-				paddingTop: '5px',
-				flexGrow: 0,
-				flexShrink: 0,
-			}}>
+			}}
+		>
+			<div
+				style={{
+					flexGrow: 0,
+					flexShrink: 0,
+					marginRight: '5px',
+				}}
+			>
 				<select
-					style={{
-						width: '60px',
-					}}
 					onChange={this.typeSelected}
 				>
-					<option value='variable'>Variable</option>
-					<option value='value'>Component</option>
+					<option value='variable'>Var</option>
+					<option value='value'>Comp</option>
 				</select>
 			</div>
 
-			<div style={{
-				flexGrow: 1,
-				flexShrink: 1,
-			}}>
+			<div
+				style={{
+					flexGrow: 1,
+					flexShrink: 1,
+				}}
+			>
 				{(isVariable)
 					? variable
 					: selectize
@@ -529,21 +556,21 @@ const Credentials = React.createClass({
 
 					{/*PREDICATE*/}
 					<tr>
-						<td>
+						<td colSpan='2'>
 							<label>Predicate:</label>
-						</td>
-						<td>
+							<span> </span>
 							<a
 								href='#'
 								onClick={props.addPredicate}
-							><span className='icon fa fa-plus-circle'></span></a>
+							>
+								<span className='icon fa fa-plus-circle' />
+							</a>
 						</td>
 					</tr>
 					<tr>
-						<td></td>
-						<td>
+						<td colSpan='2'>
 							{credPredicate.map((credPred, index) => {
-								return <CredPredicate
+								const cp = <CredPredicate
 									key={index}
 									predicate={credPred}
 									relationTypes={props.relationTypes}
@@ -556,10 +583,15 @@ const Credentials = React.createClass({
 											updatedPredicate
 										);
 									}}
+								/>;
+								return <InnerTable
+									key={index}
 									onRemove={() => {
 										this.handleRemoveCredPredicate(index);
 									}}
-								/>;
+								>
+									{cp}
+								</InnerTable>;
 							})}
 						</td>
 					</tr>
@@ -896,13 +928,11 @@ const CredPredicate = React.createClass({
 		nodes: React.PropTypes.object.isRequired,
 		nodesList: React.PropTypes.array.isRequired,
 		onChange: React.PropTypes.func,
-		onRemove: React.PropTypes.func,
 	},
 
 	getDefaultProps() {
 		return {
 			onChange: noop,
-			onRemove: noop,
 		};
 	},
 
@@ -943,7 +973,7 @@ const CredPredicate = React.createClass({
 				onChange={(updated) => {
 					this.handleValueChange(updated, index);
 				}}
-			/>
+			/>;
 		};
 
 		return <div>
@@ -956,7 +986,6 @@ const CredPredicate = React.createClass({
 			/>
 			<span> </span>
 			{renderSubjObj(predicate.values[1], 1)}
-			<span> <RemoveButton onRemove={props.onRemove} /></span>
 		</div>;
 	},
 });
