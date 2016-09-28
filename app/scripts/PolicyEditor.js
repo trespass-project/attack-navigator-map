@@ -174,7 +174,7 @@ const TextInput = React.createClass({
 		const { props } = this;
 
 		return <input
-			className='form-control'
+			className='form-control input-sm'
 			type='text'
 			value={props.value || ''}
 			placeholder={props.placeholder || ''}
@@ -211,6 +211,12 @@ const VariableOrSelectize = React.createClass({
 		this._updateField('type', newType);
 	},
 
+	typeSelected(event) {
+		// if (event) { event.preventDefault(); }
+		const newType = event.target.value;
+		this._updateField('type', newType);
+	},
+
 	updateValue(newVal) {
 		this._updateField('value', newVal);
 	},
@@ -233,13 +239,12 @@ const VariableOrSelectize = React.createClass({
 			[props.nodes, valueKey]
 		);
 
-		const variable = <span>
-			<TextInput
-				value={props.data.value}
-				placeholder='variable name'
-				onChange={this.updateValue}
-			/>
-		</span>;
+		const variable = <TextInput
+			value={props.data.value}
+			placeholder='variable name'
+			onChange={this.updateValue}
+		/>;
+
 		const selectize = <SelectizeDropdown
 			multi={false}
 			name='nodes'
@@ -253,17 +258,38 @@ const VariableOrSelectize = React.createClass({
 			extraProps={{ renderValue }}
 		/>;
 
-		return <div>
-			<input
-				type='checkbox'
-				checked={isVariable}
-				onChange={this.toggleType}
-			/>
-			<span> is variable </span>
-			{(isVariable)
-				? variable
-				: selectize
-			}
+		return <div style={{
+				display: 'flex',
+				marginLeft: '-60px',
+				alignItems: 'center',
+			}}>
+			<div style={{
+				width: '65px',
+				paddingTop: '5px',
+				flexGrow: 0,
+				flexShrink: 0,
+			}}>
+				<select
+					style={{
+						width: '60px',
+					}}
+					onChange={this.typeSelected}
+				>
+					<option value='variable'>Variable</option>
+					<option value='value'>Component</option>
+				</select>
+			</div>
+
+			<div style={{
+				flexGrow: 1,
+				flexShrink: 1,
+			}}>
+				{(isVariable)
+					? variable
+					: selectize
+				}
+			</div>
+
 			{(props.onRemove) &&
 				<span> <RemoveButton onRemove={props.onRemove} /></span>
 			}
@@ -475,7 +501,7 @@ const Credentials = React.createClass({
 							<a
 								href='#'
 								onClick={props.addLocation}
-							>add</a>
+							><span className='icon fa fa-plus-circle'></span></a>
 						</td>
 					</tr>
 					<tr>
@@ -510,7 +536,7 @@ const Credentials = React.createClass({
 							<a
 								href='#'
 								onClick={props.addPredicate}
-							>add</a>
+							><span className='icon fa fa-plus-circle'></span></a>
 						</td>
 					</tr>
 					<tr>
@@ -547,7 +573,7 @@ const Credentials = React.createClass({
 							<a
 								href='#'
 								onClick={props.addData}
-							>add</a>
+							><span className='icon fa fa-plus-circle'></span></a>
 						</td>
 					</tr>
 					<tr>
@@ -582,7 +608,7 @@ const Credentials = React.createClass({
 							<a
 								href='#'
 								onClick={props.addItem}
-							>add</a>
+							><span className='icon fa fa-plus-circle'></span></a>
 						</td>
 					</tr>
 					<tr>
@@ -910,16 +936,14 @@ const CredPredicate = React.createClass({
 		const { relationTypes, relationsMap } = props;
 
 		const renderSubjObj = (value, index) => {
-			return <span style={{ background: lightGrey }}>
-				<VariableOrSelectize
-					data={value}
-					nodes={props.nodes}
-					nodesList={props.nodesList}
-					onChange={(updated) => {
-						this.handleValueChange(updated, index);
-					}}
-				/>
-			</span>;
+			return <VariableOrSelectize
+				data={value}
+				nodes={props.nodes}
+				nodesList={props.nodesList}
+				onChange={(updated) => {
+					this.handleValueChange(updated, index);
+				}}
+			/>
 		};
 
 		return <div>
