@@ -8,11 +8,11 @@ const _ = require('lodash');
 const SelectizeDropdown = require('./SelectizeDropdown.js');
 const RelationSelectize = require('./RelationSelectize.js');
 const ComponentReference = require('./ComponentReference.js');
+const DividingSpace = require('./DividingSpace.js');
 
 
 const noop = () => {};
 
-const lightGrey = 'rgb(245, 245, 245)';
 const padding = 25;
 
 
@@ -358,7 +358,7 @@ const AtLocations = React.createClass({
 		);
 
 		return <div>
-			<div style={{ /*paddingLeft: padding*/ }}>
+			<div>
 				<SelectizeDropdown
 					multi={true}
 					name='locations'
@@ -409,7 +409,7 @@ const EnabledAction = React.createClass({
 		const actionType = this.getType();
 
 		return <div>
-			<div style={{ /*paddingLeft: padding*/ }}>
+			<div>
 				<select
 					value={actionType}
 					onChange={this.changeActionType}
@@ -781,30 +781,40 @@ const CredData = React.createClass({
 		const { data } = props;
 
 		return <div>
-			<TextInput
-				value={data.name}
-				placeholder='name'
-				onChange={this.handleNameChange}
-			/>
-			<span> </span>
-			{data.values
-				.map((value, index) => {
-					return <div key={index}>
-						<VariableOrSelectize
-							data={value}
-							nodes={props.nodes}
-							nodesList={props.nodesList}
-							onChange={(updated) => {
-								this.handleValueChange(updated, index);
-							}}
-							onRemove={() => {
-								this.handleRemoveValue(index);
-							}}
-						/>
-					</div>;
-				})
-			}
-			<span> <a href='#' onClick={this.handleAddValue}>add value</a></span>
+			<div>
+				<TextInput
+					value={data.name}
+					placeholder='name'
+					onChange={this.handleNameChange}
+				/>
+			</div>
+
+			<DividingSpace />
+
+			<div>
+				<label>Value:</label> <a href='#' onClick={this.handleAddValue}><span className='icon fa fa-plus-circle' /></a>
+			</div>
+
+			<div>
+				{data.values
+					.map((value, index) => {
+						return <div key={index}>
+							<DividingSpace />
+							<VariableOrSelectize
+								data={value}
+								nodes={props.nodes}
+								nodesList={props.nodesList}
+								onChange={(updated) => {
+									this.handleValueChange(updated, index);
+								}}
+								onRemove={() => {
+									this.handleRemoveValue(index);
+								}}
+							/>
+						</div>;
+					})
+				}
+			</div>
 		</div>;
 	},
 });
@@ -871,49 +881,92 @@ const CredItem = React.createClass({
 		this._updateField('values', values);
 	},
 
+	renderItem(value, index, type) {
+		if (value.type !== type) { return null; }
+
+		const { props } = this;
+
+		const commonProps = {
+			nodes: props.nodes,
+			nodesList: props.nodesList,
+			onChange: (updated) => {
+				this.handleValueChange(updated, index);
+			},
+			onRemove: () => {
+				this.handleRemoveValue(index);
+			},
+		};
+
+		const component = {
+			credItem: <CredItem
+				item={value}
+				{...commonProps}
+			/>,
+			credData: <CredData
+				data={value}
+				{...commonProps}
+			/>,
+		}[value.type] || null;
+
+		const style = {
+			padding: 5,
+			// paddingLeft: padding,
+			// border: 'solid 1px black'
+		};
+		// if (value.type === 'credData') {
+			style.backgroundColor = '#ededeb';
+		// }
+
+		return <div key={index}>
+			<DividingSpace />
+			<div style={style}>
+				<InnerTable
+					onRemove={() => {
+						this.handleRemoveValue(index);
+					}}
+				>
+					{component}
+				</InnerTable>
+			</div>
+		</div>;
+	},
+
 	render() {
 		const props = this.props;
 		const { item } = props;
 
 		return <div>
-			<TextInput
-				value={item.name}
-				placeholder='name'
-				onChange={this.handleNameChange}
-			/>
-			<span> </span>
-			{item.values
-				.map((value, index) => {
-					const commonProps = {
-						nodes: props.nodes,
-						nodesList: props.nodesList,
-						onChange: (updated) => {
-							this.handleValueChange(updated, index);
-						},
-						onRemove: () => {
-							this.handleRemoveValue(index);
-						},
-					};
+			<div>
+				<TextInput
+					value={item.name}
+					placeholder='name'
+					onChange={this.handleNameChange}
+				/>
+			</div>
 
-					const component = {
-						credItem: <CredItem
-							item={value}
-							{...commonProps}
-						/>,
-						credData: <CredData
-							data={value}
-							{...commonProps}
-						/>,
-					}[value.type] || null;
+			<DividingSpace />
 
-					return <div key={index}>
-						{component}
-						<span> </span>
-					</div>;
-				})
-			}
-			<span> <a href='#' onClick={this.handleAddValueItem}>add item</a>,</span>
-			<span> <a href='#' onClick={this.handleAddValueData}>add data</a>,</span>
+			<div>
+				<label>Data:</label> <a href='#' onClick={this.handleAddValueData}><span className='icon fa fa-plus-circle' /></a>
+			</div>
+
+			<div>
+				{item.values.map((it, index) => {
+					return this.renderItem(it, index, 'credData');
+				})}
+			</div>
+
+			<DividingSpace />
+
+			<div>
+				<label>Item:</label> <a href='#' onClick={this.handleAddValueItem}><span className='icon fa fa-plus-circle' /></a>
+			</div>
+
+			<div>
+				{item.values.map((it, index) => {
+					return this.renderItem(it, index, 'credItem');
+				})}
+			</div>
 		</div>;
 	},
 });
@@ -1077,7 +1130,8 @@ const PolicyEditor = React.createClass({
 							<label>Id:</label>
 						</td>
 						<td>
-							<span className='disabled'>{policy.id}</span>
+							{/*<span className='disabled'>{policy.id}</span>*/}
+							{policy.id}
 						</td>
 					</tr>
 					<tr>
@@ -1145,7 +1199,7 @@ const PolicyEditor = React.createClass({
 						event.preventDefault();
 						props.onRemove();
 					}}
-				>remove</a>
+				>remove policy</a>
 			</div>
 		</div>;
 	},
