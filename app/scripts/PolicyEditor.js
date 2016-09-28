@@ -156,7 +156,7 @@ const InnerTable = React.createClass({
 			padding: 5
 		};
 		const remove = <RemoveButton onRemove={props.onRemove} />;
-		return <table>
+		return <table style={{ marginBottom: 5 }}>
 			<tbody>
 				<tr>
 					<td style={style}>{props.children}</td>
@@ -521,22 +521,21 @@ const Credentials = React.createClass({
 				<tbody>
 					{/*LOCATION*/}
 					<tr>
-						<td>
+						<td colSpan='2'>
 							<label>Location:</label>
-						</td>
-						<td>
+							<span> </span>
 							<a
 								href='#'
 								onClick={props.addLocation}
-							><span className='icon fa fa-plus-circle'></span></a>
+							>
+								<span className='icon fa fa-plus-circle' />
+							</a>
 						</td>
 					</tr>
 					<tr>
-						<td></td>
-						<td>
+						<td colSpan='2'>
 							{credLocation.map((credLoc, index) => {
-								return <CredLocation
-									key={index}
+								const content = <CredLocation
 									locationId={credLoc.id}
 									locationOptions={props.locationOptions}
 									nodes={props.nodes}
@@ -546,10 +545,15 @@ const Credentials = React.createClass({
 											value
 										);
 									}}
+								/>;
+								return <InnerTable
+									key={index}
 									onRemove={() => {
 										this.handleRemoveCredLocation(index);
 									}}
-								/>;
+								>
+									{content}
+								</InnerTable>;
 							})}
 						</td>
 					</tr>
@@ -570,8 +574,7 @@ const Credentials = React.createClass({
 					<tr>
 						<td colSpan='2'>
 							{credPredicate.map((credPred, index) => {
-								const cp = <CredPredicate
-									key={index}
+								const content = <CredPredicate
 									predicate={credPred}
 									relationTypes={props.relationTypes}
 									relationsMap={props.relationsMap}
@@ -590,7 +593,7 @@ const Credentials = React.createClass({
 										this.handleRemoveCredPredicate(index);
 									}}
 								>
-									{cp}
+									{content}
 								</InnerTable>;
 							})}
 						</td>
@@ -598,22 +601,21 @@ const Credentials = React.createClass({
 
 					{/*DATA*/}
 					<tr>
-						<td>
+						<td colSpan='2'>
 							<label>Data:</label>
-						</td>
-						<td>
+							<span> </span>
 							<a
 								href='#'
 								onClick={props.addData}
-							><span className='icon fa fa-plus-circle'></span></a>
+							>
+								<span className='icon fa fa-plus-circle' />
+							</a>
 						</td>
 					</tr>
 					<tr>
-						<td></td>
-						<td>
+						<td colSpan='2'>
 							{credData.map((credData, index) => {
-								return <CredData
-									key={index}
+								const content = <CredData
 									data={credData}
 									nodes={props.nodes}
 									nodesList={props.nodesList}
@@ -623,42 +625,51 @@ const Credentials = React.createClass({
 											updatedData
 										);
 									}}
+								/>;
+								return <InnerTable
+									key={index}
 									onRemove={() => {
 										this.handleRemoveCredData(index);
 									}}
-								/>;
+								>
+									{content}
+								</InnerTable>;
 							})}
 						</td>
 					</tr>
 
 				{/*ITEM*/}
 					<tr>
-						<td>
+						<td colSpan='2'>
 							<label>Item:</label>
-						</td>
-						<td>
+							<span> </span>
 							<a
 								href='#'
 								onClick={props.addItem}
-							><span className='icon fa fa-plus-circle'></span></a>
+							>
+								<span className='icon fa fa-plus-circle' />
+							</a>
 						</td>
 					</tr>
 					<tr>
-						<td></td>
-						<td>
+						<td colSpan='2'>
 							{credItem.map((credItem, index) => {
-								return <CredItem
-									key={index}
+								const content = <CredItem
 									item={credItem}
 									nodes={props.nodes}
 									nodesList={props.nodesList}
 									onChange={(updated) => {
 										this.handleChangeCredItem(index, updated);
 									}}
+								/>;
+								return <InnerTable
+									key={index}
 									onRemove={() => {
 										this.handleRemoveCredItem(index);
 									}}
-								/>;
+								>
+									{content}
+								</InnerTable>;
 							})}
 						</td>
 					</tr>
@@ -675,14 +686,12 @@ const CredLocation = React.createClass({
 		locationOptions: React.PropTypes.array.isRequired,
 		nodes: React.PropTypes.object.isRequired,
 		onChange: React.PropTypes.func,
-		onRemove: React.PropTypes.func,
 	},
 
 	getDefaultProps() {
 		return {
 			locationOptions: [],
 			onChange: noop,
-			onRemove: noop,
 		};
 	},
 
@@ -701,19 +710,16 @@ const CredLocation = React.createClass({
 			[props.nodes, valueKey]
 		);
 
-		return <div>
-			<SelectizeDropdown
-				multi={false}
-				name='credLocation'
-				value={(locationId) ? location : undefined}
-				options={props.locationOptions}
-				valueKey='value'
-				labelKey='label'
-				onChange={props.onChange/*(name, values)*/}
-				extraProps={{ renderValue }}
-			/>
-			<span> <RemoveButton onRemove={props.onRemove} /></span>
-		</div>;
+		return <SelectizeDropdown
+			multi={false}
+			name='credLocation'
+			value={(locationId) ? location : undefined}
+			options={props.locationOptions}
+			valueKey='value'
+			labelKey='label'
+			onChange={props.onChange/*(name, values)*/}
+			extraProps={{ renderValue }}
+		/>;
 	},
 });
 
@@ -724,13 +730,11 @@ const CredData = React.createClass({
 		nodes: React.PropTypes.object.isRequired,
 		nodesList: React.PropTypes.array.isRequired,
 		onChange: React.PropTypes.func,
-		onRemove: React.PropTypes.func,
 	},
 
 	getDefaultProps() {
 		return {
 			onChange: noop,
-			onRemove: noop,
 		};
 	},
 
@@ -801,8 +805,7 @@ const CredData = React.createClass({
 					</div>;
 				})
 			}
-			<span> <a href='#' onClick={this.handleAddValue}>add value</a>,</span>
-			<span> <RemoveButton onRemove={props.onRemove} /></span>
+			<span> <a href='#' onClick={this.handleAddValue}>add value</a></span>
 		</div>;
 	},
 });
@@ -814,13 +817,11 @@ const CredItem = React.createClass({
 		nodes: React.PropTypes.object.isRequired,
 		nodesList: React.PropTypes.array.isRequired,
 		onChange: React.PropTypes.func,
-		onRemove: React.PropTypes.func,
 	},
 
 	getDefaultProps() {
 		return {
 			onChange: noop,
-			onRemove: noop,
 		};
 	},
 
@@ -914,7 +915,6 @@ const CredItem = React.createClass({
 			}
 			<span> <a href='#' onClick={this.handleAddValueItem}>add item</a>,</span>
 			<span> <a href='#' onClick={this.handleAddValueData}>add data</a>,</span>
-			<span> <RemoveButton onRemove={props.onRemove} /></span>
 		</div>;
 	},
 });
@@ -1071,10 +1071,6 @@ const PolicyEditor = React.createClass({
 		const { policy } = props;
 
 		return <div className='policy'>
-			<div>
-				<a href='#' onClick={props.onRemove}>delete policy</a>
-			</div>
-
 			<table>
 				<tbody>
 					<tr>
@@ -1142,6 +1138,16 @@ const PolicyEditor = React.createClass({
 					</tr>
 				</tbody>
 			</table>
+
+			<div>
+				<a
+					href='#'
+					onClick={(event) => {
+						event.preventDefault();
+						props.onRemove();
+					}}
+				>remove</a>
+			</div>
 		</div>;
 	},
 });
