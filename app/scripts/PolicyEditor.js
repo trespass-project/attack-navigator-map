@@ -749,7 +749,8 @@ const CredData = React.createClass({
 		);
 	},
 
-	handleAddValue() {
+	handleAddValue(event) {
+		if (event) { event.preventDefault(); }
 		const values = [
 			...this.props.data.values,
 			emptyValue
@@ -850,11 +851,13 @@ const CredItem = React.createClass({
 		);
 	},
 
-	handleAddValueItem() {
+	handleAddValueItem(event) {
+		if (event) { event.preventDefault(); }
 		this._handleAdd('credItem');
 	},
 
-	handleAddValueData() {
+	handleAddValueData(event) {
+		if (event) { event.preventDefault(); }
 		this._handleAdd('credData');
 	},
 
