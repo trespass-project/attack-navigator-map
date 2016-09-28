@@ -151,7 +151,8 @@ const InnerTable = React.createClass({
 		const { props } = this;
 		const style = {
 			background: 'white',
-			padding: 5
+			padding: 5,
+			width: '100%',
 		};
 		const remove = <RemoveButton onRemove={props.onRemove} />;
 		return <table style={{ marginBottom: 5 }}>
