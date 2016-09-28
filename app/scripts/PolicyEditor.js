@@ -19,9 +19,7 @@ const padding = 25;
 const emptyValue = {
 	type: 'variable',
 };
-const emptyCredLocation = {
-	id: undefined
-};
+const emptyCredLocation = undefined;
 const emptyCredPredicate = {
 	relationType: undefined,
 	values: [
@@ -536,7 +534,7 @@ const Credentials = React.createClass({
 						<td colSpan='2'>
 							{credLocation.map((credLoc, index) => {
 								const content = <CredLocation
-									locationId={credLoc.id}
+									locationId={credLoc}
 									locationOptions={props.locationOptions}
 									nodes={props.nodes}
 									onChange={(name, value) => {
