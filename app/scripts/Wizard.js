@@ -174,8 +174,8 @@ const Wizard = React.createClass({
 				<AutoSizer>{
 					({ height, width }) => <FlexTable
 						width={width}
-						height={300}
-						disableHeader={false}
+						height={Infinity}
+						disableHeader={true}
 						headerHeight={24}
 						rowHeight={24}
 						rowGetter={({ index }) => props.recentModels[index]}
