@@ -2012,10 +2012,12 @@ function resultsSelectAttack(index) {
 			const rootNode = trespass.attacktree.getRootNode(aplAttacktree);
 			const labels = state.analysis.analysisResults[selectedTool][index].labels;
 			try {
-				attacktree = trespass.attacktree.subtreeFromLeafLabels(
+				const newRootNode = trespass.attacktree.subtreeFromLeafLabels(
 					rootNode,
 					labels
 				);
+				// because that's what the attack tree vis component expects
+				attacktree = { node: [newRootNode] };
 			} catch (err) {
 				const msg = 'constructing subtree from labels failed';
 				console.error(msg);
