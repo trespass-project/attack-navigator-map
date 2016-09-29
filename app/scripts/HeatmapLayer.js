@@ -6,7 +6,7 @@ module.exports.name = 'HeatmapLayer';
 
 
 // const displayName =
-module.exports.displayName = undefined; // 'heatmap layer';
+module.exports.displayName = "'heatmap' layer";
 
 
 // const adjustProps =
