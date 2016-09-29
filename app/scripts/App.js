@@ -5,8 +5,6 @@ const pkg = JSON.parse(fs.readFileSync('./package.json').toString());
 const classnames = require('classnames');
 const constants = require('./constants.js');
 const actionCreators = require('./actionCreators.js');
-// const ModelDebugView = require('./components/ModelDebugView/ModelDebugView.js');
-// const MainMenu = require('./MainMenu.js');
 const Wizard = require('./Wizard.js');
 const GraphEditor = require('./GraphEditor.js');
 const AnalysisResultsOverlay = require('./AnalysisResultsOverlay.js');
@@ -203,17 +201,6 @@ React.createClass({
 						/>
 					</div>
 				</div>
-
-				{/*<div id='model-debug-view'>
-					<div className='panel-section'>
-						<h3 className='title'>debug</h3>
-						<MainMenu id='main-menu' {...props} />
-					</div>
-					<div className='panel-section'>
-						<h3 className='title'>model</h3>
-						<ModelDebugView {...props} />
-					</div>
-				</div>*/}
 
 				<div id='panel-container'>
 					<Wizard

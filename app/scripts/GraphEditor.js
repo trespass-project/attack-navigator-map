@@ -50,13 +50,14 @@ let GraphEditor = React.createClass({
 					context.dispatch( actionCreators.addGroup(group) );
 				}
 			},
-			{
-				label: 'auto-layout',
-				icon: icons['fa-magic'],
-				action: (/*event*/) => {
-					context.dispatch( actionCreators.autoLayout() );
-				}
-			},
+			// TODO: implement
+			// {
+			// 	label: 'auto-layout',
+			// 	icon: icons['fa-magic'],
+			// 	action: (event) => {
+			// 		context.dispatch( actionCreators.autoLayout() );
+			// 	}
+			// },
 			{
 				label: 'reset\nview',
 				icon: icons['fa-sliders'],
