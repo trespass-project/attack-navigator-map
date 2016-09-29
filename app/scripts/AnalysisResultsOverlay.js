@@ -33,11 +33,8 @@ const ToolName = React.createClass({
 		const isRunning = (!pending && !completed);
 
 		const style = {
-			padding: '5px',
-			marginBottom: '5px',
 			border: 'solid 1px black',
 			color: 'black',
-			fontWeight: 'normal',
 		};
 
 		if (hasError) {
@@ -81,7 +78,7 @@ const ToolName = React.createClass({
 						href={item.result_file_url}
 						target='_blank'
 						className='result-link'
-					>output︎</a>
+					>output︎ file</a>
 				}
 			</div>
 		</div>;
