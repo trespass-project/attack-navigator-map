@@ -12,6 +12,7 @@ const getPolicies = (state) => state.graph.policies;
 const getModelId = (state) => state.metadata.id;
 const getRelationTypes = (state) => state.relationTypes;
 const getComponentsLib = (state) => state.componentsLib;
+const getAttackerProfit = (state) => state.attackerProfit;
 const getAttackerProfile = (state) => state.attackerProfile;
 const getAttackerProfiles = (state) => state.attackerProfiles;
 const getResultsAttacktree = (state) => state.resultsAttacktree;
@@ -23,6 +24,13 @@ const getAvailableLayersList = (state) => state.availableLayersList;
 module.exports.nodesList = createSelector(
 	getNodes,
 	R.values
+);
+
+
+// const attackerProfit =
+module.exports.attackerProfit = createSelector(
+	getAttackerProfit,
+	(profit) => parseFloat(profit, 10)
 );
 
 

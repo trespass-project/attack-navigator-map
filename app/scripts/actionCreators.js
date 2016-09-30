@@ -1151,7 +1151,7 @@ module.exports.setAttackerProfit =
 function setAttackerProfit(profit) {
 	return {
 		type: constants.ACTION_setAttackerProfit,
-		profit: parseFloat(profit, 10),
+		profit,
 	};
 };
 
