@@ -67,7 +67,8 @@
     "moment": "^2.13.0",
     "mout": "^0.11.0",
     "normalizr": "^2.0.0",
-    "ramda": "^0.21.0",
+    "query-string": "^4.2.3",
+    "ramda": "^0.22.1",
     "react": "^15.1.0",
     "react-addons-css-transition-group": "^15.2.1",
     "react-addons-pure-render-mixin": "^15.3.1",
@@ -89,12 +90,12 @@
     "reselect": "^2.5.3",
     "shortid": "^2.2.4",
     "sifter": "^0.5.1",
-    "trespass.js": "^0.24.3",
     "trespass-visualizations": "latest",
+    "trespass.js": "^0.24.3",
     "tween.js": "^0.14.0",
     "xml2js": "^0.4.16"
   },
   "name": "attack-navigator-map",
-  "version": "0.25.3",
+  "version": "0.25.4",
   "private": false
 }

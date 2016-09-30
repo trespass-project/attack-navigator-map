@@ -5,6 +5,7 @@ const _ = require('lodash');
 const JSZip = require('jszip');
 const saveAs = require('file-saver').saveAs;
 const slugify = require('mout/string/slugify');
+const queryString = require('query-string');
 const trespass = require('trespass.js');
 const trespassModel = trespass.model;
 const api = trespass.api;
@@ -1259,20 +1260,17 @@ function setAnalysisResults(analysisResults) {
 		}, []);
 
 	return (dispatch, getState) => {
-		Promise.all(promises)
+		return Promise.all(promises)
 			.then((results) => {
 				return results
 					.reduce((acc, item) => Object.assign({}, acc, item), {});
 			})
 			.then((preparedResults) => {
 				console.log('prepared results', preparedResults);
-				dispatch({
+				return dispatch({
 					type: constants.ACTION_setAnalysisResults,
 					analysisResults: preparedResults,
 				});
-				dispatch(
-					resultsSelectTool('Attack Pattern Lib.')
-				);
 			});
 	};
 };
@@ -1362,6 +1360,11 @@ const selectAnalysisResultsSnapshot =
 module.exports.selectAnalysisResultsSnapshot =
 function selectAnalysisResultsSnapshot(snapshot) {
 	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_selectAnalysisResultsSnapshot,
+			snapshot,
+		});
+
 		const state = getState().present;
 		const modelId = state.model.metadata.id;
 		const toolchains = state.interface.toolChains;
@@ -1374,6 +1377,9 @@ function selectAnalysisResultsSnapshot(snapshot) {
 		const toolNames = toolchain.tools.map(R.prop('name'));
 		// console.log('toolNames', toolNames);
 
+		// create fake task status data
+		let fakeTaskStatusData = [];
+
 		// retrieve files
 		const promises = toolNames
 			.reduce((acc, toolName) => {
@@ -1384,6 +1390,21 @@ function selectAnalysisResultsSnapshot(snapshot) {
 				const fileHash = snapshot.tree[fileName];
 				// console.log(fileHash, snapshot.tree);
 				if (!fileHash) { return acc; }
+
+				const query = queryString.stringify({
+					model_id: modelId,
+					filename: fileName,
+					file_id: fileHash,
+				});
+				const resultFileUrl = `${api.makeUrl(knowledgebaseApi, 'files')}?${query}`;
+				fakeTaskStatusData = [
+					...fakeTaskStatusData,
+					{
+						status: 'done',
+						name: toolName,
+						result_file_url: resultFileUrl,
+					}
+				];
 
 				const promise = new Promise((resolve, reject) => {
 					const asBlob = true;
@@ -1404,6 +1425,81 @@ function selectAnalysisResultsSnapshot(snapshot) {
 				return [...acc, promise];
 			}, []);
 
+		const taskStatusDataCategorized = helpers.handleStatus(
+			{ tool_status: fakeTaskStatusData }
+		);
+		// to update tools list
+		dispatch(
+			setTaskStatusCategorized(taskStatusDataCategorized)
+		);
+
+		function prepareResult(item) {
+			return new Promise((resolve, reject) => {
+				function done(contents) {
+					resolve({ [item.name]: contents });
+				}
+
+				function textHandler(e) {
+					const content = e.target.result;
+					done([content]);
+				}
+
+				function zipHandler(blob) {
+					JSZip.loadAsync(blob)
+						.then((zip) => {
+							// console.log(zip);
+
+							const re = new RegExp('^ata_output_nr', 'i');
+
+							const promises = R.values(zip.files)
+								.filter((file) => {
+									console.log(file.name, file);
+									return re.test(file.name);
+								})
+								.map((file) => {
+									return file.async('string')
+										.then((content) => content);
+								});
+
+							return Promise.all(promises)
+								.then((contents) => {
+									done(contents);
+								});
+						})
+						.catch((err) => {
+							console.error(err.stack || err);
+						});
+				}
+
+				const blob = item.blob;
+				// console.log(item.name, blob);
+
+				const reader = new FileReader();
+
+				const zipTypes = [
+					'application/zip',
+					// 'application/x-zip',
+					// 'application/x-zip-compressed',
+					// 'application/octet-stream',
+					// 'multipart/x-zip',
+				];
+				const textTypes = [
+					'text/plain',
+					'application/xml'
+				];
+				if (R.contains(blob.type, textTypes)) {
+					reader.onload = textHandler;
+					reader.readAsText(blob);
+				} else if (R.contains(blob.type, zipTypes)) {
+					// reader.onload = zipHandler;
+					// reader.readAsArrayBuffer(blob);
+					zipHandler(blob);
+				} else {
+					console.warn('unexpected mime type', blob.type);
+				}
+			});
+		}
+
 		return Promise.all(promises)
 			.catch((err) => {
 				console.error(err.stack);
@@ -1411,6 +1507,21 @@ function selectAnalysisResultsSnapshot(snapshot) {
 			.then((items) => {
 				// console.log(items); // [{ name, blob }]
 				return helpers.toHashMap('name', items);
+			})
+			.then(analysisResults => {
+				const promises = R.values(analysisResults)
+					.map(prepareResult);
+
+				return Promise.all(promises)
+					.catch((err) => {
+						console.error(err);
+					})
+					.then((_results) => {
+						// combine into one object
+						const results = _results
+							.reduce((acc, item) => _.assign(acc, item), {});
+						return dispatch( setAnalysisResults(results) );
+					});
 			});
 	};
 };
@@ -1557,73 +1668,6 @@ function runAnalysis(modelId, toolChainId, attackerProfileId) {
 					});
 			})
 			.then(() => {
-				function prepareResult(item) {
-					return new Promise((resolve, reject) => {
-						function done(contents) {
-							resolve({ [item.name]: contents });
-						}
-
-						function textHandler(e) {
-							const content = e.target.result;
-							done([content]);
-						}
-
-						function zipHandler(blob) {
-							JSZip.loadAsync(blob)
-								.then((zip) => {
-									// console.log(zip);
-
-									const re = new RegExp('^ata_output_nr', 'i');
-
-									const promises = R.values(zip.files)
-										.filter((file) => {
-											console.log(file.name, file);
-											return re.test(file.name);
-										})
-										.map((file) => {
-											return file.async('string')
-												.then((content) => content);
-										});
-
-									return Promise.all(promises)
-										.then((contents) => {
-											done(contents);
-										});
-								})
-								.catch((err) => {
-									console.error(err.stack || err);
-								});
-						}
-
-						const blob = item.blob;
-						// console.log(item.name, blob);
-
-						const reader = new FileReader();
-
-						const zipTypes = [
-							'application/zip',
-							// 'application/x-zip',
-							// 'application/x-zip-compressed',
-							// 'application/octet-stream',
-							// 'multipart/x-zip',
-						];
-						const textTypes = [
-							'text/plain',
-							'application/xml'
-						];
-						if (R.contains(blob.type, textTypes)) {
-							reader.onload = textHandler;
-							reader.readAsText(blob);
-						} else if (R.contains(blob.type, zipTypes)) {
-							// reader.onload = zipHandler;
-							// reader.readAsArrayBuffer(blob);
-							zipHandler(blob);
-						} else {
-							console.warn('unexpected mime type', blob.type);
-						}
-					});
-				}
-
 				const callbacks = {
 					// onToolChainStart: () => {
 					// 	console.log('onToolChainStart');
@@ -1640,42 +1684,11 @@ function runAnalysis(modelId, toolChainId, attackerProfileId) {
 									selectAnalysisResultsSnapshot(snapshots[0])
 								);
 							})
-							.then(analysisResults => {
-								const promises = R.values(analysisResults)
-									.map(prepareResult);
-
-								Promise.all(promises)
-									.catch((err) => {
-										console.error(err);
-									})
-									.then((_results) => {
-										// combine into one object
-										const results = _results
-											.reduce((acc, item) => _.assign(acc, item), {});
-
-										dispatch(
-											setAnalysisResults(results)
-										);
-									});
+							.then(() => {
+								dispatch(
+									resultsSelectTool('Attack Pattern Lib.')
+								);
 							});
-
-						// retrieveAnalysisResults(taskStatusData)
-						// 	.then(analysisResults => {
-						// 		const promises = R.values(analysisResults)
-						// 			.map(prepareResult);
-
-						// 		Promise.all(promises)
-						// 			.catch((err) => {
-						// 				console.error(err);
-						// 			})
-						// 			.then((_results) => {
-						// 				const results = _results
-						// 					.reduce((acc, item) => _.assign(acc, item), {});
-						// 				dispatch(
-						// 					setAnalysisResults(results)
-						// 				);
-						// 			});
-						// 	});
 					},
 					onTaskStatus: (taskStatusDataCategorized) => {
 						dispatch(
