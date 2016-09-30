@@ -5,6 +5,7 @@ const _ = require('lodash');
 const JSZip = require('jszip');
 const saveAs = require('file-saver').saveAs;
 const slugify = require('mout/string/slugify');
+const queryString = require('query-string');
 const trespass = require('trespass.js');
 const trespassModel = trespass.model;
 const api = trespass.api;
@@ -1375,6 +1376,9 @@ function selectAnalysisResultsSnapshot(snapshot) {
 		const toolNames = toolchain.tools.map(R.prop('name'));
 		// console.log('toolNames', toolNames);
 
+		// create fake task status data
+		let fakeTaskStatusData = [];
+
 		// retrieve files
 		const promises = toolNames
 			.reduce((acc, toolName) => {
@@ -1385,6 +1389,21 @@ function selectAnalysisResultsSnapshot(snapshot) {
 				const fileHash = snapshot.tree[fileName];
 				// console.log(fileHash, snapshot.tree);
 				if (!fileHash) { return acc; }
+
+				const query = queryString.stringify({
+					model_id: modelId,
+					filename: fileName,
+					file_id: fileHash,
+				});
+				const resultFileUrl = `${api.makeUrl(knowledgebaseApi, 'files')}?${query}`;
+				fakeTaskStatusData = [
+					...fakeTaskStatusData,
+					{
+						status: 'done',
+						name: toolName,
+						result_file_url: resultFileUrl,
+					}
+				];
 
 				const promise = new Promise((resolve, reject) => {
 					const asBlob = true;
@@ -1404,6 +1423,14 @@ function selectAnalysisResultsSnapshot(snapshot) {
 
 				return [...acc, promise];
 			}, []);
+
+		const taskStatusDataCategorized = helpers.handleStatus(
+			{ tool_status: fakeTaskStatusData }
+		);
+		// to update tools list
+		dispatch(
+			setTaskStatusCategorized(taskStatusDataCategorized)
+		);
 
 		function prepareResult(item) {
 			return new Promise((resolve, reject) => {
