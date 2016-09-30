@@ -35,7 +35,7 @@ const blacklist = [
 	'ACTION_setHoverGroup',
 	'ACTION_setPreviewEdge',
 	'ACTION_setTransformation',
-	'ACTION_setTaskStatusCategorized',
+	// 'ACTION_setTaskStatusCategorized',
 	'ACTION_updateComponentProperties',
 	'ACTION_setHighlighted',
 ];

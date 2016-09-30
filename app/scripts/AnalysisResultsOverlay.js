@@ -190,16 +190,6 @@ const AnalysisResultsOverlay = React.createClass({
 					: []
 			};
 
-		// const isDone = ['pending', 'current']
-		// 	.reduce((count, collName) => {
-		// 		return count + (taskStatusCategorized[collName] || []).length;
-		// 	}, 0) === 0;
-
-		// const hasErrors = R.any(
-		// 	item => item.status === 'error',
-		// 	taskStatusCategorized.current || []
-		// );
-
 		const closeX = <div
 			className='close-x'
 			onClick={this.onClose}
@@ -275,6 +265,7 @@ const AnalysisResultsOverlay = React.createClass({
 
 				<hr />
 
+				{/* TODO: outsource css */}
 				<div style={{ marginBottom: 5 }}>
 					<div style={{ color: 'grey' }}>
 						Tools

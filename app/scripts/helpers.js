@@ -287,20 +287,26 @@ function unTransformFromTo(fromElem, toElem, xy) {
 const handleStatus =
 module.exports.handleStatus =
 function handleStatus(taskStatusData) {
+	const statusDone = R.propEq('status', 'done');
+	const statusNotNotStarted = R.complement(
+		R.propEq('status', 'not started')
+	);
+
+	console.log(taskStatusData);
 	const completed = R.takeWhile(
-		item => (item.status === 'done'),
+		statusDone,
 		taskStatusData.tool_status
 	);
 	const notCompleted = R.dropWhile(
-		item => (item.status === 'done'),
+		statusDone,
 		taskStatusData.tool_status
 	);
 	const current = R.filter(
-		item => (item.status !== 'not started'),
+		statusNotNotStarted,
 		notCompleted
 	);
 	const pending = R.dropWhile(
-		item => (item.status !== 'not started'),
+		statusNotNotStarted,
 		notCompleted
 	);
 
