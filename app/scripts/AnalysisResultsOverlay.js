@@ -194,6 +194,8 @@ const AnalysisResultsOverlay = React.createClass({
 
 		const resultsReady = !!props.analysisResults;
 
+		const k = `${props.resultsSelectedTool}-${props.resultsSelectedAttackIndex}`;
+
 		let ToolVisualization = null;
 		if (props.resultsSelectedTool) {
 			/* eslint default-case: 0 */
@@ -224,6 +226,7 @@ const AnalysisResultsOverlay = React.createClass({
 		return <div id='AnalysisDashboard'>
 			<div className='visualization'>
 				<AttacktreeVisualization
+					key={k}
 					attacktree={props.resultsAttacktree}
 					layout={undefined}
 				/>
