@@ -28,6 +28,7 @@ const toHashMap =
 module.exports.toHashMap = trespassUtils.toHashMap;
 
 
+// TODO: remove this
 const normalize =
 module.exports.normalize =
 function normalize(data, idAttribute='id') {
@@ -292,7 +293,6 @@ function handleStatus(taskStatusData) {
 		R.propEq('status', 'not started')
 	);
 
-	console.log(taskStatusData);
 	const completed = R.takeWhile(
 		statusDone,
 		taskStatusData.tool_status

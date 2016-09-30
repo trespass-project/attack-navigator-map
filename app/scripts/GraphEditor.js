@@ -1,5 +1,4 @@
 const React = require('react');
-const reactDOM = require('react-dom');
 const mout = require('mout');
 
 const GraphMixin = require('./GraphMixin.js');
@@ -28,13 +27,13 @@ let GraphEditor = React.createClass({
 	propTypes: {
 	},
 
-	getDefaultProps: function() {
+	getDefaultProps() {
 		return {
 			editable: true,
 		};
 	},
 
-	_onContextMenu: function(event) {
+	_onContextMenu(event) {
 		const context = this.context;
 		const props = this.props;
 
@@ -74,7 +73,7 @@ let GraphEditor = React.createClass({
 		context.dispatch( actionCreators.showContextMenu(event, menuItems) );
 	},
 
-	_onClick: function(event) {
+	_onClick(event) {
 		event.preventDefault();
 		event.stopPropagation();
 		const context = this.context;
@@ -82,7 +81,7 @@ let GraphEditor = React.createClass({
 		context.dispatch( actionCreators.select(null) );
 	},
 
-	_onWheel: function(event) {
+	_onWheel(event) {
 		event.preventDefault();
 		const props = this.props;
 
@@ -119,7 +118,7 @@ let GraphEditor = React.createClass({
 		);
 	},
 
-	_onMouseMove: function(event) {
+	_onMouseMove(event) {
 		event.preventDefault();
 		event.stopPropagation();
 
@@ -131,13 +130,13 @@ let GraphEditor = React.createClass({
 		}
 	},
 
-	_onMouseLeave: function(event) {
+	_onMouseLeave(event) {
 		event.preventDefault();
 		event.stopPropagation();
 		this.context.dispatch( actionCreators.setMouseOverEditor(false) );
 	},
 
-	_onMouseUp: function(event) {
+	_onMouseUp(event) {
 		event.preventDefault();
 		event.stopPropagation();
 
@@ -151,13 +150,13 @@ let GraphEditor = React.createClass({
 		context.dispatch( actionCreators.setPanning(false) );
 	},
 
-	_onDragStart: function(event) {
+	_onDragStart(event) {
 		const props = this.props;
 		this._originalPanX = props.panX;
 		this._originalPanY = props.panY;
 	},
 
-	_onDragMove: function(event) {
+	_onDragMove(event) {
 		this.context.dispatch(
 			actionCreators.setTransformation({
 				panX: this._originalPanX + event._deltaX,
@@ -166,7 +165,7 @@ let GraphEditor = React.createClass({
 		);
 	},
 
-	_onDragEnd: function(event) {
+	_onDragEnd(event) {
 		const props = this.props;
 		this._originalPanX = props.panX;
 		this._originalPanY = props.panY;
@@ -175,7 +174,7 @@ let GraphEditor = React.createClass({
 
 
 const spec = {
-	drop: function (props, monitor, component) {
+	drop: (props, monitor, component) => {
 		// console.log(monitor.getItem());
 		const clientOffset = monitor.internalMonitor.store.getState().dragOffset.clientOffset;
 		return {

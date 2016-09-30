@@ -77,7 +77,12 @@ const MapInfo = React.createClass({
 									<label>Title:</label>
 								</td>
 								<td>
-									{props.metadata.title} <a href='#' onClick={this.renameMap}>edit</a>
+									{props.metadata.title}
+									<a
+										href='#'
+										style={{ marginLeft: '0.5em' }}
+										onClick={this.renameMap}
+									>edit</a>
 								</td>
 							</tr>
 						</tbody>

@@ -1266,6 +1266,7 @@ function setAnalysisResults(analysisResults) {
 					.reduce((acc, item) => Object.assign({}, acc, item), {});
 			})
 			.then((preparedResults) => {
+				console.log('prepared results', preparedResults);
 				return dispatch({
 					type: constants.ACTION_setAnalysisResults,
 					analysisResults: preparedResults,

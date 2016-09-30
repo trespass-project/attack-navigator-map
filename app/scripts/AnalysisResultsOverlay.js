@@ -33,11 +33,8 @@ const ToolName = React.createClass({
 		const isRunning = (!pending && !completed);
 
 		const style = {
-			padding: '5px',
-			marginBottom: '5px',
 			border: 'solid 1px black',
 			color: 'black',
-			fontWeight: 'normal',
 		};
 
 		if (hasError) {
@@ -81,7 +78,7 @@ const ToolName = React.createClass({
 						href={item.result_file_url}
 						target='_blank'
 						className='result-link'
-					>output︎</a>
+					>output︎ file</a>
 				}
 			</div>
 		</div>;
@@ -197,6 +194,8 @@ const AnalysisResultsOverlay = React.createClass({
 
 		const resultsReady = !!props.analysisResults;
 
+		const k = `${props.resultsSelectedTool}-${props.resultsSelectedAttackIndex}`;
+
 		let ToolVisualization = null;
 		if (props.resultsSelectedTool) {
 			/* eslint default-case: 0 */
@@ -227,6 +226,7 @@ const AnalysisResultsOverlay = React.createClass({
 		return <div id='AnalysisDashboard'>
 			<div className='visualization'>
 				<AttacktreeVisualization
+					key={k}
 					attacktree={props.resultsAttacktree}
 					layout={undefined}
 				/>
