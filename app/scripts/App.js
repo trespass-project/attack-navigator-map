@@ -10,8 +10,7 @@ const GraphEditor = require('./GraphEditor.js');
 const AnalysisResultsOverlay = require('./AnalysisResultsOverlay.js');
 
 
-module.exports =
-React.createClass({
+const App = React.createClass({
 	propTypes: {
 		dispatch: React.PropTypes.func.isRequired,
 	},
@@ -229,3 +228,5 @@ React.createClass({
 		);
 	}
 });
+
+module.exports = App;
