@@ -275,6 +275,7 @@ const AnalysisResultsOverlay = React.createClass({
 
 				<hr />
 
+				{/* TODO: outsource css */}
 				<div style={{ marginBottom: 5 }}>
 					<div style={{ color: 'grey' }}>
 						Tools
