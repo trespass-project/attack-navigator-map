@@ -63,8 +63,7 @@ React.createClass({
 
 		if (ctrlOrCmd && event.keyCode === 83) {
 			// [control / command] + [s]
-			event.preventDefault();
-			this.save();
+			this.saveMap(event);
 		} else if (shift && ctrlOrCmd && event.keyCode === 90) {
 			// [shift] + [control / command] + [z]
 			event.preventDefault();
