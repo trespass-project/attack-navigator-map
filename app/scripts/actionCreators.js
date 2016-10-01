@@ -1,4 +1,4 @@
-// const isNodeEnvironment = require('detect-node');
+// const $ = require('jquery');
 const axios = require('axios');
 const R = require('ramda');
 const _ = require('lodash');
@@ -6,6 +6,7 @@ const JSZip = require('jszip');
 const saveAs = require('file-saver').saveAs;
 const slugify = require('mout/string/slugify');
 const queryString = require('query-string');
+const bowser = require('bowser');
 const trespass = require('trespass.js');
 const trespassModel = trespass.model;
 const api = trespass.api;
@@ -31,6 +32,28 @@ function handleError(err) {
 }
 
 // ——————————
+
+
+function _saveAs(blob, fileName, modelId, fallbackFileName) {
+	// because it does not work reliably in safari ...
+	if (bowser.safari) {
+		// this does not work:
+		// const url = URL.createObjectURL(blob);
+
+		const url = `${knowledgebaseApi.host}tkb/files?model_id=${modelId}&filename=${fallbackFileName}`;
+
+		// neither does this:
+		// const $link = $(`<a href="${url}" download="${fallbackFileName}" target="_blank">download</a>`);
+		// $('body').append($link);
+		// $link.trigger('click');
+		// console.log($link);
+		// $link.remove();
+
+		alert(`Unfortunately this feature does not work reliably in safari. You can download the file manually at:\n${url}`);
+	} else {
+		saveAs(blob, fileName);
+	}
+}
 
 
 const getRecentFiles =
@@ -884,7 +907,7 @@ function downloadModelXML() {
 				const slugifiedTitle = model.system.title.replace(/\s/g, '-');
 				const blob = getXMLBlob(modelXmlStr);
 				const fileName = `${slugifiedTitle}.xml`;
-				saveAs(blob, fileName);
+				_saveAs(blob, fileName, state.model.metadata.id, modelFileName);
 			});
 	};
 };
@@ -905,6 +928,21 @@ function downloadZippedScenario(modelId) {
 					state.interface
 				);
 
+				// make sure we send scenario file to kb first,
+				// so that effing safari can download it too,
+				// through the work-around in `_saveAs()`
+				return knowledgebaseApi.putFile(
+					axios,
+					modelId,
+					scenarioXmlStr,
+					scenarioFileName,
+					'scenario_file'
+				)
+					.then(() => {
+						return { modelXmlStr, scenarioXmlStr };
+					});
+			})
+			.then(({ modelXmlStr, scenarioXmlStr }) => {
 				return zipScenario(
 					modelXmlStr,
 					modelFileName,
@@ -913,7 +951,7 @@ function downloadZippedScenario(modelId) {
 				);
 			})
 			.then((zipBlob) => {
-				saveAs(zipBlob, scenarioZipName);
+				_saveAs(zipBlob, scenarioZipName, modelId, scenarioFileName);
 			});
 	};
 };
@@ -1645,6 +1683,7 @@ function runAnalysis(modelId, toolChainId, attackerProfileId) {
 				// upload to knowledgebase
 				return Promise.resolve()
 					.then(() => {
+						// TODO: how is this different from `saveModelToKb()`?
 						return knowledgebaseApi.putFile(
 							axios,
 							modelId,
