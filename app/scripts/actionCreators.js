@@ -1,4 +1,3 @@
-// const isNodeEnvironment = require('detect-node');
 const axios = require('axios');
 const R = require('ramda');
 const _ = require('lodash');
@@ -555,9 +554,7 @@ function addNodeToGroup(nodeId, groupId) {
 module.exports.removeNode =
 function removeNode(nodeId) {
 	return (dispatch, getState) => {
-		// if (!isNodeEnvironment) {
-		// 	// TODO: make kb call
-		// }
+		// TODO: make kb call
 
 		dispatch({
 			type: constants.ACTION_removeNode,
