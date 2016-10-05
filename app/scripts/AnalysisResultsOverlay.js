@@ -1,5 +1,6 @@
 const React = require('react');
 const classnames = require('classnames');
+const R = require('ramda');
 const Loader = require('react-loader');
 const actionCreators = require('./actionCreators.js');
 const trespassVisualizations = require('trespass-visualizations');
@@ -96,6 +97,7 @@ const AnalysisResultsOverlay = React.createClass({
 		resultsAttacktree: React.PropTypes.object,
 		analysisSnapshots: React.PropTypes.array.isRequired,
 		onClose: React.PropTypes.func,
+		highlightNodeIds: React.PropTypes.array,
 	},
 
 	contextTypes: {
@@ -106,6 +108,7 @@ const AnalysisResultsOverlay = React.createClass({
 		return {
 			onClose: () => {},
 			analysisSnapshots: [],
+			highlightNodeIds: [],
 		};
 	},
 
@@ -177,7 +180,7 @@ const AnalysisResultsOverlay = React.createClass({
 	},
 
 	render() {
-		const props = this.props;
+		const { props, context } = this;
 		const toolChain = props.toolChain;
 
 		const taskStatusCategorized = props.taskStatusCategorized
@@ -217,6 +220,11 @@ const AnalysisResultsOverlay = React.createClass({
 						profit={props.attackerProfit}
 						selectedIndex={props.resultsSelectedAttackIndex}
 						onSelect={this.onAttackSelect}
+						onHover={(item, index) => {
+							context.dispatch(
+								actionCreators.highlightAttackTreeNodes(index)
+							);
+						}}
 					/>;
 					break;
 				}
@@ -229,6 +237,18 @@ const AnalysisResultsOverlay = React.createClass({
 					key={k}
 					attacktree={props.resultsAttacktree}
 					layout={undefined}
+					overrideEdgeStyle={(d, index) => {
+						if (props.highlightNodeIds.length
+							&& R.contains(d.data.id, props.highlightNodeIds)) {
+							return {
+								strokeWidth: 4,
+								strokeOpacity: 1,
+							};
+						}
+						return {
+							strokeOpacity: 0.25,
+						};
+					}}
 				/>
 			</div>
 

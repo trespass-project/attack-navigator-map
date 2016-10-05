@@ -12,6 +12,7 @@ const initialState = {
 	resultsAttacktree: undefined,
 	analysisSnapshots: [],
 	subtreeCache: {},
+	highlightNodeIds: [],
 };
 
 
@@ -61,6 +62,14 @@ function reducer(state=initialState, action) {
 			return mergeWithState({
 				resultsSelectedAttackIndex: index,
 				resultsAttacktree: attacktree,
+				highlightNodeIds: [],
+			});
+		}
+
+		case constants.ACTION_highlightAttackTreeNodes: {
+			const { nodeIds } = action;
+			return mergeWithState({
+				highlightNodeIds: nodeIds,
 			});
 		}
 

@@ -2030,12 +2030,30 @@ const resultsSelectTool =
 module.exports.resultsSelectTool =
 function resultsSelectTool(toolName) {
 	return (dispatch, getState) => {
+		const state = getState().present;
+
 		dispatch({
 			type: constants.ACTION_resultsSelectTool,
 			toolName,
 		});
 
-		if (R.contains(toolName, ['Treemaker', 'Attack Pattern Lib.'])) {
+		if (R.contains(toolName, trespass.analysis.analysisToolNamesStrict)) {
+			const { subtreeCache } = state.analysis;
+			const selectedTool = toolName;
+			const referenceTree = state.analysis.analysisResults['Attack Pattern Lib.'];
+			if (toolName === 'A.T. Evaluator') {
+				state.analysis.analysisResults[toolName]
+					.forEach((result, index) => {
+						/*const attacktree =*/ getSubtree(
+							{ state, dispatch },
+							subtreeCache,
+							{ selectedTool, index },
+							referenceTree
+						);
+					});
+			}
+		} else {
+			// treemaker, apl:
 			// display tree
 			dispatch( resultsSelectAttack(0) );
 		}
@@ -2084,6 +2102,32 @@ function getSubtree({ state, dispatch }, subtreeCache, { selectedTool, index }, 
 	}
 
 	return attacktree;
+};
+
+
+const highlightAttackTreeNodes =
+module.exports.highlightAttackTreeNodes =
+function highlightAttackTreeNodes(index) {
+	return (dispatch, getState) => {
+		const state = getState().present;
+
+		const { subtreeCache } = state.analysis;
+		const selectedTool = state.analysis.resultsSelectedTool;
+		console.log(subtreeCache, selectedTool, index);
+		const { nodeIds } = subtreeCache[selectedTool][index];
+
+		// because subtrees are highlighted on the apl tree
+		dispatch({
+			type: constants.ACTION_resultsSelectAttack,
+			attacktree: state.analysis.analysisResults['Attack Pattern Lib.'],
+			// index: 0,
+		});
+
+		dispatch({
+			type: constants.ACTION_highlightAttackTreeNodes,
+			nodeIds,
+		});
+	};
 };
 
 
