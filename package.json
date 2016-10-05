@@ -88,9 +88,9 @@
     "shortid": "^2.2.4",
     "sifter": "^0.5.1",
     "trespass-visualizations": "latest",
-    "trespass.js": "^0.24.3",
+    "trespass.js": "^0.26.0",
     "xml2js": "^0.4.16"
   },
   "name": "attack-navigator-map",
-  "version": "0.25.6"
+  "version": "0.25.7"
 }
