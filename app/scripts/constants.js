@@ -105,6 +105,7 @@ const constants = {
 	ACTION_resultsSelectTool: 'ACTION_resultsSelectTool',
 	ACTION_resultsSelectAttack: 'ACTION_resultsSelectAttack',
 	ACTION_resetAnalysis: 'ACTION_resetAnalysis',
+	ACTION_cacheSubtree: 'ACTION_cacheSubtree',
 
 	ACTION_addPredicatesToRelationTypes: 'ACTION_addPredicatesToRelationTypes',
 	ACTION_setAnalysisResultsSnapshots: 'ACTION_setAnalysisResultsSnapshots',

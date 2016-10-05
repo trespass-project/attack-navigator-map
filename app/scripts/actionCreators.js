@@ -2035,12 +2035,45 @@ function resultsSelectTool(toolName) {
 			toolName,
 		});
 
-		if (toolName === 'Treemaker'
-			|| toolName === 'Attack Pattern Lib.') {
+		if (R.contains(toolName, ['Treemaker', 'Attack Pattern Lib.'])) {
 			// display tree
 			dispatch( resultsSelectAttack(0) );
 		}
 	};
+};
+
+
+const getSubtree =
+module.exports.getSubtree =
+function getSubtree(dispatch, subtreeCache, selectedTool, index, leafLabels, rootNode) {
+	// try to get a cached version first
+	let attacktree = R.pathOr(
+		undefined,
+		[selectedTool, index, 'attacktree'],
+		subtreeCache
+	);
+
+	// otherwise create it
+	if (!attacktree) {
+		const subtreeRoot = trespass.attacktree.subtreeFromLeafLabels(
+			rootNode,
+			leafLabels
+		);
+		// because that's what the attack tree vis component expects
+		attacktree = { node: [subtreeRoot] };
+
+		const allNodes = trespass.attacktree.getAllNodes(subtreeRoot);
+		const nodeIds = allNodes.map(R.prop('id'));
+		dispatch({
+			type: constants.ACTION_cacheSubtree,
+			selectedTool,
+			index,
+			attacktree,
+			nodeIds,
+		});
+	}
+
+	return attacktree;
 };
 
 
@@ -2050,6 +2083,7 @@ function resultsSelectAttack(index) {
 	return (dispatch, getState) => {
 		const state = getState().present;
 		const selectedTool = state.analysis.resultsSelectedTool;
+		const { subtreeCache } = state.analysis;
 		let attacktree = undefined;
 
 		/* eslint brace-style: 0 */
@@ -2059,23 +2093,18 @@ function resultsSelectAttack(index) {
 		else if (selectedTool === 'A.T. Evaluator') {
 			const aplAttacktree = state.analysis.analysisResults['Attack Pattern Lib.'];
 			const rootNode = trespass.attacktree.getRootNode(aplAttacktree);
-			const labels = state.analysis.analysisResults[selectedTool][index].labels;
+			const leafLabels = state.analysis.analysisResults[selectedTool][index].labels;
 			try {
-				const newRootNode = trespass.attacktree.subtreeFromLeafLabels(
-					rootNode,
-					labels
-				);
-				// because that's what the attack tree vis component expects
-				attacktree = { node: [newRootNode] };
+				attacktree = getSubtree(dispatch, subtreeCache, selectedTool, index, leafLabels, rootNode);
 			} catch (err) {
 				const msg = 'constructing subtree from labels failed';
 				console.error(msg);
+				console.log(err.stack);
 				attacktree = undefined;
 				alert(msg);
 			}
 		}
-		else if (selectedTool === 'Treemaker'
-			|| selectedTool === 'Attack Pattern Lib.') {
+		else if (R.contains(selectedTool, ['Treemaker', 'Attack Pattern Lib.'])) {
 			attacktree = state.analysis.analysisResults[selectedTool];
 		}
 
