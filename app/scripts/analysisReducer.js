@@ -73,13 +73,18 @@ function reducer(state=initialState, action) {
 
 		case constants.ACTION_cacheSubtree: {
 			const { selectedTool, index, attacktree, nodeIds } = action;
-			return mergeWithState({
-				subtreeCache: {
-					[selectedTool]: {
-						[index]: { attacktree, nodeIds }
-					}
-				}
-			});
+			const newCache = Object.assign(
+				{},
+				state.subtreeCache
+			);
+			if (!newCache[selectedTool]) {
+				newCache[selectedTool] = {};
+			}
+			newCache[selectedTool][index] = { attacktree, nodeIds };
+			return update(
+				state,
+				{ subtreeCache: { $set: newCache } }
+			);
 		}
 
 		default:
