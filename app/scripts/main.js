@@ -119,6 +119,7 @@ function mapStateToProps(_state) {
 	props.componentsLibMap = selectors.componentsLibMap(state);
 
 	// attacker profile
+	props.attackerProfit = selectors.attackerProfit(state);
 	props.selectedAttackerProfileId = selectors.selectedAttackerProfileId(state);
 	props.attackerProfileIsComplete = selectors.attackerProfileIsComplete(state);
 
