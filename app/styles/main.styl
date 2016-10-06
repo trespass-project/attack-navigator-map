@@ -22,6 +22,14 @@ icomoon-font-path = "../fonts"
 *
 	box-sizing: border-box
 
+a
+	cursor: pointer
+
+a:not([href])
+	&:hover
+		text-decoration: none
+		cursor: default
+
 body
 	margin: 0
 	padding: 0
@@ -89,10 +97,16 @@ body
 
 			#intro-box
 				padding: 50px
-				width: 500px
+				width: 450px
 				height: auto
 				background-color: white
 				box-shadow: rgba(0, 0, 0, 0.35) 0px 0px 75px
+				border-top: solid $panelGapHeight $trespass_red
+
+			sup
+				font-size: 60%
+				top: -0.7em
+				/* font-weight: bold */
 
 
 		#model-debug-view
@@ -460,7 +474,7 @@ hr#divider
 	margin-right: - $panelPadding;
 	padding-right: $panelPadding;
 	border: none !important
-	height: 6px
+	height: $panelGapHeight
 	background-color: $trespass_grey_medium
 	transition: background-color $transitionDuration
 
