@@ -247,13 +247,15 @@ function groupAsFragment(graph, group) {
 		.reduce((acc, nodeId) => {
 			const node = graph.nodes[nodeId];
 			const nodeEdges = getNodeEdges(node, graph.edges);
-			return acc.concat(nodeEdges);
+			return [...acc, ...nodeEdges];
 		}, []);
 
 	return createFragment({
 		nodes: helpers.toHashMap('id', nodes),
 		edges: helpers.toHashMap('id', edges),
 		groups: helpers.toHashMap('id', [group]),
+		policies: getGroupPolicies(graph, group),
+		// TODO: should processes be in there too?
 	});
 };
 
@@ -1192,9 +1194,32 @@ const getNodeGroups =
 module.exports.getNodeGroups =
 function getNodeGroups(node, groupsMap) {
 	return R.values(groupsMap)
-		.filter((group) => {
-			return R.contains(node.id, group.nodeIds);
-		});
+		.filter((group) => R.contains(node.id, group.nodeIds));
+};
+
+
+const getNodePolicies =
+module.exports.getNodePolicies =
+function getNodePolicies(node, policiesMap) {
+	return R.values(policiesMap)
+		.filter((policy) => R.contains(node.id, policy.atLocations));
+};
+
+
+const getGroupPolicies =
+module.exports.getGroupPolicies =
+function getGroupPolicies(graph, group) {
+	const policiesMap = graph.policies || {};
+	const nodes = getGroupNodes(group, graph.nodes);
+	const policies = nodes
+		.reduce((acc, node) => {
+			getNodePolicies(node, policiesMap)
+				.forEach((policy) => {
+					acc[policy.id] = policy;
+				});
+			return acc;
+		}, {});
+	return policies;
 };
 
 
@@ -1202,9 +1227,7 @@ const getNodeEdges =
 module.exports.getNodeEdges =
 function getNodeEdges(node, edgesMap) {
 	return R.values(edgesMap)
-		.filter((edge) => {
-			return R.contains(node.id, [edge.from, edge.to]);
-		});
+		.filter((edge) => R.contains(node.id, [edge.from, edge.to]));
 };
 
 
