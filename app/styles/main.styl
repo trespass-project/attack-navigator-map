@@ -486,3 +486,22 @@ hr#divider
 			label
 				margin-bottom: 0px
 
+@keyframes circular {
+	from {
+		transform: rotate(0deg) translateX(5px) rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg) translateX(5px) rotate(-360deg);
+	}
+}
+#marker
+	animation: circular 0.3s linear infinite;
+
+#introduction
+	ul
+		list-style: none
+		margin: 0
+		padding: 0
+
+		li::before
+			content: '· '
