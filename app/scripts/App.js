@@ -221,7 +221,7 @@ const App = React.createClass({
 								</div>
 
 								<div>
-									Start by
+									Get started by:
 									<ul>
 										<li>
 											<a
@@ -238,8 +238,8 @@ const App = React.createClass({
 										<li>
 											<a
 												onMouseEnter={introHighlight('#recent-models')}
-												onMouseLeave={introHighlight(null)}>
-											opening an existing map</a>
+												onMouseLeave={introHighlight(null)}
+											>opening an existing map</a>
 										</li>
 									</ul>
 								</div>
@@ -247,11 +247,11 @@ const App = React.createClass({
 								<hr />
 
 								<div>
-									<a href={constants.manualUrl} target='_blank'>Read the manual</a>
+									<a href={constants.manualUrl} target='_blank'>Read the manual</a><sup> ↗︎</sup>
 								</div>
 
 								<div>
-									<a href={constants.issueTrackerUrl} target='_blank'>Report an issue</a>
+									<a href={constants.issueTrackerUrl} target='_blank'>Report an issue</a><sup> ↗︎</sup>
 								</div>
 							</div>
 						</div>
