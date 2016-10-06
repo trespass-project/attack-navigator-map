@@ -225,12 +225,16 @@ const App = React.createClass({
 									<ul>
 										<li>
 											<a
+												href='#'
+												onClick={(event) => this.refs.wizard.clickCreateNew(event)}
 												onMouseEnter={introHighlight('#create-new-map')}
 												onMouseLeave={introHighlight(null)}
 											>creating a new map</a>
 										</li>
 										<li>
 											<a
+												href='#'
+												onClick={(event) => this.refs.wizard.clickFileButton(event)}
 												onMouseEnter={introHighlight('#import-model-file')}
 												onMouseLeave={introHighlight(null)}
 											>loading a model file</a>
@@ -269,6 +273,7 @@ const App = React.createClass({
 
 				<div id='panel-container'>
 					<Wizard
+						ref='wizard'
 						{...props}
 						saveMap={this.saveMap}
 					/>
