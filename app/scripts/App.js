@@ -167,7 +167,7 @@ const App = React.createClass({
 						? <div id='introduction'>
 							<div id='intro-box'>
 								<div>
-									<strong>Attack Navigator Map</strong>
+									<h3 style={{ marginTop: 0 }}>Attack Navigator Map</h3>
 								</div>
 
 								<div>
