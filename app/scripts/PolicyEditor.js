@@ -200,7 +200,7 @@ const TextInput = React.createClass({
 		const { props } = this;
 
 		return <input
-			className='form-control input-sm'
+			className='form-control'
 			type='text'
 			value={props.value || ''}
 			placeholder={props.placeholder || ''}
@@ -376,10 +376,63 @@ const AtLocations = React.createClass({
 });
 
 
+const InOutType = React.createClass({
+	propTypes: {
+		type: React.PropTypes.string.isRequired,
+
+		locationOptions: React.PropTypes.array.isRequired,
+		nodes: React.PropTypes.object.isRequired,
+
+		loc: React.PropTypes.string,
+		logged: React.PropTypes.bool,
+	},
+
+	getDefaultProps() {
+		return {
+		};
+	},
+
+	render() {
+		const { props } = this;
+		console.log(props);
+
+		return <div>
+			<div>in out</div>
+			<div>
+				<label>
+					<input type='checkbox' checked={props.logged} />
+					<span> logged</span>
+				</label>
+			</div>
+			<div>
+				{/* not really a `credLoaction`, but it does the same */}
+				<span>loc: </span>
+				<CredLocation
+					locationId={props.loc}
+					locationOptions={props.locationOptions}
+					nodes={props.nodes}
+					onChange={(name, value) => {
+						console.log(name, value);
+						// this.handleChangeCredLocation(
+						// 	index,
+						// 	value
+						// );
+					}}
+				/>
+			</div>
+			<div>{/*tupleType*/}</div>
+		</div>;
+	},
+});
+
+
 const EnabledAction = React.createClass({
 	propTypes: {
 		action: React.PropTypes.object.isRequired,
 		onChange: React.PropTypes.func,
+
+		locationOptions: React.PropTypes.array.isRequired,
+		nodes: React.PropTypes.object.isRequired,
 	},
 
 	getDefaultProps() {
@@ -407,7 +460,18 @@ const EnabledAction = React.createClass({
 	},
 
 	render() {
+		const { props } = this;
 		const actionType = this.getType();
+
+		const isComplexType = R.contains(actionType, ['in', 'out']);
+		const complexTypeEditor = (isComplexType)
+			? <InOutType
+				type={actionType}
+				{...props.action[actionType]}
+				locationOptions={props.locationOptions}
+				nodes={props.nodes}
+			/>
+			: null;
 
 		return <div>
 			<div>
@@ -426,6 +490,7 @@ const EnabledAction = React.createClass({
 					})}
 				</select>
 			</div>
+			{complexTypeEditor}
 		</div>;
 	},
 });
@@ -1169,6 +1234,8 @@ const PolicyEditor = React.createClass({
 										onChange={(updatedAction) => {
 											this.enabledActionChanged(index, updatedAction);
 										}}
+										locationOptions={props.locationOptions}
+										nodes={props.nodes}
 									/>;
 								})
 							}
