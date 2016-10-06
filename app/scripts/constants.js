@@ -91,7 +91,7 @@ const constants = {
 	ACTION_loadComponentTypes_DONE: 'ACTION_loadComponentTypes_DONE',
 	ACTION_loadModelPatterns: 'ACTION_loadModelPatterns',
 	ACTION_loadModelPatterns_DONE: 'ACTION_loadModelPatterns_DONE',
-	ACTION_saveMapAsModelPattern: 'ACTION_saveMapAsModelPattern',
+	ACTION_saveFragmentAsModelPattern: 'ACTION_saveFragmentAsModelPattern',
 	ACTION_deleteModelPattern: 'ACTION_deleteModelPattern',
 
 	ACTION_showSaveDialog: 'ACTION_showSaveDialog',

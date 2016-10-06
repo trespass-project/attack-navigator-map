@@ -1794,18 +1794,15 @@ function loadAttackerProfiles(modelId) {
 };
 
 
-const saveMapAsModelPattern =
-module.exports.saveMapAsModelPattern =
-function saveMapAsModelPattern() {
+const saveFragmentAsModelPattern =
+module.exports.saveFragmentAsModelPattern =
+function saveFragmentAsModelPattern(fragment) {
 	return (dispatch, getState) => {
 		const title = prompt('Enter pattern title');
 		if (!title || title.trim() === '') {
 			// cancelled, or nothing entered
 			return;
 		}
-
-		const state = getState().present;
-		const fragment = _.merge({}, state.model.graph);
 
 		// adjust position coordinates, so that there is no offset
 		// when dragging pattern onto the map later
@@ -1818,10 +1815,11 @@ function saveMapAsModelPattern() {
 			});
 
 		dispatch({
-			type: constants.ACTION_saveMapAsModelPattern,
+			type: constants.ACTION_saveFragmentAsModelPattern,
 			fragment,
 		});
 
+		const state = getState().present;
 		const modelId = state.model.metadata.id;
 		const patternId = slugify(title);
 		knowledgebaseApi.saveModelPattern(axios, modelId, fragment, title, patternId)
@@ -1832,6 +1830,37 @@ function saveMapAsModelPattern() {
 			.catch((err) => {
 				console.error(err);
 			});
+	};
+};
+
+
+const saveGroupAsModelPattern =
+module.exports.saveGroupAsModelPattern =
+function saveGroupAsModelPattern(groupId) {
+	return (dispatch, getState) => {
+		const state = getState().present;
+		const { graph } = state.model;
+		const group = graph.groups[groupId];
+		const fragment = _.merge(
+			{},
+			modelHelpers.groupAsFragment(graph, group)
+		);
+		dispatch(
+			saveFragmentAsModelPattern(fragment)
+		);
+	};
+};
+
+
+const saveMapAsModelPattern =
+module.exports.saveMapAsModelPattern =
+function saveMapAsModelPattern() {
+	return (dispatch, getState) => {
+		const state = getState().present;
+		const fragment = _.merge({}, state.model.graph);
+		dispatch(
+			saveFragmentAsModelPattern(fragment)
+		);
 	};
 };
 
