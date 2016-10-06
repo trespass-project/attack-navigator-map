@@ -251,6 +251,7 @@ function groupAsFragment(graph, group) {
 		}, []);
 
 	return createFragment({
+		// TODO: shouldn't policies etc. be in there too?
 		nodes: helpers.toHashMap('id', nodes),
 		edges: helpers.toHashMap('id', edges),
 		groups: helpers.toHashMap('id', [group]),
