@@ -251,7 +251,7 @@ const App = React.createClass({
 								<hr />
 
 								<div>
-									<a href={constants.manualUrl} target='_blank'>Read the manual</a><sup> ↗︎</sup>
+									<a href={constants.manualUrl} target='_blank'>Read the full manual</a><sup> ↗︎</sup>
 								</div>
 
 								<div>
