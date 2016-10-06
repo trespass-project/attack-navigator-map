@@ -412,9 +412,12 @@ const EnabledAction = React.createClass({
 		return <div>
 			<div>
 				<select
-					value={actionType}
 					onChange={this.changeActionType}
+					value={actionType || ''}
 				>
+					<option key={''} value={''} disabled>
+						select
+					</option>
 					{actionTypes.map((type) => {
 						return <option
 							key={type}
