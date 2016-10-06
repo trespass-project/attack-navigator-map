@@ -2,12 +2,53 @@ const React = require('react');
 import { ActionCreators as UndoActionCreators } from 'redux-undo';
 const fs = require('fs');
 const pkg = JSON.parse(fs.readFileSync('./package.json').toString());
+const R = require('ramda');
+const $ = require('jquery');
 const classnames = require('classnames');
 const constants = require('./constants.js');
 const actionCreators = require('./actionCreators.js');
 const Wizard = require('./Wizard.js');
 const GraphEditor = require('./GraphEditor.js');
 const AnalysisResultsOverlay = require('./AnalysisResultsOverlay.js');
+
+
+const introHighlight = R.curry(
+	(selector, event) => {
+		const $marker = $('body').find('#marker');
+		if (!selector) {
+			$marker.css({
+				display: 'none'
+			});
+			return;
+		}
+
+		const $target = $('body').find(selector);
+		const offset = $target.offset();
+
+		// const padding = 5;
+		// $marker.css({
+		// 	left: offset.left - padding,
+		// 	top: offset.top - padding,
+		// 	width: $target.outerWidth() + (2 * padding),
+		// 	height: $target.outerHeight() + (2 * padding),
+		// 	display: 'block',
+		// });
+
+		const size = 30;
+		const centerX = offset.left - 5;
+		const centerY = offset.top - 5;
+		$marker.css({
+			left: centerX,
+			top: centerY,
+			width: size,
+			height: size,
+			borderRadius: size / 2,
+			border: 'none',
+			background: 'rgba(255, 40, 0, 0.75)',
+			display: 'block',
+		});
+	}
+);
 
 
 const App = React.createClass({
@@ -166,18 +207,44 @@ const App = React.createClass({
 					{(!props.hasOpenMap)
 						? <div id='introduction'>
 							<div id='intro-box'>
+								<div
+									id='marker'
+									style={{
+										position: 'absolute',
+										display: 'none',
+										border: 'solid 3px rgb(255, 30, 0)'
+									}}
+								/>
+
 								<div>
-									<strong>Attack Navigator Map</strong>
+									<h3 style={{ marginTop: 0 }}>Attack Navigator Map</h3>
 								</div>
 
 								<div>
 									Start by
 									<ul>
-										<li>creating a new map</li>
-										<li>loading a model file</li>
-										<li>opening an existing map</li>
+										<li>
+											<a
+												onMouseEnter={introHighlight('#create-new-map')}
+												onMouseLeave={introHighlight(null)}
+											>creating a new map</a>
+										</li>
+										<li>
+											<a
+												onMouseEnter={introHighlight('#import-model-file')}
+												onMouseLeave={introHighlight(null)}
+											>loading a model file</a>
+										</li>
+										<li>
+											<a
+												onMouseEnter={introHighlight('#recent-models')}
+												onMouseLeave={introHighlight(null)}>
+											opening an existing map</a>
+										</li>
 									</ul>
 								</div>
+
+								<hr />
 
 								<div>
 									<a href={constants.manualUrl} target='_blank'>Read the manual</a>

@@ -129,6 +129,7 @@ const Wizard = React.createClass({
 
 		return <div>
 			<button
+				id='create-new-map'
 				onClick={this.clickCreateNew}
 				className='btn btn-default custom-button'
 			>
@@ -149,7 +150,9 @@ const Wizard = React.createClass({
 					{...inputProps}
 				/>
 			</div>
+
 			<button
+				id='import-model-file'
 				onClick={this.clickFileButton}
 				className='btn btn-default custom-button'
 			>
@@ -170,7 +173,7 @@ const Wizard = React.createClass({
 			<br />
 
 			<h3 className='title'>Recent models</h3>
-			<div className='recent-models'>
+			<div className='recent-models' id='recent-models'>
 				<AutoSizer>{
 					({ height, width }) => <FlexTable
 						width={width}
