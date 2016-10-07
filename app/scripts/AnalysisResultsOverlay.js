@@ -131,6 +131,21 @@ const AnalysisResultsOverlay = React.createClass({
 		);
 	},
 
+	onAttackHover(item, index) {
+		const { props } = this;
+		if (index === props.resultsSelectedAttackIndex) {
+			return;
+		}
+		this.context.dispatch(
+			actionCreators.highlightAttackTreeNodes(index)
+		);
+	},
+
+	onAttackHoverOut() {
+		const { props } = this;
+		this.onAttackSelect(undefined, props.resultsSelectedAttackIndex);
+	},
+
 	selectToolchainRun(event) {
 		const snapshotIndex = event.target.value;
 		const snapshot = this.props.analysisSnapshots[snapshotIndex];
@@ -220,11 +235,8 @@ const AnalysisResultsOverlay = React.createClass({
 						profit={props.attackerProfit}
 						selectedIndex={props.resultsSelectedAttackIndex}
 						onSelect={this.onAttackSelect}
-						onHover={(item, index) => {
-							context.dispatch(
-								actionCreators.highlightAttackTreeNodes(index)
-							);
-						}}
+						onHover={this.onAttackHover}
+						onHoverOut={this.onAttackHoverOut}
 					/>;
 					break;
 				}

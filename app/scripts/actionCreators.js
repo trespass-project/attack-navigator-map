@@ -2032,6 +2032,10 @@ function resultsSelectTool(toolName) {
 	return (dispatch, getState) => {
 		const state = getState().present;
 
+		dispatch(
+			highlightAttackTreeNodes(null)
+		);
+
 		dispatch({
 			type: constants.ACTION_resultsSelectTool,
 			toolName,
@@ -2081,9 +2085,10 @@ function getSubtree({ state, dispatch }, subtreeCache, { selectedTool, index }, 
 				leafLabels
 			);
 			// because that's what the attack tree vis component expects
+			const { childElemName } = trespass.attacktree;
 			attacktree = _.isEmpty(subtreeRoot)
-				? { [trespass.attacktree.childElemName]: [] }
-				: { [trespass.attacktree.childElemName]: [subtreeRoot] };
+				? { [childElemName]: [] }
+				: { [childElemName]: [subtreeRoot] };
 
 			const allNodes = trespass.attacktree.getAllNodes(
 				trespass.attacktree.getRootNode(attacktree)
@@ -2117,13 +2122,18 @@ function highlightAttackTreeNodes(index) {
 
 		const { subtreeCache } = state.analysis;
 		const selectedTool = state.analysis.resultsSelectedTool;
-		const { nodeIds } = subtreeCache[selectedTool][index];
+		const nodeIds = (index === null || index === undefined)
+			? []
+			: subtreeCache[selectedTool][index].nodeIds;
 
-		// because subtrees are highlighted on the apl tree
 		dispatch({
 			type: constants.ACTION_resultsSelectAttack,
+
+			// because subtrees are highlighted on the apl tree
 			attacktree: state.analysis.analysisResults['Attack Pattern Lib.'],
-			// index: 0,
+
+			// we need to keep the current one though
+			index: state.analysis.resultsSelectedAttackIndex,
 		});
 
 		dispatch({
@@ -2138,6 +2148,13 @@ const resultsSelectAttack =
 module.exports.resultsSelectAttack =
 function resultsSelectAttack(index) {
 	return (dispatch, getState) => {
+		dispatch(
+			highlightAttackTreeNodes(null)
+		);
+		if (index === null || index === undefined) {
+			return;
+		}
+
 		const state = getState().present;
 		const selectedTool = state.analysis.resultsSelectedTool;
 		const { subtreeCache } = state.analysis;
