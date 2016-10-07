@@ -2081,9 +2081,13 @@ function getSubtree({ state, dispatch }, subtreeCache, { selectedTool, index }, 
 				leafLabels
 			);
 			// because that's what the attack tree vis component expects
-			attacktree = { node: [subtreeRoot] };
+			attacktree = _.isEmpty(subtreeRoot)
+				? { [trespass.attacktree.childElemName]: [] }
+				: { [trespass.attacktree.childElemName]: [subtreeRoot] };
 
-			const allNodes = trespass.attacktree.getAllNodes(subtreeRoot);
+			const allNodes = trespass.attacktree.getAllNodes(
+				trespass.attacktree.getRootNode(attacktree)
+			);
 			const nodeIds = allNodes.map(R.prop('id'));
 			dispatch({
 				type: constants.ACTION_cacheSubtree,
