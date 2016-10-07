@@ -2117,7 +2117,6 @@ function highlightAttackTreeNodes(index) {
 
 		const { subtreeCache } = state.analysis;
 		const selectedTool = state.analysis.resultsSelectedTool;
-		console.log(subtreeCache, selectedTool, index);
 		const { nodeIds } = subtreeCache[selectedTool][index];
 
 		// because subtrees are highlighted on the apl tree

@@ -238,16 +238,22 @@ const AnalysisResultsOverlay = React.createClass({
 					attacktree={props.resultsAttacktree}
 					layout={undefined}
 					overrideEdgeStyle={(d, index) => {
-						if (props.highlightNodeIds.length
-							&& R.contains(d.data.id, props.highlightNodeIds)) {
+						if (!props.highlightNodeIds.length) {
+							return {
+								strokeOpacity: 1,
+							};
+						}
+
+						if (R.contains(d.data.id, props.highlightNodeIds)) {
 							return {
 								strokeWidth: 4,
 								strokeOpacity: 1,
 							};
+						} else {
+							return {
+								strokeOpacity: 0.25,
+							};
 						}
-						return {
-							strokeOpacity: 0.25,
-						};
 					}}
 				/>
 			</div>
