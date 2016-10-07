@@ -2055,6 +2055,16 @@ function resultsSelectTool(toolName) {
 							referenceTree
 						);
 					});
+			} else if (toolName === 'A.T. Analyzer') {
+				state.analysis.analysisResults[toolName]
+					.forEach((attackTrace, index) => {
+						/*const attacktree =*/ getSubtreeFromTrace(
+							{ state, dispatch },
+							subtreeCache,
+							{ selectedTool, index },
+							{ referenceTree, attackTrace }
+						);
+					});
 			}
 		} else {
 			// treemaker, apl:
@@ -2062,6 +2072,52 @@ function resultsSelectTool(toolName) {
 			dispatch( resultsSelectAttack(0) );
 		}
 	};
+};
+
+
+const getSubtreeFromTrace =
+module.exports.getSubtreeFromTrace =
+function getSubtreeFromTrace({ state, dispatch }, subtreeCache, { selectedTool, index }, { referenceTree, attackTrace }) {
+	// try to get a cached version first
+	let attacktree = R.pathOr(
+		undefined,
+		[selectedTool, index, 'attacktree'],
+		subtreeCache
+	);
+
+	// otherwise create it
+	if (!attacktree) {
+		try {
+			console.log(attackTrace, referenceTree);
+			attacktree = trespass.attacktree.subtreePickFromReferenceTree(
+				trespass.attacktree.getRootNode(attackTrace),
+				trespass.attacktree.getRootNode(referenceTree)
+			);
+
+			const { childElemName } = trespass.attacktree;
+			attacktree = { [childElemName]: [attacktree] };
+
+			const allNodes = trespass.attacktree.getAllNodes(
+				trespass.attacktree.getRootNode(attacktree)
+			);
+			const nodeIds = allNodes.map(R.prop('id'));
+			dispatch({
+				type: constants.ACTION_cacheSubtree,
+				selectedTool,
+				index,
+				attacktree,
+				nodeIds,
+			});
+		} catch (err) {
+			const msg = 'constructing subtree from attack trace failed';
+			console.error(msg);
+			console.log(err.stack);
+			attacktree = undefined;
+			alert(msg);
+		}
+	}
+
+	return attacktree;
 };
 
 

@@ -223,6 +223,8 @@ const AnalysisResultsOverlay = React.createClass({
 						attacktrees={props.analysisResults['A.T. Analyzer']}
 						selectedIndex={props.resultsSelectedAttackIndex}
 						onSelect={this.onAttackSelect}
+						onHover={this.onAttackHover}
+						onHoverOut={this.onAttackHoverOut}
 					/>;
 					break;
 				}
