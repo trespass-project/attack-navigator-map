@@ -2048,7 +2048,7 @@ function resultsSelectTool(toolName) {
 			if (toolName === 'A.T. Evaluator') {
 				state.analysis.analysisResults[toolName]
 					.forEach((result, index) => {
-						/*const attacktree =*/ getSubtree(
+						/*const attacktree =*/ getSubtreeFromAttackVector(
 							{ state, dispatch },
 							subtreeCache,
 							{ selectedTool, index },
@@ -2058,7 +2058,7 @@ function resultsSelectTool(toolName) {
 			} else if (toolName === 'A.T. Analyzer') {
 				state.analysis.analysisResults[toolName]
 					.forEach((attackTrace, index) => {
-						/*const attacktree =*/ getSubtreeFromTrace(
+						/*const attacktree =*/ getSubtreeFromAttackTrace(
 							{ state, dispatch },
 							subtreeCache,
 							{ selectedTool, index },
@@ -2075,9 +2075,9 @@ function resultsSelectTool(toolName) {
 };
 
 
-const getSubtreeFromTrace =
-module.exports.getSubtreeFromTrace =
-function getSubtreeFromTrace({ state, dispatch }, subtreeCache, { selectedTool, index }, { referenceTree, attackTrace }) {
+const getSubtreeFromAttackTrace =
+module.exports.getSubtreeFromAttackTrace =
+function getSubtreeFromAttackTrace({ state, dispatch }, subtreeCache, { selectedTool, index }, { referenceTree, attackTrace }) {
 	// try to get a cached version first
 	let attacktree = R.pathOr(
 		undefined,
@@ -2121,9 +2121,9 @@ function getSubtreeFromTrace({ state, dispatch }, subtreeCache, { selectedTool, 
 };
 
 
-const getSubtree =
-module.exports.getSubtree =
-function getSubtree({ state, dispatch }, subtreeCache, { selectedTool, index }, referenceTree) {
+const getSubtreeFromAttackVector =
+module.exports.getSubtreeFromAttackVector =
+function getSubtreeFromAttackVector({ state, dispatch }, subtreeCache, { selectedTool, index }, referenceTree) {
 	// try to get a cached version first
 	let attacktree = R.pathOr(
 		undefined,
@@ -2222,7 +2222,7 @@ function resultsSelectAttack(index) {
 		}
 		else if (selectedTool === 'A.T. Evaluator') {
 			const referenceTree = state.analysis.analysisResults['Attack Pattern Lib.'];
-			attacktree = getSubtree(
+			attacktree = getSubtreeFromAttackVector(
 				{ state, dispatch },
 				subtreeCache,
 				{ selectedTool, index },
