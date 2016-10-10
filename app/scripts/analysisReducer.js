@@ -1,7 +1,6 @@
-// const update = require('react-addons-update');
+const update = require('react-addons-update');
 const R = require('ramda');
 const mergeWith = require('./reducer-utils.js').mergeWith;
-// const omitType = require('./reducer-utils.js').omitType;
 const constants = require('./constants.js');
 
 
@@ -12,6 +11,8 @@ const initialState = {
 	resultsSelectedAttackIndex: undefined,
 	resultsAttacktree: undefined,
 	analysisSnapshots: [],
+	subtreeCache: {},
+	highlightNodeIds: [],
 };
 
 
@@ -61,6 +62,14 @@ function reducer(state=initialState, action) {
 			return mergeWithState({
 				resultsSelectedAttackIndex: index,
 				resultsAttacktree: attacktree,
+				highlightNodeIds: [],
+			});
+		}
+
+		case constants.ACTION_highlightAttackTreeNodes: {
+			const { nodeIds } = action;
+			return mergeWithState({
+				highlightNodeIds: nodeIds,
 			});
 		}
 
@@ -69,6 +78,22 @@ function reducer(state=initialState, action) {
 			return mergeWithState({
 				analysisSnapshots: snapshots,
 			});
+		}
+
+		case constants.ACTION_cacheSubtree: {
+			const { selectedTool, index, attacktree, nodeIds } = action;
+			const newCache = Object.assign(
+				{},
+				state.subtreeCache
+			);
+			if (!newCache[selectedTool]) {
+				newCache[selectedTool] = {};
+			}
+			newCache[selectedTool][index] = { attacktree, nodeIds };
+			return update(
+				state,
+				{ subtreeCache: { $set: newCache } }
+			);
 		}
 
 		default:
