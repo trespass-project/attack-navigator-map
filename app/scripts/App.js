@@ -294,6 +294,7 @@ const App = React.createClass({
 								actionCreators.setAnalysisRunning(false)
 							);
 						}}
+						highlightNodeIds={props.highlightNodeIds}
 					/>
 				}
 			</div>

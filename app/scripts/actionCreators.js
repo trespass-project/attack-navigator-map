@@ -2059,16 +2059,152 @@ const resultsSelectTool =
 module.exports.resultsSelectTool =
 function resultsSelectTool(toolName) {
 	return (dispatch, getState) => {
+		const state = getState().present;
+
+		dispatch(
+			highlightAttackTreeNodes(null)
+		);
+
 		dispatch({
 			type: constants.ACTION_resultsSelectTool,
 			toolName,
 		});
 
-		if (toolName === 'Treemaker'
-			|| toolName === 'Attack Pattern Lib.') {
+		if (R.contains(toolName, trespass.analysis.analysisToolNamesStrict)) {
+			const { subtreeCache } = state.analysis;
+			const selectedTool = toolName;
+			const referenceTree = state.analysis.analysisResults['Attack Pattern Lib.'];
+			const getSubtreeParams = {
+				subtreeCache,
+				selectedTool,
+				dispatch
+			};
+			state.analysis.analysisResults[toolName]
+				.forEach((result, index) => {
+					let createFn;
+					if (toolName === 'A.T. Analyzer') {
+						const attackTrace = state.analysis.analysisResults[selectedTool][index];
+						createFn = () => getSubtreeFromAttackTrace(
+							referenceTree,
+							attackTrace
+						);
+					} else if (toolName === 'A.T. Evaluator') {
+						const leafLabels = state.analysis.analysisResults[selectedTool][index].labels;
+						createFn = () => getSubtreeFromAttackVector(
+							referenceTree,
+							leafLabels
+						);
+					}
+					// we don't actually use, we only want it to
+					// be cached
+					/*const attacktree =*/ getSubtree(
+						Object.assign({ index }, getSubtreeParams),
+						createFn
+					);
+				});
+		} else {
+			// treemaker, apl:
 			// display tree
 			dispatch( resultsSelectAttack(0) );
 		}
+	};
+};
+
+
+const getSubtree =
+module.exports.getSubtree =
+function getSubtree({ subtreeCache, selectedTool, index, dispatch }, createSubtree) {
+	// try to get a cached version first
+	let subtree = R.pathOr(
+		undefined,
+		[selectedTool, index, 'attacktree'],
+		subtreeCache
+	);
+
+	if (!subtree) {
+		// not cached yet
+
+		try {
+			const subtreeRoot = createSubtree();
+			const { childElemName } = trespass.attacktree;
+			subtree = {
+				[childElemName]: _.isEmpty(subtreeRoot)
+					? []
+					: [subtreeRoot]
+			};
+		} catch (err) {
+			const msg = 'constructing subtree failed';
+			console.error(msg);
+			console.log(err.stack);
+			alert(msg);
+			subtree = undefined;
+		}
+
+		const allNodes = trespass.attacktree.getAllNodes(
+			trespass.attacktree.getRootNode(subtree)
+		);
+		const nodeIds = allNodes.map(R.prop('id'));
+		dispatch({
+			type: constants.ACTION_cacheSubtree,
+			selectedTool,
+			index,
+			attacktree: subtree,
+			nodeIds,
+		});
+	}
+
+	return subtree;
+};
+
+
+const getSubtreeFromAttackTrace =
+module.exports.getSubtreeFromAttackTrace =
+function getSubtreeFromAttackTrace(referenceTree, attackTrace) {
+	const subtreeRoot = trespass.attacktree.subtreePickFromReferenceTree(
+		trespass.attacktree.getRootNode(attackTrace),
+		trespass.attacktree.getRootNode(referenceTree)
+	);
+	return subtreeRoot;
+};
+
+
+const getSubtreeFromAttackVector =
+module.exports.getSubtreeFromAttackVector =
+function getSubtreeFromAttackVector(referenceTree, leafLabels) {
+	const subtreeRoot = trespass.attacktree.subtreeFromLeafLabels(
+		trespass.attacktree.getRootNode(referenceTree),
+		leafLabels
+	);
+	return subtreeRoot;
+};
+
+
+const highlightAttackTreeNodes =
+module.exports.highlightAttackTreeNodes =
+function highlightAttackTreeNodes(index) {
+	return (dispatch, getState) => {
+		const state = getState().present;
+
+		const { subtreeCache } = state.analysis;
+		const selectedTool = state.analysis.resultsSelectedTool;
+		const nodeIds = (index === null || index === undefined)
+			? []
+			: subtreeCache[selectedTool][index].nodeIds;
+
+		dispatch({
+			type: constants.ACTION_resultsSelectAttack,
+
+			// because subtrees are highlighted on the apl tree
+			attacktree: state.analysis.analysisResults['Attack Pattern Lib.'],
+
+			// we need to keep the current one though
+			index: state.analysis.resultsSelectedAttackIndex,
+		});
+
+		dispatch({
+			type: constants.ACTION_highlightAttackTreeNodes,
+			nodeIds,
+		});
 	};
 };
 
@@ -2077,34 +2213,46 @@ const resultsSelectAttack =
 module.exports.resultsSelectAttack =
 function resultsSelectAttack(index) {
 	return (dispatch, getState) => {
+		dispatch(
+			highlightAttackTreeNodes(null)
+		);
+		if (index === null || index === undefined) {
+			return;
+		}
+
 		const state = getState().present;
 		const selectedTool = state.analysis.resultsSelectedTool;
+		const { subtreeCache } = state.analysis;
 		let attacktree = undefined;
 
 		/* eslint brace-style: 0 */
-		if (selectedTool === 'A.T. Analyzer') {
-			attacktree = state.analysis.analysisResults[selectedTool][index];
-		}
-		else if (selectedTool === 'A.T. Evaluator') {
-			const aplAttacktree = state.analysis.analysisResults['Attack Pattern Lib.'];
-			const rootNode = trespass.attacktree.getRootNode(aplAttacktree);
-			const labels = state.analysis.analysisResults[selectedTool][index].labels;
-			try {
-				const newRootNode = trespass.attacktree.subtreeFromLeafLabels(
-					rootNode,
-					labels
+		if (R.contains(
+				selectedTool,
+				trespass.analysis.analysisToolNamesStrict
+			)) {
+			const getSubtreeParams = {
+				subtreeCache,
+				selectedTool,
+				index,
+				dispatch
+			};
+			if (selectedTool === 'A.T. Analyzer') {
+				attacktree = getSubtree(
+					getSubtreeParams,
+					() => {
+						console.error('this should not happen.');
+					}
 				);
-				// because that's what the attack tree vis component expects
-				attacktree = { node: [newRootNode] };
-			} catch (err) {
-				const msg = 'constructing subtree from labels failed';
-				console.error(msg);
-				attacktree = undefined;
-				alert(msg);
 			}
-		}
-		else if (selectedTool === 'Treemaker'
-			|| selectedTool === 'Attack Pattern Lib.') {
+			else if (selectedTool === 'A.T. Evaluator') {
+				attacktree = getSubtree(
+					getSubtreeParams,
+					() => {
+						console.error('this should not happen.');
+					}
+				);
+			}
+		} else {
 			attacktree = state.analysis.analysisResults[selectedTool];
 		}
 
