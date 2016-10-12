@@ -549,9 +549,10 @@ function layoutGraphByType(_graph, spacing=100, maxNodesPerCol=7) {
 	let groupIndex = -1;
 
 	// create groups for the different types
+	const allNodes = R.values(graph.nodes);
 	collectionNames
 		.forEach((collectionName) => {
-			const selection = R.values(graph.nodes)
+			const selection = allNodes
 				.filter((node) => {
 					return (node.modelComponentType === collectionNamesSingular[collectionName]);
 				});
