@@ -389,71 +389,69 @@ const AtLocations = React.createClass({
 
 const InOutType = React.createClass({
 	propTypes: {
-		type: React.PropTypes.string.isRequired,
+		action: React.PropTypes.string.isRequired,
+		location: React.PropTypes.shape({
+			type: React.PropTypes.oneOf(['locvar', 'locval']),
+			value: React.PropTypes.string,
+		}),
+		values: React.PropTypes.array.isRequired,
+		logged: React.PropTypes.bool, // TODO: ?
 
 		locationOptions: React.PropTypes.array.isRequired,
 		nodes: React.PropTypes.object.isRequired,
 		nodesList: React.PropTypes.array.isRequired,
 
-		logged: React.PropTypes.bool,
-
-		locvar: React.PropTypes.string,
-		locval: React.PropTypes.string,
-		_: (props/*, propName, componentName*/) => {
-			return (!!props['locvar'] && !!props['locval'])
-				? new Error('Only one or the other allowed: `locvar`, `locval`.')
-				: null;
-		},
-
 		onChange: React.PropTypes.func,
 		onRemove: React.PropTypes.func,
 	},
 
-	omitKeys: [
-		'type',
-		'locationOptions',
-		'nodes',
-		'nodesList',
-		'onChange',
-		'onRemove',
-	],
-
 	getDefaultProps() {
 		return {
+			location: {
+				type: 'locvar',
+				value: ''
+			},
+			values: [],
 			logged: false,
 			onChange: noop,
 			onRemove: noop,
 		};
 	},
 
+	pickProps: ['location', 'values', 'logged'],
+
 	handleLocChange({ type, value }) {
-		const updated = R.omit(this.omitKeys, this.props);
-		delete updated.locvar;
-		delete updated.locval;
-		const key = {
+		const typeMap = {
 			'variable': 'locvar',
 			'value': 'locval',
-		}[type];
-		updated[key] = value;
+		};
+		const updatedLocation = {
+			type: typeMap[type],
+			value,
+		};
+		const updated = update(
+			R.pick(this.pickProps, this.props),
+			{ location: { $set: updatedLocation } }
+		);
 		this.props.onChange(updated);
 	},
 
 	handleLoggedChange(event) {
 		// event.preventDefault();
-		const updated = Object.assign(
-			{},
-			R.omit(this.omitKeys, this.props),
-			{ logged: event.target.checked }
+		const updated = update(
+			R.pick(this.pickProps, this.props),
+			{ logged: { $set: event.target.checked } }
 		);
 		this.props.onChange(updated);
 	},
 
 	render() {
 		const { props } = this;
-		const loc = props.locval || props.locvar;
 		const data = {
-			type: (!!props.locvar) ? 'variable' : 'value',
-			value: loc
+			type: (props.location.type === 'locvar')
+				? 'variable'
+				: 'value',
+			value: props.location.value,
 		};
 
 		return <div>
@@ -467,6 +465,7 @@ const InOutType = React.createClass({
 					<span> logged</span>
 				</label>
 			</div>
+
 			<div>
 				<span>location: </span>
 				<VariableOrSelectize
@@ -478,7 +477,10 @@ const InOutType = React.createClass({
 					}}
 				/>
 			</div>
-			<div>{/*tupleType*/}</div>
+
+			<div>
+				{/*tupleType*/}
+			</div>
 		</div>;
 	},
 });
@@ -486,7 +488,7 @@ const InOutType = React.createClass({
 
 const EnabledAction = React.createClass({
 	propTypes: {
-		action: React.PropTypes.object.isRequired,
+		enabled: React.PropTypes.object.isRequired,
 		onChange: React.PropTypes.func,
 
 		locationOptions: React.PropTypes.array.isRequired,
@@ -496,41 +498,38 @@ const EnabledAction = React.createClass({
 
 	getDefaultProps() {
 		return {
-			action: {},
 			onChange: noop,
 		};
 	},
 
-	getType() {
-		// should only have a single field
-		const actionType = R.keys(this.props.action)[0];
-		return actionType;
-	},
-
 	changeActionType(event) {
-		const newType = event.target.value;
 		const { props } = this;
-		const { action } = props;
-		const oldValue = action[this.getType()];
-		const newAction = {
-			[newType]: oldValue || {},
-		};
-		props.onChange(newAction);
+		const updated = update(
+			props.enabled,
+			{ action: { $set: event.target.value } }
+		);
+		props.onChange(updated);
 	},
 
-	handleActionChange(updatedActionValue) {
-		this.props.onChange({ [this.getType()]: updatedActionValue });
+	handleActionChange(updatedEnabled) {
+		// { location, values, logged }
+		const { props } = this;
+		const updated = Object.assign(
+			{},
+			props.enabled,
+			updatedEnabled
+		);
+		props.onChange(updated);
 	},
 
 	render() {
 		const { props } = this;
-		const actionType = this.getType();
+		const { enabled } = props;
 
-		const isComplexType = R.contains(actionType, ['in', 'out']);
+		const isComplexType = R.contains(enabled.action, ['in', 'out']);
 		const complexTypeEditor = (isComplexType)
 			? <InOutType
-				type={actionType}
-				{...props.action[actionType]}
+				{...enabled}
 				locationOptions={props.locationOptions}
 				nodes={props.nodes}
 				nodesList={props.nodesList}
@@ -547,7 +546,7 @@ const EnabledAction = React.createClass({
 							<span> </span>
 							<select
 								onChange={this.changeActionType}
-								value={actionType || ''}
+								value={enabled.action || ''}
 							>
 								<option key={''} value={''} disabled>
 									select
@@ -1317,10 +1316,10 @@ const PolicyEditor = React.createClass({
 					<tr>
 						<td colSpan='2' style={{ paddingLeft: padding }}>
 							{(policy.enabled || [])
-								.map((action, index) => {
+								.map((enabled, index) => {
 									return <EnabledAction
-										key={action}
-										action={action}
+										key={index}
+										enabled={enabled}
 										onChange={(updatedAction) => {
 											this.enabledActionChanged(index, updatedAction);
 										}}
