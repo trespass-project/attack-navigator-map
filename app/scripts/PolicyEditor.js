@@ -214,7 +214,10 @@ const TextInput = React.createClass({
 
 const VariableOrSelectize = React.createClass({
 	propTypes: {
-		data: React.PropTypes.object.isRequired,
+		data: React.PropTypes.shape({
+			type: React.PropTypes.oneOf(['variable', 'value']),
+			value: React.PropTypes.string,
+		}).isRequired,
 		nodes: React.PropTypes.object.isRequired,
 		nodesList: React.PropTypes.array.isRequired,
 		onChange: React.PropTypes.func,
