@@ -1122,6 +1122,7 @@ const PolicyEditor = React.createClass({
 		relationTypes: React.PropTypes.array.isRequired,
 		relationsMap: React.PropTypes.object.isRequired,
 		nodes: React.PropTypes.object.isRequired,
+		nodesList: React.PropTypes.array.isRequired,
 		onChange: React.PropTypes.func,
 		onRemove: React.PropTypes.func,
 	},
