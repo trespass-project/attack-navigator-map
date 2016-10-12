@@ -145,6 +145,13 @@ function _renderValue(nodes, valueKey='value', item) {
 const InnerTable = React.createClass({
 	propTypes: {
 		onRemove: React.PropTypes.func.isRequired,
+		noRemove: React.PropTypes.bool,
+	},
+
+	getDefaultProps() {
+		return {
+			noRemove: false,
+		};
 	},
 
 	render() {
@@ -159,7 +166,7 @@ const InnerTable = React.createClass({
 			<tbody>
 				<tr>
 					<td style={style}>{props.children}</td>
-					<td>{remove}</td>
+					<td>{!props.noRemove && remove}</td>
 				</tr>
 			</tbody>
 		</table>;
@@ -386,41 +393,88 @@ const InOutType = React.createClass({
 
 		locationOptions: React.PropTypes.array.isRequired,
 		nodes: React.PropTypes.object.isRequired,
+		nodesList: React.PropTypes.array.isRequired,
 
-		loc: React.PropTypes.string,
 		logged: React.PropTypes.bool,
+
+		locvar: React.PropTypes.string,
+		locval: React.PropTypes.string,
+		_: (props/*, propName, componentName*/) => {
+			return (!!props['locvar'] && !!props['locval'])
+				? new Error('Only one or the other allowed: `locvar`, `locval`.')
+				: null;
+		},
+
+		onChange: React.PropTypes.func,
+		onRemove: React.PropTypes.func,
 	},
+
+	omitKeys: [
+		'type',
+		'locationOptions',
+		'nodes',
+		'nodesList',
+		'onChange',
+		'onRemove',
+	],
 
 	getDefaultProps() {
 		return {
+			logged: false,
+			onChange: noop,
+			onRemove: noop,
 		};
+	},
+
+	handleLocChange({ type, value }) {
+		const updated = R.omit(this.omitKeys, this.props);
+		delete updated.locvar;
+		delete updated.locval;
+		const key = {
+			'variable': 'locvar',
+			'value': 'locval',
+		}[type];
+		updated[key] = value;
+		this.props.onChange(updated);
+	},
+
+	handleLoggedChange(event) {
+		// event.preventDefault();
+		const updated = Object.assign(
+			{},
+			R.omit(this.omitKeys, this.props),
+			{ logged: event.target.checked }
+		);
+		this.props.onChange(updated);
 	},
 
 	render() {
 		const { props } = this;
-		console.log(props);
+		const loc = props.locval || props.locvar;
+		const data = {
+			type: (!!props.locvar) ? 'variable' : 'value',
+			value: loc
+		};
 
 		return <div>
-			<div>in out</div>
 			<div>
-				<label>
-					<input type='checkbox' checked={props.logged} />
+				<label style={{ fontWeight: 'normal' }}>
+					<input
+						type='checkbox'
+						checked={props.logged}
+						onChange={this.handleLoggedChange}
+					/>
 					<span> logged</span>
 				</label>
 			</div>
 			<div>
-				{/* not really a `credLoaction`, but it does the same */}
-				<span>loc: </span>
-				<CredLocation
-					locationId={props.loc}
-					locationOptions={props.locationOptions}
+				<span>location: </span>
+				<VariableOrSelectize
+					data={data}
 					nodes={props.nodes}
-					onChange={(name, value) => {
-						console.log(name, value);
-						// this.handleChangeCredLocation(
-						// 	index,
-						// 	value
-						// );
+					nodesList={props.nodesList}
+					onChange={(updated) => {
+						this.handleLocChange(updated);
 					}}
 				/>
 			</div>
@@ -437,6 +491,7 @@ const EnabledAction = React.createClass({
 
 		locationOptions: React.PropTypes.array.isRequired,
 		nodes: React.PropTypes.object.isRequired,
+		nodesList: React.PropTypes.array.isRequired,
 	},
 
 	getDefaultProps() {
@@ -463,6 +518,10 @@ const EnabledAction = React.createClass({
 		props.onChange(newAction);
 	},
 
+	handleActionChange(updatedActionValue) {
+		this.props.onChange({ [this.getType()]: updatedActionValue });
+	},
+
 	render() {
 		const { props } = this;
 		const actionType = this.getType();
@@ -474,27 +533,50 @@ const EnabledAction = React.createClass({
 				{...props.action[actionType]}
 				locationOptions={props.locationOptions}
 				nodes={props.nodes}
+				nodesList={props.nodesList}
+				onChange={this.handleActionChange}
 			/>
 			: null;
 
 		return <div>
-			<div>
-				<select
-					onChange={this.changeActionType}
-					value={actionType || ''}
-				>
-					<option key={''} value={''} disabled>
-						select
-					</option>
-					{actionTypes.map((type) => {
-						return <option
-							key={type}
-							value={type}
-						>{type}</option>;
-					})}
-				</select>
-			</div>
-			{complexTypeEditor}
+			<table>
+				<tbody>
+					<tr>
+						<td colSpan='2'>
+							<label>Type:</label>
+							<span> </span>
+							<select
+								onChange={this.changeActionType}
+								value={actionType || ''}
+							>
+								<option key={''} value={''} disabled>
+									select
+								</option>
+								{actionTypes.map((type) => {
+									return <option
+										key={type}
+										value={type}
+									>{type}</option>;
+								})}
+							</select>
+						</td>
+					</tr>
+
+					<tr>
+						<td colSpan='2'>
+						{(isComplexType) && <DividingSpace />}
+						{(isComplexType) &&
+							<InnerTable
+								onRemove={noop}
+								noRemove={true}
+							>
+								{complexTypeEditor}
+							</InnerTable>
+						}
+						</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>;
 	},
 });
@@ -1230,7 +1312,10 @@ const PolicyEditor = React.createClass({
 						<td>
 							<label>Action{/*(s)*/}:</label>
 						</td>
-						<td>
+						<td></td>
+					</tr>
+					<tr>
+						<td colSpan='2' style={{ paddingLeft: padding }}>
 							{(policy.enabled || [])
 								.map((action, index) => {
 									return <EnabledAction
@@ -1241,11 +1326,13 @@ const PolicyEditor = React.createClass({
 										}}
 										locationOptions={props.locationOptions}
 										nodes={props.nodes}
+										nodesList={props.nodesList}
 									/>;
 								})
 							}
 						</td>
 					</tr>
+
 					<tr>
 						<td colSpan='2'>
 							<label>Credentials:</label>
