@@ -301,6 +301,7 @@ const VariableOrSelectize = React.createClass({
 				}}
 			>
 				<select
+					value={props.data.type}
 					onChange={this.typeSelected}
 				>
 					<option value='variable'>Var</option>
