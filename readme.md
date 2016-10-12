@@ -3,12 +3,6 @@
 
 ## installation
 
-depends on `trespass.js` being `npm link`ed:
-
-```
-npm link trespass.js
-```
-
 install all dependencies:
 
 ```
@@ -23,7 +17,7 @@ npm install
 gulp serve
 ```
 
-- will start a production server at [http://localhost:3000/](http://localhost:3000/)
+- will start a server at [http://localhost:3000/](http://localhost:3000/)
 - make sure the `knowledgebase` is running
 
 
