@@ -396,14 +396,43 @@ const Tuple = React.createClass({
 
 	valueHandleFieldChange(fieldName, updated, index) {
 		const { props } = this;
+		const prevValue = props.value.values[index];
+		const updatedValue = Object.assign(
+			{},
+			prevValue,
+			{ [fieldName]: updated }
+		);
+
+		// if case changed, reset `value` to s.th. sane
+		if (prevValue.type !== updatedValue.type) {
+			switch (updatedValue.type) {
+				case 'value':
+				case 'variable':
+				case 'input': {
+					updatedValue.value = '';
+					break;
+				}
+
+				case 'tuple': {
+					delete updatedValue.value;
+					updatedValue.values = [];
+					break;
+				}
+
+				case 'wildcard': {
+					delete updatedValue.value;
+					break;
+				}
+
+				default:
+					break;
+			}
+		}
+
 		this._updateArrayIndex(
 			'values',
 			index,
-			Object.assign(
-				{},
-				props.value.values[index],
-				{ [fieldName]: updated }
-			)
+			updatedValue
 		);
 	},
 
