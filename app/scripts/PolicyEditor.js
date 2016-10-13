@@ -16,6 +16,11 @@ const noop = () => {};
 
 const padding = 25;
 
+const innerTableContainerStyle = {
+	padding: 5,
+	backgroundColor: '#ededeb',
+};
+
 
 const emptyValue = {
 	type: 'variable',
@@ -581,10 +586,9 @@ const Tuple = React.createClass({
 						}}
 					>
 						{types.map((t) => {
-							return <option
-								key={t.v}
-								value={t.v}
-							>{t.label}</option>;
+							return <option key={t.v} value={t.v}>
+								{t.label}
+							</option>;
 						})}
 					</select>;
 
@@ -1420,18 +1424,9 @@ const CredItem = React.createClass({
 			/>,
 		}[value.type] || null;
 
-		const style = {
-			padding: 5,
-			// paddingLeft: padding,
-			// border: 'solid 1px black'
-		};
-		// if (value.type === 'credData') {
-			style.backgroundColor = '#ededeb';
-		// }
-
 		return <div key={index}>
 			<DividingSpace />
-			<div style={style}>
+			<div style={innerTableContainerStyle}>
 				<InnerTable
 					onRemove={() => {
 						this.handleRemoveValue(index);
