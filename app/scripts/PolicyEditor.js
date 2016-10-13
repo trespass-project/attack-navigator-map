@@ -507,13 +507,15 @@ const AtLocations = React.createClass({
 
 const InOutType = React.createClass({
 	propTypes: {
-		action: React.PropTypes.string.isRequired,
-		location: React.PropTypes.shape({
-			type: React.PropTypes.oneOf(['locvar', 'locval']),
-			value: React.PropTypes.string,
-		}),
-		values: React.PropTypes.array.isRequired,
-		logged: React.PropTypes.bool, // TODO: ?
+		enabled: React.PropTypes.shape({
+			action: React.PropTypes.string.isRequired,
+			location: React.PropTypes.shape({
+				type: React.PropTypes.oneOf(['locvar', 'locval']),
+				value: React.PropTypes.string,
+			}),
+			values: React.PropTypes.array.isRequired,
+			logged: React.PropTypes.bool,
+		}).isRequired,
 
 		locationOptions: React.PropTypes.array.isRequired,
 		nodes: React.PropTypes.object.isRequired,
@@ -525,18 +527,10 @@ const InOutType = React.createClass({
 
 	getDefaultProps() {
 		return {
-			location: {
-				type: 'locvar',
-				value: ''
-			},
-			values: [],
-			logged: false,
 			onChange: noop,
 			onRemove: noop,
 		};
 	},
-
-	pickProps: ['location', 'values', 'logged'],
 
 	handleLocChange({ type, value }) {
 		const typeMap = {
@@ -547,29 +541,60 @@ const InOutType = React.createClass({
 			type: typeMap[type],
 			value,
 		};
-		const updated = update(
-			R.pick(this.pickProps, this.props),
-			{ location: { $set: updatedLocation } }
+		this._updateField(
+			'location',
+			updatedLocation
 		);
-		this.props.onChange(updated);
 	},
 
 	handleLoggedChange(event) {
 		// event.preventDefault();
-		const updated = update(
-			R.pick(this.pickProps, this.props),
-			{ logged: { $set: event.target.checked } }
+		this._updateField(
+			'logged',
+			event.target.checked
 		);
-		this.props.onChange(updated);
+	},
+
+	handleValuesValueChange(updatedValue, index) {
+		this._updateArrayIndex('values', index, updatedValue);
+	},
+
+	_updateField(fieldName, updatedValue) {
+		__updateField(
+			this.props.onChange,
+			this.props.enabled,
+			[fieldName, updatedValue]
+		);
+	},
+
+	_updateArrayIndex(fieldName, index, updatedValue) {
+		__updateArrayIndex(
+			this.props.onChange,
+			this.props.enabled,
+			[fieldName, index, updatedValue]
+		);
 	},
 
 	render() {
 		const { props } = this;
+
+		const enabled = _.defaults(
+			props.enabled,
+			{
+				location: {
+					type: 'locvar',
+					value: ''
+				},
+				values: [],
+				logged: false,
+			}
+		);
+
 		const data = {
-			type: (props.location.type === 'locvar')
+			type: (enabled.location.type === 'locvar')
 				? 'variable'
 				: 'value',
-			value: props.location.value,
+			value: enabled.location.value,
 		};
 
 		return <div>
@@ -577,7 +602,7 @@ const InOutType = React.createClass({
 				<label style={{ fontWeight: 'normal' }}>
 					<input
 						type='checkbox'
-						checked={props.logged}
+						checked={enabled.logged}
 						onChange={this.handleLoggedChange}
 					/>
 					<span> logged</span>
@@ -599,7 +624,7 @@ const InOutType = React.createClass({
 			<hr />
 
 			<div>
-				{props.values
+				{enabled.values
 					.map((val, index) => {
 						let Component;
 						switch (val.type) {
@@ -616,12 +641,11 @@ const InOutType = React.createClass({
 							key={index}
 							value={val}
 							onChange={(updatedValue) => {
-								console.log(updatedValue);
+								this.handleValuesValueChange(updatedValue, index);
 							}}
 						/>;
 					})
 				}
-				{/*tupleType*/}
 			</div>
 		</div>;
 	},
@@ -653,7 +677,7 @@ const EnabledAction = React.createClass({
 		props.onChange(updated);
 	},
 
-	handleActionChange(updatedEnabled) {
+	handleEnabledChange(updatedEnabled) {
 		// { location, values, logged }
 		const { props } = this;
 		const updated = Object.assign(
@@ -671,11 +695,11 @@ const EnabledAction = React.createClass({
 		const isComplexType = R.contains(enabled.action, ['in', 'out']);
 		const complexTypeEditor = (isComplexType)
 			? <InOutType
-				{...enabled}
+				enabled={enabled}
 				locationOptions={props.locationOptions}
 				nodes={props.nodes}
 				nodesList={props.nodesList}
-				onChange={this.handleActionChange}
+				onChange={this.handleEnabledChange}
 			/>
 			: null;
 
