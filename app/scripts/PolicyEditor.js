@@ -298,6 +298,8 @@ const VariableOrSelectize = React.createClass({
 			type: React.PropTypes.oneOf(['variable', 'value']),
 			value: React.PropTypes.string,
 		}).isRequired,
+		variableLabel: React.PropTypes.string,
+		selectizeLabel: React.PropTypes.string,
 		nodes: React.PropTypes.object.isRequired,
 		nodesList: React.PropTypes.array.isRequired,
 		onChange: React.PropTypes.func,
@@ -307,6 +309,8 @@ const VariableOrSelectize = React.createClass({
 	getDefaultProps() {
 		return {
 			data: {},
+			variableLabel: 'Variable',
+			selectizeLabel: 'Component',
 			onChange: noop,
 			nodes: {},
 		};
@@ -373,8 +377,8 @@ const VariableOrSelectize = React.createClass({
 					value={props.data.type}
 					onChange={this.typeSelected}
 				>
-					<option value='variable'>Variable</option>
-					<option value='value'>Component</option>
+					<option value='variable'>{props.variableLabel}</option>
+					<option value='value'>{props.selectizeLabel}</option>
 				</select>
 			}
 			cell2={
@@ -740,9 +744,11 @@ const InOutType = React.createClass({
 			</div>
 
 			<div>
-				<span>location: </span>
+				{/*<span>location: </span>*/}
 				<VariableOrSelectize
 					data={data}
+					variableLabel='Loc. variable'
+					selectizeLabel='Loc. component'
 					nodes={props.nodes}
 					nodesList={props.nodesList}
 					onChange={(updated) => {
@@ -751,7 +757,7 @@ const InOutType = React.createClass({
 				/>
 			</div>
 
-			<hr />
+			<DividingSpace />
 
 			<div>
 				{enabled.values
