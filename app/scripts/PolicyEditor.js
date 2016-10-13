@@ -347,11 +347,13 @@ const Tuple = React.createClass({
 	propTypes: {
 		value: React.PropTypes.object.isRequired,
 		onChange: React.PropTypes.func,
+		onRemove: React.PropTypes.func,
 	},
 
 	getDefaultProps() {
 		return {
 			onChange: noop,
+			onRemove: noop,
 		};
 	},
 
@@ -377,6 +379,21 @@ const Tuple = React.createClass({
 			updatedValue
 		);
 		props.onChange(updated);
+	},
+
+	_updateField(fieldName, updatedValue) {
+		__updateField(
+			this.props.onChange,
+			this.props.value,
+			[fieldName, updatedValue]
+		);
+	},
+
+	handleRemoveValue(index) {
+		this._updateField(
+			'values',
+			R.remove(index, 1, this.props.value.values)
+		);
 	},
 
 	render() {
@@ -445,6 +462,12 @@ const Tuple = React.createClass({
 							</select>
 
 							{getComponent(value)}
+
+							<span> <RemoveButton
+								onRemove={() => {
+									this.handleRemoveValue(index);
+								}}
+							/></span>
 						</div>;
 					})
 				}
