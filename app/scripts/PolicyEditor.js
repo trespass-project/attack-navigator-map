@@ -576,12 +576,11 @@ const Tuple = React.createClass({
 						})}
 					</select>;
 
-					const remove = (props.onRemove) &&
-						<RemoveButton
-							onRemove={() => {
-								this.handleRemoveValue(index);
-							}}
-						/>;
+					const remove = <RemoveButton
+						onRemove={() => {
+							this.handleRemoveValue(index);
+						}}
+					/>;
 
 					return <FlexRow
 						key={index}
@@ -593,6 +592,7 @@ const Tuple = React.createClass({
 			}
 			<div>
 				<AddButton onAdd={this.addValue} />
+				<RemoveButton onRemove={props.onRemove} />
 			</div>
 		</div>;
 	},
@@ -702,6 +702,13 @@ const InOutType = React.createClass({
 		this._updateArrayIndex('values', index, updatedValue);
 	},
 
+	handleValuesValueRemove(index) {
+		this._updateField(
+			'values',
+			R.remove(index, 1, this.props.enabled.values)
+		);
+	},
+
 	_updateField(fieldName, updatedValue) {
 		__updateField(
 			this.props.onChange,
@@ -715,6 +722,17 @@ const InOutType = React.createClass({
 			this.props.onChange,
 			this.props.enabled,
 			[fieldName, index, updatedValue]
+		);
+	},
+
+	addValue() {
+		const emptyVal = {
+			type: 'tuple',
+			values: [],
+		};
+		this._updateField(
+			'values',
+			[...this.props.enabled.values, emptyVal]
 		);
 	},
 
@@ -748,7 +766,7 @@ const InOutType = React.createClass({
 						checked={enabled.logged}
 						onChange={this.handleLoggedChange}
 					/>
-					<span> logged</span>
+					<span> is logged</span>
 				</label>
 			</div>
 
@@ -788,11 +806,15 @@ const InOutType = React.createClass({
 								this.handleValuesValueChange(updatedValue, index);
 							}}
 							onRemove={() => {
-								console.warn('root level tuple is actually not a tuple + can not be removed');
+								this.handleValuesValueRemove(index);
 							}}
 						/>;
 					})
 				}
+			</div>
+
+			<div>
+				<AddButton onAdd={this.addValue} />
 			</div>
 		</div>;
 	},

@@ -1174,7 +1174,13 @@ function addProcess(process) {
 
 const emptyPolicy = {
 	enabled: [
-		{}
+		{
+			location: {
+				type: 'locvar',
+				value: ''
+			},
+			values: [],
+		}
 	]
 };
 
