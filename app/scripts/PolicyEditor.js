@@ -203,7 +203,8 @@ const InnerTable = React.createClass({
 			width: '100%',
 		};
 		const remove = <RemoveButton onRemove={props.onRemove} />;
-		return <table style={tableStyle}>
+
+		return <table style={tableStyle} className='inner'>
 			<tbody>
 				<tr>
 					<td style={style}>
@@ -562,7 +563,11 @@ const Tuple = React.createClass({
 		};
 
 		return <div>
-			<div>Tuple:</div>
+			<div>
+				<label>Tuple:</label>
+				<span> </span>
+				<AddButton onAdd={this.addValue} />
+			</div>
 
 			{props.value.values
 				.map((value, index) => {
@@ -589,17 +594,20 @@ const Tuple = React.createClass({
 						}}
 					/>;
 
-					return <FlexRow
-						key={index}
-						cell1={select}
-						cell2={getComponent(value, index)}
-						cell3={remove}
-					/>;
+					return <div key={index}>
+						<DividingSpace />
+						<FlexRow
+							key={index}
+							cell1={select}
+							cell2={getComponent(value, index)}
+							cell3={remove}
+						/>
+					</div>;
 				})
 			}
 			<div>
-				<AddButton onAdd={this.addValue} />
-				<RemoveButton onRemove={props.onRemove} />
+				{/*<AddButton onAdd={this.addValue} />*/}
+				{/*<RemoveButton onRemove={props.onRemove} />*/}
 			</div>
 		</div>;
 	},
@@ -766,63 +774,87 @@ const InOutType = React.createClass({
 		};
 
 		return <div>
-			<div>
-				<label style={{ fontWeight: 'normal' }}>
-					<input
-						type='checkbox'
-						checked={enabled.logged}
-						onChange={this.handleLoggedChange}
-					/>
-					<span> is logged</span>
-				</label>
-			</div>
+			<table>
+				<tbody>
 
-			<div>
-				<VariableOrSelectize
-					data={data}
-					variableLabel='Loc. variable'
-					selectizeLabel='Loc. component'
-					nodes={props.nodes}
-					nodesList={props.nodesList}
-					onChange={(updated) => {
-						this.handleLocChange(updated);
-					}}
-				/>
-			</div>
+					<tr>
+						<td colSpan='2'>
+							<label style={{ fontWeight: 'normal' }}>
+								<input
+									type='checkbox'
+									checked={enabled.logged}
+									onChange={this.handleLoggedChange}
+								/>
+								<span> is logged</span>
+							</label>
+						</td>
+					</tr>
 
-			<DividingSpace />
+					<tr>
+						<td>
+							<VariableOrSelectize
+								data={data}
+								variableLabel='Loc. variable'
+								selectizeLabel='Loc. component'
+								nodes={props.nodes}
+								nodesList={props.nodesList}
+								onChange={(updated) => {
+									this.handleLocChange(updated);
+								}}
+							/>
+						</td>
+					</tr>
 
-			<div>
-				{enabled.values
-					.map((val, index) => {
-						let Component;
-						switch (val.type) {
-							case 'tuple': {
-								Component = Tuple;
-								break;
+					<tr>
+						<td>
+							{(enabled.values.length > 0) &&
+								<DividingSpace />
 							}
+							{enabled.values
+								.map((val, index) => {
+									let Component;
+									switch (val.type) {
+										case 'tuple': {
+											Component = Tuple;
+											break;
+										}
 
-							default: {
-								return null;
+										// TODO: more types?
+
+										default: {
+											return null;
+										}
+									}
+
+									const content = <Component
+										key={index}
+										value={val}
+										onChange={(updatedValue) => {
+											this.handleValuesValueChange(updatedValue, index);
+										}}
+									/>;
+
+									return <InnerTable
+										key={index}
+										onRemove={() => {
+											this.handleValuesValueRemove(index);
+										}}
+									>
+										{content}
+									</InnerTable>;
+								})
 							}
-						}
-						return <Component
-							key={index}
-							value={val}
-							onChange={(updatedValue) => {
-								this.handleValuesValueChange(updatedValue, index);
-							}}
-							onRemove={() => {
-								this.handleValuesValueRemove(index);
-							}}
-						/>;
-					})
-				}
-			</div>
+						</td>
+					</tr>
 
-			<div>
-				<AddButton onAdd={this.addValue} />
-			</div>
+					<tr>
+						<td>
+							<AddButton onAdd={this.addValue} />
+						</td>
+					</tr>
+
+				</tbody>
+			</table>
 		</div>;
 	},
 });
@@ -905,14 +937,11 @@ const EnabledAction = React.createClass({
 
 					<tr>
 						<td colSpan='2'>
-						{(isComplexType) && <DividingSpace />}
 						{(isComplexType) &&
-							<InnerTable
-								onRemove={noop}
-								noRemove={true}
-							>
-								{complexTypeEditor}
-							</InnerTable>
+							<DividingSpace />
+						}
+						{(isComplexType) &&
+							complexTypeEditor
 						}
 						</td>
 					</tr>
