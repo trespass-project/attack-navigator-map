@@ -849,7 +849,9 @@ const InOutType = React.createClass({
 
 					<tr>
 						<td>
-							<AddButton onAdd={this.addValue} />
+							{(enabled.values.length === 0) &&
+								<AddButton onAdd={this.addValue} />
+							}
 						</td>
 					</tr>
 
