@@ -5,6 +5,7 @@ const React = require('react');
 const update = require('react-addons-update');
 const R = require('ramda');
 const _ = require('lodash');
+const classnames = require('classnames');
 const SelectizeDropdown = require('./SelectizeDropdown.js');
 const RelationSelectize = require('./RelationSelectize.js');
 const ComponentReference = require('./ComponentReference.js');
@@ -174,24 +175,52 @@ const InnerTable = React.createClass({
 });
 
 
+const IconButton = React.createClass({
+	propTypes: {
+		onClick: React.PropTypes.func.isRequired,
+		icon: React.PropTypes.string.isRequired,
+	},
+
+	render() {
+		const classes = classnames(
+			'icon', 'fa', this.props.icon
+		);
+		return <a
+			href='#'
+			onClick={(event) => {
+				event.preventDefault();
+				this.props.onClick();
+			}}
+			style={{ marginLeft: 5 }}
+		><span className={classes} /></a>;
+	}
+});
+
+
 const RemoveButton = React.createClass({
 	propTypes: {
 		onRemove: React.PropTypes.func.isRequired,
 	},
 
-	handleRemove(event) {
-		event.preventDefault();
-		this.props.onRemove();
+	render() {
+		return <IconButton
+			icon='fa-minus-circle'
+			onClick={this.props.onRemove}
+		/>;
+	}
+});
+
+
+const AddButton = React.createClass({
+	propTypes: {
+		onAdd: React.PropTypes.func.isRequired,
 	},
 
 	render() {
-		return <a
-			href='#'
-			onClick={this.handleRemove}
-			style={{ marginLeft: 5 }}
-		>
-			<span className='icon fa fa-minus-circle' />
-		</a>;
+		return <IconButton
+			icon='fa-plus-circle'
+			onClick={this.props.onAdd}
+		/>;
 	}
 });
 
@@ -318,8 +347,8 @@ const VariableOrSelectize = React.createClass({
 					value={props.data.type}
 					onChange={this.typeSelected}
 				>
-					<option value='variable'>Var</option>
-					<option value='value'>Comp</option>
+					<option value='variable'>Variable</option>
+					<option value='value'>Component</option>
 				</select>
 			</div>
 
@@ -485,9 +514,7 @@ const Tuple = React.createClass({
 				}
 			{/*</div>*/}
 			<div>
-				<a href='#' onClick={this.addValue}>
-					<span className='icon fa fa-plus-circle' />
-				</a>
+				<AddButton onAdd={this.addValue} />
 			</div>
 		</div>;
 	},
@@ -682,6 +709,9 @@ const InOutType = React.createClass({
 							value={val}
 							onChange={(updatedValue) => {
 								this.handleValuesValueChange(updatedValue, index);
+							}}
+							onRemove={() => {
+								console.log('remove');
 							}}
 						/>;
 					})
@@ -883,12 +913,7 @@ const Credentials = React.createClass({
 						<td colSpan='2'>
 							<label>Location:</label>
 							<span> </span>
-							<a
-								href='#'
-								onClick={props.addLocation}
-							>
-								<span className='icon fa fa-plus-circle' />
-							</a>
+							<AddButton onAdd={props.addLocation} />
 						</td>
 					</tr>
 					<tr>
@@ -922,12 +947,7 @@ const Credentials = React.createClass({
 						<td colSpan='2'>
 							<label>Predicate:</label>
 							<span> </span>
-							<a
-								href='#'
-								onClick={props.addPredicate}
-							>
-								<span className='icon fa fa-plus-circle' />
-							</a>
+							<AddButton onAdd={props.addPredicate} />
 						</td>
 					</tr>
 					<tr>
@@ -963,12 +983,7 @@ const Credentials = React.createClass({
 						<td colSpan='2'>
 							<label>Data:</label>
 							<span> </span>
-							<a
-								href='#'
-								onClick={props.addData}
-							>
-								<span className='icon fa fa-plus-circle' />
-							</a>
+							<AddButton onAdd={props.addData} />
 						</td>
 					</tr>
 					<tr>
@@ -1002,12 +1017,7 @@ const Credentials = React.createClass({
 						<td colSpan='2'>
 							<label>Item:</label>
 							<span> </span>
-							<a
-								href='#'
-								onClick={props.addItem}
-							>
-								<span className='icon fa fa-plus-circle' />
-							</a>
+							<AddButton onAdd={props.addItem} />
 						</td>
 					</tr>
 					<tr>
@@ -1153,7 +1163,9 @@ const CredData = React.createClass({
 			<DividingSpace />
 
 			<div>
-				<label>Value:</label> <a href='#' onClick={this.handleAddValue}><span className='icon fa fa-plus-circle' /></a>
+				<label>Value:</label>
+				<span> </span>
+				<AddButton onAdd={this.handleAddValue} />
 			</div>
 
 			<div>
@@ -1310,7 +1322,9 @@ const CredItem = React.createClass({
 			<DividingSpace />
 
 			<div>
-				<label>Data:</label> <a href='#' onClick={this.handleAddValueData}><span className='icon fa fa-plus-circle' /></a>
+				<label>Data:</label>
+				<span> </span>
+				<AddButton onAdd={this.handleAddValueData} />
 			</div>
 
 			<div>
@@ -1322,7 +1336,9 @@ const CredItem = React.createClass({
 			<DividingSpace />
 
 			<div>
-				<label>Item:</label> <a href='#' onClick={this.handleAddValueItem}><span className='icon fa fa-plus-circle' /></a>
+				<label>Item:</label>
+				<span> </span>
+				<AddButton onAdd={this.handleAddValueItem} />
 			</div>
 
 			<div>
