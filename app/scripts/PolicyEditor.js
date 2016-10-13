@@ -219,6 +219,13 @@ const TextInput = React.createClass({
 });
 
 
+const Wildcard = React.createClass({
+	render() {
+		return <strong>*</strong>;
+	},
+});
+
+
 const VariableOrSelectize = React.createClass({
 	propTypes: {
 		data: React.PropTypes.shape({
@@ -331,6 +338,117 @@ const VariableOrSelectize = React.createClass({
 			{(props.onRemove) &&
 				<span> <RemoveButton onRemove={props.onRemove} /></span>
 			}
+		</div>;
+	},
+});
+
+
+const Tuple = React.createClass({
+	propTypes: {
+		value: React.PropTypes.object.isRequired,
+		onChange: React.PropTypes.func,
+	},
+
+	getDefaultProps() {
+		return {
+			onChange: noop,
+		};
+	},
+
+	_updateArrayIndex(fieldName, index, updatedValue) {
+		__updateArrayIndex(
+			this.props.onChange,
+			this.props.value,
+			[fieldName, index, updatedValue]
+		);
+	},
+
+	valueTypeChanged(newType, index) {
+		const { props } = this;
+		const updatedValue = updateFieldInObject(
+			props.value.values[index],
+			'type',
+			newType
+		);
+		const updated = updateArrayIndexInObject(
+			props.value,
+			'values',
+			index,
+			updatedValue
+		);
+		props.onChange(updated);
+	},
+
+	render() {
+		const props = this.props;
+		const types = [
+			{ v: 'value', label: 'Value' },
+			{ v: 'wildcard', label: 'Wildcard' },
+			{ v: 'variable', label: 'Variable' },
+			{ v: 'input', label: 'Input' },
+			{ v: 'tuple', label: 'Tuple' },
+		];
+
+		function getComponent(value) {
+			/* eslint brace-style: 0 */
+			if (value.type === 'value') {
+				return <TextInput
+					value={value.value}
+					placeholder={value.type}
+					onChange={undefined /*this.updateValue*/}
+				/>;
+			}
+			else if (value.type === 'variable') {
+				return <TextInput
+					value={value.value}
+					placeholder={value.type}
+					onChange={undefined /*this.updateValue*/}
+				/>;
+			}
+			else if (value.type === 'input') {
+				return <TextInput
+					value={value.value}
+					placeholder={value.type}
+					onChange={undefined /*this.updateValue*/}
+				/>;
+			}
+			else if (value.type === 'wildcard') {
+				return <Wildcard />;
+			}
+			else if (value.type === 'tuple') {
+				return <Tuple
+					value={value}
+				/>;
+			}
+			return null;
+		}
+
+		return <div>
+			{/*<div>*/}
+				{props.value.values
+					.map((value, index) => {
+						// console.log(value);
+						return <div key={index}>
+							<select
+								value={value.type}
+								onChange={(event) => {
+									const newType = event.target.value;
+									this.valueTypeChanged(newType, index);
+								}}
+							>
+								{types.map((t) => {
+									return <option
+										key={t.v}
+										value={t.v}
+									>{t.label}</option>;
+								})}
+							</select>
+
+							{getComponent(value)}
+						</div>;
+					})
+				}
+			{/*</div>*/}
 		</div>;
 	},
 });
@@ -478,7 +596,31 @@ const InOutType = React.createClass({
 				/>
 			</div>
 
+			<hr />
+
 			<div>
+				{props.values
+					.map((val, index) => {
+						let Component;
+						switch (val.type) {
+							case 'tuple': {
+								Component = Tuple;
+								break;
+							}
+
+							default: {
+								return null;
+							}
+						}
+						return <Component
+							key={index}
+							value={val}
+							onChange={(updatedValue) => {
+								console.log(updatedValue);
+							}}
+						/>;
+					})
+				}
 				{/*tupleType*/}
 			</div>
 		</div>;
