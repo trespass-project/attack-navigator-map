@@ -143,6 +143,43 @@ function _renderValue(nodes, valueKey='value', item) {
 }
 
 
+const FlexRow = React.createClass({
+	propTypes: {
+		cell1: React.PropTypes.any.isRequired,
+		cell2: React.PropTypes.any.isRequired,
+		cell3: React.PropTypes.any,
+	},
+
+	render() {
+		const { props } = this;
+		const containerStyle = {
+			display: 'flex',
+			alignItems: 'center',
+		};
+		const cell1Style = {
+			flexGrow: 0,
+			flexShrink: 0,
+			marginRight: '5px',
+		};
+		const cell2Style = {
+			flexGrow: 1,
+			flexShrink: 1,
+		};
+		return <div style={containerStyle}>
+			<div style={cell1Style}>
+				{props.cell1}
+			</div>
+			<div style={cell2Style}>
+				{props.cell2}
+			</div>
+			{(!!props.cell3) &&
+				<span> {props.cell3}</span>
+			}
+		</div>;
+	},
+});
+
+
 const InnerTable = React.createClass({
 	propTypes: {
 		onRemove: React.PropTypes.func.isRequired,
@@ -330,19 +367,8 @@ const VariableOrSelectize = React.createClass({
 			extraProps={{ renderValue }}
 		/>;
 
-		return <div
-			style={{
-				display: 'flex',
-				alignItems: 'center',
-			}}
-		>
-			<div
-				style={{
-					flexGrow: 0,
-					flexShrink: 0,
-					marginRight: '5px',
-				}}
-			>
+		return <FlexRow
+			cell1={
 				<select
 					value={props.data.type}
 					onChange={this.typeSelected}
@@ -350,24 +376,15 @@ const VariableOrSelectize = React.createClass({
 					<option value='variable'>Variable</option>
 					<option value='value'>Component</option>
 				</select>
-			</div>
-
-			<div
-				style={{
-					flexGrow: 1,
-					flexShrink: 1,
-				}}
-			>
-				{(isVariable)
-					? variable
-					: selectize
-				}
-			</div>
-
-			{(props.onRemove) &&
-				<span> <RemoveButton onRemove={props.onRemove} /></span>
 			}
-		</div>;
+			cell2={
+				(isVariable) ? variable : selectize
+			}
+			cell3={
+				(props.onRemove) &&
+					<RemoveButton onRemove={props.onRemove} />
+			}
+		/>;
 	},
 });
 
@@ -523,11 +540,11 @@ const Tuple = React.createClass({
 		};
 
 		return <div>
-			{/*<div>*/}
-				{props.value.values
-					.map((value, index) => {
-						// console.log(value);
-						return <div key={index}>
+			{props.value.values
+				.map((value, index) => {
+					return <FlexRow
+						key={index}
+						cell1={
 							<select
 								value={value.type}
 								onChange={(event) => {
@@ -544,18 +561,21 @@ const Tuple = React.createClass({
 									>{t.label}</option>;
 								})}
 							</select>
-
-							{getComponent(value, index)}
-
-							<span> <RemoveButton
-								onRemove={() => {
-									this.handleRemoveValue(index);
-								}}
-							/></span>
-						</div>;
-					})
-				}
-			{/*</div>*/}
+						}
+						cell2={
+							getComponent(value, index)
+						}
+						cell3={
+							(props.onRemove) &&
+								<RemoveButton
+									onRemove={() => {
+										this.handleRemoveValue(index);
+									}}
+								/>
+						}
+					/>;
+				})
+			}
 			<div>
 				<AddButton onAdd={this.addValue} />
 			</div>
