@@ -396,6 +396,18 @@ const Tuple = React.createClass({
 		);
 	},
 
+	addValue() {
+		const emptyVal = { type: 'variable', value: '' };
+		const updatedValues = update(
+			this.props.value.values,
+			{ $push: [emptyVal] }
+		);
+		this._updateField(
+			'values',
+			updatedValues
+		);
+	},
+
 	render() {
 		const props = this.props;
 		const types = [
@@ -472,6 +484,11 @@ const Tuple = React.createClass({
 					})
 				}
 			{/*</div>*/}
+			<div>
+				<a href='#' onClick={this.addValue}>
+					<span className='icon fa fa-plus-circle' />
+				</a>
+			</div>
 		</div>;
 	},
 });
