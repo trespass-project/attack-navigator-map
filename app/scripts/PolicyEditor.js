@@ -394,20 +394,25 @@ const Tuple = React.createClass({
 		);
 	},
 
-	valueTypeChanged(newType, index) {
+	valueHandleFieldChange(fieldName, updated, index) {
 		const { props } = this;
-		const updatedValue = updateFieldInObject(
-			props.value.values[index],
-			'type',
-			newType
-		);
-		const updated = updateArrayIndexInObject(
-			props.value,
+		this._updateArrayIndex(
 			'values',
 			index,
-			updatedValue
+			Object.assign(
+				{},
+				props.value.values[index],
+				{ [fieldName]: updated }
+			)
 		);
-		props.onChange(updated);
+	},
+
+	valueTypeChanged(newType, index) {
+		this.valueHandleFieldChange('type', newType, index);
+	},
+
+	valueValueChanged(newValue, index) {
+		this.valueHandleFieldChange('value', newValue, index);
 	},
 
 	_updateField(fieldName, updatedValue) {
@@ -447,27 +452,34 @@ const Tuple = React.createClass({
 			{ v: 'tuple', label: 'Tuple' },
 		];
 
-		function getComponent(value) {
+		const getComponent = (value, index) => {
+			const handleChange = (newValue) => {
+				this.valueValueChanged(
+					newValue,
+					index
+				);
+			};
+
 			/* eslint brace-style: 0 */
 			if (value.type === 'value') {
 				return <TextInput
 					value={value.value}
 					placeholder={value.type}
-					onChange={undefined /*this.updateValue*/}
+					onChange={handleChange}
 				/>;
 			}
 			else if (value.type === 'variable') {
 				return <TextInput
 					value={value.value}
 					placeholder={value.type}
-					onChange={undefined /*this.updateValue*/}
+					onChange={handleChange}
 				/>;
 			}
 			else if (value.type === 'input') {
 				return <TextInput
 					value={value.value}
 					placeholder={value.type}
-					onChange={undefined /*this.updateValue*/}
+					onChange={handleChange}
 				/>;
 			}
 			else if (value.type === 'wildcard') {
@@ -479,7 +491,7 @@ const Tuple = React.createClass({
 				/>;
 			}
 			return null;
-		}
+		};
 
 		return <div>
 			{/*<div>*/}
@@ -490,8 +502,10 @@ const Tuple = React.createClass({
 							<select
 								value={value.type}
 								onChange={(event) => {
-									const newType = event.target.value;
-									this.valueTypeChanged(newType, index);
+									this.valueTypeChanged(
+										event.target.value,
+										index
+									);
 								}}
 							>
 								{types.map((t) => {
@@ -502,7 +516,7 @@ const Tuple = React.createClass({
 								})}
 							</select>
 
-							{getComponent(value)}
+							{getComponent(value, index)}
 
 							<span> <RemoveButton
 								onRemove={() => {
