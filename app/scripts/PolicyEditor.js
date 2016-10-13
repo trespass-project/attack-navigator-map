@@ -466,7 +466,6 @@ const Tuple = React.createClass({
 	},
 
 	tupleChanged(updatedTuple, index) {
-		console.log(updatedTuple);
 		this._updateArrayIndex(
 			'values',
 			index,
@@ -556,39 +555,39 @@ const Tuple = React.createClass({
 		};
 
 		return <div>
+			<div>Tuple:</div>
+
 			{props.value.values
 				.map((value, index) => {
+					const select = <select
+						value={value.type}
+						onChange={(event) => {
+							this.valueTypeChanged(
+								event.target.value,
+								index
+							);
+						}}
+					>
+						{types.map((t) => {
+							return <option
+								key={t.v}
+								value={t.v}
+							>{t.label}</option>;
+						})}
+					</select>;
+
+					const remove = (props.onRemove) &&
+						<RemoveButton
+							onRemove={() => {
+								this.handleRemoveValue(index);
+							}}
+						/>;
+
 					return <FlexRow
 						key={index}
-						cell1={
-							<select
-								value={value.type}
-								onChange={(event) => {
-									this.valueTypeChanged(
-										event.target.value,
-										index
-									);
-								}}
-							>
-								{types.map((t) => {
-									return <option
-										key={t.v}
-										value={t.v}
-									>{t.label}</option>;
-								})}
-							</select>
-						}
-						cell2={
-							getComponent(value, index)
-						}
-						cell3={
-							(props.onRemove) &&
-								<RemoveButton
-									onRemove={() => {
-										this.handleRemoveValue(index);
-									}}
-								/>
-						}
+						cell1={select}
+						cell2={getComponent(value, index)}
+						cell3={remove}
 					/>;
 				})
 			}
@@ -659,7 +658,7 @@ const InOutType = React.createClass({
 				type: React.PropTypes.oneOf(['locvar', 'locval']),
 				value: React.PropTypes.string,
 			}),
-			values: React.PropTypes.array.isRequired,
+			values: React.PropTypes.array/*.isRequired*/,
 			logged: React.PropTypes.bool,
 		}).isRequired,
 
@@ -668,13 +667,11 @@ const InOutType = React.createClass({
 		nodesList: React.PropTypes.array.isRequired,
 
 		onChange: React.PropTypes.func,
-		onRemove: React.PropTypes.func,
 	},
 
 	getDefaultProps() {
 		return {
 			onChange: noop,
-			onRemove: noop,
 		};
 	},
 
@@ -756,7 +753,6 @@ const InOutType = React.createClass({
 			</div>
 
 			<div>
-				{/*<span>location: </span>*/}
 				<VariableOrSelectize
 					data={data}
 					variableLabel='Loc. variable'
