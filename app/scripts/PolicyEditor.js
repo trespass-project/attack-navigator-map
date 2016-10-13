@@ -194,17 +194,24 @@ const InnerTable = React.createClass({
 
 	render() {
 		const { props } = this;
+		const tableStyle = {
+			marginBottom: 5
+		};
 		const style = {
 			background: 'white',
 			padding: 5,
 			width: '100%',
 		};
 		const remove = <RemoveButton onRemove={props.onRemove} />;
-		return <table style={{ marginBottom: 5 }}>
+		return <table style={tableStyle}>
 			<tbody>
 				<tr>
-					<td style={style}>{props.children}</td>
-					<td>{!props.noRemove && remove}</td>
+					<td style={style}>
+						{props.children}
+					</td>
+					<td>
+						{!props.noRemove && remove}
+					</td>
 				</tr>
 			</tbody>
 		</table>;
