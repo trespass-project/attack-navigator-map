@@ -465,6 +465,15 @@ const Tuple = React.createClass({
 		this.valueHandleFieldChange('value', newValue, index);
 	},
 
+	tupleChanged(updatedTuple, index) {
+		console.log(updatedTuple);
+		this._updateArrayIndex(
+			'values',
+			index,
+			updatedTuple
+		);
+	},
+
 	_updateField(fieldName, updatedValue) {
 		__updateField(
 			this.props.onChange,
@@ -538,6 +547,9 @@ const Tuple = React.createClass({
 			else if (value.type === 'tuple') {
 				return <Tuple
 					value={value}
+					onChange={(updatedTuple) => {
+						this.tupleChanged(updatedTuple, index);
+					}}
 				/>;
 			}
 			return null;
@@ -780,7 +792,7 @@ const InOutType = React.createClass({
 								this.handleValuesValueChange(updatedValue, index);
 							}}
 							onRemove={() => {
-								console.log('remove');
+								console.warn('root level tuple is actually not a tuple + can not be removed');
 							}}
 						/>;
 					})
