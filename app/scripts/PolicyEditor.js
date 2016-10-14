@@ -598,14 +598,30 @@ const Tuple = React.createClass({
 						}}
 					/>;
 
+					const compo = getComponent(value, index);
+
 					return <div key={index}>
 						<DividingSpace />
-						<FlexRow
-							key={index}
-							cell1={select}
-							cell2={getComponent(value, index)}
-							cell3={remove}
-						/>
+						{(value.type !== 'tuple')
+							? <FlexRow
+								cell1={select}
+								cell2={compo}
+								cell3={remove}
+							/>
+							: <div style={innerTableContainerStyle}>
+								{select}
+								<InnerTable
+									onRemove={() => {
+										this.handleRemoveValue(index);
+									}}
+								>
+									<div>
+										{/*select*/}
+										{compo}
+									</div>
+								</InnerTable>
+							</div>
+						}
 					</div>;
 				})
 			}
