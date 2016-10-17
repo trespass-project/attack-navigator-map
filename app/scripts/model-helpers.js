@@ -668,7 +668,7 @@ function graphFromModel(model) {
 							from: parts[0],
 							to: parts[1],
 							directed: true,
-							relation: pred.id,
+							relation: trespass.model.sanitizedPredicateId(pred.id),
 						});
 						edges.push(edge);
 					});
