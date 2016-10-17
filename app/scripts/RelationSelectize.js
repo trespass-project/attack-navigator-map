@@ -1,5 +1,6 @@
 const React = require('react');
 const SelectizeDropdown = require('./SelectizeDropdown.js');
+const trespass = require('trespass.js');
 
 
 // TODO: added ones are not persisted
@@ -9,9 +10,7 @@ const createFromSearch = (options, search) => {
 	}
 	const result = {
 		label: search,
-		value: search
-			.toLowerCase()
-			.replace(/ +/g, '-'),
+		value: trespass.model.sanitizePredicateId(search),
 	};
 	return result;
 };

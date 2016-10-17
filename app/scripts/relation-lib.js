@@ -22,7 +22,7 @@ module.exports = [
 
 	{
 		'type': 'relation',
-		'value': 'at-location',
+		'value': 'atLocation',
 		'label': 'contained in',
 		'directed': true,
 		// 'acceptsSource': ['location'],
@@ -31,7 +31,7 @@ module.exports = [
 
 	{
 		'type': 'relation',
-		'value': 'at-location',
+		'value': 'atLocation',
 		'label': 'is at',
 		'directed': true,
 		// 'acceptsSource': ['location'],
@@ -58,7 +58,7 @@ module.exports = [
 
 	{
 		'type': 'relation',
-		'value': 'employee-of',
+		'value': 'employeeOf',
 		'label': 'employee of',
 		'directed': true,
 		// 'acceptsSource': ['actor'],
@@ -67,7 +67,7 @@ module.exports = [
 
 	{
 		'type': 'relation',
-		'value': 'contracted-by',
+		'value': 'contractedBy',
 		'label': 'contracted by',
 		'directed': true,
 		// 'acceptsSource': ['actor'],
@@ -76,7 +76,7 @@ module.exports = [
 
 	{
 		'type': 'relation',
-		'value': 'in-department',
+		'value': 'inDepartment',
 		'label': 'in department',
 		'directed': true,
 		// 'acceptsSource': ['actor', 'location'],
@@ -85,7 +85,7 @@ module.exports = [
 
 	{
 		'type': 'relation',
-		'value': 'can-open',
+		'value': 'canOpen',
 		'label': 'can open',
 		'directed': true,
 		// 'acceptsSource': ['asset'],
@@ -94,7 +94,7 @@ module.exports = [
 
 	{
 		'type': 'relation',
-		'value': 'logical-access',
+		'value': 'logicalAccess',
 		'label': 'logical access',
 		'directed': true,
 		// 'acceptsSource': ['actor'],

@@ -3,6 +3,7 @@ const $ = require('jquery');
 const R = require('ramda');
 const _ = require('lodash');
 const moment = require('moment');
+const trespass = require('trespass.js');
 const mergeWith = require('./reducer-utils.js').mergeWith;
 const constants = require('./constants.js');
 const helpers = require('./helpers.js');
@@ -393,9 +394,18 @@ function reducer(state=initialState, action) {
 
 		case constants.ACTION_addPredicatesToRelationTypes: {
 			const { predicates } = action;
+
+			// make sure id strings are sane
+			const sanitizedPredicates = predicates
+				.map((pred) => {
+					return Object.assign({}, pred, {
+						id: trespass.model.sanitizePredicateId(pred.value)
+					});
+				});
+
 			const relationTypes = R.uniqBy(
 				R.prop('value'),
-				[...state.relationTypes, ...predicates]
+				[...state.relationTypes, ...sanitizedPredicates]
 			);
 			return mergeWithState({ relationTypes });
 		}
