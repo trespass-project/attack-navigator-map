@@ -113,6 +113,8 @@ const constants = {
 	ACTION_selectAnalysisResultsSnapshot: 'ACTION_selectAnalysisResultsSnapshot',
 
 	CLONE_OFFSET: 70,
+
+	ATLOCATION_RELATION_TYPE: 'atLocation',
 };
 
 

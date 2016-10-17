@@ -7,6 +7,7 @@ import { createSelector } from 'reselect';
 const PureRenderMixin = require('react-addons-pure-render-mixin');
 const icons = require('./icons.js');
 const helpers = require('./helpers.js');
+const constants = require('./constants.js');
 const modelHelpers = require('./model-helpers.js');
 const actionCreators = require('./actionCreators.js');
 
@@ -229,7 +230,7 @@ const Edge = React.createClass({
 		const isDirected = !R.contains(edge.relation, modelHelpers.nonDirectedRelationTypes);
 
 		let treatLikePredicate = props.isPredicate;
-		if (edge.relation === 'at-location') {
+		if (edge.relation === constants.ATLOCATION_RELATION_TYPE) {
 			// arrow = null;
 			treatLikePredicate = false;
 		}

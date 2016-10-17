@@ -644,7 +644,7 @@ function graphFromModel(model) {
 								from: item.id,
 								to: loc,
 								directed: true,
-								relation: 'at-location'
+								relation: constants.ATLOCATION_RELATION_TYPE,
 							});
 							edges.push(edge);
 						});
@@ -668,7 +668,7 @@ function graphFromModel(model) {
 							from: parts[0],
 							to: parts[1],
 							directed: true,
-							relation: trespass.model.sanitizedPredicateId(pred.id),
+							relation: trespass.model.sanitizePredicateId(pred.id),
 						});
 						edges.push(edge);
 					});
@@ -867,7 +867,7 @@ function modelFromGraph(graph, metadata={}, state={}, debugData={}) {
 				// certain edge relation types translate to s.th.
 				// specific in the model:
 
-				if (edge.relation === 'at-location') {
+				if (edge.relation === constants.ATLOCATION_RELATION_TYPE) {
 					const fromNode = graph.nodes[edge.from];
 					if (fromNode) {
 						fromNode.atLocations = R.uniq(
@@ -1265,11 +1265,11 @@ function inferEdgeType(fromType, toType) {
 		return 'network';
 	} else if (fromType === 'item' && toType === 'location') {
 		// TODO: is that always the case?
-		return 'at-location';
+		return constants.ATLOCATION_RELATION_TYPE;
 	} else if (fromType === 'data' && toType === 'item') {
-		return 'at-location';
+		return constants.ATLOCATION_RELATION_TYPE;
 	} else if (fromType === 'actor' && toType === 'location') {
-		return 'at-location';
+		return constants.ATLOCATION_RELATION_TYPE;
 	} else {
 		return undefined;
 	}
