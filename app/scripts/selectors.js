@@ -1,6 +1,7 @@
 import { createSelector } from 'reselect';
 const R = require('ramda');
 const _ = require('lodash');
+const constants = require('./constants');
 const helpers = require('./helpers');
 const modelHelpers = require('./model-helpers');
 const trespass = require('trespass.js');
@@ -115,7 +116,7 @@ module.exports.getNodeWarnings = createSelector(
 				// location is not connected to anything
 				if (node.modelComponentType === 'location') {
 					const connectionEdges = nodeEdges
-						.filter((edge) => (edge.relation === undefined));
+						.filter((edge) => (edge.relation === constants.RELTYPE_PHYSICAL_CONNECTION));
 					if (!connectionEdges.length) {
 						messages = [...messages, 'is not connected to anything'];
 					}

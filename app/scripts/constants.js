@@ -114,7 +114,9 @@ const constants = {
 
 	CLONE_OFFSET: 70,
 
-	ATLOCATION_RELATION_TYPE: 'atLocation',
+	RELTYPE_PHYSICAL_CONNECTION: undefined,
+	RELTYPE_NETWORK: 'network',
+	RELTYPE_ATLOCATION: 'atLocation',
 };
 
 

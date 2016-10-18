@@ -1,7 +1,9 @@
+const constants = require('./constants.js');
+
 module.exports = [
 	{
 		'type': 'relation',
-		'value': undefined,
+		'value': constants.RELTYPE_PHYSICAL_CONNECTION,
 		'label': 'connects',
 		'directed': false,
 
@@ -13,7 +15,7 @@ module.exports = [
 
 	{
 		'type': 'relation',
-		'value': 'network',
+		'value': constants.RELTYPE_NETWORK,
 		'label': 'network connection',
 		'directed': false,
 		// 'acceptsSource': ['location'],
@@ -22,7 +24,7 @@ module.exports = [
 
 	{
 		'type': 'relation',
-		'value': 'atLocation',
+		'value': constants.RELTYPE_ATLOCATION,
 		'label': 'is located at',
 		'directed': true,
 		// 'acceptsSource': ['location'],
@@ -31,7 +33,7 @@ module.exports = [
 
 	{
 		'type': 'relation',
-		'value': 'atLocation',
+		'value': constants.RELTYPE_ATLOCATION,
 		'label': 'possesses',
 		'directed': true,
 		// 'acceptsSource': ['location'],
