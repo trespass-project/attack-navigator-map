@@ -106,6 +106,17 @@ describe(common.f1('model-helpers.js'), () => {
 		});
 	});
 
+	describe(common.f2('impossibleEdgeTypes()'), () => {
+		it(common.f3('should work'), () => {
+			const impossibleTypes = modelHelpers.impossibleEdgeTypes(
+				'item',
+				'data'
+			);
+			assert(R.contains('connects', impossibleTypes));
+			assert(R.contains(undefined, impossibleTypes));
+		});
+	});
+
 	describe(common.f2('replaceIdInGroup()'), () => {
 		const group = {
 			id: 'group-id',
