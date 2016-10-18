@@ -575,9 +575,15 @@ function cloneNode(nodeId) {
 
 module.exports.addNodeToGroup =
 function addNodeToGroup(nodeId, groupId) {
-	return {
-		type: constants.ACTION_addNodeToGroup,
-		nodeId, groupId
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_addNodeToGroup,
+			nodeId,
+			groupId,
+		});
+
+		const modelId = getState().present.model.metadata.id;
+		dispatch( saveModelToKb(modelId) );
 	};
 };
 
@@ -976,6 +982,9 @@ function addEdge(edge) {
 		dispatch(
 			select(edgeId, 'edge')
 		);
+
+		const modelId = getState().present.model.metadata.id;
+		dispatch( saveModelToKb(modelId) );
 	};
 };
 
@@ -998,9 +1007,14 @@ function removeEdge(edgeId) {
 const addGroup =
 module.exports.addGroup =
 function addGroup(group) {
-	return {
-		type: constants.ACTION_addGroup,
-		group
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_addGroup,
+			group
+		});
+
+		const modelId = getState().present.model.metadata.id;
+		dispatch( saveModelToKb(modelId) );
 	};
 };
 
@@ -1092,9 +1106,14 @@ function saveAttackerProfile(profile) {
 
 module.exports.addProcess =
 function addProcess(process) {
-	return {
-		type: constants.ACTION_addProcess,
-		process
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_addProcess,
+			process
+		});
+
+		const modelId = getState().present.model.metadata.id;
+		dispatch( saveModelToKb(modelId) );
 	};
 };
 
@@ -1107,9 +1126,14 @@ const emptyPolicy = {
 
 module.exports.addPolicy =
 function addPolicy(policy=emptyPolicy) {
-	return {
-		type: constants.ACTION_addPolicy,
-		policy
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_addPolicy,
+			policy
+		});
+
+		const modelId = getState().present.model.metadata.id;
+		dispatch( saveModelToKb(modelId) );
 	};
 };
 
@@ -1120,6 +1144,8 @@ function updatePolicy(policy) {
 		type: constants.ACTION_updatePolicy,
 		policy
 	};
+
+	// TODO: save to kb?
 };
 
 
@@ -1139,9 +1165,14 @@ function removePolicy(policyId) {
 
 module.exports.addPredicate =
 function addPredicate(predicate) {
-	return {
-		type: constants.ACTION_addPredicate,
-		predicate
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_addPredicate,
+			predicate
+		});
+
+		const modelId = getState().present.model.metadata.id;
+		dispatch( saveModelToKb(modelId) );
 	};
 };
 
@@ -1153,6 +1184,8 @@ function predicateChanged(predicateId, newProperties) {
 		type: constants.ACTION_predicateChanged,
 		predicateId, newProperties
 	};
+
+	// TODO: update kb
 };
 
 
