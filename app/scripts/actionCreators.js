@@ -558,9 +558,18 @@ function setMouseOverEditor(yesno) {
 
 module.exports.cloneNode =
 function cloneNode(nodeId) {
-	return {
-		type: constants.ACTION_cloneNode,
-		nodeId
+	return (dispatch, getState) => {
+		const modelId = getState().present.model.metadata.id;
+
+		dispatch({
+			type: constants.ACTION_cloneNode,
+			nodeId,
+			cb: (addedNodes) => {
+				kbCreateNodes(modelId, addedNodes);
+			},
+		});
+
+		dispatch( saveModelToKb(modelId) );
 	};
 };
 

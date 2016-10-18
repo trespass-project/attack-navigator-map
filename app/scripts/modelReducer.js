@@ -170,8 +170,8 @@ function reducer(state=initialState, action) {
 		}
 
 		case constants.ACTION_cloneNode: {
-			const { nodeId } = action;
-			const newGraph = modelHelpers.cloneNode(state.graph, nodeId);
+			const { nodeId, cb } = action;
+			const newGraph = modelHelpers.cloneNode(state.graph, nodeId, cb);
 			return mergeWithState({ graph: newGraph });
 		}
 

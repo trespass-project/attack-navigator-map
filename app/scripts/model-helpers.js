@@ -501,19 +501,14 @@ function importFragment(graph, fragment, atXY=origin, cb=noop) {
 	// 		}
 	// 	});
 
-	cb(fragment.nodes);
+	const nodes = offsetNodes(atXY, fragment.nodes);
+	cb(R.values(nodes));
 
 	return combineFragments([
 		graph,
 		update(
 			fragment,
-			{
-				nodes: {
-					$apply: (nodes) => {
-						return offsetNodes(atXY, nodes);
-					}
-				}
-			}
+			{ nodes: { $set: nodes } }
 		)
 	]);
 };
@@ -1041,7 +1036,7 @@ function removeGroup(graph, groupId, removeNodes=false, cb=noop) {
 
 const cloneNode =
 module.exports.cloneNode =
-function cloneNode(graph, origNodeId) {
+function cloneNode(graph, origNodeId, cb=noop) {
 	const origNode = graph.nodes[origNodeId];
 
 	const fragment = duplicateFragment(
@@ -1063,7 +1058,7 @@ function cloneNode(graph, origNodeId) {
 	};
 
 	// add fragment
-	return importFragment(g, fragment, xy);
+	return importFragment(g, fragment, xy, cb);
 };
 
 
