@@ -660,11 +660,15 @@ function moveGroup(groupId, posDelta) {
 
 module.exports.cloneGroup =
 function cloneGroup(groupId) {
-	return {
-		type: constants.ACTION_cloneGroup,
-		groupId
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_cloneGroup,
+			groupId
+		});
+
+		const modelId = getState().present.model.metadata.id;
+		dispatch( saveModelToKb(modelId, true) );
 	};
-	// TODO: update model in kb?
 };
 
 
@@ -1065,17 +1069,20 @@ function removeGroup(groupId, removeNodes=false) {
 const updateComponentProperties =
 module.exports.updateComponentProperties =
 function updateComponentProperties(componentId, graphComponentType, newProperties) {
-	return {
-		type: constants.ACTION_updateComponentProperties,
-		componentId,
-		graphComponentType,
-		newProperties,
-		cb: (modelId, item) => {
-			knowledgebaseApi.createItem(axios, modelId, item);
-		}
-	};
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_updateComponentProperties,
+			componentId,
+			graphComponentType,
+			newProperties,
+			cb: (modelId, item) => {
+				knowledgebaseApi.createItem(axios, modelId, item);
+			}
+		});
 
-	// TODO: update in kb?
+		const modelId = getState().present.model.metadata.id;
+		dispatch( saveModelToKb(modelId, true) );
+	};
 };
 
 
@@ -1167,12 +1174,15 @@ function addPolicy(policy=emptyPolicy) {
 
 module.exports.updatePolicy =
 function updatePolicy(policy) {
-	return {
-		type: constants.ACTION_updatePolicy,
-		policy
-	};
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_updatePolicy,
+			policy
+		});
 
-	// TODO: save to kb?
+		const modelId = getState().present.model.metadata.id;
+		dispatch( saveModelToKb(modelId, true) );
+	};
 };
 
 
@@ -1207,12 +1217,15 @@ function addPredicate(predicate) {
 const predicateChanged =
 module.exports.predicateChanged =
 function predicateChanged(predicateId, newProperties) {
-	return {
-		type: constants.ACTION_predicateChanged,
-		predicateId, newProperties
-	};
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_predicateChanged,
+			predicateId, newProperties
+		});
 
-	// TODO: update kb
+		const modelId = getState().present.model.metadata.id;
+		dispatch( saveModelToKb(modelId, true) );
+	};
 };
 
 
