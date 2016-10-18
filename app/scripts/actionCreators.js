@@ -124,13 +124,13 @@ function createNewMap() {
 		}
 
 		const modelId = undefined;
-		getModelOrCreate(modelId)
+		return getModelOrCreate(modelId)
 			.then(({ modelId, isNew }) => {
 				const metadata = { title };
-				return dispatch( initMap(modelId, metadata) )
-					.then(() => {
-						return dispatch( saveModelToKb(modelId) );
-					});
+				return dispatch( initMap(modelId, metadata) );
+			})
+			.then(() => {
+				dispatch( saveModelToKb(modelId) );
 			});
 	};
 };
@@ -144,7 +144,6 @@ function renameMap(modelId, newName) {
 			type: constants.ACTION_updateMetadata,
 			metadata: { title: newName },
 		});
-		// update in kb
 		dispatch( saveModelToKb(modelId) );
 	};
 };
@@ -153,9 +152,7 @@ function renameMap(modelId, newName) {
 const resetMap =
 module.exports.resetMap =
 function resetMap() {
-	return {
-		type: constants.ACTION_resetMap,
-	};
+	return { type: constants.ACTION_resetMap };
 };
 
 
@@ -164,11 +161,13 @@ module.exports.fetchKbData =
 function fetchKbData(modelId) {
 	return (dispatch, getState) => {
 		// load model-specific stuff from knowledgebase
-		dispatch( loadComponentTypes(modelId) );
-		dispatch( loadModelPatterns(modelId) );
-		dispatch( loadAttackerProfiles(modelId) );
-		dispatch( loadToolChains(modelId) );
-		dispatch( getRecentFiles(modelId) );
+		return Promise.all([
+			dispatch( loadComponentTypes(modelId) ),
+			dispatch( loadModelPatterns(modelId) ),
+			dispatch( loadAttackerProfiles(modelId) ),
+			dispatch( loadToolChains(modelId) ),
+			dispatch( getRecentFiles(modelId) ),
+		]);
 	};
 };
 
@@ -228,9 +227,29 @@ function loadModelFromKb(modelId) {
 };
 
 
+const kbApiSaveModel = ({ modelId, modelXmlStr, dispatch }) => {
+	return knowledgebaseApi.saveModelFile(axios, modelId, modelXmlStr)
+		.then(() => {
+			console.info('model sent');
+			return dispatch( getRecentFiles() );
+		})
+		.catch((err) => {
+			console.error(err.message);
+			alert(err.message);
+		});
+};
+
+
+const kbApiSaveModelDebounced = _.debounce(
+	kbApiSaveModel,
+	3000,
+	{ maxWait: 7000 } // always save after this time, no matter what
+);
+
+
 const saveModelToKb =
 module.exports.saveModelToKb =
-function saveModelToKb(modelId) {
+function saveModelToKb(modelId, debounced=false) {
 	return (dispatch, getState) => {
 		if (!modelId) {
 			// currently no model open to save
@@ -242,17 +261,15 @@ function saveModelToKb(modelId) {
 		dispatch({
 			type: constants.ACTION_saveModelToKb,
 			state,
+			debounced,
 		});
 
-		return knowledgebaseApi.saveModelFile(axios, modelId, modelXmlStr)
-			.then(() => {
-				console.info('model sent');
-				return dispatch( getRecentFiles() );
-			})
-			.catch((err) => {
-				console.error(err.message);
-				alert(err.message);
-			});
+		const args = { modelId, modelXmlStr, dispatch };
+		// note: the debounced one does not return a promise
+		// (but `undefined`) when the function does not fire
+		return (!debounced)
+			? kbApiSaveModel(args)
+			: kbApiSaveModelDebounced(args);
 	};
 };
 
@@ -558,18 +575,33 @@ function setMouseOverEditor(yesno) {
 
 module.exports.cloneNode =
 function cloneNode(nodeId) {
-	return {
-		type: constants.ACTION_cloneNode,
-		nodeId
+	return (dispatch, getState) => {
+		const modelId = getState().present.model.metadata.id;
+
+		dispatch({
+			type: constants.ACTION_cloneNode,
+			nodeId,
+			cb: (addedNodes) => {
+				kbCreateNodes(modelId, addedNodes);
+			},
+		});
+
+		dispatch( saveModelToKb(modelId, true) );
 	};
 };
 
 
 module.exports.addNodeToGroup =
 function addNodeToGroup(nodeId, groupId) {
-	return {
-		type: constants.ACTION_addNodeToGroup,
-		nodeId, groupId
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_addNodeToGroup,
+			nodeId,
+			groupId,
+		});
+
+		const modelId = getState().present.model.metadata.id;
+		dispatch( saveModelToKb(modelId, true) );
 	};
 };
 
@@ -577,8 +609,6 @@ function addNodeToGroup(nodeId, groupId) {
 module.exports.removeNode =
 function removeNode(nodeId) {
 	return (dispatch, getState) => {
-		// TODO: make kb call
-
 		dispatch({
 			type: constants.ACTION_removeNode,
 			nodeId,
@@ -605,9 +635,14 @@ function moveNode(nodeId, xy) {
 
 module.exports.ungroupNode =
 function ungroupNode(nodeId) {
-	return {
-		type: constants.ACTION_ungroupNode,
-		nodeId
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_ungroupNode,
+			nodeId
+		});
+
+		const modelId = getState().present.model.metadata.id;
+		dispatch( saveModelToKb(modelId, true) );
 	};
 };
 
@@ -619,14 +654,24 @@ function moveGroup(groupId, posDelta) {
 		groupId,
 		posDelta
 	};
+	// TODO: update model in kb?
 };
 
 
 module.exports.cloneGroup =
 function cloneGroup(groupId) {
-	return {
-		type: constants.ACTION_cloneGroup,
-		groupId
+	return (dispatch, getState) => {
+		const modelId = getState().present.model.metadata.id;
+
+		dispatch({
+			type: constants.ACTION_cloneGroup,
+			groupId,
+			cb: (addedNodes) => {
+				kbCreateNodes(modelId, addedNodes);
+			},
+		});
+
+		dispatch( saveModelToKb(modelId, true) );
 	};
 };
 
@@ -966,10 +1011,13 @@ function addEdge(edge) {
 				edgeId = _edgeId;
 			}
 		});
-		// console.log(edgeId);
+
 		dispatch(
 			select(edgeId, 'edge')
 		);
+
+		const modelId = getState().present.model.metadata.id;
+		dispatch( saveModelToKb(modelId) );
 	};
 };
 
@@ -992,9 +1040,14 @@ function removeEdge(edgeId) {
 const addGroup =
 module.exports.addGroup =
 function addGroup(group) {
-	return {
-		type: constants.ACTION_addGroup,
-		group
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_addGroup,
+			group
+		});
+
+		const modelId = getState().present.model.metadata.id;
+		dispatch( saveModelToKb(modelId, true) );
 	};
 };
 
@@ -1020,14 +1073,19 @@ function removeGroup(groupId, removeNodes=false) {
 const updateComponentProperties =
 module.exports.updateComponentProperties =
 function updateComponentProperties(componentId, graphComponentType, newProperties) {
-	return {
-		type: constants.ACTION_updateComponentProperties,
-		componentId,
-		graphComponentType,
-		newProperties,
-		cb: (modelId, item) => {
-			knowledgebaseApi.createItem(axios, modelId, item);
-		}
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_updateComponentProperties,
+			componentId,
+			graphComponentType,
+			newProperties,
+			cb: (modelId, item) => {
+				knowledgebaseApi.createItem(axios, modelId, item);
+			}
+		});
+
+		const modelId = getState().present.model.metadata.id;
+		dispatch( saveModelToKb(modelId, true) );
 	};
 };
 
@@ -1086,9 +1144,14 @@ function saveAttackerProfile(profile) {
 
 module.exports.addProcess =
 function addProcess(process) {
-	return {
-		type: constants.ACTION_addProcess,
-		process
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_addProcess,
+			process
+		});
+
+		const modelId = getState().present.model.metadata.id;
+		dispatch( saveModelToKb(modelId, false) );
 	};
 };
 
@@ -1101,18 +1164,28 @@ const emptyPolicy = {
 
 module.exports.addPolicy =
 function addPolicy(policy=emptyPolicy) {
-	return {
-		type: constants.ACTION_addPolicy,
-		policy
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_addPolicy,
+			policy
+		});
+
+		const modelId = getState().present.model.metadata.id;
+		dispatch( saveModelToKb(modelId, false) );
 	};
 };
 
 
 module.exports.updatePolicy =
 function updatePolicy(policy) {
-	return {
-		type: constants.ACTION_updatePolicy,
-		policy
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_updatePolicy,
+			policy
+		});
+
+		const modelId = getState().present.model.metadata.id;
+		dispatch( saveModelToKb(modelId, true) );
 	};
 };
 
@@ -1133,9 +1206,14 @@ function removePolicy(policyId) {
 
 module.exports.addPredicate =
 function addPredicate(predicate) {
-	return {
-		type: constants.ACTION_addPredicate,
-		predicate
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_addPredicate,
+			predicate
+		});
+
+		const modelId = getState().present.model.metadata.id;
+		dispatch( saveModelToKb(modelId, true) );
 	};
 };
 
@@ -1143,9 +1221,14 @@ function addPredicate(predicate) {
 const predicateChanged =
 module.exports.predicateChanged =
 function predicateChanged(predicateId, newProperties) {
-	return {
-		type: constants.ACTION_predicateChanged,
-		predicateId, newProperties
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_predicateChanged,
+			predicateId, newProperties
+		});
+
+		const modelId = getState().present.model.metadata.id;
+		dispatch( saveModelToKb(modelId, true) );
 	};
 };
 
@@ -1623,9 +1706,7 @@ function humanizeModelIds() {
 							});
 					});
 				return Promise.all(promises)
-					.then(() => {
-						return idReplacementMap;
-					});
+					.then(() => idReplacementMap);
 			});
 	};
 };

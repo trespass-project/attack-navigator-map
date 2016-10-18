@@ -5,8 +5,7 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Provider, connect } from 'react-redux';
 import ReduxThunk from 'redux-thunk';
 import createLogger from 'redux-logger';
-import undoable from 'redux-undo';
-import { includeAction } from 'redux-undo';
+import undoable, { includeAction } from 'redux-undo';
 
 const modelReducer = require('./modelReducer.js');
 const interfaceReducer = require('./interfaceReducer.js');
