@@ -1273,21 +1273,33 @@ function inferEdgeType(fromType, toType) {
 
 const impossibleEdgeTypes =
 module.exports.impossibleEdgeTypes =
-function impossibleEdgeTypes(fromType, toType) {
-	// TODO: more combinations?
+R.memoize(
+	function impossibleEdgeTypes(fromType, toType) {
+		let types = [];
 
-	let types = [];
+		// TODO: more combinations?
 
-	if (fromType !== 'location' && toType !== 'location') {
-		types = [...types, undefined, 'connects'];
+		if (fromType !== 'location' && toType !== 'location') {
+			types = [...types, undefined, 'connects'];
+		}
+
+		if (fromType === 'location' && toType === 'location') {
+			types = [
+				...types,
+				'atLocation', // ← at least the ones from the std lib.
+				'employeeOf',
+				'contractedBy',
+				'inDepartment',
+			];
+		}
+
+		if (fromType === 'item' && toType === 'data') {
+			types = [...types, constants.ATLOCATION_RELATION_TYPE];
+		}
+
+		return R.uniq(types);
 	}
-
-	if (fromType === 'item' && toType === 'data') {
-		types = [...types, constants.ATLOCATION_RELATION_TYPE];
-	}
-
-	return types;
-};
+);
 
 
 const updateComponentProperties =
