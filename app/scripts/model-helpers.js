@@ -1064,7 +1064,7 @@ function cloneNode(graph, origNodeId, cb=noop) {
 
 const cloneGroup =
 module.exports.cloneGroup =
-function cloneGroup(graph, groupId) {
+function cloneGroup(graph, groupId, cb=noop) {
 	const origGroup = graph.groups[groupId];
 
 	const fragment = duplicateFragment(
@@ -1077,7 +1077,7 @@ function cloneGroup(graph, groupId) {
 	};
 
 	// add fragment; returns new graph
-	return importFragment(graph, fragment, xy);
+	return importFragment(graph, fragment, xy, cb);
 };
 
 

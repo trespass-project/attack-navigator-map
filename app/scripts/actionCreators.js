@@ -661,12 +661,16 @@ function moveGroup(groupId, posDelta) {
 module.exports.cloneGroup =
 function cloneGroup(groupId) {
 	return (dispatch, getState) => {
+		const modelId = getState().present.model.metadata.id;
+
 		dispatch({
 			type: constants.ACTION_cloneGroup,
-			groupId
+			groupId,
+			cb: (addedNodes) => {
+				kbCreateNodes(modelId, addedNodes);
+			},
 		});
 
-		const modelId = getState().present.model.metadata.id;
 		dispatch( saveModelToKb(modelId, true) );
 	};
 };
