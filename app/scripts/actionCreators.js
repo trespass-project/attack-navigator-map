@@ -124,13 +124,13 @@ function createNewMap() {
 		}
 
 		const modelId = undefined;
-		getModelOrCreate(modelId)
+		return getModelOrCreate(modelId)
 			.then(({ modelId, isNew }) => {
 				const metadata = { title };
-				return dispatch( initMap(modelId, metadata) )
-					.then(() => {
-						return dispatch( saveModelToKb(modelId) );
-					});
+				return dispatch( initMap(modelId, metadata) );
+			})
+			.then(() => {
+				dispatch( saveModelToKb(modelId) );
 			});
 	};
 };
@@ -161,11 +161,13 @@ module.exports.fetchKbData =
 function fetchKbData(modelId) {
 	return (dispatch, getState) => {
 		// load model-specific stuff from knowledgebase
-		dispatch( loadComponentTypes(modelId) );
-		dispatch( loadModelPatterns(modelId) );
-		dispatch( loadAttackerProfiles(modelId) );
-		dispatch( loadToolChains(modelId) );
-		dispatch( getRecentFiles(modelId) );
+		return Promise.all([
+			dispatch( loadComponentTypes(modelId) ),
+			dispatch( loadModelPatterns(modelId) ),
+			dispatch( loadAttackerProfiles(modelId) ),
+			dispatch( loadToolChains(modelId) ),
+			dispatch( getRecentFiles(modelId) ),
+		]);
 	};
 };
 
