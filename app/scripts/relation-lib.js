@@ -1,7 +1,7 @@
 module.exports = [
 	{
 		'type': 'relation',
-		'value': 'connects',
+		'value': undefined,
 		'label': 'connects',
 		'directed': false,
 

@@ -112,7 +112,6 @@ describe(common.f1('model-helpers.js'), () => {
 				'item',
 				'data'
 			);
-			assert(R.contains('connects', impossibleTypes));
 			assert(R.contains(undefined, impossibleTypes));
 		});
 	});
@@ -833,7 +832,7 @@ describe(common.f1('model-helpers.js'), () => {
 		];
 		const edges = [
 			{ id: 'edge-1', relation: undefined, from: 'a1', to: 'b1' },
-			{ id: 'edge-2', relation: 'connects', from: 'a2', to: 'b2' },
+			{ id: 'edge-2', relation: undefined, from: 'a2', to: 'b2' },
 			{ id: 'edge-3', relation: 'network', from: 'a3', to: 'b3' },
 			{
 				id: 'edge-5',

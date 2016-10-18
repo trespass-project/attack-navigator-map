@@ -22,11 +22,11 @@ trespass.model.collectionNamesSingular;
 
 const nonDirectedRelationTypes =
 module.exports.nonDirectedRelationTypes =
-['network', 'connects', undefined];
+['network', undefined];
 
 const nonEdgeRelationTypes =
 module.exports.nonEdgeRelationTypes =
-['network', 'connects', undefined];
+['network', undefined];
 
 // TODO: clean these up
 const nonGraphCollectionNames =
@@ -1250,9 +1250,7 @@ const inferEdgeType =
 module.exports.inferEdgeType =
 function inferEdgeType(fromType, toType) {
 	// TODO: more combinations?
-
 	if (fromType === 'location' && toType === 'location') {
-		// return 'connects';
 		return undefined;
 		// TODO: or should it return all possible options, like
 		// ['connection', 'isContainedIn']? (directed-ness could play a role)
@@ -1280,7 +1278,7 @@ R.memoize(
 		// TODO: more combinations?
 
 		if (fromType !== 'location' && toType !== 'location') {
-			types = [...types, undefined, 'connects'];
+			types = [...types, undefined];
 		}
 
 		if (fromType === 'location' && toType === 'location') {

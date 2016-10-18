@@ -115,7 +115,7 @@ module.exports.getNodeWarnings = createSelector(
 				// location is not connected to anything
 				if (node.modelComponentType === 'location') {
 					const connectionEdges = nodeEdges
-						.filter((edge) => ((!edge.relation) || (edge.relation === 'connects')));
+						.filter((edge) => (edge.relation === undefined));
 					if (!connectionEdges.length) {
 						messages = [...messages, 'is not connected to anything'];
 					}
