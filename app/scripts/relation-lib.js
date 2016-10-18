@@ -23,7 +23,7 @@ module.exports = [
 	{
 		'type': 'relation',
 		'value': 'atLocation',
-		'label': 'contained in',
+		'label': 'is located at',
 		'directed': true,
 		// 'acceptsSource': ['location'],
 		// 'acceptsTarget': ['location']
@@ -32,28 +32,10 @@ module.exports = [
 	{
 		'type': 'relation',
 		'value': 'atLocation',
-		'label': 'is at',
-		'directed': true,
-		// 'acceptsSource': ['location'],
-		// 'acceptsTarget': ['location']
-	},
-
-	{
-		'type': 'relation',
-		'value': 'possesses',
 		'label': 'possesses',
 		'directed': true,
 		// 'acceptsSource': ['location'],
 		// 'acceptsTarget': ['location']
-	},
-
-	{
-		'type': 'relation',
-		'value': 'owns',
-		'label': 'owns',
-		'directed': true,
-		// 'acceptsSource': ['actor'],
-		// 'acceptsTarget': []
 	},
 
 	{
@@ -81,7 +63,7 @@ module.exports = [
 		'directed': true,
 		// 'acceptsSource': ['actor', 'location'],
 		// 'acceptsTarget': ['location']
-	},
+	}/*,
 
 	{
 		'type': 'relation',
@@ -90,14 +72,5 @@ module.exports = [
 		'directed': true,
 		// 'acceptsSource': ['asset'],
 		// 'acceptsTarget': ['location']
-	},
-
-	{
-		'type': 'relation',
-		'value': 'logicalAccess',
-		'label': 'logical access',
-		'directed': true,
-		// 'acceptsSource': ['actor'],
-		// 'acceptsTarget': ['location']
-	}
+	}*/
 ];
