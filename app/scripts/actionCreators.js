@@ -227,9 +227,29 @@ function loadModelFromKb(modelId) {
 };
 
 
+const kbApiSaveModel = ({ modelId, modelXmlStr, dispatch }) => {
+	return knowledgebaseApi.saveModelFile(axios, modelId, modelXmlStr)
+		.then(() => {
+			console.info('model sent');
+			return dispatch( getRecentFiles() );
+		})
+		.catch((err) => {
+			console.error(err.message);
+			alert(err.message);
+		});
+};
+
+
+const kbApiSaveModelDebounced = _.debounce(
+	kbApiSaveModel,
+	3000,
+	{ maxWait: 7000 } // always save after this time, no matter what
+);
+
+
 const saveModelToKb =
 module.exports.saveModelToKb =
-function saveModelToKb(modelId) {
+function saveModelToKb(modelId, debounced=false) {
 	return (dispatch, getState) => {
 		if (!modelId) {
 			// currently no model open to save
@@ -241,17 +261,15 @@ function saveModelToKb(modelId) {
 		dispatch({
 			type: constants.ACTION_saveModelToKb,
 			state,
+			debounced,
 		});
 
-		return knowledgebaseApi.saveModelFile(axios, modelId, modelXmlStr)
-			.then(() => {
-				console.info('model sent');
-				return dispatch( getRecentFiles() );
-			})
-			.catch((err) => {
-				console.error(err.message);
-				alert(err.message);
-			});
+		const args = { modelId, modelXmlStr, dispatch };
+		// note: the debounced one does not return a promise
+		// (but `undefined`) when the function does not fire
+		return (!debounced)
+			? kbApiSaveModel(args)
+			: kbApiSaveModelDebounced(args);
 	};
 };
 
@@ -568,7 +586,7 @@ function cloneNode(nodeId) {
 			},
 		});
 
-		dispatch( saveModelToKb(modelId) );
+		dispatch( saveModelToKb(modelId, true) );
 	};
 };
 
@@ -583,7 +601,7 @@ function addNodeToGroup(nodeId, groupId) {
 		});
 
 		const modelId = getState().present.model.metadata.id;
-		dispatch( saveModelToKb(modelId) );
+		dispatch( saveModelToKb(modelId, true) );
 	};
 };
 
@@ -617,9 +635,14 @@ function moveNode(nodeId, xy) {
 
 module.exports.ungroupNode =
 function ungroupNode(nodeId) {
-	return {
-		type: constants.ACTION_ungroupNode,
-		nodeId
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_ungroupNode,
+			nodeId
+		});
+
+		const modelId = getState().present.model.metadata.id;
+		dispatch( saveModelToKb(modelId, true) );
 	};
 };
 
@@ -631,6 +654,7 @@ function moveGroup(groupId, posDelta) {
 		groupId,
 		posDelta
 	};
+	// TODO: update model in kb?
 };
 
 
@@ -640,6 +664,7 @@ function cloneGroup(groupId) {
 		type: constants.ACTION_cloneGroup,
 		groupId
 	};
+	// TODO: update model in kb?
 };
 
 
@@ -1014,7 +1039,7 @@ function addGroup(group) {
 		});
 
 		const modelId = getState().present.model.metadata.id;
-		dispatch( saveModelToKb(modelId) );
+		dispatch( saveModelToKb(modelId, true) );
 	};
 };
 
@@ -1049,6 +1074,8 @@ function updateComponentProperties(componentId, graphComponentType, newPropertie
 			knowledgebaseApi.createItem(axios, modelId, item);
 		}
 	};
+
+	// TODO: update in kb?
 };
 
 
@@ -1113,7 +1140,7 @@ function addProcess(process) {
 		});
 
 		const modelId = getState().present.model.metadata.id;
-		dispatch( saveModelToKb(modelId) );
+		dispatch( saveModelToKb(modelId, false) );
 	};
 };
 
@@ -1133,7 +1160,7 @@ function addPolicy(policy=emptyPolicy) {
 		});
 
 		const modelId = getState().present.model.metadata.id;
-		dispatch( saveModelToKb(modelId) );
+		dispatch( saveModelToKb(modelId, false) );
 	};
 };
 
@@ -1172,7 +1199,7 @@ function addPredicate(predicate) {
 		});
 
 		const modelId = getState().present.model.metadata.id;
-		dispatch( saveModelToKb(modelId) );
+		dispatch( saveModelToKb(modelId, true) );
 	};
 };
 
