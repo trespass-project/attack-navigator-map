@@ -144,7 +144,6 @@ function renameMap(modelId, newName) {
 			type: constants.ACTION_updateMetadata,
 			metadata: { title: newName },
 		});
-		// update in kb
 		dispatch( saveModelToKb(modelId) );
 	};
 };
@@ -153,9 +152,7 @@ function renameMap(modelId, newName) {
 const resetMap =
 module.exports.resetMap =
 function resetMap() {
-	return {
-		type: constants.ACTION_resetMap,
-	};
+	return { type: constants.ACTION_resetMap };
 };
 
 
@@ -586,8 +583,6 @@ function addNodeToGroup(nodeId, groupId) {
 module.exports.removeNode =
 function removeNode(nodeId) {
 	return (dispatch, getState) => {
-		// TODO: make kb call
-
 		dispatch({
 			type: constants.ACTION_removeNode,
 			nodeId,
@@ -975,7 +970,7 @@ function addEdge(edge) {
 				edgeId = _edgeId;
 			}
 		});
-		// console.log(edgeId);
+
 		dispatch(
 			select(edgeId, 'edge')
 		);
@@ -1632,9 +1627,7 @@ function humanizeModelIds() {
 							});
 					});
 				return Promise.all(promises)
-					.then(() => {
-						return idReplacementMap;
-					});
+					.then(() => idReplacementMap);
 			});
 	};
 };
