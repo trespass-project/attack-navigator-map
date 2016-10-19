@@ -1336,16 +1336,28 @@ function monitorTaskStatus(taskUrl, _callbacks={}) {
 const setAnalysisRunning =
 module.exports.setAnalysisRunning =
 function setAnalysisRunning(yesno) {
-	return {
-		type: constants.ACTION_setAnalysisRunning,
-		yesno
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_setAnalysisRunning,
+			yesno
+		});
+		if (!yesno) {
+			dispatch( setAnalysisResults(null) );
+		}
 	};
 };
 
 
 const setAnalysisResults =
 module.exports.setAnalysisResults =
-function setAnalysisResults(analysisResults) {
+function setAnalysisResults(analysisResults=null) {
+	if (!analysisResults) {
+		return {
+			type: constants.ACTION_setAnalysisResults,
+			analysisResults: null,
+		};
+	}
+
 	const promises = R.keys(analysisResults)
 		.reduce((acc, key) => {
 			const result = analysisResults[key];

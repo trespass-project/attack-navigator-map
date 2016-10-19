@@ -35,13 +35,9 @@ function reducer(state=initialState, action) {
 			});
 
 		case constants.ACTION_setAnalysisRunning: {
-			const update = {
-				analysisRunning: action.yesno,
-			};
-			if (!action.yesno) {
-				update.analysisResults = null;
-			}
-			return mergeWithState(update);
+			return mergeWithState({
+				analysisRunning: action.yesno
+			});
 		}
 
 		case constants.ACTION_setTaskStatusCategorized:
