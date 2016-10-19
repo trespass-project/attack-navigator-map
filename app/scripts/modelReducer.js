@@ -192,6 +192,7 @@ function reducer(state=initialState, action) {
 		}
 
 		case constants.ACTION_nodesStorePosition: {
+			// TODO: use selector
 			const nodes = R.values(state.graph.nodes)
 				.map((node) => {
 					return Object.assign(
@@ -210,6 +211,7 @@ function reducer(state=initialState, action) {
 		}
 
 		case constants.ACTION_nodesRestorePosition: {
+			// TODO: use selector
 			const nodes = R.values(state.graph.nodes)
 				.map((node) => {
 					return Object.assign(
@@ -261,6 +263,18 @@ function reducer(state=initialState, action) {
 
 			const newGraph = modelHelpers.addEdge(state.graph, typedEdge, cb);
 			return mergeWithState({ graph: newGraph });
+		}
+
+		case constants.ACTION_reverseEdgeDirection: {
+			const { edgeId } = action;
+			const updatedEdge = modelHelpers.reverseEdgeDirection(
+				state.graph,
+				edgeId
+			);
+			return update(
+				state,
+				{ graph: { edges: { [edgeId]: { $set: updatedEdge } } } }
+			);
 		}
 
 		case constants.ACTION_removeEdge: {
