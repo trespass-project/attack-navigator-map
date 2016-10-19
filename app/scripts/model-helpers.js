@@ -1325,6 +1325,19 @@ R.memoize(
 );
 
 
+const possibleEdgeTypes =
+module.exports.possibleEdgeTypes =
+R.memoize(
+	function possibleEdgeTypes(allTypes, fromType, toType) {
+		const impossibleTypes = impossibleEdgeTypes(fromType, toType);
+		return R.filter(
+			(type) => !R.contains(type.value, impossibleTypes),
+			allTypes
+		);
+	}
+);
+
+
 const updateComponentProperties =
 module.exports.updateComponentProperties =
 function updateComponentProperties(graph, graphComponentType, componentId, newProperties, cb=noop) {

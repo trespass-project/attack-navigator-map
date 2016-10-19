@@ -1,12 +1,12 @@
 const React = require('react');
 const R = require('ramda');
 const actionCreators = require('./actionCreators.js');
+const modelHelpers = require('./model-helpers.js');
 const ComponentReference = require('./ComponentReference.js');
 const SelectizeDropdown = require('./SelectizeDropdown.js');
 const RelationSelectize = require('./RelationSelectize.js');
 
 
-// TODO: added ones are not persisted
 const createFromSearch = (options, search) => {
 	if (!search || options.length) {
 		return null;
@@ -104,8 +104,16 @@ const PredicateEditor = React.createClass({
 		);
 	},
 
-	renderPredicate(edge, index, relationTypes, relationsMap) {
+	renderPredicate(edge, index, relationTypes, relationsMap, { fromType, toType }) {
 		const props = this.props;
+
+		// filter out the impossible relation types for these
+		// model model components
+		const possibleTypes = modelHelpers.possibleEdgeTypes(
+			relationTypes,
+			fromType,
+			toType
+		);
 
 		const subj = <SubjObjSelectize
 			nodes={props.nodes}
@@ -133,9 +141,6 @@ const PredicateEditor = React.createClass({
 			}}
 		/>;
 
-		// TODO: make it possible to add predicates
-		// allow 'create from search':
-		// http://furqanzafar.github.io/react-selectize/#/?category=simple
 		return <li key={index}>
 			<span>{subj} </span>
 			<RelationSelectize
@@ -162,7 +167,11 @@ const PredicateEditor = React.createClass({
 									edge,
 									index,
 									props.relationTypes,
-									props.relationsMap
+									props.relationsMap,
+									{
+										fromType: props.nodes[edge.from].modelComponentType,
+										toType: props.nodes[edge.to].modelComponentType,
+									}
 								)
 						)}
 					</ul>
