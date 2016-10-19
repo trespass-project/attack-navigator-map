@@ -280,6 +280,7 @@ const Wizard = React.createClass({
 
 	renderConnections() {
 		const props = this.props;
+		// TODO: calculate `predicatesList`
 		const predicates = R.values(props.graph.predicates || {});
 		return <div>
 			<h3 className='title'>Predicates</h3>
@@ -292,6 +293,11 @@ const Wizard = React.createClass({
 				predicates={predicates}
 				handleCreate={this.createPredicate}
 				handleUpdate={this.updatePredicate}
+				selectedEdgeId={
+					(props.selectedType === 'edge')
+						? props.selectedId
+						: undefined
+				}
 			/>
 		</div>;
 	},

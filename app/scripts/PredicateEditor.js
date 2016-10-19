@@ -55,6 +55,7 @@ const PredicateEditor = React.createClass({
 		relationTypes: React.PropTypes.array.isRequired,
 		relationsMap: React.PropTypes.object.isRequired,
 		predicates: React.PropTypes.array.isRequired,
+		selectedEdgeId: React.PropTypes.string,
 	},
 
 	getDefaultProps() {
@@ -141,10 +142,13 @@ const PredicateEditor = React.createClass({
 			}}
 		/>;
 
-		return <li key={index}>
+		const isSelected = props.selectedEdgeId === edge.id;
+		const classes = (isSelected) ? 'selectedPredicate' : '';
+
+		return <li key={index} className={classes}>
 			<span>{subj} </span>
 			<RelationSelectize
-				options={relationTypes}
+				options={possibleTypes}
 				value={relationsMap[edge.relation]}
 				onChange={(name, relation) => {
 					this.edgeRelationChanged(name, relation, edge.id);
