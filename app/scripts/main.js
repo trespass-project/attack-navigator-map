@@ -139,6 +139,7 @@ function mapStateToProps(_state) {
 	};
 
 	props.nodesList = selectors.nodesList(state);
+	props.predicatesList = selectors.predicatesList(state);
 
 	return props;
 }

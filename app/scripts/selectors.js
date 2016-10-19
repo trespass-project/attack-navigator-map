@@ -9,6 +9,7 @@ const trespass = require('trespass.js');
 
 const getNodes = (state) => state.graph.nodes;
 const getEdges = (state) => state.graph.edges;
+const getPredicates = (state) => state.graph.predicates;
 const getPolicies = (state) => state.graph.policies;
 const getModelId = (state) => state.metadata.id;
 const getRelationTypes = (state) => state.relationTypes;
@@ -25,6 +26,13 @@ const getAvailableLayersList = (state) => state.availableLayersList;
 // const nodesList =
 module.exports.nodesList = createSelector(
 	getNodes,
+	R.values
+);
+
+
+// const predicatesList =
+module.exports.predicatesList = createSelector(
+	getPredicates,
 	R.values
 );
 

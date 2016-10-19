@@ -192,6 +192,7 @@ function reducer(state=initialState, action) {
 		}
 
 		case constants.ACTION_nodesStorePosition: {
+			// TODO: use selector
 			const nodes = R.values(state.graph.nodes)
 				.map((node) => {
 					return Object.assign(
@@ -210,6 +211,7 @@ function reducer(state=initialState, action) {
 		}
 
 		case constants.ACTION_nodesRestorePosition: {
+			// TODO: use selector
 			const nodes = R.values(state.graph.nodes)
 				.map((node) => {
 					return Object.assign(
