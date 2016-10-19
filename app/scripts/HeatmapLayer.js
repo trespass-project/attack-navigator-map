@@ -6,14 +6,21 @@ module.exports.name = 'HeatmapLayer';
 
 
 // const displayName =
-module.exports.displayName = "'heatmap' layer";
+module.exports.displayName = 'analysis result heatmap';
 
 
 // const adjustProps =
-module.exports.adjustProps = undefined;
-// function adjustProps(props) {
-// 	return Object.assign({}, props, { showNodeLabels: false });
-// };
+module.exports.adjustProps =
+function adjustProps(props) {
+	// disable validation layer, when heatmap layer is active
+	const activeLayersList = props.activeLayersList
+		.filter((layer) => (layer.name !== 'ValidationLayer'));
+	return Object.assign(
+		{},
+		props,
+		{ activeLayersList }
+	);
+};
 
 
 const HeatmapLayer = React.createClass({
@@ -50,7 +57,8 @@ const HeatmapLayer = React.createClass({
 		const yShift = 6; // TODO: get label font size
 
 		// TODO: color should depend on frequency?
-		const fillColor = 'rgba(255, 40, 0, 0.25)';
+		// const fillColor = 'rgba(255, 40, 0, 0.25)';
+		/*fill={fillColor}*/
 
 		function renderItem(node) {
 			return <g
@@ -58,11 +66,10 @@ const HeatmapLayer = React.createClass({
 				transform={`translate(${node.x}, ${node.y + yShift})`}
 			>
 				<circle
-					className='backgroundCircle'
+					className='backgroundCircle heatmap'
 					cx={0}
 					cy={0}
 					r={r}
-					fill={fillColor}
 				/>
 			</g>;
 		}
