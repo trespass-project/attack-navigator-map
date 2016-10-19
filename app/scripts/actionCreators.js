@@ -1333,19 +1333,28 @@ function monitorTaskStatus(taskUrl, _callbacks={}) {
 }
 
 
-const setAnalysisRunning =
-module.exports.setAnalysisRunning =
-function setAnalysisRunning(yesno) {
-	return {
-		type: constants.ACTION_setAnalysisRunning,
-		yesno
+const showAnalysisOverlay =
+module.exports.showAnalysisOverlay =
+function showAnalysisOverlay(yesno) {
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_showAnalysisOverlay,
+			yesno
+		});
 	};
 };
 
 
 const setAnalysisResults =
 module.exports.setAnalysisResults =
-function setAnalysisResults(analysisResults) {
+function setAnalysisResults(analysisResults=null) {
+	if (!analysisResults) {
+		return {
+			type: constants.ACTION_setAnalysisResults,
+			analysisResults: null,
+		};
+	}
+
 	const promises = R.keys(analysisResults)
 		.reduce((acc, key) => {
 			const result = analysisResults[key];
@@ -1828,8 +1837,9 @@ function runAnalysis(modelId, toolChainId, attackerProfileId) {
 
 		dispatch({
 			type: constants.ACTION_runAnalysis,
-			toolChainId
+			toolChainId,
 		});
+		dispatch( showAnalysisOverlay(true) );
 	};
 };
 

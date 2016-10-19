@@ -534,3 +534,20 @@ hr#divider
 
 		li::before
 			content: '· '
+
+
+
+@keyframes pulsating {
+	0% {
+		fill: rgba(255, 40, 0, 0.25);
+	}
+	50% {
+		fill: rgba(255, 40, 0, 0.35);
+	}
+	100% {
+		fill: rgba(255, 40, 0, 0.25);
+	}
+}
+circle.backgroundCircle.heatmap
+	fill: green
+	animation: pulsating 0.8s ease-in-out infinite;

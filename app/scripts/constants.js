@@ -79,7 +79,7 @@ const constants = {
 	ACTION_runAnalysis: 'ACTION_runAnalysis',
 	ACTION_humanizeModelIds: 'ACTION_humanizeModelIds',
 	ACTION_humanizeModelIds_updateInterfaceState: 'ACTION_humanizeModelIds_updateInterfaceState',
-	ACTION_setAnalysisRunning: 'ACTION_setAnalysisRunning',
+	ACTION_showAnalysisOverlay: 'ACTION_showAnalysisOverlay',
 	ACTION_setAnalysisResults: 'ACTION_setAnalysisResults',
 	ACTION_setTaskStatusCategorized: 'ACTION_setTaskStatusCategorized',
 	ACTION_setSelectedToolChain: 'ACTION_setSelectedToolChain',

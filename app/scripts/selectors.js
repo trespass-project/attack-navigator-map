@@ -16,6 +16,7 @@ const getComponentsLib = (state) => state.componentsLib;
 const getAttackerProfit = (state) => state.attackerProfit;
 const getAttackerProfile = (state) => state.attackerProfile;
 const getAttackerProfiles = (state) => state.attackerProfiles;
+const getAnalysisResults = (state) => state.analysisResults;
 const getResultsAttacktree = (state) => state.resultsAttacktree;
 const getActiveLayersList = (state) => state.activeLayersList;
 const getAvailableLayersList = (state) => state.availableLayersList;
@@ -225,9 +226,19 @@ const notEmpty = R.complement(_.isEmpty);
 // const displayLayersList =
 module.exports.displayLayersList = createSelector(
 	getAvailableLayersList,
-	(layers) => {
+	getAnalysisResults,
+	(layers, analysisResults) => {
 		return layers
-			.filter((item) => notEmpty(item.displayName));
+			.filter((item) => notEmpty(item.displayName))
+			.filter((item) => {
+				// only show heatmap layer option when there
+				// actually are analysis results
+				if (item.name === 'HeatmapLayer'
+					&& R.isNil(analysisResults)) {
+					return false;
+				}
+				return true;
+			});
 	}
 );
 
