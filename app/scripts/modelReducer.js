@@ -263,6 +263,22 @@ function reducer(state=initialState, action) {
 			return mergeWithState({ graph: newGraph });
 		}
 
+		case constants.ACTION_reverseEdgeDirection: {
+			const { edgeId } = action;
+			const edge = state.graph.edges[edgeId];
+			const updatedEdge = update(
+				edge,
+				{
+					from: { $set: edge.to },
+					to: { $set: edge.from },
+				}
+			);
+			return update(
+				state,
+				{ graph: { edges: { [edgeId]: { $set: updatedEdge } } } }
+			);
+		}
+
 		case constants.ACTION_removeEdge: {
 			const { edgeId } = action;
 			const newGraph = modelHelpers.removeEdge(state.graph, edgeId);
