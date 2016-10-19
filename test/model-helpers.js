@@ -7,6 +7,7 @@ const _ = require('lodash');
 const common = require('./common.js');
 
 const trespass = require('trespass.js');
+const constants = require('../app/scripts/constants.js');
 const helpers = require('../app/scripts/helpers.js');
 const modelHelpers = require('../app/scripts/model-helpers.js');
 
@@ -73,22 +74,22 @@ describe(common.f1('model-helpers.js'), () => {
 	describe(common.f2('inferEdgeType()'), () => {
 		it(common.f3('edges between locations should have type `undefined`'), () => {
 			const edgeType = modelHelpers.inferEdgeType('location', 'location');
-			assert(edgeType === undefined);
+			assert(edgeType === constants.RELTYPE_PHYSICAL_CONNECTION);
 		});
 
 		it(common.f3('edges between items should have type "networkConnection"'), () => {
 			const edgeType = modelHelpers.inferEdgeType('item', 'item');
-			assert(edgeType === 'network');
+			assert(edgeType === constants.RELTYPE_NETWORK);
 		});
 
-		it(common.f3('edges between items and locations should have type "at-location"'), () => {
+		it(common.f3('edges between items and locations should have type "atLocation"'), () => {
 			const edgeType = modelHelpers.inferEdgeType('item', 'location');
-			assert(edgeType === 'at-location');
+			assert(edgeType === constants.RELTYPE_ATLOCATION);
 		});
 
-		it(common.f3('edges between data and items should have type "at-location"'), () => {
+		it(common.f3('edges between data and items should have type "atLocation"'), () => {
 			const edgeType = modelHelpers.inferEdgeType('data', 'item');
-			assert(edgeType === 'at-location');
+			assert(edgeType === constants.RELTYPE_ATLOCATION);
 		});
 
 		// it(common.f3('spread operator test'), () => {
@@ -103,6 +104,16 @@ describe(common.f1('model-helpers.js'), () => {
 		it(common.f3('edge types that cannot be inferred should be undefined'), () => {
 			const edgeType = modelHelpers.inferEdgeType('location', 'item');
 			assert(!edgeType);
+		});
+	});
+
+	describe(common.f2('impossibleEdgeTypes()'), () => {
+		it(common.f3('should work'), () => {
+			const impossibleTypes = modelHelpers.impossibleEdgeTypes(
+				'item',
+				'data'
+			);
+			assert(R.contains(constants.RELTYPE_PHYSICAL_CONNECTION, impossibleTypes));
 		});
 	});
 
@@ -821,9 +832,9 @@ describe(common.f1('model-helpers.js'), () => {
 			},
 		];
 		const edges = [
-			{ id: 'edge-1', relation: undefined, from: 'a1', to: 'b1' },
-			{ id: 'edge-2', relation: 'connects', from: 'a2', to: 'b2' },
-			{ id: 'edge-3', relation: 'network', from: 'a3', to: 'b3' },
+			{ id: 'edge-1', relation: constants.RELTYPE_PHYSICAL_CONNECTION, from: 'a1', to: 'b1' },
+			{ id: 'edge-2', relation: constants.RELTYPE_PHYSICAL_CONNECTION, from: 'a2', to: 'b2' },
+			{ id: 'edge-3', relation: constants.RELTYPE_NETWORK, from: 'a3', to: 'b3' },
 			{
 				id: 'edge-5',
 				relation: 'predicate',
@@ -832,19 +843,19 @@ describe(common.f1('model-helpers.js'), () => {
 			},
 			{
 				id: 'edge-4',
-				relation: 'at-location',
+				relation: constants.RELTYPE_ATLOCATION,
 				from: 'node-1',
 				to: 'node-2'
 			},
 			{
 				id: 'edge-6',
-				relation: 'at-location',
+				relation: constants.RELTYPE_ATLOCATION,
 				from: 'node-2',
 				to: 'node-98'
 			},
 			{
 				id: 'edge-7',
-				relation: 'at-location',
+				relation: constants.RELTYPE_ATLOCATION,
 				from: 'node-2',
 				to: 'node-99'
 			},
@@ -897,7 +908,7 @@ describe(common.f1('model-helpers.js'), () => {
 			assert(system.edges[2].target === 'b3');
 		});
 
-		it(common.f3('should convert `at-location` type edges to `atLocations`'), () => {
+		it(common.f3('should convert `atLocation` type edges to `atLocations`'), () => {
 			const itemAtLocations = system.items[0].atLocations;
 			assert(itemAtLocations.length === 1);
 			assert(R.contains('node-2', itemAtLocations));

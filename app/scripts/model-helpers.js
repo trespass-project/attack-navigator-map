@@ -21,12 +21,16 @@ module.exports.collectionNamesSingular =
 trespass.model.collectionNamesSingular;
 
 const nonDirectedRelationTypes =
-module.exports.nonDirectedRelationTypes =
-['network', 'connects', undefined];
+module.exports.nonDirectedRelationTypes = [
+	constants.RELTYPE_NETWORK,
+	constants.RELTYPE_PHYSICAL_CONNECTION
+];
 
 const nonEdgeRelationTypes =
-module.exports.nonEdgeRelationTypes =
-['network', 'connects', undefined];
+module.exports.nonEdgeRelationTypes = [
+	constants.RELTYPE_NETWORK,
+	constants.RELTYPE_PHYSICAL_CONNECTION
+];
 
 // TODO: clean these up
 const nonGraphCollectionNames =
@@ -639,7 +643,7 @@ function graphFromModel(model) {
 								from: item.id,
 								to: loc,
 								directed: true,
-								relation: constants.ATLOCATION_RELATION_TYPE,
+								relation: constants.RELTYPE_ATLOCATION,
 							});
 							edges.push(edge);
 						});
@@ -862,7 +866,7 @@ function modelFromGraph(graph, metadata={}, state={}, debugData={}) {
 				// certain edge relation types translate to s.th.
 				// specific in the model:
 
-				if (edge.relation === constants.ATLOCATION_RELATION_TYPE) {
+				if (edge.relation === constants.RELTYPE_ATLOCATION) {
 					const fromNode = graph.nodes[edge.from];
 					if (fromNode) {
 						fromNode.atLocations = R.uniq(
@@ -1250,25 +1254,61 @@ const inferEdgeType =
 module.exports.inferEdgeType =
 function inferEdgeType(fromType, toType) {
 	// TODO: more combinations?
-
 	if (fromType === 'location' && toType === 'location') {
-		// return 'connects';
-		return undefined;
+		return constants.RELTYPE_PHYSICAL_CONNECTION;
 		// TODO: or should it return all possible options, like
 		// ['connection', 'isContainedIn']? (directed-ness could play a role)
 	} else if (fromType === 'item' && toType === 'item') {
-		return 'network';
+		return constants.RELTYPE_NETWORK;
 	} else if (fromType === 'item' && toType === 'location') {
 		// TODO: is that always the case?
-		return constants.ATLOCATION_RELATION_TYPE;
+		return constants.RELTYPE_ATLOCATION;
 	} else if (fromType === 'data' && toType === 'item') {
-		return constants.ATLOCATION_RELATION_TYPE;
+		return constants.RELTYPE_ATLOCATION;
 	} else if (fromType === 'actor' && toType === 'location') {
-		return constants.ATLOCATION_RELATION_TYPE;
+		return constants.RELTYPE_ATLOCATION;
 	} else {
 		return undefined;
 	}
 };
+
+
+const impossibleEdgeTypes =
+module.exports.impossibleEdgeTypes =
+R.memoize(
+	function impossibleEdgeTypes(fromType, toType) {
+		let types = [];
+
+		// TODO: more combinations?
+
+		if (fromType !== 'location' && toType !== 'location') {
+			types = [
+				...types,
+				constants.RELTYPE_PHYSICAL_CONNECTION,
+			];
+		}
+
+		if (fromType === 'location' && toType === 'location') {
+			types = [
+				...types,
+				constants.RELTYPE_ATLOCATION,
+				// at least the ones from the std lib.
+				'employeeOf',
+				'contractedBy',
+				'inDepartment',
+			];
+		}
+
+		if (fromType === 'item' && toType === 'data') {
+			types = [
+				...types,
+				constants.RELTYPE_ATLOCATION
+			];
+		}
+
+		return R.uniq(types);
+	}
+);
 
 
 const updateComponentProperties =
