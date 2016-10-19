@@ -983,6 +983,20 @@ function removeEdge(graph, edgeId) {
 };
 
 
+const reverseEdgeDirection =
+module.exports.reverseEdgeDirection =
+function reverseEdgeDirection(graph, edgeId) {
+	const edge = graph.edges[edgeId];
+	return update(
+		edge,
+		{
+			from: { $set: edge.to },
+			to: { $set: edge.from },
+		}
+	);
+};
+
+
 const addGroup = // TODO: test
 module.exports.addGroup =
 function addGroup(graph, _group) {
@@ -1260,7 +1274,7 @@ function inferEdgeType(fromType, toType) {
 		// ['connection', 'isContainedIn']? (directed-ness could play a role)
 	} else if (fromType === 'item' && toType === 'item') {
 		return constants.RELTYPE_NETWORK;
-	} else if (fromType === 'item' && toType === 'location') {
+	} else if (fromType === 'item' && R.contains(toType, ['location', 'actor'])) {
 		// TODO: is that always the case?
 		return constants.RELTYPE_ATLOCATION;
 	} else if (fromType === 'data' && toType === 'item') {
@@ -1307,6 +1321,19 @@ R.memoize(
 		}
 
 		return R.uniq(types);
+	}
+);
+
+
+const possibleEdgeTypes =
+module.exports.possibleEdgeTypes =
+R.memoize(
+	function possibleEdgeTypes(allTypes, fromType, toType) {
+		const impossibleTypes = impossibleEdgeTypes(fromType, toType);
+		return R.filter(
+			(type) => !R.contains(type.value, impossibleTypes),
+			allTypes
+		);
 	}
 );
 

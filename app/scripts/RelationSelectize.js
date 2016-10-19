@@ -3,7 +3,8 @@ const SelectizeDropdown = require('./SelectizeDropdown.js');
 const trespass = require('trespass.js');
 
 
-// TODO: added ones are not persisted
+// allow 'create from search':
+// http://furqanzafar.github.io/react-selectize/#/?category=simple
 const createFromSearch = (options, search) => {
 	if (!search || options.length) {
 		return null;

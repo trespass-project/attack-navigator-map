@@ -1022,6 +1022,18 @@ function addEdge(edge) {
 };
 
 
+const reverseEdgeDirection =
+module.exports.reverseEdgeDirection =
+function reverseEdgeDirection(edgeId) {
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_reverseEdgeDirection,
+			edgeId,
+		});
+	};
+};
+
+
 const removeEdge =
 module.exports.removeEdge =
 function removeEdge(edgeId) {

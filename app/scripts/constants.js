@@ -62,6 +62,7 @@ const constants = {
 	ACTION_loadXML: 'ACTION_loadXML',
 	// ACTION_updateModel: 'ACTION_updateModel',
 	ACTION_addEdge: 'ACTION_addEdge',
+	ACTION_reverseEdgeDirection: 'ACTION_reverseEdgeDirection',
 	ACTION_removeEdge: 'ACTION_removeEdge',
 	ACTION_updateComponentProperties: 'ACTION_updateComponentProperties',
 	ACTION_addProcess: 'ACTION_addProcess',

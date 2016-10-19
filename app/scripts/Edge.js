@@ -33,6 +33,11 @@ const arrowShapePathThick = makeArrowHeadPath(arrowShapeThick);
 // 	.target(function(d) { return d.toNode; });
 
 
+function isEdgeDirected(edge) {
+	return !R.contains(edge.relation, modelHelpers.nonDirectedRelationTypes);
+}
+
+
 function pathifyBezier(p1, c1, c2, p2) {
 	return [
 		'M', `${p1.x}, ${p1.y}`,
@@ -227,7 +232,7 @@ const Edge = React.createClass({
 
 		const { p1/*, c1, c2*/, p2 } = this.calculateLinePoints({ edgeNodes });
 
-		const isDirected = !R.contains(edge.relation, modelHelpers.nonDirectedRelationTypes);
+		const isDirected = isEdgeDirected(edge);
 
 		let treatLikePredicate = props.isPredicate;
 		if (edge.relation === constants.RELTYPE_ATLOCATION) {
@@ -292,7 +297,7 @@ const Edge = React.createClass({
 	_onContextMenu(event) {
 		const context = this.context;
 		const props = this.props;
-		const menuItems = [
+		let menuItems = [
 			{
 				label: 'delete',
 				destructive: true,
@@ -302,6 +307,21 @@ const Edge = React.createClass({
 				}
 			}
 		];
+
+		if (isEdgeDirected(props.edge)) {
+			menuItems = [
+				...menuItems,
+				{
+					label: 'reverse\ndirection',
+					destructive: false,
+					icon: icons['fa-arrows-h'],
+					action: () => {
+						context.dispatch( actionCreators.reverseEdgeDirection(props.edge.id) );
+					}
+				}
+			];
+		}
+
 		context.dispatch( actionCreators.showContextMenu(event, menuItems) );
 	},
 });
