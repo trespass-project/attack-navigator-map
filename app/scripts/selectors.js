@@ -125,8 +125,8 @@ module.exports.getNodeWarnings = createSelector(
 				// things are not located anywhere
 				if (R.contains(node.modelComponentType, ['actor', 'item', 'data'])) {
 					const atLocationEdges = nodeEdges
-						.filter((edge) => (edge.from === node.id))
-						.filter((edge) => (edge.relation === 'at-location'));
+						.filter(R.propEq('from', node.id))
+						.filter(R.propEq('relation', constants.RELTYPE_ATLOCATION));
 					if (!atLocationEdges.length) {
 						messages = [...messages, 'is not located anywhere'];
 					}
