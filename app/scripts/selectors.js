@@ -228,7 +228,6 @@ module.exports.displayLayersList = createSelector(
 	getAvailableLayersList,
 	getAnalysisResults,
 	(layers, analysisResults) => {
-		console.log(analysisResults, R.isNil(analysisResults));
 		return layers
 			.filter((item) => notEmpty(item.displayName))
 			.filter((item) => {
