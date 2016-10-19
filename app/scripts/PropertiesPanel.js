@@ -155,6 +155,10 @@ const PropertiesPanel = React.createClass({
 
 				// look up actual nodes by id
 				const edgeNodes = modelHelpers.getEdgeNodes(edge, props.graph.nodes);
+				const impossibleTypes = modelHelpers.impossibleEdgeTypes(
+					edgeNodes.fromNode.modelComponentType,
+					edgeNodes.toNode.modelComponentType
+				);
 
 				return [
 					<tr key='property-from'>
@@ -173,6 +177,7 @@ const PropertiesPanel = React.createClass({
 									return <option
 										key={relation.label}
 										value={relation.value}
+										disabled={R.contains(relation.value, impossibleTypes)}
 									>
 										{relation.label}
 									</option>;

@@ -230,7 +230,7 @@ const Edge = React.createClass({
 		const isDirected = !R.contains(edge.relation, modelHelpers.nonDirectedRelationTypes);
 
 		let treatLikePredicate = props.isPredicate;
-		if (edge.relation === constants.ATLOCATION_RELATION_TYPE) {
+		if (edge.relation === constants.RELTYPE_ATLOCATION) {
 			// arrow = null;
 			treatLikePredicate = false;
 		}

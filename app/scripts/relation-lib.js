@@ -1,7 +1,9 @@
+const constants = require('./constants.js');
+
 module.exports = [
 	{
 		'type': 'relation',
-		'value': 'connects',
+		'value': constants.RELTYPE_PHYSICAL_CONNECTION,
 		'label': 'connects',
 		'directed': false,
 
@@ -13,7 +15,7 @@ module.exports = [
 
 	{
 		'type': 'relation',
-		'value': 'network',
+		'value': constants.RELTYPE_NETWORK,
 		'label': 'network connection',
 		'directed': false,
 		// 'acceptsSource': ['location'],
@@ -22,8 +24,8 @@ module.exports = [
 
 	{
 		'type': 'relation',
-		'value': 'atLocation',
-		'label': 'contained in',
+		'value': constants.RELTYPE_ATLOCATION,
+		'label': 'is located at',
 		'directed': true,
 		// 'acceptsSource': ['location'],
 		// 'acceptsTarget': ['location']
@@ -31,29 +33,11 @@ module.exports = [
 
 	{
 		'type': 'relation',
-		'value': 'atLocation',
-		'label': 'is at',
-		'directed': true,
-		// 'acceptsSource': ['location'],
-		// 'acceptsTarget': ['location']
-	},
-
-	{
-		'type': 'relation',
-		'value': 'possesses',
+		'value': constants.RELTYPE_ATLOCATION,
 		'label': 'possesses',
 		'directed': true,
 		// 'acceptsSource': ['location'],
 		// 'acceptsTarget': ['location']
-	},
-
-	{
-		'type': 'relation',
-		'value': 'owns',
-		'label': 'owns',
-		'directed': true,
-		// 'acceptsSource': ['actor'],
-		// 'acceptsTarget': []
 	},
 
 	{
@@ -81,7 +65,7 @@ module.exports = [
 		'directed': true,
 		// 'acceptsSource': ['actor', 'location'],
 		// 'acceptsTarget': ['location']
-	},
+	}/*,
 
 	{
 		'type': 'relation',
@@ -90,14 +74,5 @@ module.exports = [
 		'directed': true,
 		// 'acceptsSource': ['asset'],
 		// 'acceptsTarget': ['location']
-	},
-
-	{
-		'type': 'relation',
-		'value': 'logicalAccess',
-		'label': 'logical access',
-		'directed': true,
-		// 'acceptsSource': ['actor'],
-		// 'acceptsTarget': ['location']
-	}
+	}*/
 ];
