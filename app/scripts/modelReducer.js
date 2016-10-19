@@ -265,13 +265,9 @@ function reducer(state=initialState, action) {
 
 		case constants.ACTION_reverseEdgeDirection: {
 			const { edgeId } = action;
-			const edge = state.graph.edges[edgeId];
-			const updatedEdge = update(
-				edge,
-				{
-					from: { $set: edge.to },
-					to: { $set: edge.from },
-				}
+			const updatedEdge = modelHelpers.reverseEdgeDirection(
+				state.graph,
+				edgeId
 			);
 			return update(
 				state,

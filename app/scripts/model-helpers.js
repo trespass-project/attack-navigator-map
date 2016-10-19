@@ -983,6 +983,20 @@ function removeEdge(graph, edgeId) {
 };
 
 
+const reverseEdgeDirection =
+module.exports.reverseEdgeDirection =
+function reverseEdgeDirection(graph, edgeId) {
+	const edge = graph.edges[edgeId];
+	return update(
+		edge,
+		{
+			from: { $set: edge.to },
+			to: { $set: edge.from },
+		}
+	);
+};
+
+
 const addGroup = // TODO: test
 module.exports.addGroup =
 function addGroup(graph, _group) {
