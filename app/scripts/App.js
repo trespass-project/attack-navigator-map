@@ -166,7 +166,7 @@ const App = React.createClass({
 
 				{(props.resultsAttacktree) &&
 					<div id='heatmapControl'>
-						{(props.analysisRunning)
+						{(props.showAnalysisOverlay)
 							? <a
 								onClick={(event) => {
 									event.preventDefault();
@@ -174,7 +174,7 @@ const App = React.createClass({
 										actionCreators.enableLayer('HeatmapLayer', true)
 									);
 									props.dispatch(
-										actionCreators.setAnalysisRunning(false)
+										actionCreators.showAnalysisOverlay(false)
 									);
 								}}
 								href='#'
@@ -184,7 +184,7 @@ const App = React.createClass({
 								onClick={(event) => {
 									event.preventDefault();
 									props.dispatch(
-										actionCreators.setAnalysisRunning(true)
+										actionCreators.showAnalysisOverlay(true)
 									);
 									props.dispatch(
 										actionCreators.enableLayer('HeatmapLayer', false)
@@ -279,7 +279,7 @@ const App = React.createClass({
 					/>
 				</div>
 
-				{(props.analysisRunning) &&
+				{(props.showAnalysisOverlay) &&
 					<AnalysisResultsOverlay
 						attackerProfit={props.attackerProfit}
 						toolChain={props.toolChains[props.toolChainId]}
@@ -291,7 +291,7 @@ const App = React.createClass({
 						resultsSelectedAttackIndex={props.resultsSelectedAttackIndex}
 						onClose={() => {
 							props.dispatch(
-								actionCreators.setAnalysisRunning(false)
+								actionCreators.showAnalysisOverlay(false)
 							);
 						}}
 						highlightNodeIds={props.highlightNodeIds}

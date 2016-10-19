@@ -1333,12 +1333,12 @@ function monitorTaskStatus(taskUrl, _callbacks={}) {
 }
 
 
-const setAnalysisRunning =
-module.exports.setAnalysisRunning =
-function setAnalysisRunning(yesno) {
+const showAnalysisOverlay =
+module.exports.showAnalysisOverlay =
+function showAnalysisOverlay(yesno) {
 	return (dispatch, getState) => {
 		dispatch({
-			type: constants.ACTION_setAnalysisRunning,
+			type: constants.ACTION_showAnalysisOverlay,
 			yesno
 		});
 		if (!yesno) {
@@ -1840,8 +1840,9 @@ function runAnalysis(modelId, toolChainId, attackerProfileId) {
 
 		dispatch({
 			type: constants.ACTION_runAnalysis,
-			toolChainId
+			toolChainId,
 		});
+		dispatch( showAnalysisOverlay(true) );
 	};
 };
 

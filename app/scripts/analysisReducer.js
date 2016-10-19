@@ -5,7 +5,7 @@ const constants = require('./constants.js');
 
 
 const initialState = {
-	analysisRunning: false,
+	showAnalysisOverlay: false,
 	analysisResults: null,
 	resultsSelectedTool: undefined,
 	resultsSelectedAttackIndex: undefined,
@@ -24,19 +24,19 @@ function reducer(state=initialState, action) {
 		case constants.ACTION_resetAnalysis:
 			return initialState;
 
-		case constants.ACTION_runAnalysis:
-			return mergeWithState({
-				analysisRunning: true,
-			});
+		// case constants.ACTION_runAnalysis: {
+		// 	const { toolChainId } = action;
+		// 	return state;
+		// }
 
 		case constants.ACTION_setAnalysisResults:
 			return mergeWithState({
 				analysisResults: action.analysisResults,
 			});
 
-		case constants.ACTION_setAnalysisRunning: {
+		case constants.ACTION_showAnalysisOverlay: {
 			return mergeWithState({
-				analysisRunning: action.yesno
+				showAnalysisOverlay: action.yesno
 			});
 		}
 
