@@ -22,8 +22,8 @@ const availableLayersList = [
 	ValidationLayer,
 	PredicateLayer,
 	HighlightLayer,
-	HeatmapLayer,
 	GroupedComponentsLayer,
+	HeatmapLayer,
 ];
 
 const defaultActiveLayersList = [
