@@ -1341,9 +1341,6 @@ function showAnalysisOverlay(yesno) {
 			type: constants.ACTION_showAnalysisOverlay,
 			yesno
 		});
-		if (!yesno) {
-			dispatch( setAnalysisResults(null) );
-		}
 	};
 };
 
