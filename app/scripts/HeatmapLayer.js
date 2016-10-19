@@ -57,7 +57,8 @@ const HeatmapLayer = React.createClass({
 		const yShift = 6; // TODO: get label font size
 
 		// TODO: color should depend on frequency?
-		const fillColor = 'rgba(255, 40, 0, 0.25)';
+		// const fillColor = 'rgba(255, 40, 0, 0.25)';
+		/*fill={fillColor}*/
 
 		function renderItem(node) {
 			return <g
@@ -65,11 +66,10 @@ const HeatmapLayer = React.createClass({
 				transform={`translate(${node.x}, ${node.y + yShift})`}
 			>
 				<circle
-					className='backgroundCircle'
+					className='backgroundCircle heatmap'
 					cx={0}
 					cy={0}
 					r={r}
-					fill={fillColor}
 				/>
 			</g>;
 		}
