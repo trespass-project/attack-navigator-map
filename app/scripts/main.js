@@ -37,6 +37,7 @@ const blacklist = [
 	// 'ACTION_setTaskStatusCategorized',
 	'ACTION_updateComponentProperties',
 	'ACTION_setHighlighted',
+	'ACTION_saveModelToKb',
 ];
 const logger = createLogger({
 	timestamp: false,
