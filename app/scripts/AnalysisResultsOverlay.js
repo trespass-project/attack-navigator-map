@@ -260,21 +260,6 @@ const AnalysisResultsOverlay = React.createClass({
 					</div>
 
 					<div>
-						<span className='grey'>Mode: </span>
-						<select
-							value={props.selectedAttacktreePreset}
-							onChange={(event) => {
-								context.dispatch(
-									actionCreators.selectAttacktreePreset(event.target.value)
-								);
-							}}
-						>
-							<option value='normal'>Normal</option>
-							<option value='similarity'>Similarity</option>
-						</select>
-					</div>
-
-					<div>
 						<span className='grey'>Layout: </span>
 						<select
 							value={props.selectedAttacktreeLayout}
@@ -286,6 +271,21 @@ const AnalysisResultsOverlay = React.createClass({
 						>
 							<option value='regular'>Normal</option>
 							<option value='radial'>Radial</option>
+						</select>
+					</div>
+
+					<div>
+						<span className='grey'>Mode: </span>
+						<select
+							value={props.selectedAttacktreePreset}
+							onChange={(event) => {
+								context.dispatch(
+									actionCreators.selectAttacktreePreset(event.target.value)
+								);
+							}}
+						>
+							<option value='normal'>Normal</option>
+							<option value='similarity'>Similarity</option>
 						</select>
 					</div>
 				</div>
