@@ -98,6 +98,10 @@ const initialState = {
 
 	availableLayersList: availableLayersList,
 	activeLayersList: defaultActiveLayersList,
+
+	// ——————————
+
+	selectedAttacktreePreset: 'normal',
 };
 
 
@@ -408,6 +412,11 @@ function reducer(state=initialState, action) {
 				[...state.relationTypes, ...sanitizedPredicates]
 			);
 			return mergeWithState({ relationTypes });
+		}
+
+		case constants.ACTION_selectAttacktreePreset: {
+			const { presetName } = action;
+			return mergeWithState({ selectedAttacktreePreset: presetName });
 		}
 
 		default:

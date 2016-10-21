@@ -113,6 +113,8 @@ const constants = {
 	ACTION_setAnalysisResultsSnapshots: 'ACTION_setAnalysisResultsSnapshots',
 	ACTION_selectAnalysisResultsSnapshot: 'ACTION_selectAnalysisResultsSnapshot',
 
+	ACTION_selectAttacktreePreset: 'ACTION_selectAttacktreePreset',
+
 	CLONE_OFFSET: 70,
 
 	RELTYPE_PHYSICAL_CONNECTION: undefined,

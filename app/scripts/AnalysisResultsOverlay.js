@@ -98,6 +98,7 @@ const AnalysisResultsOverlay = React.createClass({
 		analysisSnapshots: React.PropTypes.array.isRequired,
 		onClose: React.PropTypes.func,
 		highlightNodeIds: React.PropTypes.array,
+		selectedAttacktreePreset: React.PropTypes.string.isRequired,
 	},
 
 	contextTypes: {
@@ -214,7 +215,7 @@ const AnalysisResultsOverlay = React.createClass({
 
 		const k = `${props.resultsSelectedTool}-${props.resultsSelectedAttackIndex}`;
 
-		const attacktreeProps = attacktreeVisPresets['normal'];
+		const attacktreeProps = attacktreeVisPresets[props.selectedAttacktreePreset];
 
 		let ToolVisualization = null;
 		if (props.resultsSelectedTool) {
@@ -249,6 +250,30 @@ const AnalysisResultsOverlay = React.createClass({
 
 		return <div id='AnalysisDashboard'>
 			<div className='visualization'>
+				<div className='topBar clearfix'>
+					<div>
+						<span className='grey'>Visualization type: </span>
+						<select value='attacktree'>
+							<option value='attacktree'>Attack tree</option>
+						</select>
+					</div>
+
+					<div>
+						<span className='grey'>Mode: </span>
+						<select
+							value={props.selectedAttacktreePreset}
+							onChange={(event) => {
+								context.dispatch(
+									actionCreators.selectAttacktreePreset(event.target.value)
+								);
+							}}
+						>
+							<option value='normal'>Normal</option>
+							<option value='similarity'>Similarity</option>
+						</select>
+					</div>
+				</div>
+
 				<AttacktreeVisualization
 					key={k}
 					attacktree={props.resultsAttacktree}

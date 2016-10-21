@@ -2,7 +2,7 @@ const R = require('ramda');
 
 
 const normal = {
-	layout: undefined,
+	layout: 'regular',
 	showSimilarity: false,
 	overrideEdgeStyle: (d, index) => {
 		if (!props.highlightNodeIds.length) {
@@ -26,7 +26,7 @@ const normal = {
 
 
 const similarity = {
-	layout: 'radial',
+	// layout: 'radial',
 	showSimilarity: true,
 	overrideEdgeStyle: (d, index) => {
 		return {

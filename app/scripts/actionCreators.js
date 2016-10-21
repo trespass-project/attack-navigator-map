@@ -2366,3 +2366,15 @@ function resultsSelectAttack(index) {
 		});
 	};
 };
+
+
+const selectAttacktreePreset =
+module.exports.selectAttacktreePreset =
+function selectAttacktreePreset(presetName) {
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_selectAttacktreePreset,
+			presetName,
+		});
+	};
+};
