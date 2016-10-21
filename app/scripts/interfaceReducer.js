@@ -98,6 +98,11 @@ const initialState = {
 
 	availableLayersList: availableLayersList,
 	activeLayersList: defaultActiveLayersList,
+
+	// ——————————
+
+	selectedAttacktreePreset: 'normal',
+	selectedAttacktreeLayout: 'regular',
 };
 
 
@@ -408,6 +413,16 @@ function reducer(state=initialState, action) {
 				[...state.relationTypes, ...sanitizedPredicates]
 			);
 			return mergeWithState({ relationTypes });
+		}
+
+		case constants.ACTION_selectAttacktreePreset: {
+			const { presetName } = action;
+			return mergeWithState({ selectedAttacktreePreset: presetName });
+		}
+
+		case constants.ACTION_selectAttacktreeLayout: {
+			const { layoutName } = action;
+			return mergeWithState({ selectedAttacktreeLayout: layoutName });
 		}
 
 		default:
