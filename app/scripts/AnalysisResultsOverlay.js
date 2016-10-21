@@ -99,6 +99,7 @@ const AnalysisResultsOverlay = React.createClass({
 		onClose: React.PropTypes.func,
 		highlightNodeIds: React.PropTypes.array,
 		selectedAttacktreePreset: React.PropTypes.string.isRequired,
+		selectedAttacktreeLayout: React.PropTypes.string.isRequired,
 	},
 
 	contextTypes: {
@@ -272,12 +273,28 @@ const AnalysisResultsOverlay = React.createClass({
 							<option value='similarity'>Similarity</option>
 						</select>
 					</div>
+
+					<div>
+						<span className='grey'>Layout: </span>
+						<select
+							value={props.selectedAttacktreeLayout}
+							onChange={(event) => {
+								context.dispatch(
+									actionCreators.selectAttacktreeLayout(event.target.value)
+								);
+							}}
+						>
+							<option value='regular'>Normal</option>
+							<option value='radial'>Radial</option>
+						</select>
+					</div>
 				</div>
 
 				<AttacktreeVisualization
 					key={k}
 					attacktree={props.resultsAttacktree}
 					{...attacktreeProps}
+					layout={props.selectedAttacktreeLayout}
 				/>
 			</div>
 

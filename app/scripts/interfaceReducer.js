@@ -102,6 +102,7 @@ const initialState = {
 	// ——————————
 
 	selectedAttacktreePreset: 'normal',
+	selectedAttacktreeLayout: 'regular',
 };
 
 
@@ -417,6 +418,11 @@ function reducer(state=initialState, action) {
 		case constants.ACTION_selectAttacktreePreset: {
 			const { presetName } = action;
 			return mergeWithState({ selectedAttacktreePreset: presetName });
+		}
+
+		case constants.ACTION_selectAttacktreeLayout: {
+			const { layoutName } = action;
+			return mergeWithState({ selectedAttacktreeLayout: layoutName });
 		}
 
 		default:

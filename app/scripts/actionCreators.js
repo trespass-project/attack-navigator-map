@@ -2378,3 +2378,15 @@ function selectAttacktreePreset(presetName) {
 		});
 	};
 };
+
+
+const selectAttacktreeLayout =
+module.exports.selectAttacktreeLayout =
+function selectAttacktreeLayout(layoutName) {
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_selectAttacktreeLayout,
+			layoutName,
+		});
+	};
+};
