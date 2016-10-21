@@ -4,7 +4,7 @@ const R = require('ramda');
 const normal = {
 	layout: 'regular',
 	showSimilarity: false,
-	overrideEdgeStyle: (d, index) => {
+	overrideEdgeStyle: (props, d, index) => {
 		if (!props.highlightNodeIds.length) {
 			return {
 				strokeOpacity: 1,
@@ -28,7 +28,7 @@ const normal = {
 const similarity = {
 	// layout: 'radial',
 	showSimilarity: true,
-	overrideEdgeStyle: (d, index) => {
+	overrideEdgeStyle: (props, d, index) => {
 		return {
 			strokeWidth: 20,
 		};
@@ -36,7 +36,10 @@ const similarity = {
 };
 
 
-const presets = { normal, similarity };
+const frequency = normal;
+
+
+const presets = { normal, similarity, frequency };
 module.exports = R.keys(presets)
 	.reduce((acc, name) => {
 		acc[name] = R.merge(

@@ -2282,6 +2282,18 @@ function getSubtreeFromAttackVector(referenceTree, leafLabels) {
 };
 
 
+const highlightAttackTreeNodeIds =
+module.exports.highlightAttackTreeNodeIds =
+function highlightAttackTreeNodeIds(nodeIds) {
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_highlightAttackTreeNodes,
+			nodeIds,
+		});
+	};
+};
+
+
 const highlightAttackTreeNodes =
 module.exports.highlightAttackTreeNodes =
 function highlightAttackTreeNodes(index) {
@@ -2304,10 +2316,7 @@ function highlightAttackTreeNodes(index) {
 			index: state.analysis.resultsSelectedAttackIndex,
 		});
 
-		dispatch({
-			type: constants.ACTION_highlightAttackTreeNodes,
-			nodeIds,
-		});
+		dispatch( highlightAttackTreeNodeIds(nodeIds) );
 	};
 };
 

@@ -123,6 +123,8 @@ function mapStateToProps(_state) {
 	props.selectedAttackerProfileId = selectors.selectedAttackerProfileId(state);
 	props.attackerProfileIsComplete = selectors.attackerProfileIsComplete(state);
 
+	props.resultsAttacktreeLabelsHistogram = selectors.resultsAttacktreeLabelsHistogram(props);
+	props.labelToNodeIdsMap = selectors.labelToNodeIdsMap(props);
 	props.resultsAttacktreeIdHistogram = selectors.resultsAttacktreeIdHistogram(state);
 
 	props.locationOptions = selectors.locationOptions(state);
