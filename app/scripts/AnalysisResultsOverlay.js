@@ -1,8 +1,8 @@
 const React = require('react');
 const classnames = require('classnames');
-const R = require('ramda');
 const Loader = require('react-loader');
 const actionCreators = require('./actionCreators.js');
+const attacktreeVisPresets = require('./attacktreeVisPresets.js');
 const trespassVisualizations = require('trespass-visualizations');
 const { ATAnalyzerResults, ATEvaluatorResults, AttacktreeVisualization } = trespassVisualizations.components;
 
@@ -98,6 +98,8 @@ const AnalysisResultsOverlay = React.createClass({
 		analysisSnapshots: React.PropTypes.array.isRequired,
 		onClose: React.PropTypes.func,
 		highlightNodeIds: React.PropTypes.array,
+		selectedAttacktreePreset: React.PropTypes.string.isRequired,
+		selectedAttacktreeLayout: React.PropTypes.string.isRequired,
 	},
 
 	contextTypes: {
@@ -214,6 +216,8 @@ const AnalysisResultsOverlay = React.createClass({
 
 		const k = `${props.resultsSelectedTool}-${props.resultsSelectedAttackIndex}`;
 
+		const attacktreeProps = attacktreeVisPresets[props.selectedAttacktreePreset];
+
 		let ToolVisualization = null;
 		if (props.resultsSelectedTool) {
 			/* eslint default-case: 0 */
@@ -247,35 +251,57 @@ const AnalysisResultsOverlay = React.createClass({
 
 		return <div id='AnalysisDashboard'>
 			<div className='visualization'>
+				<div className='topBar clearfix'>
+					<div>
+						<span className='grey'>Visualization type: </span>
+						<select value='attacktree'>
+							<option value='attacktree'>Attack tree</option>
+						</select>
+					</div>
+
+					<div>
+						<span className='grey'>Mode: </span>
+						<select
+							value={props.selectedAttacktreePreset}
+							onChange={(event) => {
+								context.dispatch(
+									actionCreators.selectAttacktreePreset(event.target.value)
+								);
+							}}
+						>
+							<option value='normal'>Normal</option>
+							<option value='similarity'>Similarity</option>
+						</select>
+					</div>
+
+					<div>
+						<span className='grey'>Layout: </span>
+						<select
+							value={props.selectedAttacktreeLayout}
+							onChange={(event) => {
+								context.dispatch(
+									actionCreators.selectAttacktreeLayout(event.target.value)
+								);
+							}}
+						>
+							<option value='regular'>Normal</option>
+							<option value='radial'>Radial</option>
+						</select>
+					</div>
+				</div>
+
 				<AttacktreeVisualization
 					key={k}
 					attacktree={props.resultsAttacktree}
-					layout={undefined}
-					overrideEdgeStyle={(d, index) => {
-						if (!props.highlightNodeIds.length) {
-							return {
-								strokeOpacity: 1,
-							};
-						}
-
-						if (R.contains(d.data.id, props.highlightNodeIds)) {
-							return {
-								strokeWidth: 4,
-								strokeOpacity: 1,
-							};
-						} else {
-							return {
-								strokeOpacity: 0.25,
-							};
-						}
-					}}
+					{...attacktreeProps}
+					layout={props.selectedAttacktreeLayout}
 				/>
 			</div>
 
 			<div className={classnames('tools', { ready: resultsReady })}>
 				<div className='clearfix'>
 					<div style={{ float: 'left' }}>
-						<span style={{ color: 'grey' }}>Toolchain run: </span>
+						<span className='grey'>Toolchain run: </span>
 						<select
 							name='snapshots'
 							style={{
@@ -307,7 +333,7 @@ const AnalysisResultsOverlay = React.createClass({
 
 				{/* TODO: outsource css */}
 				<div style={{ marginBottom: 5 }}>
-					<div style={{ color: 'grey' }}>
+					<div className='grey'>
 						Tools
 					</div>
 				</div>
