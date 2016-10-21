@@ -298,6 +298,7 @@ const App = React.createClass({
 						selectedAttacktreePreset={props.selectedAttacktreePreset}
 						selectedAttacktreeLayout={props.selectedAttacktreeLayout}
 						resultsAttacktreeLabelsHistogram={props.resultsAttacktreeLabelsHistogram}
+						labelToNodeIdsMap={props.labelToNodeIdsMap}
 					/>
 				}
 			</div>

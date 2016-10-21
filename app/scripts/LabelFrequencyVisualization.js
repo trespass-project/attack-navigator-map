@@ -5,11 +5,15 @@ const DividingSpace = require('./DividingSpace.js');
 const LabelFrequencyVisualization = React.createClass({
 	propTypes: {
 		labelsHistogram: React.PropTypes.array.isRequired,
+		onHover: React.PropTypes.func,
+		onHoverOut: React.PropTypes.func,
 	},
 
 	getDefaultProps() {
 		return {
 			labelsHistogram: [],
+			onHover: () => {},
+			onHoverOut: () => {},
 		};
 	},
 
@@ -27,7 +31,17 @@ const LabelFrequencyVisualization = React.createClass({
 		};
 		return <div key={item.value}>
 			<DividingSpace />
-			<div style={style}>
+			<div
+				style={style}
+				onMouseEnter={(event) => {
+					event.preventDefault();
+					props.onHover(item.value);
+				}}
+				onMouseLeave={(event) => {
+					event.preventDefault();
+					props.onHoverOut();
+				}}
+			>
 				<strong>{item.count}</strong> <span>{item.value}</span>
 			</div>
 		</div>

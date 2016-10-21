@@ -229,6 +229,17 @@ const AnalysisResultsOverlay = React.createClass({
 				</div>
 				<LabelFrequencyVisualization
 					labelsHistogram={labelsHistogram}
+					onHover={(label) => {
+						const nodeIds = props.labelToNodeIdsMap[label] || [];
+						context.dispatch(
+							actionCreators.highlightAttackTreeNodeIds(nodeIds)
+						);
+					}}
+					onHoverOut={() => {
+						context.dispatch(
+							actionCreators.highlightAttackTreeNodeIds([])
+						);
+					}}
 				/>
 			</div>;
 		}
@@ -310,6 +321,7 @@ const AnalysisResultsOverlay = React.createClass({
 					key={k}
 					attacktree={props.resultsAttacktree}
 					{...attacktreeProps}
+					overrideEdgeStyle={attacktreeProps.overrideEdgeStyle(props)}
 					layout={props.selectedAttacktreeLayout}
 				/>
 			</div>
