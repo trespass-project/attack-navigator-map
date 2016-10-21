@@ -3,6 +3,7 @@ const classnames = require('classnames');
 const R = require('ramda');
 const Loader = require('react-loader');
 const actionCreators = require('./actionCreators.js');
+const attacktreeVisPresets = require('./attacktreeVisPresets.js');
 const trespassVisualizations = require('trespass-visualizations');
 const { ATAnalyzerResults, ATEvaluatorResults, AttacktreeVisualization } = trespassVisualizations.components;
 
@@ -214,6 +215,8 @@ const AnalysisResultsOverlay = React.createClass({
 
 		const k = `${props.resultsSelectedTool}-${props.resultsSelectedAttackIndex}`;
 
+		const attacktreeProps = attacktreeVisPresets['normal'];
+
 		let ToolVisualization = null;
 		if (props.resultsSelectedTool) {
 			/* eslint default-case: 0 */
@@ -250,25 +253,7 @@ const AnalysisResultsOverlay = React.createClass({
 				<AttacktreeVisualization
 					key={k}
 					attacktree={props.resultsAttacktree}
-					layout={undefined}
-					overrideEdgeStyle={(d, index) => {
-						if (!props.highlightNodeIds.length) {
-							return {
-								strokeOpacity: 1,
-							};
-						}
-
-						if (R.contains(d.data.id, props.highlightNodeIds)) {
-							return {
-								strokeWidth: 4,
-								strokeOpacity: 1,
-							};
-						} else {
-							return {
-								strokeOpacity: 0.25,
-							};
-						}
-					}}
+					{...attacktreeProps}
 				/>
 			</div>
 
