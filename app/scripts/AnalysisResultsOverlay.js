@@ -3,6 +3,7 @@ const classnames = require('classnames');
 const Loader = require('react-loader');
 const actionCreators = require('./actionCreators.js');
 const attacktreeVisPresets = require('./attacktreeVisPresets.js');
+const LabelFrequencyVisualization = require('./LabelFrequencyVisualization.js');
 const trespassVisualizations = require('trespass-visualizations');
 const { ATAnalyzerResults, ATEvaluatorResults, AttacktreeVisualization } = trespassVisualizations.components;
 
@@ -100,6 +101,7 @@ const AnalysisResultsOverlay = React.createClass({
 		highlightNodeIds: React.PropTypes.array,
 		selectedAttacktreePreset: React.PropTypes.string.isRequired,
 		selectedAttacktreeLayout: React.PropTypes.string.isRequired,
+		resultsAttacktreeLabelsHistogram: React.PropTypes.array,
 	},
 
 	contextTypes: {
@@ -218,6 +220,19 @@ const AnalysisResultsOverlay = React.createClass({
 
 		const attacktreeProps = attacktreeVisPresets[props.selectedAttacktreePreset];
 
+		let secondary = null;
+		if (props.selectedAttacktreePreset === 'frequency') {
+			const labelsHistogram = props.resultsAttacktreeLabelsHistogram;
+			secondary = <div>
+				<div>
+					<span className='grey'>Label frequency</span>
+				</div>
+				<LabelFrequencyVisualization
+					labelsHistogram={labelsHistogram}
+				/>
+			</div>;
+		}
+
 		let ToolVisualization = null;
 		if (props.resultsSelectedTool) {
 			/* eslint default-case: 0 */
@@ -286,7 +301,7 @@ const AnalysisResultsOverlay = React.createClass({
 						>
 							<option value='normal'>Normal</option>
 							<option value='similarity'>Similarity</option>
-							<option value='treemap'>Labels treemap</option>
+							<option value='frequency'>Label frequency</option>
 						</select>
 					</div>
 				</div>
@@ -299,9 +314,9 @@ const AnalysisResultsOverlay = React.createClass({
 				/>
 			</div>
 
-			{(props.selectedAttacktreePreset === 'treemap') &&
+			{(!!secondary) &&
 				<div className='secondary-panel'>
-					<span className='grey'>Labels treemap</span>
+					{secondary}
 				</div>
 			}
 

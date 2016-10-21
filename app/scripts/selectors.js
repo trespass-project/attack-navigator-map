@@ -44,6 +44,30 @@ module.exports.attackerProfit = createSelector(
 );
 
 
+// const resultsAttacktreeLabelsHistogram =
+module.exports.resultsAttacktreeLabelsHistogram = createSelector(
+	getResultsAttacktree,
+	(attacktree) => {
+		if (!attacktree) {
+			return [];
+		}
+
+		const histogramMap = R.countBy(
+			R.toLower,
+			helpers.getAllTreeLabels(attacktree)
+		);
+		return R.sortBy(
+			R.prop('count'),
+			R.toPairs(histogramMap)
+				.map((pair) => ({
+					value: pair[0],
+					count: pair[1]
+				}))
+		);
+	}
+);
+
+
 // const resultsAttacktreeIdHistogram =
 module.exports.resultsAttacktreeIdHistogram = createSelector(
 	getResultsAttacktree,
