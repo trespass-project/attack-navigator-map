@@ -260,7 +260,7 @@ const AnalysisResultsOverlay = React.createClass({
 			<div className={classnames('tools', { ready: resultsReady })}>
 				<div className='clearfix'>
 					<div style={{ float: 'left' }}>
-						<span style={{ color: 'grey' }}>Toolchain run: </span>
+						<span className='grey'>Toolchain run: </span>
 						<select
 							name='snapshots'
 							style={{
@@ -292,7 +292,7 @@ const AnalysisResultsOverlay = React.createClass({
 
 				{/* TODO: outsource css */}
 				<div style={{ marginBottom: 5 }}>
-					<div style={{ color: 'grey' }}>
+					<div className='grey'>
 						Tools
 					</div>
 				</div>
