@@ -1,6 +1,5 @@
 const React = require('react');
 const classnames = require('classnames');
-const R = require('ramda');
 const Loader = require('react-loader');
 const actionCreators = require('./actionCreators.js');
 const attacktreeVisPresets = require('./attacktreeVisPresets.js');
