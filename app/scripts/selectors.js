@@ -44,6 +44,57 @@ module.exports.attackerProfit = createSelector(
 );
 
 
+// const resultsAttacktreeLabelsHistogram =
+module.exports.resultsAttacktreeLabelsHistogram = createSelector(
+	getResultsAttacktree,
+	(attacktree) => {
+		if (!attacktree) {
+			return [];
+		}
+
+		const histogramMap = R.countBy(
+			R.toLower,
+			helpers.getAllTreeLabels(attacktree)
+		);
+		return R.sortBy(
+			R.prop('count'),
+			R.toPairs(histogramMap)
+				.map((pair) => ({
+					value: pair[0],
+					count: pair[1]
+				}))
+		);
+	}
+);
+
+
+// const labelToNodeIdsMap =
+module.exports.labelToNodeIdsMap = createSelector(
+	getResultsAttacktree,
+	(attacktree) => {
+		if (!attacktree) {
+			return {};
+		}
+
+		// get all nodes
+		const allNodes = trespass.attacktree.getAllNodes(
+			trespass.attacktree.getRootNode(attacktree)
+		);
+		// groupBy lowercase label
+		const grouped = R.groupBy(
+			R.pipe(R.prop('label'), R.toLower),
+			allNodes
+		);
+
+		return R.keys(grouped)
+			.reduce((acc, key) => {
+				acc[key] = grouped[key].map(R.prop('id'));
+				return acc;
+			}, {});
+	}
+);
+
+
 // const resultsAttacktreeIdHistogram =
 module.exports.resultsAttacktreeIdHistogram = createSelector(
 	getResultsAttacktree,

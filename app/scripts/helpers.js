@@ -6,6 +6,7 @@ const normalizr = require('normalizr');
 const slugify = require('mout/string/slugify');
 const trespass = require('trespass.js');
 const trespassUtils = trespass.utils;
+const { getRootNode, getAllNodes } = trespass.attacktree;
 
 
 const getElemByRef =
@@ -321,6 +322,15 @@ function makeHumanReadable(item) {
 	const label = slugify(item.label || item.id);
 	return `${type}__${label}`;
 };
+
+
+const getAllTreeLabels =
+module.exports.getAllTreeLabels =
+R.pipe(
+	getRootNode,
+	getAllNodes,
+	R.map(R.prop('label'))
+);
 
 
 const getAllIdsFromTree =

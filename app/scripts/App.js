@@ -297,6 +297,8 @@ const App = React.createClass({
 						highlightNodeIds={props.highlightNodeIds}
 						selectedAttacktreePreset={props.selectedAttacktreePreset}
 						selectedAttacktreeLayout={props.selectedAttacktreeLayout}
+						resultsAttacktreeLabelsHistogram={props.resultsAttacktreeLabelsHistogram}
+						labelToNodeIdsMap={props.labelToNodeIdsMap}
 					/>
 				}
 			</div>
