@@ -2,7 +2,7 @@
 	color: $trespass_grey_medium
 
 #AnalysisDashboard
-	background-color: white
+	background-color: $bgcolor
 	z-index: 999999
 	position: absolute
 	top: 0
@@ -30,10 +30,17 @@
 			padding: $panelPadding
 			padding-bottom: 10 + $panelPadding
 			background-color: white
+			margin-right: $panelGapHeight
 
 			& > div
 				float: left
 				margin-right: 2em
+
+	.secondary-panel
+		width: $panelWidth
+		margin-right: $panelGapHeight
+		padding: $panelPadding
+		background-color: white
 
 	.tools
 		width: $resultsPanelWidth

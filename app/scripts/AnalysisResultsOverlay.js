@@ -286,6 +286,7 @@ const AnalysisResultsOverlay = React.createClass({
 						>
 							<option value='normal'>Normal</option>
 							<option value='similarity'>Similarity</option>
+							<option value='treemap'>Labels treemap</option>
 						</select>
 					</div>
 				</div>
@@ -297,6 +298,12 @@ const AnalysisResultsOverlay = React.createClass({
 					layout={props.selectedAttacktreeLayout}
 				/>
 			</div>
+
+			{(props.selectedAttacktreePreset === 'treemap') &&
+				<div className='secondary-panel'>
+					<span className='grey'>Labels treemap</span>
+				</div>
+			}
 
 			<div className={classnames('tools', { ready: resultsReady })}>
 				<div className='clearfix'>
