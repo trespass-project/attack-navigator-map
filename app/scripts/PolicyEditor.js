@@ -300,7 +300,7 @@ const TextInput = React.createClass({
 
 const Wildcard = React.createClass({
 	render() {
-		return <strong>*</strong>;
+		return <strong>✱</strong>;
 	},
 });
 
