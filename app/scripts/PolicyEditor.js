@@ -841,6 +841,14 @@ const InOutType = React.createClass({
 		this.valueHandleFieldChange('value', newValue, index);
 	},
 
+	tupleChanged(updatedTuple, index) {
+		this._updateArrayIndex(
+			'values',
+			index,
+			updatedTuple
+		);
+	},
+
 	render() {
 		const { props } = this;
 
@@ -872,10 +880,6 @@ const InOutType = React.createClass({
 			],
 			this
 		);
-		callbacks.valueTypeChanged = callbacks.valueTypeChanged || noop;
-		callbacks.handleRemoveValue = callbacks.handleRemoveValue || noop;
-		callbacks.valueValueChanged = callbacks.valueValueChanged || noop;
-		callbacks.tupleChanged = callbacks.tupleChanged || noop;
 
 		return <div>
 			<table>
