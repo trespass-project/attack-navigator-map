@@ -189,6 +189,46 @@ function renderTupleValue(value, index, {
 }
 
 
+function sanitizeValue(prevValue, updatedValue) {
+	/* eslint no-param-reassign: 0 */
+	// if case changed, reset `value` to s.th. sane
+	if (prevValue.type !== updatedValue.type) {
+		switch (updatedValue.type) {
+			case 'value':
+			case 'variable':
+			case 'input': {
+				const previousWasSimilar = R.contains(
+					prevValue.type,
+					['value', 'variable', 'input']
+				);
+				if (previousWasSimilar) {
+					updatedValue.value = prevValue.value;
+				} else {
+					delete updatedValue.value;
+				}
+				break;
+			}
+
+			case 'tuple': {
+				delete updatedValue.value;
+				updatedValue.values = [];
+				break;
+			}
+
+			case 'wildcard': {
+				delete updatedValue.value;
+				break;
+			}
+
+			default:
+				break;
+		}
+	}
+
+	return updatedValue;
+}
+
+
 function updateFieldInObject(obj, fieldName, updatedValue) {
 	return update(
 		obj,
@@ -563,44 +603,10 @@ const Tuple = React.createClass({
 			{ [fieldName]: updated }
 		);
 
-		// if case changed, reset `value` to s.th. sane
-		if (prevValue.type !== updatedValue.type) {
-			switch (updatedValue.type) {
-				case 'value':
-				case 'variable':
-				case 'input': {
-					const previousWasSimilar = R.contains(
-						prevValue.type,
-						['value', 'variable', 'input']
-					);
-					if (previousWasSimilar) {
-						updatedValue.value = prevValue.value;
-					} else {
-						delete updatedValue.value;
-					}
-					break;
-				}
-
-				case 'tuple': {
-					delete updatedValue.value;
-					updatedValue.values = [];
-					break;
-				}
-
-				case 'wildcard': {
-					delete updatedValue.value;
-					break;
-				}
-
-				default:
-					break;
-			}
-		}
-
 		this._updateArrayIndex(
 			'values',
 			index,
-			updatedValue
+			sanitizeValue(prevValue, updatedValue)
 		);
 	},
 
@@ -816,44 +822,10 @@ const InOutType = React.createClass({
 			{ [fieldName]: updated }
 		);
 
-		// if case changed, reset `value` to s.th. sane
-		if (prevValue.type !== updatedValue.type) {
-			switch (updatedValue.type) {
-				case 'value':
-				case 'variable':
-				case 'input': {
-					const previousWasSimilar = R.contains(
-						prevValue.type,
-						['value', 'variable', 'input']
-					);
-					if (previousWasSimilar) {
-						updatedValue.value = prevValue.value;
-					} else {
-						delete updatedValue.value;
-					}
-					break;
-				}
-
-				case 'tuple': {
-					delete updatedValue.value;
-					updatedValue.values = [];
-					break;
-				}
-
-				case 'wildcard': {
-					delete updatedValue.value;
-					break;
-				}
-
-				default:
-					break;
-			}
-		}
-
 		this._updateArrayIndex(
 			'values',
 			index,
-			updatedValue
+			sanitizeValue(prevValue, updatedValue)
 		);
 	},
 
