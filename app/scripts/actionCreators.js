@@ -127,10 +127,13 @@ function createNewMap() {
 		return getModelOrCreate(modelId)
 			.then(({ modelId, isNew }) => {
 				const metadata = { title };
-				return dispatch( initMap(modelId, metadata) );
+				return dispatch( initMap(modelId, metadata) )
+					.then(() => {
+						return dispatch( saveModelToKb(modelId) );
+					});
 			})
-			.then(() => {
-				dispatch( saveModelToKb(modelId) );
+			.catch((err) => {
+				console.error(err);
 			});
 	};
 };
@@ -253,6 +256,7 @@ function saveModelToKb(modelId, debounced=false) {
 	return (dispatch, getState) => {
 		if (!modelId) {
 			// currently no model open to save
+			console.warn('no model id');
 			return Promise.resolve();
 		}
 
