@@ -761,7 +761,7 @@ const InOutType = React.createClass({
 		this._updateArrayIndex('values', index, updatedValue);
 	},
 
-	handleValuesValueRemove(index) {
+	handleRemoveValue(index) {
 		this._updateField(
 			'values',
 			R.remove(index, 1, this.props.enabled.values)
@@ -947,7 +947,7 @@ const InOutType = React.createClass({
 									return <InnerTable
 										key={index}
 										onRemove={() => {
-											this.handleValuesValueRemove(index);
+											this.handleRemoveValue(index);
 										}}
 									>
 										{content}
