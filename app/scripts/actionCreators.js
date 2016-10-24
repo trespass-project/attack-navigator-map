@@ -1766,7 +1766,10 @@ function runAnalysis(modelId, toolChainId, attackerProfileId) {
 		// humanize ids
 		dispatch( humanizeModelIds() )
 			.then((idReplacementMap) => {
-				const { modelXmlStr, model } = stateToModelXML(state, { idReplacementMap });
+				// state has changed in the meantime, so we need to get
+				// the latest one!
+				const state = getState().present;
+				const { modelXmlStr/*, model*/ } = stateToModelXML(state, { idReplacementMap });
 
 				// const validationErrors = trespass.model.validateModel(model);
 				// if (validationErrors.length) {
