@@ -22,6 +22,10 @@ const innerTableContainerStyle = {
 };
 
 
+const emptyTuple = {
+	type: 'tuple',
+	values: [],
+};
 const emptyValue = {
 	type: 'variable',
 };
@@ -689,12 +693,12 @@ const InOutType = React.createClass({
 	propTypes: {
 		enabled: React.PropTypes.shape({
 			action: React.PropTypes.string.isRequired,
+			logged: React.PropTypes.bool,
 			location: React.PropTypes.shape({
 				type: React.PropTypes.oneOf(['locvar', 'locval']),
 				value: React.PropTypes.string,
 			}),
 			values: React.PropTypes.array/*.isRequired*/,
-			logged: React.PropTypes.bool,
 		}).isRequired,
 
 		locationOptions: React.PropTypes.array.isRequired,
@@ -761,13 +765,9 @@ const InOutType = React.createClass({
 	},
 
 	addValue() {
-		const emptyVal = {
-			type: 'tuple',
-			values: [],
-		};
 		this._updateField(
 			'values',
-			[...this.props.enabled.values, emptyVal]
+			[...this.props.enabled.values, emptyTuple]
 		);
 	},
 
