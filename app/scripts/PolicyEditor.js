@@ -28,6 +28,15 @@ const emptyTuple = {
 };
 const emptyValue = {
 	type: 'variable',
+	// value: '',
+};
+const emptyVariable = {
+	type: 'variable',
+	// value: '',
+};
+const emptyLocVar = {
+	type: 'variable',
+	// value: '',
 };
 const emptyCredLocation = undefined;
 const emptyCredPredicate = {
@@ -619,10 +628,9 @@ const Tuple = React.createClass({
 	},
 
 	addValue() {
-		const emptyVal = { type: 'variable', value: '' };
 		const updatedValues = update(
 			this.props.value.values,
-			{ $push: [emptyVal] }
+			{ $push: [emptyVariable] }
 		);
 		this._updateField(
 			'values',
@@ -855,10 +863,7 @@ const InOutType = React.createClass({
 		const enabled = _.defaults(
 			props.enabled,
 			{
-				location: {
-					type: 'locvar',
-					value: ''
-				},
+				location: emptyLocVar,
 				values: [],
 				logged: false,
 			}
