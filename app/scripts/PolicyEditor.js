@@ -69,6 +69,60 @@ const actionTypes = [
 ];
 
 
+const tupleValueTypes = [
+	{ v: 'value', label: 'Value' },
+	{ v: 'wildcard', label: 'Wildcard' },
+	{ v: 'variable', label: 'Variable' },
+	{ v: 'input', label: 'Input' },
+	{ v: 'tuple', label: 'Tuple' },
+];
+
+
+const getComponent = (value, index, { valueValueChanged, tupleChanged }) => {
+	const handleChange = (newValue) => {
+		valueValueChanged(
+			newValue,
+			index
+		);
+	};
+
+	/* eslint brace-style: 0 */
+	if (value.type === 'value') {
+		return <TextInput
+			value={value.value}
+			placeholder={value.type}
+			onChange={handleChange}
+		/>;
+	}
+	else if (value.type === 'variable') {
+		return <TextInput
+			value={value.value}
+			placeholder={value.type}
+			onChange={handleChange}
+		/>;
+	}
+	else if (value.type === 'input') {
+		return <TextInput
+			value={value.value}
+			placeholder={value.type}
+			onChange={handleChange}
+		/>;
+	}
+	else if (value.type === 'wildcard') {
+		return <Wildcard />;
+	}
+	else if (value.type === 'tuple') {
+		return <Tuple
+			value={value}
+			onChange={(updatedTuple) => {
+				tupleChanged(updatedTuple, index);
+			}}
+		/>;
+	}
+	return null;
+};
+
+
 function updateFieldInObject(obj, fieldName, updatedValue) {
 	return update(
 		obj,
@@ -521,57 +575,6 @@ const Tuple = React.createClass({
 
 	render() {
 		const props = this.props;
-		const types = [
-			{ v: 'value', label: 'Value' },
-			{ v: 'wildcard', label: 'Wildcard' },
-			{ v: 'variable', label: 'Variable' },
-			{ v: 'input', label: 'Input' },
-			{ v: 'tuple', label: 'Tuple' },
-		];
-
-		const getComponent = (value, index) => {
-			const handleChange = (newValue) => {
-				this.valueValueChanged(
-					newValue,
-					index
-				);
-			};
-
-			/* eslint brace-style: 0 */
-			if (value.type === 'value') {
-				return <TextInput
-					value={value.value}
-					placeholder={value.type}
-					onChange={handleChange}
-				/>;
-			}
-			else if (value.type === 'variable') {
-				return <TextInput
-					value={value.value}
-					placeholder={value.type}
-					onChange={handleChange}
-				/>;
-			}
-			else if (value.type === 'input') {
-				return <TextInput
-					value={value.value}
-					placeholder={value.type}
-					onChange={handleChange}
-				/>;
-			}
-			else if (value.type === 'wildcard') {
-				return <Wildcard />;
-			}
-			else if (value.type === 'tuple') {
-				return <Tuple
-					value={value}
-					onChange={(updatedTuple) => {
-						this.tupleChanged(updatedTuple, index);
-					}}
-				/>;
-			}
-			return null;
-		};
 
 		return <div>
 			<div>
@@ -591,7 +594,7 @@ const Tuple = React.createClass({
 							);
 						}}
 					>
-						{types.map((t) => {
+						{tupleValueTypes.map((t) => {
 							return <option key={t.v} value={t.v}>
 								{t.label}
 							</option>;
@@ -604,7 +607,11 @@ const Tuple = React.createClass({
 						}}
 					/>;
 
-					const compo = getComponent(value, index);
+					const { valueValueChanged, tupleChanged } = this;
+					const compo = getComponent(
+						value, index,
+						{ valueValueChanged, tupleChanged }
+					);
 
 					return <div key={index}>
 						<DividingSpace />
@@ -622,7 +629,6 @@ const Tuple = React.createClass({
 									}}
 								>
 									<div>
-										{/*select*/}
 										{compo}
 									</div>
 								</InnerTable>
