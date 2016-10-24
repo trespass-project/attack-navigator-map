@@ -632,12 +632,15 @@ const Tuple = React.createClass({
 
 	render() {
 		const props = this.props;
-		const {
-			valueTypeChanged,
-			handleRemoveValue,
-			valueValueChanged,
-			tupleChanged
-		} = this;
+		const callbacks = R.pick(
+			[
+				'valueTypeChanged',
+				'handleRemoveValue',
+				'valueValueChanged',
+				'tupleChanged',
+			],
+			this
+		);
 
 		return <div>
 			<div>
@@ -645,17 +648,11 @@ const Tuple = React.createClass({
 				<span> </span>
 				<AddButton onAdd={this.addValue} />
 			</div>
-			{props.value.values.map((value, index) => {
-				return renderTupleValue(
-					value, index,
-					{
-						valueTypeChanged,
-						handleRemoveValue,
-						valueValueChanged,
-						tupleChanged
-					}
-				);
-			})}
+			{props.value.values
+				.map((value, index) => {
+					return renderTupleValue(value, index, callbacks);
+				})
+			}
 		</div>;
 	},
 });
@@ -790,8 +787,54 @@ const InOutType = React.createClass({
 	addValue() {
 		this._updateField(
 			'values',
-			[...this.props.enabled.values, emptyTuple]
+			[...this.props.enabled.values, emptyValue/*emptyTuple*/]
 		);
+	},
+
+	valueHandleFieldChange(fieldName, updated, index) {
+		const { props } = this;
+		const prevValue = props.enabled.values[index];
+		const updatedValue = Object.assign(
+			{},
+			prevValue,
+			{ [fieldName]: updated }
+		);
+
+		// if case changed, reset `value` to s.th. sane
+		if (prevValue.type !== updatedValue.type) {
+			switch (updatedValue.type) {
+				case 'value':
+				case 'variable':
+				case 'input': {
+					updatedValue.value = '';
+					break;
+				}
+
+				case 'tuple': {
+					delete updatedValue.value;
+					updatedValue.values = [];
+					break;
+				}
+
+				case 'wildcard': {
+					delete updatedValue.value;
+					break;
+				}
+
+				default:
+					break;
+			}
+		}
+
+		this._updateArrayIndex(
+			'values',
+			index,
+			updatedValue
+		);
+	},
+
+	valueTypeChanged(newType, index) {
+		this.valueHandleFieldChange('type', newType, index);
 	},
 
 	render() {
@@ -815,6 +858,20 @@ const InOutType = React.createClass({
 				: 'value',
 			value: enabled.location.value,
 		};
+
+		const callbacks = R.pick(
+			[
+				'valueTypeChanged',
+				'handleRemoveValue',
+				'valueValueChanged',
+				'tupleChanged',
+			],
+			this
+		);
+		callbacks.valueTypeChanged = callbacks.valueTypeChanged || noop;
+		callbacks.handleRemoveValue = callbacks.handleRemoveValue || noop;
+		callbacks.valueValueChanged = callbacks.valueValueChanged || noop;
+		callbacks.tupleChanged = callbacks.tupleChanged || noop;
 
 		return <div>
 			<table>
@@ -853,7 +910,17 @@ const InOutType = React.createClass({
 							{(enabled.values.length > 0) &&
 								<DividingSpace />
 							}
+
 							{enabled.values
+								.map((value, index) => {
+									return renderTupleValue(
+										value, index,
+										callbacks
+									);
+								})
+							}
+
+							{/*enabled.values
 								.map((val, index) => {
 									let Component;
 									switch (val.type) {
@@ -885,16 +952,14 @@ const InOutType = React.createClass({
 									>
 										{content}
 									</InnerTable>;
-								})
+								})*/
 							}
 						</td>
 					</tr>
 
 					<tr>
 						<td>
-							{(enabled.values.length === 0) &&
-								<AddButton onAdd={this.addValue} />
-							}
+							<AddButton onAdd={this.addValue} />
 						</td>
 					</tr>
 
