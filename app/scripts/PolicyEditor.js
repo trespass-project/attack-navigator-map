@@ -837,6 +837,10 @@ const InOutType = React.createClass({
 		this.valueHandleFieldChange('type', newType, index);
 	},
 
+	valueValueChanged(newValue, index) {
+		this.valueHandleFieldChange('value', newValue, index);
+	},
+
 	render() {
 		const { props } = this;
 
