@@ -637,10 +637,6 @@ const Tuple = React.createClass({
 					</div>;
 				})
 			}
-			<div>
-				{/*<AddButton onAdd={this.addValue} />*/}
-				{/*<RemoveButton onRemove={props.onRemove} />*/}
-			</div>
 		</div>;
 	},
 });
