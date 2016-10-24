@@ -573,8 +573,9 @@ const Tuple = React.createClass({
 						prevValue.type,
 						['value', 'variable', 'input']
 					);
-					if (!previousWasSimilar) {
-						// updatedValue.value = '';
+					if (previousWasSimilar) {
+						updatedValue.value = prevValue.value;
+					} else {
 						delete updatedValue.value;
 					}
 					break;
@@ -821,7 +822,15 @@ const InOutType = React.createClass({
 				case 'value':
 				case 'variable':
 				case 'input': {
-					updatedValue.value = '';
+					const previousWasSimilar = R.contains(
+						prevValue.type,
+						['value', 'variable', 'input']
+					);
+					if (previousWasSimilar) {
+						updatedValue.value = prevValue.value;
+					} else {
+						delete updatedValue.value;
+					}
 					break;
 				}
 
