@@ -35,7 +35,7 @@ const emptyVariable = {
 	// value: '',
 };
 const emptyLocVar = {
-	type: 'variable',
+	type: 'locvar',
 	// value: '',
 };
 const emptyCredLocation = undefined;
