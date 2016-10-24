@@ -191,12 +191,13 @@ const FlexRow = React.createClass({
 
 const InnerTable = React.createClass({
 	propTypes: {
-		onRemove: React.PropTypes.func.isRequired,
+		onRemove: React.PropTypes.func,
 		noRemove: React.PropTypes.bool,
 	},
 
 	getDefaultProps() {
 		return {
+			onRemove: noop,
 			noRemove: false,
 		};
 	},
@@ -211,7 +212,6 @@ const InnerTable = React.createClass({
 			padding: 5,
 			width: '100%',
 		};
-		const remove = <RemoveButton onRemove={props.onRemove} />;
 
 		return <table style={tableStyle} className='inner'>
 			<tbody>
@@ -220,7 +220,9 @@ const InnerTable = React.createClass({
 						{props.children}
 					</td>
 					<td>
-						{!props.noRemove && remove}
+						{!props.noRemove &&
+							<RemoveButton onRemove={props.onRemove} />
+						}
 					</td>
 				</tr>
 			</tbody>
