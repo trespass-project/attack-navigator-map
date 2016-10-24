@@ -57,6 +57,14 @@ const ToolName = React.createClass({
 			style.border = 'solid 1px rgb(255, 40, 0)';
 		}
 
+		const loaderProps = {
+			loaded: false,
+			length: 4,
+			width: 2,
+			lines: 10,
+			radius: 4,
+		};
+
 		return <div
 			className='tool-item clearfix'
 			style={style}
@@ -64,14 +72,8 @@ const ToolName = React.createClass({
 		>
 			<div style={{ float: 'left' }}>
 				<span>{item.name} </span>
-				{(isRunning) &&
-					<Loader
-						loaded={false}
-						length={4}
-						width={2}
-						lines={10}
-						radius={4}
-					/>
+				{(isRunning && !hasError) &&
+					<Loader {...loaderProps} />
 				}
 			</div>
 			<div style={{ float: 'right' }}>
@@ -81,6 +83,9 @@ const ToolName = React.createClass({
 						target='_blank'
 						className='result-link'
 					>output︎ file</a>
+				}
+				{(hasError) &&
+					<span>error</span>
 				}
 			</div>
 		</div>;
