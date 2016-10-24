@@ -22,10 +22,10 @@ const innerTableContainerStyle = {
 };
 
 
-const emptyTuple = {
-	type: 'tuple',
-	values: [],
-};
+// const emptyTuple = {
+// 	type: 'tuple',
+// 	values: [],
+// };
 const emptyValue = {
 	type: 'variable',
 	// value: '',
