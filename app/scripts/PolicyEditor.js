@@ -122,6 +122,63 @@ const getComponent = (value, index, { valueValueChanged, tupleChanged }) => {
 	return null;
 };
 
+function renderTupleValue(value, index, {
+		valueTypeChanged,
+		handleRemoveValue,
+		valueValueChanged,
+		tupleChanged
+	}) {
+	const select = <select
+		value={value.type}
+		onChange={(event) => {
+			valueTypeChanged(
+				event.target.value,
+				index
+			);
+		}}
+	>
+		{tupleValueTypes.map((t) => {
+			return <option key={t.v} value={t.v}>
+				{t.label}
+			</option>;
+		})}
+	</select>;
+
+	const remove = <RemoveButton
+		onRemove={() => {
+			handleRemoveValue(index);
+		}}
+	/>;
+
+	const compo = getComponent(
+		value, index,
+		{ valueValueChanged, tupleChanged }
+	);
+
+	return <div key={index}>
+		<DividingSpace />
+		{(value.type !== 'tuple')
+			? <FlexRow
+				cell1={select}
+				cell2={compo}
+				cell3={remove}
+			/>
+			: <div style={innerTableContainerStyle}>
+				{select}
+				<InnerTable
+					onRemove={() => {
+						handleRemoveValue(index);
+					}}
+				>
+					<div>
+						{compo}
+					</div>
+				</InnerTable>
+			</div>
+		}
+	</div>;
+}
+
 
 function updateFieldInObject(obj, fieldName, updatedValue) {
 	return update(
@@ -575,6 +632,12 @@ const Tuple = React.createClass({
 
 	render() {
 		const props = this.props;
+		const {
+			valueTypeChanged,
+			handleRemoveValue,
+			valueValueChanged,
+			tupleChanged
+		} = this;
 
 		return <div>
 			<div>
@@ -582,61 +645,17 @@ const Tuple = React.createClass({
 				<span> </span>
 				<AddButton onAdd={this.addValue} />
 			</div>
-
-			{props.value.values
-				.map((value, index) => {
-					const select = <select
-						value={value.type}
-						onChange={(event) => {
-							this.valueTypeChanged(
-								event.target.value,
-								index
-							);
-						}}
-					>
-						{tupleValueTypes.map((t) => {
-							return <option key={t.v} value={t.v}>
-								{t.label}
-							</option>;
-						})}
-					</select>;
-
-					const remove = <RemoveButton
-						onRemove={() => {
-							this.handleRemoveValue(index);
-						}}
-					/>;
-
-					const { valueValueChanged, tupleChanged } = this;
-					const compo = getComponent(
-						value, index,
-						{ valueValueChanged, tupleChanged }
-					);
-
-					return <div key={index}>
-						<DividingSpace />
-						{(value.type !== 'tuple')
-							? <FlexRow
-								cell1={select}
-								cell2={compo}
-								cell3={remove}
-							/>
-							: <div style={innerTableContainerStyle}>
-								{select}
-								<InnerTable
-									onRemove={() => {
-										this.handleRemoveValue(index);
-									}}
-								>
-									<div>
-										{compo}
-									</div>
-								</InnerTable>
-							</div>
-						}
-					</div>;
-				})
-			}
+			{props.value.values.map((value, index) => {
+				return renderTupleValue(
+					value, index,
+					{
+						valueTypeChanged,
+						handleRemoveValue,
+						valueValueChanged,
+						tupleChanged
+					}
+				);
+			})}
 		</div>;
 	},
 });
