@@ -745,7 +745,10 @@ const InOutType = React.createClass({
 	addValue() {
 		this._updateField(
 			'values',
-			[...this.props.enabled.values, policyCommon.emptyValue/*emptyTuple*/]
+			[
+				...this.props.enabled.values,
+				policyCommon.emptyValue /*policyCommon.emptyTuple*/
+			]
 		);
 	},
 
