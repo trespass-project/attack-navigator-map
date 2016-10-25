@@ -101,18 +101,22 @@ function renderTupleValue(value, index, {
 	);
 
 	return <div key={index}>
-		<DividingSpace />
+		{/*<DividingSpace />*/}
 		{(value.type !== 'tuple')
-			? <FlexRow
-				cell1={select}
-				cell2={compo}
-				cell3={remove}
-			/>
-			: <div style={innerTableContainerStyle}>
-				{select}
+			? <InnerTable noRemove>
+				<FlexRow
+					cell1={select}
+					cell2={compo}
+					cell3={remove}
+				/>
+			</InnerTable>
+			: <div>{/*style={innerTableContainerStyle}*/}
 				<InnerTable
 					onRemove={() => handleRemoveValue(index)}
-				>{compo}</InnerTable>
+				>
+					<div>{select}</div>
+					{compo}
+				</InnerTable>
 			</div>
 		}
 	</div>;
@@ -595,16 +599,16 @@ const Tuple = React.createClass({
 		);
 
 		return <div>
+			<div style={innerTableContainerStyle}>
+				{(props.value.values || [])
+					.map((value, index) => {
+						return renderTupleValue(value, index, callbacks);
+					})
+				}
+			</div>
 			<div>
-				<label>Tuple:</label>
-				<span> </span>
 				<AddButton onAdd={this.addValue} />
 			</div>
-			{props.value.values
-				.map((value, index) => {
-					return renderTupleValue(value, index, callbacks);
-				})
-			}
 		</div>;
 	},
 });
@@ -845,12 +849,9 @@ const InOutType = React.createClass({
 								<DividingSpace />
 							}
 
-							{enabled.values
+							{(enabled.values || [])
 								.map((value, index) => {
-									return renderTupleValue(
-										value, index,
-										callbacks
-									);
+									return renderTupleValue(value, index,callbacks);
 								})
 							}
 						</td>
@@ -1313,7 +1314,7 @@ const CredData = React.createClass({
 			</div>
 
 			<div>
-				{data.values
+				{(data.values || [])
 					.map((value, index) => {
 						return <div key={index}>
 							<DividingSpace />
