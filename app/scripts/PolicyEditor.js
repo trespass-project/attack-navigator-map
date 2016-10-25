@@ -888,10 +888,17 @@ const EnabledAction = React.createClass({
 
 	changeActionType(event) {
 		const { props } = this;
-		const updated = update(
+		const newType = event.target.value;
+		let updated = update(
 			props.enabled,
-			{ action: { $set: event.target.value } }
+			{ action: { $set: newType } }
 		);
+
+		if (R.contains(newType, policyCommon.actionTypesSimple)) {
+			// simple types only have the action field
+			updated = R.pick(['action'], updated);
+		}
+
 		props.onChange(updated);
 	},
 

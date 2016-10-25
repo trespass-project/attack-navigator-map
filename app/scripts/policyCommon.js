@@ -81,12 +81,20 @@ module.exports.emptyPolicy = {
 };
 
 
-const actionTypes =
-module.exports.actionTypes = [
-	'in',
-	'out',
+const actionTypesSimple =
+module.exports.actionTypesSimple = [
 	'move',
 	'eval',
+];
+const actionTypesComplex =
+module.exports.actionTypesComplex = [
+	'in',
+	'out',
+];
+const actionTypes =
+module.exports.actionTypes = [
+	...actionTypesComplex,
+	...actionTypesSimple,
 ];
 
 
