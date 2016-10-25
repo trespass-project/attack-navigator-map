@@ -111,14 +111,8 @@ function renderTupleValue(value, index, {
 			: <div style={innerTableContainerStyle}>
 				{select}
 				<InnerTable
-					onRemove={() => {
-						handleRemoveValue(index);
-					}}
-				>
-					<div>
-						{compo}
-					</div>
-				</InnerTable>
+					onRemove={() => handleRemoveValue(index)}
+				>{compo}</InnerTable>
 			</div>
 		}
 	</div>;
@@ -858,41 +852,6 @@ const InOutType = React.createClass({
 										callbacks
 									);
 								})
-							}
-
-							{/*enabled.values
-								.map((val, index) => {
-									let Component;
-									switch (val.type) {
-										case 'tuple': {
-											Component = Tuple;
-											break;
-										}
-
-										// TODO: more types?
-
-										default: {
-											return null;
-										}
-									}
-
-									const content = <Component
-										key={index}
-										value={val}
-										onChange={(updatedValue) => {
-											this.handleValuesValueChange(updatedValue, index);
-										}}
-									/>;
-
-									return <InnerTable
-										key={index}
-										onRemove={() => {
-											this.handleRemoveValue(index);
-										}}
-									>
-										{content}
-									</InnerTable>;
-								})*/
 							}
 						</td>
 					</tr>
