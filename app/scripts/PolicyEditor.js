@@ -101,7 +101,6 @@ function renderTupleValue(value, index, {
 	);
 
 	return <div key={index}>
-		{/*<DividingSpace />*/}
 		{(value.type !== 'tuple')
 			? <InnerTable noRemove>
 				<FlexRow
@@ -110,7 +109,7 @@ function renderTupleValue(value, index, {
 					cell3={remove}
 				/>
 			</InnerTable>
-			: <div>{/*style={innerTableContainerStyle}*/}
+			: <div>
 				<InnerTable
 					onRemove={() => handleRemoveValue(index)}
 				>
@@ -851,7 +850,7 @@ const InOutType = React.createClass({
 
 							{(enabled.values || [])
 								.map((value, index) => {
-									return renderTupleValue(value, index,callbacks);
+									return renderTupleValue(value, index, callbacks);
 								})
 							}
 						</td>
