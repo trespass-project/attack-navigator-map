@@ -114,6 +114,7 @@ function renderTupleValue(value, index, {
 					onRemove={() => handleRemoveValue(index)}
 				>
 					<div>{select}</div>
+					<DividingSpace />
 					{compo}
 				</InnerTable>
 			</div>
@@ -598,13 +599,16 @@ const Tuple = React.createClass({
 		);
 
 		return <div>
-			<div style={innerTableContainerStyle}>
-				{(props.value.values || [])
-					.map((value, index) => {
-						return renderTupleValue(value, index, callbacks);
-					})
-				}
-			</div>
+			{(props.value.values && props.value.values.length)
+				? <div style={innerTableContainerStyle}>
+					{(props.value.values)
+						.map((value, index) => {
+							return renderTupleValue(value, index, callbacks);
+						})
+					}
+				</div>
+				: null
+			}
 			<div>
 				<AddButton onAdd={this.addValue} />
 			</div>
