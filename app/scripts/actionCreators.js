@@ -1172,20 +1172,8 @@ function addProcess(process) {
 };
 
 
-const emptyPolicy = {
-	enabled: [
-		{
-			location: {
-				type: 'locvar',
-				value: ''
-			},
-			values: [],
-		}
-	]
-};
-
 module.exports.addPolicy =
-function addPolicy(policy=emptyPolicy) {
+function addPolicy(policy) {
 	return (dispatch, getState) => {
 		dispatch({
 			type: constants.ACTION_addPolicy,

@@ -10,6 +10,7 @@ const SelectizeDropdown = require('./SelectizeDropdown.js');
 const RelationSelectize = require('./RelationSelectize.js');
 const ComponentReference = require('./ComponentReference.js');
 const DividingSpace = require('./DividingSpace.js');
+const policyCommon = require('./policyCommon.js');
 
 
 const noop = () => {};
@@ -20,71 +21,6 @@ const innerTableContainerStyle = {
 	padding: 5,
 	backgroundColor: '#ededeb',
 };
-
-
-// const emptyTuple = {
-// 	type: 'tuple',
-// 	values: [],
-// };
-const emptyValue = {
-	type: 'variable',
-	// value: '',
-};
-const emptyVariable = {
-	type: 'variable',
-	// value: '',
-};
-const emptyLocVar = {
-	type: 'locvar',
-	// value: '',
-};
-const emptyCredLocation = undefined;
-const emptyCredPredicate = {
-	relationType: undefined,
-	values: [
-		emptyValue,
-		emptyValue,
-	],
-};
-const emptyCredData = {
-	name: undefined,
-	values: [
-		// emptyValue,
-	],
-};
-const emptyCredItem = {
-	name: undefined,
-	values: [
-		// _.merge(
-		// 	{ type: 'credData' },
-		// 	emptyCredData
-		// )
-	],
-};
-
-const empty = {
-	'credLocation': emptyCredLocation,
-	'credData': emptyCredData,
-	'credItem': emptyCredItem,
-	'credPredicate': emptyCredPredicate,
-};
-
-
-const actionTypes = [
-	'in',
-	'out',
-	'move',
-	'eval',
-];
-
-
-const tupleValueTypes = [
-	{ v: 'value', label: 'Value' },
-	{ v: 'wildcard', label: 'Wildcard' },
-	{ v: 'variable', label: 'Variable' },
-	{ v: 'input', label: 'Input' },
-	{ v: 'tuple', label: 'Tuple' },
-];
 
 
 const getComponent = (value, index, { valueValueChanged, tupleChanged }) => {
@@ -146,7 +82,7 @@ function renderTupleValue(value, index, {
 			);
 		}}
 	>
-		{tupleValueTypes.map((t) => {
+		{policyCommon.tupleValueTypes.map((t) => {
 			return <option key={t.v} value={t.v}>
 				{t.label}
 			</option>;
@@ -644,7 +580,7 @@ const Tuple = React.createClass({
 	addValue() {
 		const updatedValues = update(
 			this.props.value.values,
-			{ $push: [emptyVariable] }
+			{ $push: [policyCommon.emptyVariable] }
 		);
 		this._updateField(
 			'values',
@@ -809,7 +745,7 @@ const InOutType = React.createClass({
 	addValue() {
 		this._updateField(
 			'values',
-			[...this.props.enabled.values, emptyValue/*emptyTuple*/]
+			[...this.props.enabled.values, policyCommon.emptyValue/*emptyTuple*/]
 		);
 	},
 
@@ -851,7 +787,7 @@ const InOutType = React.createClass({
 		const enabled = _.defaults(
 			props.enabled,
 			{
-				location: emptyLocVar,
+				location: policyCommon.emptyLocVar,
 				values: [],
 				logged: false,
 			}
@@ -1036,7 +972,7 @@ const EnabledAction = React.createClass({
 								<option key={''} value={''} disabled>
 									select
 								</option>
-								{actionTypes.map((type) => {
+								{policyCommon.actionTypes.map((type) => {
 									return <option
 										key={type}
 										value={type}
@@ -1368,7 +1304,7 @@ const CredData = React.createClass({
 		if (event) { event.preventDefault(); }
 		const values = [
 			...this.props.data.values,
-			emptyValue
+			policyCommon.emptyValue
 		];
 		this._updateField('values', values);
 	},
@@ -1497,7 +1433,7 @@ const CredItem = React.createClass({
 	_handleAdd(type) {
 		const values = [
 			...this.props.item.values,
-			_.merge({ type }, empty[type])
+			_.merge({ type }, policyCommon.empty[type])
 		];
 		this._updateField('values', values);
 	},
@@ -1686,7 +1622,7 @@ const PolicyEditor = React.createClass({
 			addToPolicy(
 				this.props.policy,
 				type,
-				empty[type]
+				policyCommon.empty[type]
 			)
 		);
 	},

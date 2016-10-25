@@ -17,6 +17,7 @@ const PredicateEditor = require('./PredicateEditor.js');
 const AttackerProfileEditor = require('./AttackerProfileEditor/AttackerProfileEditor.js');
 import JSONTree from 'react-json-tree';
 import { AutoSizer, FlexTable, FlexColumn/*, SortDirection*/ } from 'react-virtualized';
+const policyCommon = require('./policyCommon.js');
 
 
 // const colorMap = theme => ({
@@ -351,7 +352,7 @@ const Wizard = React.createClass({
 	addPolicy(event) {
 		if (event) { event.preventDefault(); }
 		this.context.dispatch(
-			actionCreators.addPolicy()
+			actionCreators.addPolicy(policyCommon.emptyPolicy)
 		);
 	},
 
