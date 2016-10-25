@@ -77,18 +77,21 @@ const App = React.createClass({
 		const editorElem = document.querySelector('#editor > svg');
 		props.dispatch( actionCreators.setEditorElem(editorElem) );
 
-		window.addEventListener('beforeunload', this.handleBeforeUnload);
+		// window.addEventListener('beforeunload', this.handleBeforeUnload);
 		window.addEventListener('keydown', this.keyHandler);
 	},
 
 	componentWillUnmount() {
-		window.removeEventListener('beforeunload', this.handleBeforeUnload);
+		// window.removeEventListener('beforeunload', this.handleBeforeUnload);
 		window.removeEventListener('keydown', this.keyHandler);
 	},
 
 	handleBeforeUnload(event) {
 		// save last state of map / model
-		this.saveMap(event);
+
+		// let's not do that, because what if someone just wants to abandon
+		// the work and refresh the page?
+		// this.saveMap(event);
 
 		// this whole message thing doesn't seem to work (anymore),
 		// but let's still interrupt here.
