@@ -1273,11 +1273,14 @@ function inferEdgeType(fromType, toType) {
 		// TODO: or should it return all possible options, like
 		// ['connection', 'isContainedIn']? (directed-ness could play a role)
 	} else if (fromType === 'item' && toType === 'item') {
-		return constants.RELTYPE_NETWORK;
+		return constants.RELTYPE_ATLOCATION;
+		// return constants.RELTYPE_NETWORK;
 	} else if (fromType === 'item' && R.contains(toType, ['location', 'actor'])) {
 		// TODO: is that always the case?
 		return constants.RELTYPE_ATLOCATION;
 	} else if (fromType === 'data' && toType === 'item') {
+		return constants.RELTYPE_ATLOCATION;
+	} else if (fromType === 'data' && toType === 'actor') {
 		return constants.RELTYPE_ATLOCATION;
 	} else if (fromType === 'actor' && toType === 'location') {
 		return constants.RELTYPE_ATLOCATION;
