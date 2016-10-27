@@ -1280,6 +1280,8 @@ function inferEdgeType(fromType, toType) {
 		return constants.RELTYPE_ATLOCATION;
 	} else if (fromType === 'data' && toType === 'item') {
 		return constants.RELTYPE_ATLOCATION;
+	} else if (fromType === 'data' && toType === 'actor') {
+		return constants.RELTYPE_ATLOCATION;
 	} else if (fromType === 'actor' && toType === 'location') {
 		return constants.RELTYPE_ATLOCATION;
 	} else {
