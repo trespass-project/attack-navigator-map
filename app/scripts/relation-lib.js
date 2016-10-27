@@ -31,14 +31,14 @@ module.exports = [
 		// 'acceptsTarget': ['location']
 	},
 
-	{
-		'type': 'relation',
-		'value': constants.RELTYPE_ATLOCATION,
-		'label': 'possesses',
-		'directed': true,
-		// 'acceptsSource': ['location'],
-		// 'acceptsTarget': ['location']
-	},
+	// {
+	// 	'type': 'relation',
+	// 	'value': constants.RELTYPE_ATLOCATION,
+	// 	'label': 'possesses',
+	// 	'directed': true,
+	// 	// 'acceptsSource': ['location'],
+	// 	// 'acceptsTarget': ['location']
+	// },
 
 	{
 		'type': 'relation',
