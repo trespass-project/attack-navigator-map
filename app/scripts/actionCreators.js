@@ -233,7 +233,6 @@ function loadModelFromKb(modelId) {
 const kbApiSaveModel = ({ modelId, modelXmlStr, dispatch }) => {
 	return knowledgebaseApi.saveModelFile(axios, modelId, modelXmlStr)
 		.then(() => {
-			console.info('model sent');
 			return dispatch( getRecentFiles() );
 		})
 		.catch((err) => {
