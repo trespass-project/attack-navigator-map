@@ -97,12 +97,24 @@ const Group = React.createClass({
 			if (helpers.isRectInsideRect(nodeRect, groupRect) ||
 				helpers.isRectInsideRect(groupRect, nodeRect)) {
 				// node is overlapping group
-				return <Dropzone
-					group={props.group}
-					radius={context.theme.group.dropzoneRadius}
-					x={groupRect.width * 0.5}
-					y={groupRect.height * 0.5}
-				/>;
+
+				// does node overlap dropzone rect?
+				const r = context.theme.group.dropzoneRadius;
+				const dropzoneRect = {
+					x: groupRect.x + (groupRect.width * 0.5) - r,
+					y: groupRect.y + (groupRect.height * 0.5) - r,
+					width: 2 * r,
+					height: 2 * r,
+				};
+				if (helpers.isRectInsideRect(nodeRect, dropzoneRect) ||
+					helpers.isRectInsideRect(dropzoneRect, nodeRect)) {
+					return <Dropzone
+						group={props.group}
+						radius={context.theme.group.dropzoneRadius}
+						x={groupRect.width * 0.5}
+						y={groupRect.height * 0.5}
+					/>;
+				}
 			}
 		}
 
