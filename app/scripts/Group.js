@@ -176,18 +176,6 @@ const Group = React.createClass({
 		);
 	},
 
-	_handleHover(event) {
-		this.context.dispatch(
-			actionCreators.setHoverGroup(this.props.group.id)
-		);
-	},
-
-	_handleHoverOut(event) {
-		this.context.dispatch(
-			actionCreators.setHoverGroup(null)
-		);
-	},
-
 	_onContextMenu(event) {
 		const context = this.context;
 		const props = this.props;
@@ -269,13 +257,13 @@ const Group = React.createClass({
 		);
 	},
 
-	_onMouseOver(event) {
+	_handleHover(event) {
 		this.context.dispatch(
 			actionCreators.setHoverGroup(this.props.group.id)
 		);
 	},
 
-	_onMouseOut(event) {
+	_handleHoverOut(event) {
 		this.context.dispatch(
 			actionCreators.setHoverGroup(null)
 		);
