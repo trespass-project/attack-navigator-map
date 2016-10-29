@@ -13,34 +13,43 @@ const Dropzone = React.createClass({
 	propTypes: {
 		x: React.PropTypes.number.isRequired,
 		y: React.PropTypes.number.isRequired,
-		group: React.PropTypes.object.isRequired,
 		radius: React.PropTypes.number.isRequired,
-		width: React.PropTypes.number.isRequired,
-		height: React.PropTypes.number.isRequired,
-		showGroupLabels: React.PropTypes.bool,
 		isHovered: React.PropTypes.bool,
-		isSelected: React.PropTypes.bool,
-		nodes: React.PropTypes.object,
 	},
 
 	getDefaultProps() {
 		return {
-			showGroupLabels: true,
 			isHovered: false,
-			isSelected: false,
 		};
 	},
 
 	render() {
 		const props = this.props;
+		const classes = classnames(
+			'dropzone',
+			{ 'hovered': props.isHovered }
+		);
+		const checkIcon = { __html: icons['fa-check'] };
 		return (
 			<g transform={`translate(${props.x}, ${props.y})`}>
 				<circle
-					className='dropzone'
+					className={classes}
 					cx={0}
 					cy={0}
 					r={props.radius}
 				/>
+				{(props.isHovered) &&
+					<text
+						style={{
+							fontSize: 60,
+							fill: 'white',
+						}}
+						textAnchor='middle'
+						alignmentBaseline='middle'
+						className='icon fa'
+						dangerouslySetInnerHTML={checkIcon}
+					/>
+				}
 			</g>
 		);
 	},
@@ -78,20 +87,15 @@ const Group = React.createClass({
 		>{this.props.group.label}</text>;
 	},
 
-	renderDropzone() {
-		return null;
+	renderDropzone(groupRect) {
 		const props = this.props;
 		const context = this.context;
 
-		if (props.dragNode
+		// TODO: is props.dragNode a thing?
+		if (props.dragNodeId
 			&& !R.contains(props.dragNodeId, props.group.nodeIds)) {
+			// a node is being dragged, but it is not in this group
 			const dragNode = props.nodes[props.dragNodeId];
-			const groupRect = {
-				x: props.x,
-				y: props.y,
-				width: props.width,
-				height: props.height,
-			};
 			const halfSize = 0.5 * context.theme.node.size;
 			const nodeRect = {
 				x: dragNode.x - halfSize,
@@ -100,13 +104,28 @@ const Group = React.createClass({
 				height: context.theme.node.size,
 			};
 			if (helpers.isRectInsideRect(nodeRect, groupRect) ||
-				helpers.isRectInsideRect(groupRect, nodeRect) // or, when group is smaller than node
-				) {
+				helpers.isRectInsideRect(groupRect, nodeRect)) {
+				// node is overlapping group
+
+				// does node overlap dropzone rect?
+				const r = context.theme.group.dropzoneRadius;
+				const dropzoneRect = {
+					x: groupRect.x + (groupRect.width * 0.5) - r,
+					y: groupRect.y + (groupRect.height * 0.5) - r,
+					width: 2 * r,
+					height: 2 * r,
+				};
+				const isHovered = (
+					helpers.isRectInsideRect(nodeRect, dropzoneRect)
+					|| helpers.isRectInsideRect(dropzoneRect, nodeRect)
+				);
+
 				return <Dropzone
+					isHovered={isHovered}
 					group={props.group}
 					radius={context.theme.group.dropzoneRadius}
-					x={props.width*0.5}
-					y={props.height*0.5}
+					x={groupRect.width * 0.5}
+					y={groupRect.height * 0.5}
 				/>;
 			}
 		}
@@ -146,46 +165,33 @@ const Group = React.createClass({
 		const height = bounds.maxY - bounds.minY;
 		const x = this._x = bounds.minX;
 		const y = this._y = bounds.minY;
+		const groupRect = { x, y, width, height };
 
-		return (
-			<g
-				className='group-group'
-				onClick={this._onClick}
-				onContextMenu={this._onContextMenu}
-				onMouseEnter={this._handleHover}
-				onMouseLeave={this._handleHoverOut}
-				transform={`translate(${x}, ${y})`}
-			>
-				<rect
-					className={classnames(
-						'group',
-						{ 'selected': props.isSelected }
-					)}
-					rx={context.theme.group.cornerRadius}
-					ry={context.theme.group.cornerRadius}
-					width={width}
-					height={height}
-				>
-				</rect>
-				{(props.showGroupLabels) && this.renderLabel(
-					width * 0.5,
-					/*height*0.5 + 16*/ -10
+		return <g
+			className='group-group'
+			onClick={this._onClick}
+			onContextMenu={this._onContextMenu}
+			onMouseEnter={this._handleHover}
+			onMouseLeave={this._handleHoverOut}
+			transform={`translate(${x}, ${y})`}
+		>
+			<rect
+				className={classnames(
+					'group',
+					{ 'selected': props.isSelected }
 				)}
-				{this.renderDropzone()}
-			</g>
-		);
-	},
-
-	_handleHover(event) {
-		this.context.dispatch(
-			actionCreators.setHoverGroup(this.props.group.id)
-		);
-	},
-
-	_handleHoverOut(event) {
-		this.context.dispatch(
-			actionCreators.setHoverGroup(null)
-		);
+				rx={context.theme.group.cornerRadius}
+				ry={context.theme.group.cornerRadius}
+				width={width}
+				height={height}
+			>
+			</rect>
+			{(props.showGroupLabels) && this.renderLabel(
+				width * 0.5,
+				/*height*0.5 + 16*/ -10
+			)}
+			{this.renderDropzone(groupRect)}
+		</g>;
 	},
 
 	_onContextMenu(event) {
@@ -269,13 +275,13 @@ const Group = React.createClass({
 		);
 	},
 
-	_onMouseOver(event) {
+	_handleHover(event) {
 		this.context.dispatch(
 			actionCreators.setHoverGroup(this.props.group.id)
 		);
 	},
 
-	_onMouseOut(event) {
+	_handleHoverOut(event) {
 		this.context.dispatch(
 			actionCreators.setHoverGroup(null)
 		);
