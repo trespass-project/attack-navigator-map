@@ -147,33 +147,31 @@ const Group = React.createClass({
 		const x = this._x = bounds.minX;
 		const y = this._y = bounds.minY;
 
-		return (
-			<g
-				className='group-group'
-				onClick={this._onClick}
-				onContextMenu={this._onContextMenu}
-				onMouseEnter={this._handleHover}
-				onMouseLeave={this._handleHoverOut}
-				transform={`translate(${x}, ${y})`}
-			>
-				<rect
-					className={classnames(
-						'group',
-						{ 'selected': props.isSelected }
-					)}
-					rx={context.theme.group.cornerRadius}
-					ry={context.theme.group.cornerRadius}
-					width={width}
-					height={height}
-				>
-				</rect>
-				{(props.showGroupLabels) && this.renderLabel(
-					width * 0.5,
-					/*height*0.5 + 16*/ -10
+		return <g
+			className='group-group'
+			onClick={this._onClick}
+			onContextMenu={this._onContextMenu}
+			onMouseEnter={this._handleHover}
+			onMouseLeave={this._handleHoverOut}
+			transform={`translate(${x}, ${y})`}
+		>
+			<rect
+				className={classnames(
+					'group',
+					{ 'selected': props.isSelected }
 				)}
-				{this.renderDropzone()}
-			</g>
-		);
+				rx={context.theme.group.cornerRadius}
+				ry={context.theme.group.cornerRadius}
+				width={width}
+				height={height}
+			>
+			</rect>
+			{(props.showGroupLabels) && this.renderLabel(
+				width * 0.5,
+				/*height*0.5 + 16*/ -10
+			)}
+			{this.renderDropzone()}
+		</g>;
 	},
 
 	_onContextMenu(event) {
