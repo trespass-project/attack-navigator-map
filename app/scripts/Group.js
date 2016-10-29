@@ -78,20 +78,15 @@ const Group = React.createClass({
 		>{this.props.group.label}</text>;
 	},
 
-	renderDropzone() {
-		return null;
+	renderDropzone(groupRect) {
 		const props = this.props;
 		const context = this.context;
 
-		if (props.dragNode
+		// TODO: is props.dragNode a thing?
+		if (props.dragNodeId
 			&& !R.contains(props.dragNodeId, props.group.nodeIds)) {
+			// a node is being dragged, but it is not in this group
 			const dragNode = props.nodes[props.dragNodeId];
-			const groupRect = {
-				x: props.x,
-				y: props.y,
-				width: props.width,
-				height: props.height,
-			};
 			const halfSize = 0.5 * context.theme.node.size;
 			const nodeRect = {
 				x: dragNode.x - halfSize,
@@ -100,13 +95,13 @@ const Group = React.createClass({
 				height: context.theme.node.size,
 			};
 			if (helpers.isRectInsideRect(nodeRect, groupRect) ||
-				helpers.isRectInsideRect(groupRect, nodeRect) // or, when group is smaller than node
-				) {
+				helpers.isRectInsideRect(groupRect, nodeRect)) {
+				// node is overlapping group
 				return <Dropzone
 					group={props.group}
 					radius={context.theme.group.dropzoneRadius}
-					x={props.width*0.5}
-					y={props.height*0.5}
+					x={groupRect.width * 0.5}
+					y={groupRect.height * 0.5}
 				/>;
 			}
 		}
@@ -146,6 +141,7 @@ const Group = React.createClass({
 		const height = bounds.maxY - bounds.minY;
 		const x = this._x = bounds.minX;
 		const y = this._y = bounds.minY;
+		const groupRect = { x, y, width, height };
 
 		return <g
 			className='group-group'
@@ -170,7 +166,7 @@ const Group = React.createClass({
 				width * 0.5,
 				/*height*0.5 + 16*/ -10
 			)}
-			{this.renderDropzone()}
+			{this.renderDropzone(groupRect)}
 		</g>;
 	},
 
