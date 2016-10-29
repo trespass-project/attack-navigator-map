@@ -13,21 +13,13 @@ const Dropzone = React.createClass({
 	propTypes: {
 		x: React.PropTypes.number.isRequired,
 		y: React.PropTypes.number.isRequired,
-		group: React.PropTypes.object.isRequired,
 		radius: React.PropTypes.number.isRequired,
-		width: React.PropTypes.number.isRequired,
-		height: React.PropTypes.number.isRequired,
-		showGroupLabels: React.PropTypes.bool,
 		isHovered: React.PropTypes.bool,
-		isSelected: React.PropTypes.bool,
-		nodes: React.PropTypes.object,
 	},
 
 	getDefaultProps() {
 		return {
-			showGroupLabels: true,
 			isHovered: false,
-			isSelected: false,
 		};
 	},
 
