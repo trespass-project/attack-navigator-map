@@ -25,14 +25,31 @@ const Dropzone = React.createClass({
 
 	render() {
 		const props = this.props;
+		const classes = classnames(
+			'dropzone',
+			{ 'hovered': props.isHovered }
+		);
+		const checkIcon = { __html: icons['fa-check'] };
 		return (
 			<g transform={`translate(${props.x}, ${props.y})`}>
 				<circle
-					className='dropzone'
+					className={classes}
 					cx={0}
 					cy={0}
 					r={props.radius}
 				/>
+				{(props.isHovered) &&
+					<text
+						style={{
+							fontSize: 60,
+							fill: 'white',
+						}}
+						textAnchor='middle'
+						alignmentBaseline='middle'
+						className='icon fa'
+						dangerouslySetInnerHTML={checkIcon}
+					/>
+				}
 			</g>
 		);
 	},
@@ -98,15 +115,18 @@ const Group = React.createClass({
 					width: 2 * r,
 					height: 2 * r,
 				};
-				if (helpers.isRectInsideRect(nodeRect, dropzoneRect) ||
-					helpers.isRectInsideRect(dropzoneRect, nodeRect)) {
-					return <Dropzone
-						group={props.group}
-						radius={context.theme.group.dropzoneRadius}
-						x={groupRect.width * 0.5}
-						y={groupRect.height * 0.5}
-					/>;
-				}
+				const isHovered = (
+					helpers.isRectInsideRect(nodeRect, dropzoneRect)
+					|| helpers.isRectInsideRect(dropzoneRect, nodeRect)
+				);
+
+				return <Dropzone
+					isHovered={isHovered}
+					group={props.group}
+					radius={context.theme.group.dropzoneRadius}
+					x={groupRect.width * 0.5}
+					y={groupRect.height * 0.5}
+				/>;
 			}
 		}
 

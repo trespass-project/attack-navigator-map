@@ -20,10 +20,12 @@
 		pointer-events: none
 
 	.dropzone
-		// stroke: $trespass_black
 		stroke: white
 		stroke-width: 3
 		stroke-dasharray: 10, 10
 		fill: none
-		// fill: white
-		// fill-opacity: 0.75
+
+		&.hovered
+			// fill: white
+			fill-opacity: 0.5
+			stroke-dasharray: none
