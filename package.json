@@ -87,7 +87,7 @@
     "reselect": "^2.5.3",
     "shortid": "^2.2.4",
     "sifter": "^0.5.1",
-    "trespass-visualizations": "0.18.1",
+    "trespass-visualizations": "0.19.1",
     "trespass.js": "^0.31.2",
     "xml2js": "^0.4.16"
   },
