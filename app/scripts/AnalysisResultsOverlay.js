@@ -282,6 +282,10 @@ const AnalysisResultsOverlay = React.createClass({
 
 		return <div id='AnalysisDashboard'>
 			<div className='visualization'>
+				{(!resultsReady) &&
+					<div className='overlay' />
+				}
+
 				<div className='topBar clearfix'>
 					<div>
 						<span className='grey'>Visualization type: </span>
