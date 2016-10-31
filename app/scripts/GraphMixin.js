@@ -132,6 +132,7 @@ const GraphMixin = {
 			editable={props.editable}
 			hoverNodeId={props.hoverNodeId}
 			dragNodeId={props.dragNodeId}
+			groupedNodeIds={props.groupedNodeIds}
 		/>;
 	},
 

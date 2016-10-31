@@ -37,6 +37,7 @@ const Node = React.createClass({
 		isCountermeasure: React.PropTypes.bool,
 		showNodeLabels: React.PropTypes.bool,
 		node: React.PropTypes.object.isRequired,
+		groupedNodeIds: React.PropTypes.object.isRequired,
 
 		// TODO: context
 		// editorElem: React.PropTypes.object.isRequired,
@@ -70,7 +71,7 @@ const Node = React.createClass({
 		const context = this.context;
 		const props = this.props;
 
-		const menuItems = [
+		let menuItems = [
 			{	label: 'delete',
 				destructive: true,
 				icon: icons['fa-trash'],
@@ -84,15 +85,6 @@ const Node = React.createClass({
 					context.dispatch( actionCreators.cloneNode(props.node.id) );
 				}
 			},
-
-			// TODO: only if node is actually in a group
-			{	label: 'remove\nfrom group',
-				icon: icons['fa-object-group'],
-				action: () => {
-					context.dispatch( actionCreators.ungroupNode(props.node.id) );
-				}
-			},
-
 			{	label: 'add\npolicy',
 				icon: icons['fa-plus'], // TODO: use custom icons
 				action: () => {
@@ -110,6 +102,21 @@ const Node = React.createClass({
 				}
 			},
 		];
+
+		const removeFromGroup = {
+			label: 'remove\nfrom group',
+			icon: icons['fa-object-group'],
+			action: () => {
+				context.dispatch(
+					actionCreators.ungroupNode(props.node.id)
+				);
+			}
+		};
+
+		// only if node is actually in a group
+		if (props.groupedNodeIds[props.node.id]) {
+			menuItems = R.insert(2, removeFromGroup, menuItems);
+		}
 
 		context.dispatch( actionCreators.showContextMenu(event, menuItems) );
 	},
