@@ -11,6 +11,7 @@ const getNodes = (state) => state.graph.nodes;
 const getEdges = (state) => state.graph.edges;
 const getPredicates = (state) => state.graph.predicates;
 const getPolicies = (state) => state.graph.policies;
+const getGroups = (state) => state.graph.groups;
 const getModelId = (state) => state.metadata.id;
 const getRelationTypes = (state) => state.relationTypes;
 const getComponentsLib = (state) => state.componentsLib;
@@ -34,6 +35,27 @@ module.exports.nodesList = createSelector(
 module.exports.predicatesList = createSelector(
 	getPredicates,
 	R.values
+);
+
+
+// const groupedNodeIds =
+module.exports.groupedNodeIds = createSelector(
+	getGroups,
+	R.pipe(
+		R.values,
+		R.map(R.prop('nodeIds')),
+		R.reduce(
+			R.concat,
+			[]
+		),
+		R.reduce(
+			(acc, nodeId) => {
+				acc[nodeId] = true;
+				return acc;
+			},
+			{}
+		)
+	)
 );
 
 
