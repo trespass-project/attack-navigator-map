@@ -357,6 +357,7 @@ const Node = React.createClass({
 				ry={/*context.theme.node.cornerRadius * */0}
 				height={context.theme.countermeasure.size}
 				width={context.theme.countermeasure.size}
+				style={{ fill: fillColor }}
 			/>
 			: <circle
 				className={nodeClasses}
