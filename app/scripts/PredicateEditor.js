@@ -110,11 +110,14 @@ const PredicateEditor = React.createClass({
 
 		// filter out the impossible relation types for these
 		// model model components
-		const possibleTypes = modelHelpers.possibleEdgeTypes(
-			relationTypes,
-			fromType,
-			toType
-		);
+
+		const possibleTypes = !(fromType && toType)
+			? relationTypes
+			: modelHelpers.possibleEdgeTypes(
+				relationTypes,
+				fromType,
+				toType
+			);
 
 		const subj = <SubjObjSelectize
 			nodes={props.nodes}
@@ -166,17 +169,27 @@ const PredicateEditor = React.createClass({
 				<div className='predicates'>
 					<ul>
 						{props.edges
-							.map((edge, index) =>
-								this.renderPredicate(
+							.map((edge, index) => {
+								const fromNode = props.nodes[edge.from];
+								const toNode = props.nodes[edge.to];
+								// sometimes `fromNode` and `toNode` are
+								// undefined, because they are no map
+								// components.
+								// example: `pw isPasswordOf user`
+								const fromType = R.propOr(
+									undefined, 'modelComponentType', fromNode
+								);
+								const toType = R.propOr(
+									undefined, 'modelComponentType', toNode
+								);
+								return this.renderPredicate(
 									edge,
 									index,
 									props.relationTypes,
 									props.relationsMap,
-									{
-										fromType: props.nodes[edge.from].modelComponentType,
-										toType: props.nodes[edge.to].modelComponentType,
-									}
-								)
+									{ fromType, toType }
+								);
+							}
 						)}
 					</ul>
 				</div>
