@@ -1454,15 +1454,27 @@ const CredItem = React.createClass({
 
 	render() {
 		const props = this.props;
-		const { item } = props;
+		const { item, nodesList } = props;
+
+		const select = <select
+			value={item.name}
+			onChange={(event) => {
+				const newName = event.target.value;
+				this.handleNameChange(newName);
+			}}
+		>
+			{nodesList.map((node, index) => {
+				return <option key={index} value={node.label}>
+					{node.label}
+				</option>;
+			})}
+		</select>;
 
 		return <div>
 			<div>
-				<TextInput
-					value={item.name}
-					placeholder='name'
-					onChange={this.handleNameChange}
-				/>
+				<label>Name:</label>
+				<span> </span>
+				{select}
 			</div>
 
 			<DividingSpace />
