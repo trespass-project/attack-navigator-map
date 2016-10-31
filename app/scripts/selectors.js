@@ -78,14 +78,17 @@ module.exports.resultsAttacktreeLabelsHistogram = createSelector(
 			R.toLower,
 			helpers.getAllTreeLabels(attacktree)
 		);
-		return R.sortBy(
-			R.prop('count'),
+		const histogram = R.map(
+			(pair) => ({
+				value: pair[0],
+				count: pair[1]
+			}),
 			R.toPairs(histogramMap)
-				.map((pair) => ({
-					value: pair[0],
-					count: pair[1]
-				}))
 		);
+		return R.pipe(
+			R.sortBy(R.prop('count')),
+			R.reverse
+		)(histogram);
 	}
 );
 
