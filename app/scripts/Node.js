@@ -1,4 +1,5 @@
 const R = require('ramda');
+const _ = require('lodash');
 const React = require('react');
 const classnames = require('classnames');
 import { createSelector } from 'reselect';
@@ -8,6 +9,7 @@ const Port = require('./Port.js');
 const icons = require('./icons.js');
 const helpers = require('./helpers.js');
 const actionCreators = require('./actionCreators.js');
+const policyCommon = require('./policyCommon.js');
 
 const { colorScales } = require('trespass-visualizations').color;
 const domain = [0, 1];
@@ -94,9 +96,11 @@ const Node = React.createClass({
 			{	label: 'add\npolicy',
 				icon: icons['fa-plus'], // TODO: use custom icons
 				action: () => {
-					const policy = {
-						atLocations: [props.node.id],
-					};
+					const policy = _.merge(
+						{},
+						policyCommon.emptyPolicy,
+						{ atLocations: [props.node.id] }
+					);
 					context.dispatch(
 						actionCreators.addPolicy(policy)
 					);
