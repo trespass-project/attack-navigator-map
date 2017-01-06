@@ -2361,11 +2361,19 @@ function resultsSelectAttack(index) {
 				attacktree = state.analysis.analysisResults[selectedTool][index];
 			}
 			else if (selectedTool === 'A.T. Evaluator') {
-				attacktree = getSubtree(
-					getSubtreeParams,
-					() => {
-						console.error('this should not happen.');
-					}
+				// attacktree = getSubtree(
+				// 	getSubtreeParams,
+				// 	() => {
+				// 		console.error('this should not happen.');
+				// 	}
+				// );
+				const referenceTree = state.analysis.analysisResults['Attack Pattern Lib.'];
+				const leafLabels = state.analysis.analysisResults[selectedTool][index].labels
+					// HACK: we need to remove the id annotation
+					.map((label) => label.replace(/ \(id=\d+\)/i, ''));
+				attacktree = getSubtreeFromAttackVector(
+					referenceTree,
+					leafLabels
 				);
 			}
 		} else {
