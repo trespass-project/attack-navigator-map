@@ -2277,9 +2277,20 @@ function getSubtreeFromAttackTrace(referenceTree, attackTrace) {
 const getSubtreeFromAttackVector =
 module.exports.getSubtreeFromAttackVector =
 function getSubtreeFromAttackVector(referenceTree, leafLabels) {
-	const subtreeRoot = trespass.attacktree.subtreeFromLeafLabels(
+	const re = / \(id=(\d+)\)/i;
+	const leafIds = leafLabels
+		.map((label) => {
+			const m = label.match(re);
+			if (!!m && m[1]) {
+				return m[1]; // the id
+			} else {
+				console.error('no id found in label:', label);
+				return null;
+			}
+		});
+	const subtreeRoot = trespass.attacktree.subtreeFromLeafIds(
 		trespass.attacktree.getRootNode(referenceTree),
-		leafLabels
+		leafIds
 	);
 	return subtreeRoot;
 };
@@ -2368,9 +2379,7 @@ function resultsSelectAttack(index) {
 				// 	}
 				// );
 				const referenceTree = state.analysis.analysisResults['Attack Pattern Lib.'];
-				const leafLabels = state.analysis.analysisResults[selectedTool][index].labels
-					// HACK: we need to remove the id annotation
-					.map((label) => label.replace(/ \(id=\d+\)/i, ''));
+				const leafLabels = state.analysis.analysisResults[selectedTool][index].labels;
 				attacktree = getSubtreeFromAttackVector(
 					referenceTree,
 					leafLabels
