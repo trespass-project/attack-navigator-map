@@ -2337,7 +2337,7 @@ function resultsSelectAttack(index) {
 
 		const state = getState().present;
 		const selectedTool = state.analysis.resultsSelectedTool;
-		const { subtreeCache } = state.analysis;
+		// const { subtreeCache } = state.analysis;
 		let attacktree = undefined;
 
 		/* eslint brace-style: 0 */
@@ -2345,12 +2345,12 @@ function resultsSelectAttack(index) {
 				selectedTool,
 				trespass.analysis.analysisToolNamesStrict
 			)) {
-			const getSubtreeParams = {
-				subtreeCache,
-				selectedTool,
-				index,
-				dispatch
-			};
+			// const getSubtreeParams = {
+			// 	subtreeCache,
+			// 	selectedTool,
+			// 	index,
+			// 	dispatch
+			// };
 			if (selectedTool === 'A.T. Analyzer') {
 				// attacktree = getSubtree(
 				// 	getSubtreeParams,
