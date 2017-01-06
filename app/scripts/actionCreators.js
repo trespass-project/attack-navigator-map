@@ -2163,54 +2163,56 @@ const resultsSelectTool =
 module.exports.resultsSelectTool =
 function resultsSelectTool(toolName) {
 	return (dispatch, getState) => {
-		const state = getState().present;
+		// const state = getState().present;
 
-		dispatch(
-			highlightAttackTreeNodes(null)
-		);
+		// dispatch(
+		// 	highlightAttackTreeNodes(null)
+		// );
 
 		dispatch({
 			type: constants.ACTION_resultsSelectTool,
 			toolName,
 		});
 
-		if (R.contains(toolName, trespass.analysis.analysisToolNamesStrict)) {
-			const { subtreeCache } = state.analysis;
-			const selectedTool = toolName;
-			const referenceTree = state.analysis.analysisResults['Attack Pattern Lib.'];
-			const getSubtreeParams = {
-				subtreeCache,
-				selectedTool,
-				dispatch
-			};
-			state.analysis.analysisResults[toolName]
-				.forEach((result, index) => {
-					let createFn;
-					if (toolName === 'A.T. Analyzer') {
-						const attackTrace = state.analysis.analysisResults[selectedTool][index];
-						createFn = () => getSubtreeFromAttackTrace(
-							referenceTree,
-							attackTrace
-						);
-					} else if (toolName === 'A.T. Evaluator') {
-						const leafLabels = state.analysis.analysisResults[selectedTool][index].labels;
-						createFn = () => getSubtreeFromAttackVector(
-							referenceTree,
-							leafLabels
-						);
-					}
-					// we don't actually use, we only want it to
-					// be cached
-					/*const attacktree =*/ getSubtree(
-						Object.assign({ index }, getSubtreeParams),
-						createFn
-					);
-				});
-		} else {
-			// treemaker, apl:
-			// display tree
-			dispatch( resultsSelectAttack(0) );
-		}
+		// if (R.contains(toolName, trespass.analysis.analysisToolNamesStrict)) {
+		// 	const { subtreeCache } = state.analysis;
+		// 	const selectedTool = toolName;
+		// 	const referenceTree = state.analysis.analysisResults['Attack Pattern Lib.'];
+		// 	const getSubtreeParams = {
+		// 		subtreeCache,
+		// 		selectedTool,
+		// 		dispatch
+		// 	};
+		// 	state.analysis.analysisResults[toolName]
+		// 		.forEach((result, index) => {
+		// 			let createFn;
+		// 			if (toolName === 'A.T. Analyzer') {
+		// 				const attackTrace = state.analysis.analysisResults[selectedTool][index];
+		// 				createFn = () => getSubtreeFromAttackTrace(
+		// 					referenceTree,
+		// 					attackTrace
+		// 				);
+		// 			} else if (toolName === 'A.T. Evaluator') {
+		// 				const leafLabels = state.analysis.analysisResults[selectedTool][index].labels;
+		// 				createFn = () => getSubtreeFromAttackVector(
+		// 					referenceTree,
+		// 					leafLabels
+		// 				);
+		// 			}
+		// 			// we don't actually use, we only want it to
+		// 			// be cached
+		// 			/*const attacktree =*/ getSubtree(
+		// 				Object.assign({ index }, getSubtreeParams),
+		// 				createFn
+		// 			);
+		// 		});
+		// } else {
+		// 	// treemaker, apl:
+		// 	// display tree
+		// 	dispatch( resultsSelectAttack(0) );
+		// }
+
+		dispatch( resultsSelectAttack(0) );
 	};
 };
 
@@ -2326,9 +2328,9 @@ const resultsSelectAttack =
 module.exports.resultsSelectAttack =
 function resultsSelectAttack(index) {
 	return (dispatch, getState) => {
-		dispatch(
-			highlightAttackTreeNodes(null)
-		);
+		// dispatch(
+		// 	highlightAttackTreeNodes(null)
+		// );
 		if (index === null || index === undefined) {
 			return;
 		}
@@ -2350,12 +2352,13 @@ function resultsSelectAttack(index) {
 				dispatch
 			};
 			if (selectedTool === 'A.T. Analyzer') {
-				attacktree = getSubtree(
-					getSubtreeParams,
-					() => {
-						console.error('this should not happen.');
-					}
-				);
+				// attacktree = getSubtree(
+				// 	getSubtreeParams,
+				// 	() => {
+				// 		console.error('this should not happen.');
+				// 	}
+				// );
+				attacktree = state.analysis.analysisResults[selectedTool][index];
 			}
 			else if (selectedTool === 'A.T. Evaluator') {
 				attacktree = getSubtree(
