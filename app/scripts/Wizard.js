@@ -393,6 +393,12 @@ const Wizard = React.createClass({
 		);
 	},
 
+	updateProcess(updatedProcess) {
+		this.context.dispatch(
+			actionCreators.updateProcess(updatedProcess)
+		);
+	},
+
 	removeProcess(processId) {
 		this.context.dispatch(
 			actionCreators.removeProcess(processId)
