@@ -328,6 +328,12 @@ function reducer(state=initialState, action) {
 			return mergeWithState({ graph: newGraph });
 		}
 
+		case constants.ACTION_removeProcess: {
+			const { processId } = action;
+			const newGraph = modelHelpers.removeProcess(state.graph, processId);
+			return mergeWithState({ graph: newGraph });
+		}
+
 		case constants.ACTION_addPolicy: {
 			const { policy } = action;
 			const newGraph = modelHelpers.addPolicy(state.graph, policy);

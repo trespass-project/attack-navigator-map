@@ -66,6 +66,7 @@ const constants = {
 	ACTION_removeEdge: 'ACTION_removeEdge',
 	ACTION_updateComponentProperties: 'ACTION_updateComponentProperties',
 	ACTION_addProcess: 'ACTION_addProcess',
+	ACTION_removeProcess: 'ACTION_removeProcess',
 	ACTION_addPolicy: 'ACTION_addPolicy',
 	ACTION_updatePolicy: 'ACTION_updatePolicy',
 	ACTION_removePolicy: 'ACTION_removePolicy',

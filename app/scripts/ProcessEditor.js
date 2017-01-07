@@ -216,18 +216,18 @@ function defaultCredentials(credentials) {
 }
 
 
-function addToPolicy(policy, type, data) {
+function addToProcess(process, type, data) {
 	const updateData = {
 		[type]: { $push: [data] },
 	};
 
 	return update(
 		update(
-			policy,
+			process,
 			{
 				// set defaults first, before we try to push stuff into it
 				credentials: {
-					$set: defaultCredentials(policy.credentials)
+					$set: defaultCredentials(process.credentials)
 				}
 			}
 		),
@@ -972,624 +972,16 @@ const EnabledAction = React.createClass({
 });
 
 
-const Credentials = React.createClass({
+const ProcessEditor = React.createClass({
 	propTypes: {
-		credentials: React.PropTypes.object.isRequired,
-		locationOptions: React.PropTypes.array.isRequired,
-		nodes: React.PropTypes.object.isRequired,
-		nodesList: React.PropTypes.array.isRequired,
-		onChange: React.PropTypes.func,
-		addLocation: React.PropTypes.func.isRequired,
-		addPredicate: React.PropTypes.func.isRequired,
-		addItem: React.PropTypes.func.isRequired,
-		addData: React.PropTypes.func.isRequired,
-	},
-
-	getDefaultProps() {
-		return {
-			credentials: {},
-			locationOptions: [],
-			onChange: noop,
-		};
-	},
-
-	handleChangeCredLocation(index, locationId) {
-		this._updateArrayIndex('credLocation', index, locationId);
-	},
-
-	handleRemoveCredLocation(index) {
-		this._updateField(
-			'credLocation',
-			R.remove(index, 1, this.props.credentials.credLocation)
-		);
-	},
-
-	handleChangeCredPredicate(index, updated) {
-		this._updateArrayIndex('credPredicate', index, updated);
-	},
-
-	handleRemoveCredPredicate(index) {
-		this._updateField(
-			'credPredicate',
-			R.remove(index, 1, this.props.credentials.credPredicate)
-		);
-	},
-
-	handleChangeCredData(index, updated) {
-		this._updateArrayIndex('credData', index, updated);
-	},
-
-	handleRemoveCredData(index) {
-		this._updateField(
-			'credData',
-			R.remove(index, 1, this.props.credentials.credData)
-		);
-	},
-
-	handleChangeCredItem(index, updated) {
-		this._updateArrayIndex('credItem', index, updated);
-	},
-
-	handleRemoveCredItem(index) {
-		this._updateField(
-			'credItem',
-			R.remove(index, 1, this.props.credentials.credItem)
-		);
-	},
-
-	_updateField(fieldName, updatedValue) {
-		__updateField(
-			this.props.onChange,
-			this.props.credentials,
-			[fieldName, updatedValue]
-		);
-	},
-
-	_updateArrayIndex(fieldName, index, updatedValue) {
-		__updateArrayIndex(
-			this.props.onChange,
-			this.props.credentials,
-			[fieldName, index, updatedValue]
-		);
-	},
-
-	render() {
-		const props = this.props;
-		const credLocation = props.credentials.credLocation || [];
-		const credPredicate = props.credentials.credPredicate || [];
-		const credData = props.credentials.credData || [];
-		const credItem = props.credentials.credItem || [];
-
-		return <div>
-			<table>
-				<tbody>
-					{/*LOCATION*/}
-					<tr>
-						<td colSpan='2'>
-							<label>Location:</label>
-							<span> </span>
-							<AddButton onAdd={props.addLocation} />
-						</td>
-					</tr>
-					<tr>
-						<td colSpan='2'>
-							{credLocation.map((credLoc, index) => {
-								const content = <CredLocation
-									locationId={credLoc}
-									locationOptions={props.locationOptions}
-									nodes={props.nodes}
-									onChange={(name, value) => {
-										this.handleChangeCredLocation(
-											index,
-											value
-										);
-									}}
-								/>;
-								return <InnerTable
-									key={index}
-									onRemove={() => {
-										this.handleRemoveCredLocation(index);
-									}}
-								>
-									{content}
-								</InnerTable>;
-							})}
-						</td>
-					</tr>
-
-					{/*PREDICATE*/}
-					<tr>
-						<td colSpan='2'>
-							<label>Predicate:</label>
-							<span> </span>
-							<AddButton onAdd={props.addPredicate} />
-						</td>
-					</tr>
-					<tr>
-						<td colSpan='2'>
-							{credPredicate.map((credPred, index) => {
-								const content = <CredPredicate
-									predicate={credPred}
-									relationTypes={props.relationTypes}
-									relationsMap={props.relationsMap}
-									nodes={props.nodes}
-									nodesList={props.nodesList}
-									onChange={(updatedPredicate) => {
-										this.handleChangeCredPredicate(
-											index,
-											updatedPredicate
-										);
-									}}
-								/>;
-								return <InnerTable
-									key={index}
-									onRemove={() => {
-										this.handleRemoveCredPredicate(index);
-									}}
-								>
-									{content}
-								</InnerTable>;
-							})}
-						</td>
-					</tr>
-
-					{/*DATA*/}
-					<tr>
-						<td colSpan='2'>
-							<label>Data:</label>
-							<span> </span>
-							<AddButton onAdd={props.addData} />
-						</td>
-					</tr>
-					<tr>
-						<td colSpan='2'>
-							{credData.map((credData, index) => {
-								const content = <CredData
-									data={credData}
-									nodes={props.nodes}
-									nodesList={props.nodesList}
-									onChange={(updatedData) => {
-										this.handleChangeCredData(
-											index,
-											updatedData
-										);
-									}}
-								/>;
-								return <InnerTable
-									key={index}
-									onRemove={() => {
-										this.handleRemoveCredData(index);
-									}}
-								>
-									{content}
-								</InnerTable>;
-							})}
-						</td>
-					</tr>
-
-				{/*ITEM*/}
-					<tr>
-						<td colSpan='2'>
-							<label>Item:</label>
-							<span> </span>
-							<AddButton onAdd={props.addItem} />
-						</td>
-					</tr>
-					<tr>
-						<td colSpan='2'>
-							{credItem.map((credItem, index) => {
-								const content = <CredItem
-									item={credItem}
-									nodes={props.nodes}
-									nodesList={props.nodesList}
-									onChange={(updated) => {
-										this.handleChangeCredItem(index, updated);
-									}}
-								/>;
-								return <InnerTable
-									key={index}
-									onRemove={() => {
-										this.handleRemoveCredItem(index);
-									}}
-								>
-									{content}
-								</InnerTable>;
-							})}
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>;
-	},
-});
-
-
-const CredLocation = React.createClass({
-	propTypes: {
-		locationId: React.PropTypes.string/*.isRequired*/,
-		locationOptions: React.PropTypes.array.isRequired,
-		nodes: React.PropTypes.object.isRequired,
-		onChange: React.PropTypes.func,
-	},
-
-	getDefaultProps() {
-		return {
-			locationOptions: [],
-			onChange: noop,
-		};
-	},
-
-	render() {
-		const props = this.props;
-		const { locationId } = props;
-
-		const location = {
-			value: locationId,
-			label: locationId,
-		};
-
-		const valueKey = 'value';
-		const renderValue = R.partial(
-			_renderValue,
-			[props.nodes, valueKey]
-		);
-
-		return <SelectizeDropdown
-			multi={false}
-			name='credLocation'
-			value={(locationId) ? location : undefined}
-			options={props.locationOptions}
-			valueKey='value'
-			labelKey='label'
-			onChange={props.onChange/*(name, values)*/}
-			extraProps={{ renderValue }}
-		/>;
-	},
-});
-
-
-const CredData = React.createClass({
-	propTypes: {
-		data: React.PropTypes.object.isRequired,
-		nodes: React.PropTypes.object.isRequired,
-		nodesList: React.PropTypes.array.isRequired,
-		onChange: React.PropTypes.func,
-	},
-
-	getDefaultProps() {
-		return {
-			onChange: noop,
-		};
-	},
-
-	handleValueChange(updated, index) {
-		this._updateArrayIndex('values', index, updated);
-	},
-
-	handleRemoveValue(index) {
-		this._updateField(
-			'values',
-			R.remove(index, 1, this.props.data.values)
-		);
-	},
-
-	handleAddValue(event) {
-		if (event) { event.preventDefault(); }
-		const values = [
-			...this.props.data.values,
-			policyCommon.emptyValue
-		];
-		this._updateField('values', values);
-	},
-
-	handleNameChange(name) {
-		this._updateField('name', name);
-	},
-
-	_updateField(fieldName, updatedValue) {
-		__updateField(
-			this.props.onChange,
-			this.props.data,
-			[fieldName, updatedValue]
-		);
-	},
-
-	_updateArrayIndex(fieldName, index, updatedValue) {
-		__updateArrayIndex(
-			this.props.onChange,
-			this.props.data,
-			[fieldName, index, updatedValue]
-		);
-	},
-
-	render() {
-		const props = this.props;
-		const { data } = props;
-
-		return <div>
-			<div>
-				<TextInput
-					value={data.name}
-					placeholder='name'
-					onChange={this.handleNameChange}
-				/>
-			</div>
-
-			<DividingSpace />
-
-			<div>
-				<label>Value:</label>
-				<span> </span>
-				<AddButton onAdd={this.handleAddValue} />
-			</div>
-
-			<div>
-				{(data.values || [])
-					.map((value, index) => {
-						return <div key={index}>
-							<DividingSpace />
-							<VariableOrSelectize
-								data={value}
-								nodes={props.nodes}
-								nodesList={props.nodesList}
-								onChange={(updated) => {
-									this.handleValueChange(updated, index);
-								}}
-								onRemove={() => {
-									this.handleRemoveValue(index);
-								}}
-							/>
-						</div>;
-					})
-				}
-			</div>
-		</div>;
-	},
-});
-
-
-const CredItem = React.createClass({
-	propTypes: {
-		item: React.PropTypes.object.isRequired,
-		nodes: React.PropTypes.object.isRequired,
-		nodesList: React.PropTypes.array.isRequired,
-		onChange: React.PropTypes.func,
-	},
-
-	getDefaultProps() {
-		return {
-			onChange: noop,
-		};
-	},
-
-	handleNameChange(name) {
-		this._updateField('name', name);
-	},
-
-	handleValueChange(updated, index) {
-		this._updateArrayIndex('values', index, updated);
-	},
-
-	handleRemoveValue(index) {
-		this._updateField(
-			'values',
-			R.remove(index, 1, this.props.item.values)
-		);
-	},
-
-	handleAddValueItem(event) {
-		if (event) { event.preventDefault(); }
-		this._handleAdd('credItem');
-	},
-
-	handleAddValueData(event) {
-		if (event) { event.preventDefault(); }
-		this._handleAdd('credData');
-	},
-
-	_updateField(fieldName, updatedValue) {
-		__updateField(
-			this.props.onChange,
-			this.props.item,
-			[fieldName, updatedValue]
-		);
-	},
-
-	_updateArrayIndex(fieldName, index, updatedValue) {
-		__updateArrayIndex(
-			this.props.onChange,
-			this.props.item,
-			[fieldName, index, updatedValue]
-		);
-	},
-
-	_handleAdd(type) {
-		const values = [
-			...this.props.item.values,
-			_.merge({ type }, policyCommon.empty[type])
-		];
-		this._updateField('values', values);
-	},
-
-	renderItem(value, index, type) {
-		if (value.type !== type) { return null; }
-
-		const { props } = this;
-
-		const commonProps = {
-			nodes: props.nodes,
-			nodesList: props.nodesList,
-			onChange: (updated) => {
-				this.handleValueChange(updated, index);
-			},
-			onRemove: () => {
-				this.handleRemoveValue(index);
-			},
-		};
-
-		const component = {
-			credItem: <CredItem
-				item={value}
-				{...commonProps}
-			/>,
-			credData: <CredData
-				data={value}
-				{...commonProps}
-			/>,
-		}[value.type] || null;
-
-		return <div key={index}>
-			<DividingSpace />
-			<div style={innerTableContainerStyle}>
-				<InnerTable
-					onRemove={() => {
-						this.handleRemoveValue(index);
-					}}
-				>
-					{component}
-				</InnerTable>
-			</div>
-		</div>;
-	},
-
-	render() {
-		const props = this.props;
-		const { item, nodesList } = props;
-
-		const select = <select
-			value={item.name}
-			onChange={(event) => {
-				const newName = event.target.value;
-				this.handleNameChange(newName);
-			}}
-		>
-			{nodesList.map((node, index) => {
-				return <option key={index} value={node.label}>
-					{node.label}
-				</option>;
-			})}
-		</select>;
-
-		return <div>
-			<div>
-				<label>Name:</label>
-				<span> </span>
-				{select}
-			</div>
-
-			<DividingSpace />
-
-			<div>
-				<label>Data:</label>
-				<span> </span>
-				<AddButton onAdd={this.handleAddValueData} />
-			</div>
-
-			<div>
-				{item.values.map((it, index) => {
-					return this.renderItem(it, index, 'credData');
-				})}
-			</div>
-
-			<DividingSpace />
-
-			<div>
-				<label>Item:</label>
-				<span> </span>
-				<AddButton onAdd={this.handleAddValueItem} />
-			</div>
-
-			<div>
-				{item.values.map((it, index) => {
-					return this.renderItem(it, index, 'credItem');
-				})}
-			</div>
-		</div>;
-	},
-});
-
-
-const CredPredicate = React.createClass({
-	propTypes: {
-		predicate: React.PropTypes.object.isRequired,
-		relationTypes: React.PropTypes.array.isRequired,
-		relationsMap: React.PropTypes.object.isRequired,
-		nodes: React.PropTypes.object.isRequired,
-		nodesList: React.PropTypes.array.isRequired,
-		onChange: React.PropTypes.func,
-	},
-
-	getDefaultProps() {
-		return {
-			onChange: noop,
-		};
-	},
-
-	_updateField(fieldName, updatedValue) {
-		__updateField(
-			this.props.onChange,
-			this.props.predicate,
-			[fieldName, updatedValue]
-		);
-	},
-
-	_updateArrayIndex(fieldName, index, updatedValue) {
-		__updateArrayIndex(
-			this.props.onChange,
-			this.props.predicate,
-			[fieldName, index, updatedValue]
-		);
-	},
-
-	handleRelationChange(name, relation) {
-		this._updateField('relationType', relation);
-	},
-
-	handleValueChange(updated, index) {
-		this._updateArrayIndex('values', index, updated);
-	},
-
-	render() {
-		const props = this.props;
-		const { predicate } = props;
-		const { relationTypes, relationsMap } = props;
-
-		const renderSubjObj = (value, index) => {
-			return <VariableOrSelectize
-				data={value}
-				nodes={props.nodes}
-				nodesList={props.nodesList}
-				onChange={(updated) => {
-					this.handleValueChange(updated, index);
-				}}
-			/>;
-		};
-
-		return <div>
-			{renderSubjObj(predicate.values[0], 0)}
-			<span> </span>
-			<RelationSelectize
-				options={relationTypes}
-				value={relationsMap[predicate.relationType]}
-				onChange={this.handleRelationChange}
-			/>
-			<span> </span>
-			{renderSubjObj(predicate.values[1], 1)}
-		</div>;
-	},
-});
-
-
-const PolicyEditor = React.createClass({
-	propTypes: {
-		policy: React.PropTypes.object.isRequired,
-		locationOptions: React.PropTypes.array.isRequired,
-		relationTypes: React.PropTypes.array.isRequired,
-		relationsMap: React.PropTypes.object.isRequired,
-		nodes: React.PropTypes.object.isRequired,
-		nodesList: React.PropTypes.array.isRequired,
-		onChange: React.PropTypes.func,
-		onRemove: React.PropTypes.func,
+		// process: React.PropTypes.object.isRequired,
+		// locationOptions: React.PropTypes.array.isRequired,
+		// relationTypes: React.PropTypes.array.isRequired,
+		// relationsMap: React.PropTypes.object.isRequired,
+		// nodes: React.PropTypes.object.isRequired,
+		// nodesList: React.PropTypes.array.isRequired,
+		// onChange: React.PropTypes.func,
+		// onRemove: React.PropTypes.func,
 	},
 
 	getDefaultProps() {
@@ -1604,8 +996,8 @@ const PolicyEditor = React.createClass({
 	_add(event, type) {
 		if (event) { event.preventDefault(); }
 		this.props.onChange(
-			addToPolicy(
-				this.props.policy,
+			addToProcess(
+				this.props.process,
 				type,
 				policyCommon.empty[type]
 			)
@@ -1631,7 +1023,7 @@ const PolicyEditor = React.createClass({
 	_updateField(fieldName, updatedValue) {
 		__updateField(
 			this.props.onChange,
-			this.props.policy,
+			this.props.process,
 			[fieldName, updatedValue]
 		);
 	},
@@ -1639,7 +1031,7 @@ const PolicyEditor = React.createClass({
 	_updateArrayIndex(fieldName, index, updatedValue) {
 		__updateArrayIndex(
 			this.props.onChange,
-			this.props.policy,
+			this.props.process,
 			[fieldName, index, updatedValue]
 		);
 	},
@@ -1658,9 +1050,9 @@ const PolicyEditor = React.createClass({
 
 	render() {
 		const props = this.props;
-		const { policy } = props;
+		const { process } = props;
 
-		return <div className='policy'>
+		return <div className='process'>
 			<table>
 				<tbody>
 					<tr>
@@ -1668,8 +1060,7 @@ const PolicyEditor = React.createClass({
 							<label>Id:</label>
 						</td>
 						<td>
-							{/*<span className='disabled'>{policy.id}</span>*/}
-							{policy.id}
+							{process.id}
 						</td>
 					</tr>
 					<tr>
@@ -1679,7 +1070,7 @@ const PolicyEditor = React.createClass({
 						<td>
 							<AtLocations
 								nodes={props.nodes}
-								locations={policy.atLocations}
+								locations={process.atLocations}
 								locationOptions={props.locationOptions}
 								onChange={(name, values) => {
 									this.atLocationsChanged(values);
@@ -1689,13 +1080,13 @@ const PolicyEditor = React.createClass({
 					</tr>
 					<tr>
 						<td>
-							<label>Action{/*(s)*/}:</label>
+							<label>Actions:</label>
 						</td>
 						<td></td>
 					</tr>
 					<tr>
 						<td colSpan='2' style={{ paddingLeft: padding }}>
-							{(policy.enabled || [])
+							{(process.enabled || [])
 								.map((enabled, index) => {
 									return <EnabledAction
 										key={index}
@@ -1711,29 +1102,6 @@ const PolicyEditor = React.createClass({
 							}
 						</td>
 					</tr>
-
-					<tr>
-						<td colSpan='2'>
-							<label>Credentials:</label>
-						</td>
-					</tr>
-					<tr>
-						<td colSpan='2' style={{ paddingLeft: padding }}>
-							<Credentials
-								credentials={policy.credentials}
-								locationOptions={props.locationOptions}
-								relationTypes={props.relationTypes}
-								relationsMap={props.relationsMap}
-								nodes={props.nodes}
-								nodesList={props.nodesList}
-								onChange={this.credentialsChanged}
-								addLocation={this.addLocation}
-								addPredicate={this.addPredicate}
-								addItem={this.addItem}
-								addData={this.addData}
-							/>
-						</td>
-					</tr>
 				</tbody>
 			</table>
 
@@ -1744,11 +1112,11 @@ const PolicyEditor = React.createClass({
 						event.preventDefault();
 						props.onRemove();
 					}}
-				>remove policy</a>
+				>remove process</a>
 			</div>
 		</div>;
 	},
 });
 
 
-module.exports = PolicyEditor;
+module.exports = ProcessEditor;
