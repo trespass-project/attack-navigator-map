@@ -416,13 +416,13 @@ const Wizard = React.createClass({
 		// TODO: memoize values
 		const processes = R.values(props.graph.processes || {});
 
-		return <div>
+		return <div className='processes'>
 			<h3 className='title'>Processes</h3>
 
 			<button
 				onClick={this.addProcess}
 				className='btn btn-default custom-button'
-			>Add policy</button>
+			>Add process</button>
 
 			<DividingSpace />
 
