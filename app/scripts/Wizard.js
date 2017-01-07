@@ -19,6 +19,7 @@ const AttackerProfileEditor = require('./AttackerProfileEditor/AttackerProfileEd
 import JSONTree from 'react-json-tree';
 import { AutoSizer, FlexTable, FlexColumn/*, SortDirection*/ } from 'react-virtualized';
 const policyCommon = require('./policyCommon.js');
+const processCommon = require('./processCommon.js');
 
 
 // const colorMap = theme => ({
@@ -389,12 +390,7 @@ const Wizard = React.createClass({
 		if (event) { event.preventDefault(); }
 		this.context.dispatch(
 			actionCreators.addProcess(
-				// TODO:
-				{
-					id: undefined,
-					atLocations: [],
-					actions: [],
-				} // processCommon.emptyProcess
+				processCommon.emptyProcess
 			)
 		);
 	},

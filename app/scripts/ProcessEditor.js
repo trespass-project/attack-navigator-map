@@ -10,6 +10,7 @@ const SelectizeDropdown = require('./SelectizeDropdown.js');
 // const RelationSelectize = require('./RelationSelectize.js');
 const ComponentReference = require('./ComponentReference.js');
 const DividingSpace = require('./DividingSpace.js');
+const processCommon = require('./processCommon.js');
 const policyCommon = require('./policyCommon.js');
 
 
@@ -221,18 +222,7 @@ function addToProcess(process, type, data) {
 		[type]: { $push: [data] },
 	};
 
-	return update(
-		update(
-			process,
-			{
-				// set defaults first, before we try to push stuff into it
-				credentials: {
-					$set: defaultCredentials(process.credentials)
-				}
-			}
-		),
-		{ credentials: updateData }
-	);
+	return update(process, updateData);
 }
 
 
@@ -748,7 +738,7 @@ const InOutType = React.createClass({
 			'values',
 			[
 				...this.props.enabled.values,
-				policyCommon.emptyValue /*policyCommon.emptyTuple*/
+				policyCommon.emptyValue
 			]
 		);
 	},
@@ -999,7 +989,7 @@ const ProcessEditor = React.createClass({
 			addToProcess(
 				this.props.process,
 				type,
-				policyCommon.empty[type]
+				processCommon.empty[type]
 			)
 		);
 	},
@@ -1020,12 +1010,16 @@ const ProcessEditor = React.createClass({
 		);
 	},
 
+	addAction(event) {
+		this._add(event, 'actions');
+	},
+
 	atLocationsChanged(locationIds) {
 		this._updateField('atLocations', locationIds);
 	},
 
 	actionChanged(index, updatedAction) {
-		this._updateArrayIndex('enabled', index, updatedAction);
+		this._updateArrayIndex('actions', index, updatedAction);
 	},
 
 	render() {
@@ -1059,10 +1053,15 @@ const ProcessEditor = React.createClass({
 						</td>
 					</tr>
 					<tr>
-						<td>
+						{/*<td>
 							<label>Actions:</label>
 						</td>
-						<td></td>
+						<td></td>*/}
+						<td colSpan='2'>
+							<label>Actions:</label>
+							<span> </span>
+							<AddButton onAdd={this.addAction} />
+						</td>
 					</tr>
 					<tr>
 						<td colSpan='2' style={{ paddingLeft: padding }}>
