@@ -1,6 +1,6 @@
 {
   "name": "attack-navigator-map",
-  "version": "0.35.0",
+  "version": "0.35.1",
   "license": "GPL-3.0",
   "scripts": {
     "test": "mocha --compilers js:babel-register --watch",
