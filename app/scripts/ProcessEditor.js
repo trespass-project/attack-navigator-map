@@ -1022,6 +1022,13 @@ const ProcessEditor = React.createClass({
 		this._updateArrayIndex('actions', index, updatedAction);
 	},
 
+	removeAction(index) {
+		this._updateField(
+			'actions',
+			R.remove(index, 1, this.props.process.actions)
+		);
+	},
+
 	render() {
 		const props = this.props;
 		const { process } = props;
@@ -1067,7 +1074,7 @@ const ProcessEditor = React.createClass({
 						<td colSpan='2' style={{ paddingLeft: padding }}>
 							{(process.actions || [])
 								.map((action, index) => {
-									return <EnabledAction
+									const a = <EnabledAction
 										key={index}
 										enabled={action}
 										onChange={(updatedAction) => {
@@ -1077,6 +1084,13 @@ const ProcessEditor = React.createClass({
 										nodes={props.nodes}
 										nodesList={props.nodesList}
 									/>;
+
+									return <InnerTable
+										key={index}
+										onRemove={() => this.removeAction(index)}
+									>
+										{a}
+									</InnerTable>;
 								})
 							}
 						</td>
