@@ -316,6 +316,8 @@ const Wizard = React.createClass({
 
 	renderPolicies() {
 		const props = this.props;
+		// TODO: memoize values
+		const policies = R.values(props.graph.policies || {});
 
 		return <div className='policies'>
 			<h3 className='title'>Policies</h3>
@@ -330,7 +332,7 @@ const Wizard = React.createClass({
 			<DividingSpace />
 
 			<ul>
-				{R.values(props.graph.policies || {})
+				{policies
 					.map((item) => {
 						return <li key={item.id}>
 							<PolicyEditor
@@ -411,7 +413,9 @@ const Wizard = React.createClass({
 
 	renderProcesses() {
 		const { props } = this;
+		// TODO: memoize values
 		const processes = R.values(props.graph.processes || {});
+
 		return <div>
 			<h3 className='title'>Processes</h3>
 
@@ -423,7 +427,7 @@ const Wizard = React.createClass({
 			<DividingSpace />
 
 			<ul>
-				{R.values(props.graph.processes || {})
+				{processes
 					.map((item) => {
 						return <li key={item.id}>
 							<ProcessEditor
