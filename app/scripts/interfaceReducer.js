@@ -341,10 +341,22 @@ function reducer(state=initialState, action) {
 		// }
 		case constants.ACTION_loadComponentTypes_DONE: {
 			const { componentsLib, kbTypeAttributes, modelComponentTypeToKbTypes } = action;
+
+			const sorted1 = R.sortBy(R.prop('label'), componentsLib);
+			const sorted2 = R.keys(modelComponentTypeToKbTypes)
+				.reduce(
+					(acc, key) => {
+						const list = modelComponentTypeToKbTypes[key];
+						const s = R.sortBy(R.prop('label'), list);
+						return R.assoc(key, s, acc);
+					},
+					{}
+				);
+
 			return mergeWithState({
-				componentsLib: R.sortBy(R.prop('label'), componentsLib),
+				componentsLib: sorted1,
 				kbTypeAttributes,
-				modelComponentTypeToKbTypes
+				modelComponentTypeToKbTypes: sorted2,
 			});
 		}
 
