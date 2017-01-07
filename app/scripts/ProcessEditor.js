@@ -7,7 +7,7 @@ const R = require('ramda');
 const _ = require('lodash');
 const classnames = require('classnames');
 const SelectizeDropdown = require('./SelectizeDropdown.js');
-const RelationSelectize = require('./RelationSelectize.js');
+// const RelationSelectize = require('./RelationSelectize.js');
 const ComponentReference = require('./ComponentReference.js');
 const DividingSpace = require('./DividingSpace.js');
 const policyCommon = require('./policyCommon.js');
@@ -974,14 +974,14 @@ const EnabledAction = React.createClass({
 
 const ProcessEditor = React.createClass({
 	propTypes: {
-		// process: React.PropTypes.object.isRequired,
-		// locationOptions: React.PropTypes.array.isRequired,
+		process: React.PropTypes.object.isRequired,
+		locationOptions: React.PropTypes.array.isRequired,
 		// relationTypes: React.PropTypes.array.isRequired,
 		// relationsMap: React.PropTypes.object.isRequired,
-		// nodes: React.PropTypes.object.isRequired,
-		// nodesList: React.PropTypes.array.isRequired,
-		// onChange: React.PropTypes.func,
-		// onRemove: React.PropTypes.func,
+		nodes: React.PropTypes.object.isRequired,
+		nodesList: React.PropTypes.array.isRequired,
+		onChange: React.PropTypes.func,
+		onRemove: React.PropTypes.func,
 	},
 
 	getDefaultProps() {
@@ -1004,22 +1004,6 @@ const ProcessEditor = React.createClass({
 		);
 	},
 
-	addLocation(event) {
-		this._add(event, 'credLocation');
-	},
-
-	addData(event) {
-		this._add(event, 'credData');
-	},
-
-	addItem(event) {
-		this._add(event, 'credItem');
-	},
-
-	addPredicate(event) {
-		this._add(event, 'credPredicate');
-	},
-
 	_updateField(fieldName, updatedValue) {
 		__updateField(
 			this.props.onChange,
@@ -1040,11 +1024,7 @@ const ProcessEditor = React.createClass({
 		this._updateField('atLocations', locationIds);
 	},
 
-	credentialsChanged(credentials) {
-		this._updateField('credentials', credentials);
-	},
-
-	enabledActionChanged(index, updatedAction) {
+	actionChanged(index, updatedAction) {
 		this._updateArrayIndex('enabled', index, updatedAction);
 	},
 
@@ -1086,13 +1066,13 @@ const ProcessEditor = React.createClass({
 					</tr>
 					<tr>
 						<td colSpan='2' style={{ paddingLeft: padding }}>
-							{(process.enabled || [])
-								.map((enabled, index) => {
+							{(process.actions || [])
+								.map((action, index) => {
 									return <EnabledAction
 										key={index}
-										enabled={enabled}
+										enabled={action}
 										onChange={(updatedAction) => {
-											this.enabledActionChanged(index, updatedAction);
+											this.actionChanged(index, updatedAction);
 										}}
 										locationOptions={props.locationOptions}
 										nodes={props.nodes}

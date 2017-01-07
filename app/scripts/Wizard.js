@@ -388,7 +388,11 @@ const Wizard = React.createClass({
 		this.context.dispatch(
 			actionCreators.addProcess(
 				// TODO:
-				{} // processCommon.emptyProcess
+				{
+					id: undefined,
+					atLocations: [],
+					actions: [],
+				} // processCommon.emptyProcess
 			)
 		);
 	},
