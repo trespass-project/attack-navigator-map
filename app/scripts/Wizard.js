@@ -13,11 +13,13 @@ const Library = require('./components/Library/Library.js');
 const WizardTab = require('./WizardTab.js');
 const MapInfo = require('./MapInfo.js');
 const PolicyEditor = require('./PolicyEditor.js');
+const ProcessEditor = require('./ProcessEditor.js');
 const PredicateEditor = require('./PredicateEditor.js');
 const AttackerProfileEditor = require('./AttackerProfileEditor/AttackerProfileEditor.js');
 import JSONTree from 'react-json-tree';
 import { AutoSizer, FlexTable, FlexColumn/*, SortDirection*/ } from 'react-virtualized';
 const policyCommon = require('./policyCommon.js');
+const processCommon = require('./processCommon.js');
 
 
 // const colorMap = theme => ({
@@ -315,6 +317,8 @@ const Wizard = React.createClass({
 
 	renderPolicies() {
 		const props = this.props;
+		// TODO: memoize values
+		const policies = R.values(props.graph.policies || {});
 
 		return <div className='policies'>
 			<h3 className='title'>Policies</h3>
@@ -329,7 +333,7 @@ const Wizard = React.createClass({
 			<DividingSpace />
 
 			<ul>
-				{R.values(props.graph.policies || {})
+				{policies
 					.map((item) => {
 						return <li key={item.id}>
 							<PolicyEditor
@@ -368,28 +372,78 @@ const Wizard = React.createClass({
 		);
 	},
 
+	// addProcess(event) {
+	// 	const textarea = this.refs['new-process'];
+	// 	const processJSON = textarea.value;
+	// 	try {
+	// 		const process = JSON.parse(processJSON);
+	// 		this.context.dispatch(
+	// 			actionCreators.addProcess(process)
+	// 		);
+	// 	} catch (e) {
+	// 		alert('Invalid JSON');
+	// 		return;
+	// 	}
+	// 	textarea.value = '';
+	// },
 	addProcess(event) {
-		const textarea = this.refs['new-process'];
-		const processJSON = textarea.value;
-		try {
-			const process = JSON.parse(processJSON);
-			this.context.dispatch(
-				actionCreators.addProcess(process)
-			);
-		} catch (e) {
-			alert('Invalid JSON');
-			return;
-		}
-		textarea.value = '';
+		if (event) { event.preventDefault(); }
+		this.context.dispatch(
+			actionCreators.addProcess(
+				processCommon.emptyProcess
+			)
+		);
+	},
+
+	updateProcess(updatedProcess) {
+		this.context.dispatch(
+			actionCreators.updateProcess(updatedProcess)
+		);
+	},
+
+	removeProcess(processId) {
+		this.context.dispatch(
+			actionCreators.removeProcess(processId)
+		);
 	},
 
 	renderProcesses() {
-		const processes = R.values(this.props.graph.processes || {});
-		return <div>
+		const { props } = this;
+		// TODO: memoize values
+		const processes = R.values(props.graph.processes || {});
+
+		return <div className='processes'>
 			<h3 className='title'>Processes</h3>
 
-			<hr />
-			<div>
+			<button
+				onClick={this.addProcess}
+				className='btn btn-default custom-button'
+			>Add process</button>
+
+			<DividingSpace />
+
+			<ul>
+				{processes
+					.map((item) => {
+						return <li key={item.id}>
+							<ProcessEditor
+								nodes={props.graph.nodes}
+								nodesList={props.nodesList}
+								process={item}
+								onChange={this.updateProcess}
+								onRemove={() => { this.removeProcess(item.id); }}
+								locationOptions={props.locationOptions}
+								relationTypes={props.relationTypes}
+								relationsMap={props.relationsMap}
+							/>
+						</li>;
+					})
+				}
+			</ul>
+
+			<DividingSpace />
+
+			{/*<div>
 				<div>
 					<textarea
 						style={{ width: '100%', maxWidth: '100%', fontSize: '12px' }}
@@ -399,16 +453,16 @@ const Wizard = React.createClass({
 				</div>
 				<button onClick={this.addProcess}>add</button>
 			</div>
-			<hr />
+			<hr />*/}
 
-			{processes
+			{/*processes
 				.map((item) => {
 					// theme={theme}
 					return <JSONTree
 						data={R.omit(['modelComponentType'], item)}
 						key={`process-${item.id}`}
 					/>;
-				})
+				})*/
 			}
 		</div>;
 	},

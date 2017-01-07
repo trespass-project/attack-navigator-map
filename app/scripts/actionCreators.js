@@ -1172,6 +1172,34 @@ function addProcess(process) {
 };
 
 
+module.exports.updateProcess =
+function updateProcess(process) {
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_updateProcess,
+			process
+		});
+
+		const modelId = getState().present.model.metadata.id;
+		dispatch( saveModelToKb(modelId, true) );
+	};
+};
+
+
+module.exports.removeProcess =
+function removeProcess(processId) {
+	return (dispatch, getState) => {
+		dispatch({
+			type: constants.ACTION_removeProcess,
+			processId,
+		});
+
+		const modelId = getState().present.model.metadata.id;
+		dispatch( saveModelToKb(modelId) );
+	};
+};
+
+
 module.exports.addPolicy =
 function addPolicy(policy) {
 	return (dispatch, getState) => {

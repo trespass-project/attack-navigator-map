@@ -1382,6 +1382,17 @@ function addProcess(graph, _process) {
 };
 
 
+const removeProcess = // TODO: test
+module.exports.removeProcess =
+function removeProcess(graph, processId) {
+	const processes = R.omit([processId], graph.processes || {});
+	return update(
+		graph,
+		{ processes: { $set: processes } }
+	);
+};
+
+
 const addPolicy = // TODO: test
 module.exports.addPolicy =
 function addPolicy(graph, _policy) {
