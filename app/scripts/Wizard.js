@@ -16,48 +16,9 @@ const PolicyEditor = require('./PolicyEditor.js');
 const ProcessEditor = require('./ProcessEditor.js');
 const PredicateEditor = require('./PredicateEditor.js');
 const AttackerProfileEditor = require('./AttackerProfileEditor/AttackerProfileEditor.js');
-import JSONTree from 'react-json-tree';
 import { AutoSizer, FlexTable, FlexColumn/*, SortDirection*/ } from 'react-virtualized';
 const policyCommon = require('./policyCommon.js');
 const processCommon = require('./processCommon.js');
-
-
-// const colorMap = theme => ({
-// 	BACKGROUND_COLOR: theme.base00,
-// 	TEXT_COLOR: theme.base07,
-// 	STRING_COLOR: theme.base0B,
-// 	DATE_COLOR: theme.base0B,
-// 	NUMBER_COLOR: theme.base09,
-// 	BOOLEAN_COLOR: theme.base09,
-// 	NULL_COLOR: theme.base08,
-// 	UNDEFINED_COLOR: theme.base08,
-// 	FUNCTION_COLOR: theme.base08,
-// 	SYMBOL_COLOR: theme.base08,
-// 	LABEL_COLOR: theme.base0D,
-// 	ARROW_COLOR: theme.base0D,
-// 	ITEM_STRING_COLOR: theme.base0B,
-// 	ITEM_STRING_EXPANDED_COLOR: theme.base03
-// });
-const jsonTreeTheme = {
-	scheme: 'scheme',
-	author: 'author',
-	base00: '#000000',
-	base01: '#000000',
-	base02: '#000000',
-	base03: '#000000',
-	base04: '#000000',
-	base05: '#000000',
-	base06: '#000000',
-	base07: '#000000',
-	base08: '#000000',
-	base09: '#000000',
-	base0A: '#000000',
-	base0B: '#000000',
-	base0C: '#000000',
-	base0D: '#000000',
-	base0E: '#000000',
-	base0F: '#000000',
-};
 
 
 const Wizard = React.createClass({
@@ -454,16 +415,6 @@ const Wizard = React.createClass({
 				<button onClick={this.addProcess}>add</button>
 			</div>
 			<hr />*/}
-
-			{/*processes
-				.map((item) => {
-					// theme={theme}
-					return <JSONTree
-						data={R.omit(['modelComponentType'], item)}
-						key={`process-${item.id}`}
-					/>;
-				})*/
-			}
 		</div>;
 	},
 
