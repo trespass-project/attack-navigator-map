@@ -44,7 +44,7 @@ const LabelFrequencyVisualization = React.createClass({
 			>
 				<strong>{item.count}</strong> <span>{item.value}</span>
 			</div>
-		</div>
+		</div>;
 	},
 
 	render() {
