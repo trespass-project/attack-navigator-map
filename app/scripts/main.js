@@ -142,6 +142,8 @@ function mapStateToProps(_state) {
 
 	props.nodesList = selectors.nodesList(state);
 	props.predicatesList = selectors.predicatesList(state);
+	props.processesList = selectors.processesList(state);
+	props.policiesList = selectors.policiesList(state);
 
 	props.groupedNodeIds = selectors.groupedNodeIds(props);
 

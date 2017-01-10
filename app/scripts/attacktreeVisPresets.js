@@ -13,7 +13,7 @@ const normal = {
 
 		if (R.contains(d.data.id, props.highlightNodeIds)) {
 			return {
-				strokeWidth: 4,
+				strokeWidth: 20,
 				strokeOpacity: 1,
 			};
 		} else {
