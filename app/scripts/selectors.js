@@ -28,7 +28,12 @@ const getAvailableLayersList = (state) => state.availableLayersList;
 // const nodesList =
 module.exports.nodesList = createSelector(
 	getNodes,
-	R.values
+	(nodesMap) => {
+		return R.sortBy(
+			R.prop('label'),
+			R.values(nodesMap)
+		);
+	}
 );
 
 
